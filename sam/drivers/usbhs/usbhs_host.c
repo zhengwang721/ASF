@@ -614,7 +614,8 @@ void uhd_enable(void)
 			| USBHS_HSTICR_HSOFIC  | USBHS_HSTICR_HWUPIC
 			| USBHS_HSTICR_RSMEDIC | USBHS_HSTICR_RSTIC
 			| USBHS_HSTICR_RXRSMIC;
-
+	/* VBus Hardware Control */
+	USBHS->USBHS_CTRL |= (1<<8);
 # if OTG_VBUS_IO
 	otg_vbus_init(uhd_vbus_handler);
 	/* Force VBus interrupt when VBus is always high
@@ -1085,6 +1086,11 @@ static void uhd_interrupt(void)
 {
 	uint8_t pipe_int;
 
+	if(Is_uhd_low_speed_mode() && (!(USBHS->USBHS_HSTCTRL & USBHS_HSTCTRL_SPDCONF_Msk)))
+	{
+		USBHS->USBHS_HSTCTRL |= USBHS_HSTCTRL_SPDCONF_LOW_POWER;
+	}
+
 	// Manage SOF interrupt
 	if (Is_uhd_sof()) {
 		uhd_sof_interrupt();
@@ -1168,6 +1174,7 @@ static void uhd_interrupt(void)
 		USBHS->USBHS_HSTIDR = USBHS_HSTIDR_HWUPIEC;
 		//uhd_sleep_mode(UHD_STATE_IDLE);
 		uhd_enable_vbus(); // enable VBUS
+		//USBHS->USBHS_SFR |= USBHS_SR_VBUSRQ;
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 		UHC_VBUS_CHANGE(true);
 	}
