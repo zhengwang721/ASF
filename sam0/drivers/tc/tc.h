@@ -1755,8 +1755,8 @@ static inline void tc_clear_status(
  *	</tr>
  *	<tr>
  *		<td>42123E</td>
- *		<td>11/2015</td>
- *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C21</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, SAM D09, and SAM C21</td>
  *	</tr>
  *	<tr>
  *		<td>42123D</td>
