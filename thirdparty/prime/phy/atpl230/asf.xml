@@ -21,11 +21,11 @@
 		<require idref="sam.services.plc.pplc_if.atpl230"/>
 		<build type="doxygen-entry-point" value="phy_plc_group"/>
 		<build type="distribute" subtype="license" value="../../license.txt"/>
-		<device-support value="atsam4cp16b_0"/>
+		<device-support value="atsam4cp16b:0"/>
 		<device-support value="atsam4sd32c"/>
-		<device-support value="atsam4cmp16c_0"/>
-		<device-support value="atsam4cms16c_0"/>
-		<device-support value="atsam4c16c_0"/>
+		<device-support value="atsam4cmp16c:0"/>
+		<device-support value="atsam4cms16c:0"/>
+		<device-support value="atsam4c16c:0"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>
 </asf>

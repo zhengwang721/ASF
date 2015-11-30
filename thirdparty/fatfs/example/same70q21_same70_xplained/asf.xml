@@ -1,0 +1,26 @@
+<asf xmlversion="1.0">
+	<project caption="FatFS example for SAME70 Xplained" id="common.services.fs.fatfs.access_example.same70_xplained">
+		<info type="description" value="summary">
+		FatFS example for SAME70 Xplained, the file system will be created on the external DataFlash AT45DBX.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_access.h"/>
+		<build type="header-file" value="conf_spi_master.h"/>
+		<build type="header-file" value="conf_virtual_mem.h"/>
+		<build type="header-file" value="conf_fatfs.h"/>
+		<build type="include-path" value="."/>
+		<config name="config.common.services.fs.fatfs.codepage" value="sbcs"/>
+		<require idref="common.services.fs.fatfs.access_example"/>
+		<require idref="common.components.memory.virtual_mem"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<require idref="board.same70_xplained"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<device-support value="atsame70q21"/>
+	</project>
+</asf>
