@@ -856,12 +856,12 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *    <tr>
  *        <td>42257C</td>
  *        <td>12/2015</td>
- *        <td>Added SAM L21/L22, SAM C21, and SAM DA1 support</td>
+ *        <td>Added suppport for SAM L21/L22, SAM C21, SAM D09, and SAM DA1</td>
  *    </tr>
  *    <tr>
  *        <td>42257B</td>
  *        <td>12/2014</td>
- *        <td>Added SAM R21 and SAM D10/D11 support</td>
+ *        <td>Added support for SAM R21 and SAM D10/D11</td>
  *    </tr>
  *    <tr>
  *        <td>42257A</td>

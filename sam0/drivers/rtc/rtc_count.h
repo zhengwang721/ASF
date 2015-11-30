@@ -1265,7 +1265,7 @@ uint32_t rtc_tamper_get_stamp (struct rtc_module *const module);
  *	<tr>
  *		<td>42111E</td>
  *		<td>12/2015</td>
- *		<td>Added support for SAM L21/L22, SAM C21, and SAM DA1</td>
+ *		<td>Added support for SAM L21/L22, SAM C21, SAM D09, and SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>42111D</td>
