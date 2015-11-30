@@ -69,8 +69,8 @@
 			<build type="include-path" value="Source/portable/GCC/ARM_CM4F/" toolchain="armgcc"/>
 			<build type="include-path" value="Source/portable/IAR/ARM_CM4F/" toolchain="iarewarm"/>
 			<device-support value="sam4e"/>
-			<device-support value="atsam4c16c_1"/>
-			<device-support value="atsam4cp16b_1"/>
+			<device-support value="atsam4c16c:1"/>
+			<device-support value="atsam4cp16b:1"/>
 			<device-support value="samg"/>
 			<require idref="thirdparty.os.freertos-8_0_1.portable.common"/>
 		</module>
