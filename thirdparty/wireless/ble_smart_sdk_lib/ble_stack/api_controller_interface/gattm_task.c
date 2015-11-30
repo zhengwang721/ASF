@@ -10,12 +10,13 @@
 #include "gattm_task.h"
 uint32_t u32usedBuffers = 0;
 extern uint32_t u32dbMemorySize;
+
 void init_gattm_task_module(void)
 {
 	u32usedBuffers = 0;
 }
 
-uint8_t gattm_add_svc_req_handler(struct gattm_svc_desc *svc_desc)
+at_ble_status_t gattm_add_svc_req_handler(struct gattm_svc_desc *svc_desc)
 {
     uint8_t u8Status = AT_BLE_SUCCESS;
     char NAtts = svc_desc->nb_att;
@@ -41,10 +42,10 @@ uint8_t gattm_add_svc_req_handler(struct gattm_svc_desc *svc_desc)
     INTERFACE_UNPACK_UINT16(&svc_desc->start_hdl);
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
-uint8_t gattm_add_attribute_req_handler(struct gattm_svc_desc *svc_desc, uint16_t max_data_size, uint16_t perm,
+at_ble_status_t gattm_add_attribute_req_handler(struct gattm_svc_desc *svc_desc, uint16_t max_data_size, uint16_t perm,
                                         uint8_t uuid_len, uint8_t *uuid, uint16_t *handle)
 {
     if (svc_desc->nb_att >= ((u32dbMemorySize - sizeof(struct gattm_svc_desc)) / sizeof(struct gattm_att_desc)))
@@ -63,7 +64,7 @@ uint8_t gattm_add_attribute_req_handler(struct gattm_svc_desc *svc_desc, uint16_
 
 
 
-uint8_t gattm_att_set_value_req_handler(uint16_t handle, uint16_t length, uint8_t *value)
+at_ble_status_t gattm_att_set_value_req_handler(uint16_t handle, uint16_t length, uint8_t *value)
 {
     uint8_t u8Status = AT_BLE_FAILURE;
     INTERFACE_MSG_INIT(GATTM_ATT_SET_VALUE_REQ, TASK_GATTM);
@@ -74,11 +75,11 @@ uint8_t gattm_att_set_value_req_handler(uint16_t handle, uint16_t length, uint8_
     INTERFACE_UNPACK_SKIP(2);	//u16RcvHandle
     INTERFACE_UNPACK_UINT8(&u8Status);
     INTERFACE_DONE();
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
 
-uint8_t gattm_att_get_value_req_handler(uint16_t handle, uint16_t *length, uint8_t *value)
+at_ble_status_t gattm_att_get_value_req_handler(uint16_t handle, uint16_t *length, uint8_t *value)
 {
     uint16_t u16RcvHandle;
     uint8_t u8Status = AT_BLE_FAILURE;
@@ -94,7 +95,7 @@ uint8_t gattm_att_get_value_req_handler(uint16_t handle, uint16_t *length, uint8
     {
         return AT_BLE_FAILURE;
     }
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
 #if 0

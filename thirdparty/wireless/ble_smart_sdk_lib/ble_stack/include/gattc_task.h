@@ -319,5 +319,8 @@ void gattc_svc_changed_cfg_ind_parser(uint16_t                                  
                                       uint8_t                                       *data,
                                       at_ble_characteristic_configuration_changed_t *params);
 void init_gattc_task_module(void);
+void init_gatt_client_module(void);
+void initi_gatt_server_module(void);
+
 #endif
 

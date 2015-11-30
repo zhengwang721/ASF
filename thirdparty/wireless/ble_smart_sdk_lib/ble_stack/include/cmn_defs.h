@@ -12,7 +12,7 @@
 
 #ifndef WIN32
 #undef UNREFERENCED_PARAMETER
-#define UNREFERENCED_PARAMETER(a) 
+#define UNREFERENCED_PARAMETER(a) (a=a)
 #endif
 
 /// Builds the task identifier from the type and the index of that task.

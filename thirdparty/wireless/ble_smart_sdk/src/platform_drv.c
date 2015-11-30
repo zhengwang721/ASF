@@ -88,6 +88,12 @@ uint8_t unregister_isr(uint8_t isr_index);
 #define REG_PL_WR(addr, value)       (*(volatile uint32_t *)(addr)) = (value)
 #define REG_PL_RD(addr)              (*(volatile uint32_t *)(addr))
 
+/* pwr APIs */
+static void (*pwr_enable_arm_wakeup)(uint32_t wakeup_domain);
+static void (*pwr_disable_arm_wakeup)(uint32_t wakeup_domain);
+static int (*pwr_arm_wakeup_req)(void);
+static int (*pwr_wait_BLE_out_of_reset)(uint32_t threshold);
+
 static void* gstrFwSem;
 static void* InternalAppMsgQHandle;
 static void (*ke_msg_send)(void const *param_ptr);
@@ -145,7 +151,12 @@ plf_drv_status platform_driver_init()
 		rwip_prevent_sleep_set = (void (*)(uint16_t))0x0001b99f;
 		rwip_prevent_sleep_clear = (void (*)(uint16_t))0x0001b9db;
 		apps_resume_cb = (uint32_t *)0x1004003c;
-		actualfreq = 0; /* set to NULL for now as clock calibration is disabled for the time being */  /*(uint32_t *)0x10006bd8;*/
+		actualfreq = (uint32_t *)0x10006c74; /* set to NULL for now as clock calibration is disabled for the time being */  /*(uint32_t *)0x10006bd8;*/
+		/* power APIs */
+		pwr_enable_arm_wakeup = (void (*)(uint32_t wakeup_domain))0x0001cbe9;
+		pwr_disable_arm_wakeup = (void (*)(uint32_t wakeup_domain))0x0001cd8f;
+		pwr_arm_wakeup_req = (int (*)(void))0x0001cea3;
+		pwr_wait_BLE_out_of_reset = (int (*)(uint32_t threshold))0x0001cbcf;
 #else
 		NVIC_DisableIRQ(PORT0_ALL_IRQn);
 		NVIC_DisableIRQ(PORT1_ALL_IRQn);
@@ -270,6 +281,11 @@ static void at_ke_msg_send(void const * param_ptr)
 	if(osc_en == 0)
 	{
 		/* BLE Core is off, issue a wakeup request*/
+		/* First, make sure PD4 is powered up and out of reset */
+		pwr_enable_arm_wakeup(1<<1);
+		pwr_arm_wakeup_req();
+		while (pwr_wait_BLE_out_of_reset(3));
+		pwr_disable_arm_wakeup(1<<1);
 		REG_PL_WR(0x4000B020, 1);
 		#ifndef CHIPVERSION_B0
 		while(REG_PL_RD(0x4000B020));
@@ -325,18 +341,13 @@ void send_plf_int_msg_ind(uint8_t intr_index, uint8_t callback_id, void *data, u
 											
 	//no params
 	if(params != NULL) {
-		if (data_len == 0)
-		{
-				// Send message directly
-				at_ke_msg_send(params);
-		}
-		else
+		if((data_len != 0) && (NULL != data))
 		{
 			//copy params
-			memcpy(params,data,data_len);
-			// Send the kernel message
-			at_ke_msg_send(params);
+			memcpy(params, data, data_len);
 		}
+		// Send the kernel message
+		at_ke_msg_send(params);
 	}
 }
 
@@ -349,7 +360,7 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 	static struct ke_msg* rcv_msg;
 	static struct ke_msghdr	*ke_msg_hdr;
 	plf_drv_status status = STATUS_SUCCESS;
-
+	
 	do {
 		if(NMI_MsgQueueRecv(InternalAppMsgQHandle, (void**)&rcv_msg) == STATUS_SUCCESS)
 		{
@@ -405,7 +416,27 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 plf_drv_status acquire_sleep_lock()
 {
 	plf_drv_status status = STATUS_RESOURCE_BUSY;
+	uint8_t osc_en = REG_PL_RD(0x4000B1EC)&0x01;
+	
 	rwip_prevent_sleep_set(APP_PREVENT_SLEEP);
+	if(osc_en == 0)
+	{
+		/* BLE Core is off, issue a wakeup request*/
+		/* First, make sure PD4 is powered up and out of reset */
+		pwr_enable_arm_wakeup(1<<1);
+		pwr_arm_wakeup_req();
+		while (pwr_wait_BLE_out_of_reset(3));
+		pwr_disable_arm_wakeup(1<<1);
+		REG_PL_WR(0x4000B020, 1);
+#ifndef CHIPVERSION_B0
+		while(REG_PL_RD(0x4000B020));
+#endif	//CHIPVERSION_B0
+	}
+	else
+	{
+		/*  */
+		 os_sem_up(gstrFwSem);
+	}
 	return status;
 }
 

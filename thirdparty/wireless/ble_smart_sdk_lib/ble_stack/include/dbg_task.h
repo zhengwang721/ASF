@@ -115,7 +115,7 @@ uint8_t dbg_set_tx_pw_req_handler(uint16_t conn_handle, uint8_t level);
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
-uint8_t dbg_wr_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data,
+at_ble_status_t dbg_wr_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data,
                                uint8_t u8Size, uint8_t u8WriteMode, uint8_t bDisWait);
 
 /** @ingroup dbg_task_group
@@ -132,7 +132,7 @@ uint8_t dbg_wr_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data,
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
-uint8_t dbg_rd_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data,
+at_ble_status_t dbg_rd_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data,
                                uint8_t u8Size, uint8_t u8ReadMode);
 
 #endif

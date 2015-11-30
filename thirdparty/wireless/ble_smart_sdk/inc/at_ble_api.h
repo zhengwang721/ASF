@@ -2231,6 +2231,16 @@ AT_BLE_API
 at_ble_status_t at_ble_init(at_ble_init_config_t *args);
 
 /** @ingroup gap_dev_config_group
+  * @brief Reset the link layer.
+  *
+  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
+  */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_ll_reset(void);
+
+/** @ingroup gap_dev_config_group
   * @brief Set GAP attribute data base (Appearance , slave preferred connection parameters ,
   * device name write permissions)
   *
@@ -2243,6 +2253,7 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args);
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
+
 at_ble_status_t at_ble_set_gap_deviceinfo(at_ble_gap_deviceinfo_t  *gap_deviceinfo);
 
 /** @ingroup gap_dev_config_group

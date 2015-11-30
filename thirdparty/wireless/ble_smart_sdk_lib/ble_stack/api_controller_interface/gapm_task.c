@@ -34,7 +34,7 @@ enum
  * last byte of address and recieved type from FW.
  * Where received values from FW are PUBLIC or RANDOM only.
  */
-static uint8_t gapm_get_address_type(uint8_t *pu8Addr, uint8_t u8AddrType)
+static at_ble_addr_type_t gapm_get_address_type(uint8_t *pu8Addr, uint8_t u8AddrType)
 {
     uint8_t u8RetValue = AT_BLE_ADDRESS_PUBLIC;
     if (0x00 != (u8AddrType & 0x000000FF))
@@ -52,7 +52,7 @@ static uint8_t gapm_get_address_type(uint8_t *pu8Addr, uint8_t u8AddrType)
             u8RetValue = AT_BLE_ADDRESS_RANDOM_PRIVATE_NON_RESOLVABLE;
         }
     }
-    return u8RetValue;
+    return (at_ble_addr_type_t)u8RetValue;
 }
 
 /*
@@ -60,7 +60,7 @@ static uint8_t gapm_get_address_type(uint8_t *pu8Addr, uint8_t u8AddrType)
 */
 #define gapm_set_address_type(type) ((type>0 && type <4)?1:0)
 
-uint8_t gapm_reset_req_handler(void)
+at_ble_status_t gapm_reset_req_handler(void)
 {
     uint8_t u8Operation, u8Status;
     INTERFACE_MSG_INIT(GAPM_RESET_CMD, TASK_GAPM);
@@ -74,10 +74,10 @@ uint8_t gapm_reset_req_handler(void)
         PRINT_ERR("W.OP: %02x, R.OP:%02x\r\n", GAPM_RESET, u8Operation);
         return AT_BLE_FAILURE;
     }
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
-uint8_t gapm_set_dev_config_cmd_handler(uint8_t u8Role, uint16_t u16RenewDur,
+at_ble_status_t gapm_set_dev_config_cmd_handler(uint8_t u8Role, uint16_t u16RenewDur,
                                         uint8_t *pu8Address, uint8_t *pu8Irkey, uint8_t u8AddrType, uint8_t u8AttCfg,
                                         uint16_t u16GapHandle, uint16_t u16GattHandle, uint16_t u16MaxMTU)
 {
@@ -102,12 +102,12 @@ uint8_t gapm_set_dev_config_cmd_handler(uint8_t u8Role, uint16_t u16RenewDur,
         PRINT_ERR("W.OP: %02x, R.OP:%02x\r\n", GAPM_SET_DEV_CONFIG, u8Operation);
         return AT_BLE_FAILURE;
     }
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
-uint8_t gapm_get_dev_config_cmd_handler(at_ble_get_dev_info_op_t op, void *arg)
+at_ble_status_t gapm_get_dev_config_cmd_handler(at_ble_get_dev_info_op_t op, void *arg)
 {
-    at_ble_status_t u8Status = AT_BLE_INVALID_PARAM;
+    uint8_t u8Status = AT_BLE_INVALID_PARAM;
     uint8_t u8Operation;
     do
     {
@@ -145,7 +145,7 @@ uint8_t gapm_get_dev_config_cmd_handler(at_ble_get_dev_info_op_t op, void *arg)
         INTERFACE_DONE();
     }
     while (0);
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
 at_ble_status_t gapm_cancel_cmd_handler(void)
@@ -167,7 +167,7 @@ at_ble_status_t gapm_cancel_cmd_handler(void)
     }
 }
 
-uint8_t gapm_set_channel_map_cmd_handler(uint8_t *pu8Map)
+at_ble_status_t gapm_set_channel_map_cmd_handler(uint8_t *pu8Map)
 {
     uint8_t u8Operation, u8Status;
     INTERFACE_MSG_INIT(GAPM_SET_CHANNEL_MAP_CMD, TASK_GAPM);
@@ -182,7 +182,7 @@ uint8_t gapm_set_channel_map_cmd_handler(uint8_t *pu8Map)
         PRINT_ERR("W.OP: %02x, R.OP:%02x\r\n", GAPM_SET_CHANNEL_MAP, u8Operation);
         return AT_BLE_FAILURE;
     }
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
 uint8_t gapm_dev_bdaddr_ind_handler(uint8_t *data, at_ble_addr_t *param)
@@ -223,10 +223,10 @@ at_ble_events_t gapm_cmp_evt(uint8_t *data, void *params)
         }
         else
         {
-            evt_num = AT_BLE_EVENT_MAX; //Ignore it incase of success whereas GAPM_ADDR_SOLVED_IND was received.
+            evt_num = AT_BLE_EVENT_MAX; //Ignore it in case of success whereas GAPM_ADDR_SOLVED_IND was received.
         }
         break;
-    // TODO add handle advertise error comple event
+    // TODO add handle advertise error compelet event
     case GAPM_ADV_UNDIRECT:
     case GAPM_ADV_DIRECT:
     case GAPM_ADV_DIRECT_LDC:
@@ -238,7 +238,7 @@ at_ble_events_t gapm_cmp_evt(uint8_t *data, void *params)
             {
                 at_ble_connected_t *connected = (at_ble_connected_t *)params;
                 uint8_t role;
-                index = check_ConnData_idx_role(device.conn_handle, &role);
+				index = check_ConnData_idx_role(device.conn_handle, &role);
                 connected->handle = gstrConnData[index].conHandle;
                 connected->peer_addr.type = gstrConnData[index].peerAddr.type;
                 connected->conn_status = (at_ble_status_t)u8status;
@@ -246,7 +246,7 @@ at_ble_events_t gapm_cmp_evt(uint8_t *data, void *params)
 				connected->conn_params.con_latency = gstrConnData[index].conn_latency;
 				connected->conn_params.sup_to = gstrConnData[index].sup_to;
                 memcpy(connected->peer_addr.addr, gstrConnData[index].peerAddr.addr, AT_BLE_ADDR_LEN);
-                connected->peer_addr.type = (at_ble_addr_type_t)gapm_get_address_type((uint8_t *)(&(connected->peer_addr.addr)), connected->peer_addr.type);
+                connected->peer_addr.type = gapm_get_address_type((uint8_t *)(&(connected->peer_addr.addr)), connected->peer_addr.type);
                 device.conn_handle = 0xFFFF;
                 evt_num = AT_BLE_CONNECTED;
                 break;
@@ -284,7 +284,7 @@ at_ble_events_t gapm_cmp_evt(uint8_t *data, void *params)
 			connected->conn_params.sup_to = gstrConnData[index].sup_to;
             memcpy(connected->peer_addr.addr, gstrConnData[index].peerAddr.addr, AT_BLE_ADDR_LEN);
         }
-        connected->peer_addr.type = (at_ble_addr_type_t)gapm_get_address_type((uint8_t *)(&(connected->peer_addr.addr)), connected->peer_addr.type);
+        connected->peer_addr.type = gapm_get_address_type((uint8_t *)(&(connected->peer_addr.addr)), connected->peer_addr.type);
         evt_num = AT_BLE_CONNECTED;
     }
     break;
@@ -301,7 +301,7 @@ at_ble_events_t gapm_cmp_evt(uint8_t *data, void *params)
     return evt_num;
 }
 
-uint8_t gapm_start_adv_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrSrc, uint16_t u16RenewDur,
+at_ble_status_t gapm_start_adv_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrSrc, uint16_t u16RenewDur,
                                    uint8_t peer_addr_type, uint8_t *pu8BdAddr, uint16_t u16MinIntv, uint16_t u16MaxIntv, uint8_t u8ChnlMap, uint8_t u8Mode ,
                                    uint8_t u8AdvFiltPolicy, uint8_t u8AdvDataLen, uint8_t *pu8AdvData, uint8_t u8ScnRespLen, uint8_t *pu8ScnRespData ,
                                    uint16_t u16Timeout, bool disable_randomness)
@@ -353,8 +353,8 @@ uint8_t gapm_start_adv_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrSrc, uint16_t
     INTERFACE_PACK_ARG_UINT8(disable_randomness);
     INTERFACE_SEND_NO_WAIT();
     INTERFACE_DONE();
+	UNREFERENCED_PARAMETER(u16RenewDur);
     return AT_BLE_SUCCESS;
-    UNREFERENCED_PARAMETER(u16RenewDur);
 }
 
 uint8_t get_gap_local_addr_type(void)
@@ -418,8 +418,8 @@ void gapm_adv_report_evt_handler(uint8_t *data,
         u8Rssi -= 255;
     }
     param->rssi = (int8_t)u8Rssi;
-    param->dev_addr.type = (at_ble_addr_type_t)gapm_get_address_type((uint8_t *)(&(param->dev_addr.addr)), param->dev_addr.type);
-    switch (evt_type)
+    param->dev_addr.type = gapm_get_address_type((uint8_t *)(&(param->dev_addr.addr)), param->dev_addr.type);
+	switch (evt_type)
     {
     case ADV_CONN_UNDIR:
         param->type = AT_BLE_ADV_TYPE_UNDIRECTED;
@@ -476,7 +476,7 @@ void gapm_start_connection_cmd_handler(uint8_t u8OpCode, uint8_t u8AddrType, uin
     UNREFERENCED_PARAMETER(pu8BdAddr);
 }
 
-uint8_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *param)
+at_ble_status_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *param)
 {
     uint8_t u8Operation = 0, u8Status;
     PRINT_DBG("input operation : %d\n", operation);
@@ -512,7 +512,7 @@ uint8_t gapm_white_list_mgm_cmd(uint8_t operation, uint8_t addr_type, uint8_t *p
     INTERFACE_DONE();
 	u8Operation = u8Operation; //Disable unused variable warning
     PRINT_DBG("output operation : %d\n", u8Operation);
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
 void gapm_resolv_addr_cmd_handler(uint8_t nb_key , uint8_t *rand_addr , uint8_t *irk)

@@ -28,15 +28,15 @@ typedef struct
 
 at_ble_events_t gapc_cmp_evt(uint16_t src, uint8_t *data, void *params);
 
-uint8_t gapc_get_info_cmd_handler(uint16_t conn_handle, uint8_t operation, uint8_t *param);
+at_ble_status_t gapc_get_info_cmd_handler(uint16_t conn_handle, uint8_t operation, uint8_t *param);
 
 void gapc_con_req_ind(uint8_t *data);
 
-uint8_t gapc_connection_cfm_handler(uint8_t *pu8LocalKey,  uint32_t u32LocalSignCntr,
+at_ble_status_t gapc_connection_cfm_handler(uint8_t *pu8LocalKey,  uint32_t u32LocalSignCntr,
                                     uint8_t *pu8RemoteKey, uint32_t u32RemoteSignCntr,
                                     uint8_t u8Auth, uint8_t service_enabled, uint16_t u16ConHdl);
 
-uint8_t gapc_disconnect_cmd_handler(uint8_t reason, uint16_t handle);
+at_ble_status_t gapc_disconnect_cmd_handler(uint8_t reason, uint16_t handle);
 
 void gapc_disconnect_ind(uint8_t *data, at_ble_disconnected_t *param);
 
@@ -44,7 +44,7 @@ void gapc_dev_info_req_ind_handler(uint16_t src, uint8_t *data, gapc_get_dev_inf
 
 at_ble_events_t gapc_bond_ind(uint16_t src, uint8_t *data, at_ble_pair_done_t *param);
 
-uint8_t gapc_bond_req_ind(uint16_t src, uint8_t *data, void *param);
+at_ble_events_t gapc_bond_req_ind(uint16_t src, uint8_t *data, void *param);
 
 void gapc_bond_cmd_handler(uint16_t conn_handle, uint8_t io_cababilities,
                            uint8_t oob_avaiable, uint8_t auth_req, uint8_t max_key_size,

@@ -9,8 +9,8 @@
 #define UNREFERENCED_PARAMETER(x) ((void)x)
 static int __printingNullFun(const char *_Format, ...)
 {
+	UNREFERENCED_PARAMETER(_Format);
     return 0;
-    UNREFERENCED_PARAMETER(_Format);
 }
 
 //Genral pointer to printing function

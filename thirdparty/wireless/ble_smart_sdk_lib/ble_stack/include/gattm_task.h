@@ -85,12 +85,12 @@ struct gattm_svc_desc
 
 void db_init(uint8_t *memPool, uint32_t memSize);
 
-uint8_t gattm_add_svc_req_handler(struct gattm_svc_desc *svc_desc);
+at_ble_status_t gattm_add_svc_req_handler(struct gattm_svc_desc *svc_desc);
 
-uint8_t gattm_add_attribute_req_handler(struct gattm_svc_desc *svc_desc, uint16_t max_data_size, uint16_t perm,
+at_ble_status_t gattm_add_attribute_req_handler(struct gattm_svc_desc *svc_desc, uint16_t max_data_size, uint16_t perm,
                                         uint8_t uuid_len, uint8_t *uuid, uint16_t *handle);
-uint8_t gattm_att_set_value_req_handler(uint16_t handle, uint16_t length, uint8_t *value);
-uint8_t gattm_att_get_value_req_handler(uint16_t handle, uint16_t *length, uint8_t *value);
+at_ble_status_t gattm_att_set_value_req_handler(uint16_t handle, uint16_t length, uint8_t *value);
+at_ble_status_t gattm_att_get_value_req_handler(uint16_t handle, uint16_t *length, uint8_t *value);
 
 uint8_t gatt_notify_req_handler(uint16_t conhdl, uint16_t charhdl);
 uint8_t gatt_indicate_req_handler(uint16_t conhdl, uint16_t charhdl);
@@ -942,5 +942,7 @@ struct gatt_svc_changed_ind_send_req
 };
 
 #endif
+
+void init_gattm_task_module(void);
 
 #endif // GATT_TASK_H_

@@ -247,9 +247,9 @@ static uint16_t att_permissions(at_ble_attr_permissions_t permissions, char Read
 }
 #define RI_FLAG(Permissions) ((((Permissions&AT_BLE_ATTR_READABLE_REQ_AUTHN_REQ_AUTHR)==AT_BLE_ATTR_READABLE_REQ_AUTHN_REQ_AUTHR)|((Permissions&AT_BLE_ATTR_READABLE_NO_AUTHN_REQ_AUTHR)==AT_BLE_ATTR_READABLE_NO_AUTHN_REQ_AUTHR))<<15)
 
-static uint8_t user_description_define
+static at_ble_status_t user_description_define
 (at_ble_handle_t att_handle, at_ble_attr_permissions_t perm,
- uint8_t *user_data, uint16_t len)
+ at_ble_status_t *user_data, uint16_t len)
 {
     uint8_t status = AT_BLE_SUCCESS;
 	do 
@@ -277,7 +277,7 @@ static uint8_t user_description_define
 		}
 		FN_OUT(status);
 	} while (0);
-    return status;
+    return (at_ble_status_t)status;
 }
 
 static bool is_server_conf_defined(
@@ -288,14 +288,14 @@ static bool is_server_conf_defined(
     return (properties & AT_BLE_CHAR_BROADCST) != 0 ? true : false;
 }
 
-static uint8_t server_conf_define(at_ble_handle_t att_handle, at_ble_attr_permissions_t perm)
+static at_ble_status_t server_conf_define(at_ble_handle_t att_handle, at_ble_attr_permissions_t perm)
 {
     uint8_t temp_buff[2] = {0x00, 0x00};
 	uint8_t status;
 	FN_IN();
 	status = db_addATT(att_handle, temp_buff, 2, perm);
 	FN_OUT(status);
-    return status;
+    return (at_ble_status_t)status;
 }
 
 static bool is_client_conf_defined(
@@ -307,17 +307,17 @@ static bool is_client_conf_defined(
             & (AT_BLE_CHAR_NOTIFY | AT_BLE_CHAR_INDICATE)) != 0 ? true : false;
 }
 
-static uint8_t client_conf_define(at_ble_handle_t att_handle, at_ble_attr_permissions_t perm)
+static at_ble_status_t client_conf_define(at_ble_handle_t att_handle, at_ble_attr_permissions_t perm)
 {
 	uint8_t temp_buff[2] = {0x00, 0x00};
 	uint8_t status;
 	FN_IN();
 	status = db_addATT(att_handle, temp_buff, 2, perm);
 	FN_OUT(status);
-    return status;
+    return (at_ble_status_t)status;
 }
 
-static uint8_t additional_desc_define(at_ble_generic_att_desc_t *desc)
+static at_ble_status_t additional_desc_define(at_ble_generic_att_desc_t *desc)
 {
 	uint8_t status = AT_BLE_SUCCESS;
     FN_IN();
@@ -336,11 +336,11 @@ static uint8_t additional_desc_define(at_ble_generic_att_desc_t *desc)
                   desc->perm);
     }
     FN_OUT(status);
-    return status;
+    return (at_ble_status_t)status;
 }
 
 
-static uint8_t presentation_format_define(at_ble_handle_t att_handle,
+static at_ble_status_t presentation_format_define(at_ble_handle_t att_handle,
         at_ble_char_presentation_t *ppresentation_format)
 {
     uint8_t temp_buff[7];
@@ -355,7 +355,7 @@ static uint8_t presentation_format_define(at_ble_handle_t att_handle,
     temp_buff[6] = (uint8_t)(ppresentation_format->description >> 8);
     status = gattm_att_set_value_req_handler(att_handle, 7, temp_buff);
     FN_OUT(status);
-    return status;
+    return (at_ble_status_t)status;
 }
 
 
@@ -774,7 +774,7 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
 	        for (i = 0; i < included_count; i++)
 	        {
 	            /*uuid_size(&included_list[i].uuid) + 4*/
-	            status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, included_list[i].service_handle, PERM(RD, ENABLE),
+	            status = gattm_add_attribute_req_handler(svc_desc, included_list[i].service_handle, PERM(RD, ENABLE),
                      sizeof(include_uuid), (uint8_t *)include_uuid, &temp_handle);
 				IF_ERR_BRANCH(status, __FN_EXIT);
 	        }
@@ -783,7 +783,7 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
 	        {
 	            at_ble_characteristic_t *charactaristic = &charactristic_list[i];
 	            /* define "char decl" attribute */
-	            status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, 4 /*No meaning:
+	            status = gattm_add_attribute_req_handler(svc_desc, 4 /*No meaning:
 	            For Characteristic Declarations this field is not used*/,
 	                     PERM(RD, ENABLE),
                      sizeof(char_uuid), (uint8_t *)char_uuid, &temp_handle);
@@ -794,7 +794,7 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
 	                                         charactaristic->value_permissions,
 	                                         charactaristic->uuid.type);
 	            /* define the attribute holding the value */
-	            status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, RI_FLAG(charactaristic->value_permissions) | charactaristic->value_max_len, temp_perm ,
+	            status = gattm_add_attribute_req_handler(svc_desc, RI_FLAG(charactaristic->value_permissions) | charactaristic->value_max_len, temp_perm ,
 	                     at_ble_uuid_type2len(charactaristic->uuid.type), charactaristic->uuid.uuid, &charactaristic->char_val_handle);
 	            IF_ERR_BRANCH(status, __FN_EXIT);
 			
@@ -810,7 +810,7 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
 	                {
 	                    temp_buff[0] |= 0x02;
 	                }
-	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, ((uint16_t)temp_buff[0]) << 8 | temp_buff[1], PERM(RD, ENABLE),
+	                status = gattm_add_attribute_req_handler(svc_desc, ((uint16_t)temp_buff[0]) << 8 | temp_buff[1], PERM(RD, ENABLE),
                                                 sizeof(extended_props_uuid), (uint8_t *)extended_props_uuid, &temp_handle);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 	            }
@@ -825,30 +825,30 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
 	                {
 	                    perm = att_permissions(charactaristic->user_desc_permissions, 1, 0);
 	                }
-	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, charactaristic->user_desc_len, RI_FLAG(charactaristic->user_desc_permissions) | perm,
+	                status = gattm_add_attribute_req_handler(svc_desc, charactaristic->user_desc_len, RI_FLAG(charactaristic->user_desc_permissions) | perm,
 	                                                sizeof(user_desc_uuid), (uint8_t *)user_desc_uuid, &charactaristic->user_desc_handle);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 				}
 	            if (is_server_conf_defined(charactristic_list[i].properties))
 	            {
-	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, 0x8002, att_permissions(charactaristic->server_config_permissions, 1, 0),
+	                status = gattm_add_attribute_req_handler(svc_desc, 0x8002, att_permissions(charactaristic->server_config_permissions, 1, 0),
 	                                                sizeof(server_conf_uuid), (uint8_t *)server_conf_uuid, &charactaristic->server_config_handle);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 				}
 	            if (is_client_conf_defined(charactristic_list[i].properties))
 	            {
-	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, 0x8002, att_permissions(charactaristic->client_config_permissions, 1, 1),
+	                status = gattm_add_attribute_req_handler(svc_desc, 0x8002, att_permissions(charactaristic->client_config_permissions, 1, 1),
 	                                                sizeof(client_conf_uuid), (uint8_t *)client_conf_uuid, &charactaristic->client_config_handle);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 				}
 	            if (charactristic_list[i].presentation_format)
 	            {
-	                status = (at_ble_status_t)gattm_add_attribute_req_handler(svc_desc, 7, PERM(RD, ENABLE),
+	                status = gattm_add_attribute_req_handler(svc_desc, 7, PERM(RD, ENABLE),
 	                                                sizeof(presentation_format_uuid), (uint8_t *)presentation_format_uuid, &temp_handle);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 				}
 	        }
-	        status = (at_ble_status_t)gattm_add_svc_req_handler(svc_desc);
+	        status = gattm_add_svc_req_handler(svc_desc);
 	        IF_ERR_BRANCH(status, __FN_EXIT);
 		
 	        *service_handle = svc_desc->start_hdl;
@@ -883,7 +883,7 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
 	                              NULL, charactaristic->value_max_len, charactaristic->value_permissions);
 	                    IF_ERR_BRANCH(status, __FN_EXIT);
 
-						status = (at_ble_status_t)gattm_att_set_value_req_handler(charactaristic->char_val_handle, charactaristic->value_init_len,
+						status = gattm_att_set_value_req_handler(charactaristic->char_val_handle, charactaristic->value_init_len,
 	                                                    charactaristic->init_value);
 	                    IF_ERR_BRANCH(status, __FN_EXIT);
 	                }
@@ -896,7 +896,7 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
 	            {
 	                Accumulated_handle++;
 	                charactaristic->user_desc_handle = Accumulated_handle;
-	                status = (at_ble_status_t)user_description_define(Accumulated_handle, charactaristic->user_desc_permissions
+	                status = user_description_define(Accumulated_handle, charactaristic->user_desc_permissions
 	                                        , charactaristic->user_desc, charactaristic->user_desc_max_len);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 	            }
@@ -904,20 +904,20 @@ static at_ble_status_t internal_at_ble_service_define(at_ble_uuid_t *uuid, at_bl
 	            {
 	                Accumulated_handle++;
 	                charactaristic->server_config_handle = Accumulated_handle;
-	                status = (at_ble_status_t)server_conf_define(Accumulated_handle, charactaristic->server_config_permissions);
+	                status = server_conf_define(Accumulated_handle, charactaristic->server_config_permissions);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 	            }
 	            if (is_client_conf_defined(charactaristic->properties))
 	            {
 	                Accumulated_handle++;
 	                charactaristic->client_config_handle = Accumulated_handle;
-	                status = (at_ble_status_t)client_conf_define(Accumulated_handle, charactaristic->client_config_permissions);
+	                status = client_conf_define(Accumulated_handle, charactaristic->client_config_permissions);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 	            }
 	            if (charactaristic->presentation_format)
 	            {
 	                Accumulated_handle++;
-	                status = (at_ble_status_t)presentation_format_define(Accumulated_handle, charactaristic->presentation_format);
+	                status = presentation_format_define(Accumulated_handle, charactaristic->presentation_format);
 					IF_ERR_BRANCH(status, __FN_EXIT);
 	            }
 	        }
@@ -989,7 +989,7 @@ at_ble_status_t at_ble_characteristic_value_get(at_ble_handle_t handle, uint8_t 
         }
         else
         {
-            status = (at_ble_status_t)gattm_att_get_value_req_handler(handle, len, value);
+            status = gattm_att_get_value_req_handler(handle, len, value);
             break;
         }
     }

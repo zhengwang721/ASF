@@ -90,13 +90,14 @@ static at_ble_status_t internal_event_get(uint16_t *msg_id, uint16_t *src_id, ui
 #endif  //NEW_EVT_HANDLER
 {
     internal_event_t *ev = NULL;
-    at_ble_status_t status = AT_BLE_SUCCESS;
+    uint8_t status = AT_BLE_SUCCESS;
+	
     if (timeout != 0xFFFFFFFF)
     {
         //block till an event is posted or timeout
         while (event_pending_list == NULL && status != AT_BLE_TIMEOUT)
         {
-			status = (at_ble_status_t)platform_event_wait(timeout);
+			status = platform_event_wait(timeout);
         }
     }
     else // user wants no timeout
@@ -104,7 +105,7 @@ static at_ble_status_t internal_event_get(uint16_t *msg_id, uint16_t *src_id, ui
         // block till an event is posted
         while (event_pending_list == NULL)
         {
-			status = (at_ble_status_t)platform_event_wait(timeout);
+			status = platform_event_wait(timeout);
 #ifdef SAMB11
 			if((plf_drv_status)status == STATUS_RECEIVED_PLF_EVENT_MSG)
 				break;
@@ -147,7 +148,7 @@ static at_ble_status_t internal_event_get(uint16_t *msg_id, uint16_t *src_id, ui
 		}	//if((*msg_id != 0xFFFE) && (event_pending_list != NULL)) 
 #endif
     }
-    return status;
+    return (at_ble_status_t)status;
 }
 
 void internal_event_init()
@@ -458,8 +459,8 @@ static at_ble_events_t handle_ble_event(uint16_t msg_id, uint16_t src_id, uint8_
     }
     break;
     }
+	UNREFERENCED_PARAMETER(data_len);
     return evt_num;
-    UNREFERENCED_PARAMETER(data_len);
 }
 
 uint32_t special_events_handler(uint16_t msg_id, uint16_t src_id, uint8_t *data)

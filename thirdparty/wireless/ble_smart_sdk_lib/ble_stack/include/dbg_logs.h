@@ -15,6 +15,10 @@ typedef int (*tpfTrace)(const char *_Format, ...);
 
 #if USE_TRACE_LOGS_VER  == VER_1_1
 
+#ifndef AT_BLE_DBG
+#define AT_BLE_DBG TRACE_LVL_ERR
+#endif //#ifndef AT_BLE_DBG
+
 #if (AT_BLE_DBG & TRACE_LVL_INFO) == TRACE_LVL_INFO
 extern tpfTrace tpfAtBlePrintInfo;
 

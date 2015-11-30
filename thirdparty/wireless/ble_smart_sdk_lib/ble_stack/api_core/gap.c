@@ -39,11 +39,6 @@ tstrConnData gstrConnData[AT_BLE_MAX_CONCURRENT_CONNS];
 extern volatile int init_done;
 volatile uint16_t app_task_type;
 
-/* function prototypes  */
-void init_gatt_client_module(void);
-void initi_gatt_server_module(void);
-void init_l2cc_task_module(void);
-
 at_ble_status_t at_ble_init(at_ble_init_config_t *args)
 {
 #ifdef SAMB11
@@ -117,7 +112,7 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args)
 				break;
 			}
 		}
-    //init_done = 1;
+		//init_done = 1;
 
 		/* Send Gap Reset to FW task */
 		status = (at_ble_status_t)gapm_reset_req_handler();
@@ -489,7 +484,7 @@ at_ble_status_t at_ble_addr_get(at_ble_addr_t *address)
         {
             break;
         }
-        u8Status = (at_ble_status_t)gapm_get_dev_config_cmd_handler(AT_BLE_DEVICE_ADDRESS, (void *)address);
+        u8Status = gapm_get_dev_config_cmd_handler(AT_BLE_DEVICE_ADDRESS, (void *)address);
         address->type = device.config.address.type;
     }
     while (0);
@@ -554,7 +549,7 @@ at_ble_status_t at_ble_set_dev_config(at_ble_dev_config_t *config)
                    "\tGATT Start Handle: %04X\r\n"
                    "\tMTU              : %04X\r\n", config->role, config->renew_dur, config->address.type,
                    att, config->gap_start_hdl, config->gatt_start_hdl, config->max_mtu);
-        status = (at_ble_status_t)gapm_set_dev_config_cmd_handler(config->role, config->renew_dur, &(config->address.addr[0]),
+        status = gapm_set_dev_config_cmd_handler(config->role, config->renew_dur, &(config->address.addr[0]),
                  &config->irk[0], config->address.type, att, config->gap_start_hdl,
                  config->gatt_start_hdl, config->max_mtu);
         config->address.type = u8AddrType;
@@ -575,7 +570,7 @@ at_ble_status_t at_ble_set_channel_map(at_ble_channel_map_t *map)
         {
             break;
         }
-        status = (at_ble_status_t)gapm_set_channel_map_cmd_handler(&(map->map[0]));
+        status = gapm_set_channel_map_cmd_handler(&(map->map[0]));
     }
     while (0);
     FN_OUT(status);
@@ -635,11 +630,14 @@ at_ble_status_t at_ble_set_adv_channel_Map(at_ble_adv_channel_map_t ch)
 {
     at_ble_status_t u8Status = AT_BLE_SUCCESS;
     FN_IN();
-    switch (ch)
+    switch ((uint8_t)ch)
     {
     case AT_BLE_ADV_CHNL_37_EN:
     case AT_BLE_ADV_CHNL_38_EN:
     case AT_BLE_ADV_CHNL_39_EN:
+	case (AT_BLE_ADV_CHNL_37_EN | AT_BLE_ADV_CHNL_38_EN):
+    case (AT_BLE_ADV_CHNL_37_EN | AT_BLE_ADV_CHNL_39_EN):
+    case (AT_BLE_ADV_CHNL_38_EN | AT_BLE_ADV_CHNL_39_EN):
     case AT_BLE_ADV_ALL_CHNLS_EN:
         device.u8AdvChnlMap = ch;
         break;
@@ -674,7 +672,7 @@ at_ble_status_t at_ble_adv_start(at_ble_adv_type_t type, at_ble_adv_mode_t mode,
                 || ((type == AT_BLE_ADV_TYPE_UNDIRECTED) && (interval < AT_BLE_ADV_INTERVAL_MIN))
                 || ((interval < AT_BLE_ADV_NONCON_INTERVAL_MIN) &&
                     ((type >= AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED)))
-                || ((type == AT_BLE_ADV_TYPE_DIRECTED) && (peer_addr->addr == NULL)))
+                || ((type == AT_BLE_ADV_TYPE_DIRECTED) && (peer_addr == NULL)))
         {
             status = AT_BLE_INVALID_PARAM;
             break;
@@ -719,7 +717,7 @@ at_ble_status_t at_ble_adv_start(at_ble_adv_type_t type, at_ble_adv_mode_t mode,
             adv_type = GAPM_ADV_NON_CONN;
             break;
         }
-        status = (at_ble_status_t)gapm_start_adv_cmd_handler(adv_type, gap_addr_type,
+        status = gapm_start_adv_cmd_handler(adv_type, gap_addr_type,
                                             (uint16_t)AT_RENEW_DUR_VAL_MIN, peer_addr_type, (uint8_t *)(peer_addr == NULL ? NULL : & (peer_addr->addr)),
                                             interval, interval, ((device.u8AdvChnlMap == 0) ? ((uint8_t)AT_BLE_ADV_ALL_CHNLS_EN) : ((uint8_t)device.u8AdvChnlMap)), mode, filtered,
                                             device.advLen, device.ADVData, scan_rsp_len, device.SrData, ke_timeout, disable_randomness);
@@ -890,7 +888,7 @@ at_ble_status_t at_ble_disconnect(at_ble_handle_t handle, at_ble_disconnect_reas
 {
     at_ble_status_t status = AT_BLE_SUCCESS;
     FN_IN();
-    status = (at_ble_status_t)gapc_disconnect_cmd_handler(reason, handle);
+    status = gapc_disconnect_cmd_handler(reason, handle);
     internal_conn_flush(handle);
     FN_OUT(status);
     return status;
@@ -910,7 +908,7 @@ at_ble_status_t at_ble_whitelist_add(at_ble_addr_t *address)
             PRINT_ERR("0x%02X\n", status);
             break;
         }
-        status = (at_ble_status_t)gapm_white_list_mgm_cmd(GAPM_ADD_DEV_IN_WLIST, address->type, address->addr);
+        status = gapm_white_list_mgm_cmd(GAPM_ADD_DEV_IN_WLIST, address->type, address->addr);
     }
     while (0);
     FN_OUT(status);
@@ -929,7 +927,7 @@ at_ble_status_t at_ble_whitelist_remove(at_ble_addr_t *address)
             status = AT_BLE_INVALID_PARAM;
             break;
         }
-        status = (at_ble_status_t)gapm_white_list_mgm_cmd(GAPM_RMV_DEV_FRM_WLIST, address->type, address->addr);
+        status = gapm_white_list_mgm_cmd(GAPM_RMV_DEV_FRM_WLIST, address->type, address->addr);
     }
     while (0);
     ASSERT_PRINT_ERR(AT_BLE_SUCCESS != status, "Status : 0x%02X\n", status);
@@ -940,7 +938,7 @@ at_ble_status_t at_ble_whitelist_clear(void)
 {
     at_ble_status_t status = AT_BLE_SUCCESS;
     FN_IN();
-    status = (at_ble_status_t)gapm_white_list_mgm_cmd(GAPM_CLEAR_WLIST, 0, NULL);
+    status = gapm_white_list_mgm_cmd(GAPM_CLEAR_WLIST, 0, NULL);
     ASSERT_PRINT_ERR(AT_BLE_SUCCESS != status, "Status : 0x%02X\n", status);
     FN_OUT(status);
     return status;
@@ -956,7 +954,7 @@ at_ble_status_t at_ble_get_whitelist_size(uint8_t *size)
             status = AT_BLE_INVALID_PARAM;
             break;
         }
-        status = (at_ble_status_t)gapm_white_list_mgm_cmd(GAPM_GET_WLIST_SIZE, 0, size);
+        status = gapm_white_list_mgm_cmd(GAPM_GET_WLIST_SIZE, 0, size);
     }
     while (0);
     ASSERT_PRINT_ERR(AT_BLE_SUCCESS != status, "Status : 0x%02X\n", status);
@@ -1060,7 +1058,7 @@ at_ble_status_t at_ble_send_sec_config(at_ble_signature_info_t *signature_info,
             PRINT_ERR("Invalid Auth Type %d\r\n", authen);
             break;
         }
-        status = (at_ble_status_t)gapc_connection_cfm_handler((uint8_t *) & (signature_info->stLocalCsrk.key[0]),
+        status = gapc_connection_cfm_handler((uint8_t *) & (signature_info->stLocalCsrk.key[0]),
                                              signature_info->stSignCounter.u32LocalCounter,
                                              (uint8_t *) & (signature_info->stPeerCsrk.key[0]),
                                              signature_info->stSignCounter.u32PeerCounter,
@@ -1093,7 +1091,7 @@ at_ble_status_t at_ble_rx_power_get(at_ble_handle_t conn_handle, int8_t *rx_powe
         {
             break;
         }
-        status = (at_ble_status_t)gapc_get_info_cmd_handler(conn_handle, GAPC_GET_CON_RSSI, (uint8_t *)rx_power);
+        status = gapc_get_info_cmd_handler(conn_handle, GAPC_GET_CON_RSSI, (uint8_t *)rx_power);
         if (*((uint8_t *)rx_power) > 127)
         {
             *((uint8_t *)rx_power) = (*((uint8_t *)rx_power) + 1) & 0xFF;
@@ -1109,7 +1107,7 @@ at_ble_status_t at_ble_tx_power_set(at_ble_tx_power_level_t power)
     at_ble_status_t status = AT_BLE_SUCCESS;
     uint32_t level = (uint32_t) power  & 0x1F;
     FN_IN();
-    status = (at_ble_status_t)dbg_wr_mem_req_handler(PWR_REG_ADDR, (uint8_t *)&level, 4, 32, 0);
+    status = dbg_wr_mem_req_handler(PWR_REG_ADDR, (uint8_t *)&level, 4, 32, 0);
     ASSERT_PRINT_ERR(AT_BLE_SUCCESS != status, "Status : 0x%02X\n", status);
     FN_OUT(status);
     return status;
@@ -1127,9 +1125,9 @@ at_ble_status_t at_ble_tx_power_get(at_ble_tx_power_level_t *power)
 }
 at_ble_status_t at_ble_chip_id_get(uint32_t *chip_id)
 {
-	at_ble_status_t status = AT_BLE_SUCCESS;
-	FN_IN();
-	status = dbg_rd_mem_req_handler(CHIP_ID_REG_ADDR, (uint8_t *)chip_id, 1, 32);
+    at_ble_status_t status = AT_BLE_SUCCESS;
+    FN_IN();
+    status = (at_ble_status_t)dbg_rd_mem_req_handler(CHIP_ID_REG_ADDR, (uint8_t *)chip_id, 1, 32);
     FN_OUT(status);
     return status;
 }
@@ -1137,7 +1135,7 @@ at_ble_status_t read_32_from_BTLC1000(uint32_t address, uint32_t *value)
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
 	FN_IN();
-	status = dbg_rd_mem_req_handler(address, (uint8_t *)value, 1, 32);
+	status = (at_ble_status_t)dbg_rd_mem_req_handler(address, (uint8_t *)value, 1, 32);
 	FN_OUT(status);
 	return status;
 }
@@ -1155,6 +1153,12 @@ at_ble_status_t at_ble_firmware_version_get(uint32_t *fw_version)
 	FN_OUT(status);
 	return status;
 }
+
+at_ble_status_t at_ble_ll_reset(void)
+{
+	return gapm_reset_req_handler();	
+}
+
 /* utility functions, might be removed later*/
 uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type)
 {

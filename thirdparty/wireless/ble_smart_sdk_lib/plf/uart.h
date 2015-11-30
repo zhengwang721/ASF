@@ -66,6 +66,66 @@ enum uart_status_code {
 	UART_STATUS_ERR_GPIO_NOT_AVAILABLE,
 };
 
+#define UART_CALLBACK_MODE	true
+#if UART_CALLBACK_MODE == true
+
+#ifdef CHIPVERSION_B0
+	#define UART0_RX_VECTOR_TABLE_INDEX		16
+	#define UART0_TX_VECTOR_TABLE_INDEX		17
+	#define UART1_RX_VECTOR_TABLE_INDEX		18
+	#define UART1_TX_VECTOR_TABLE_INDEX		19
+#else
+	#define UART0_RX_VECTOR_TABLE_INDEX		16
+	#define UART0_TX_VECTOR_TABLE_INDEX		17
+	#define UART1_RX_VECTOR_TABLE_INDEX		18
+	#define UART1_TX_VECTOR_TABLE_INDEX		19
+#endif	//CHIPVERSION_B0
+
+/** Type definition for an GPIO/PORT pin interrupt module callback function. */
+typedef void (*uartint_callback_t)(void);
+
+/**
+ * \brief UART Transmit Callback enum
+ *
+ * Callbacks for UART callback driver.
+ *
+ * \note These callbacks will be called when the corresponding is .
+ *	interrupt is enabled and has pending status.
+ */
+enum uart_tx_callback {
+	/** Callback for buffer transmitted */
+	UART_CALLBACK_TX_FIFO_NOT_FULL,
+#  if !defined(__DOXYGEN__)
+	/** Number of available callbacks. */
+	UART_TX_CALLBACK_N,
+#  endif
+};
+
+/**
+ * \brief UART Receive Callback enum
+ *
+ * Callbacks for UART callback driver.
+ * UART RX FIFO size is 8 bytes. You can register for required amount
+ * data received into the receive FIFO.
+ *
+ * \note These callbacks will be called when the corresponding is .
+ *	interrupt is enabled and has pending status.
+ */
+enum uart_rx_callback {
+	/** Callback for Receive FiFo not empty */
+	UART_CALLBACK_RX_FIFO_NOT_EMPTY,
+	/** Callback for Receive FiFo Quarter full */
+	UART_CALLBACK_RX_FIFO_QUARTER_FULL,
+	/** Callback for Receive FiFo Half full */
+	UART_CALLBACK_RX_FIFO_HALF_FULL,
+	/** Callback for Receive FiFo Three Quarter full */
+	UART_CALLBACK_RX_FIFO_THREE_QUARTER_FULL,
+#  if !defined(__DOXYGEN__)
+	/** Number of available callbacks. */
+	UART_RX_CALLBACK_N,
+#  endif
+};
+#  endif
 /** \brief UART Core index
  *
  * Some version of chip has multiple UART modules.
@@ -191,7 +251,7 @@ enum uart_status_code uart_read_wait(enum uart_hw_module module, uint8_t *const 
 * This blocking function will transmit a block of \c length characters
 * via the UART.
 *
-* \note Using this function in combination with the interrupt (\c _job) functions is
+* \note Using this function in combination with the interrupt functions is
 *       not recommended as it has no functionality to check if there is an
 *       ongoing interrupt driven operation running or not.
 *
@@ -210,7 +270,7 @@ enum uart_status_code uart_write_buffer_wait(enum uart_hw_module module, const u
  * This blocking function will receive a block of \c length characters
  * via the UART.
  *
- * \note Using this function in combination with the interrupt (\c *_job)
+ * \note Using this function in combination with the interrupt 
  *       functions is not recommended as it has no functionality to check if
  *       there is an ongoing interrupt driven operation running or not.
  *
@@ -230,7 +290,7 @@ enum uart_status_code uart_read_buffer_wait(enum uart_hw_module module, uint8_t 
  * This blocking function will send a block of characters
  * via the UART.
  *
- * \note Using this function in combination with the interrupt (\c *_job)
+ * \note Using this function in combination with the interrupt 
  *       functions is not recommended as it has no functionality to check if
  *       there is an ongoing interrupt driven operation running or not.
  *
@@ -242,6 +302,49 @@ enum uart_status_code uart_read_buffer_wait(enum uart_hw_module module, uint8_t 
  */
  void uart_printf(enum uart_hw_module module, char* format, ...);
 
+/**
+* \brief Registers a callback function for UART Receive functionality
+*
+* This blocking register a callback function when we receive certain amount of data
+* is received into the RX FIFO.
+*
+* \param[in]  module  			enumeration UART hw module
+* \param[in]  callback_num  	\ref uart_rx_callback for various options
+* \param[in]	callback		Callback function of type \ref uartint_callback_t
+*
+* \return Status of the operation.
+* \retval UART_STATUS_OK         			If the operation was completed
+*	\retval	UART_STATUS_ERR_INVALID_ARG	For Invalid argument
+*/
+enum uart_status_code uart_register_receive_callback(enum uart_hw_module module, enum uart_rx_callback callback_num,uartint_callback_t callback);
+
+/**
+* \brief Enables the callback feature for the requested callback type.
+*
+* This function enables the interrupt for the requested callback type.
+*
+* \param[in]  module  		enumeration UART hw module
+* \param[in]  callback_num  \ref uart_rx_callback for various options
+*
+* \return Status of the operation.
+* \retval UART_STATUS_OK         If the operation was completed
+*	\retval	UART_STATUS_ERR_INVALID_ARG	For Invalid argument
+*/
+enum uart_status_code uart_enable_receive_callback(enum uart_hw_module module, enum uart_rx_callback callback_num);
+
+/**
+* \brief Disables the callback feature for the requested callback type.
+*
+* This function disables the interrupt for the requested callback type.
+*
+* \param[in]  module  		enumeration UART hw module
+* \param[in]  callback_num  \ref uart_rx_callback for various options
+*
+* \return Status of the operation.
+* \retval UART_STATUS_OK         If the operation was completed
+*	\retval	UART_STATUS_ERR_INVALID_ARG	For Invalid argument
+*/
+enum uart_status_code uart_disable_receive_callback(enum uart_hw_module module, enum uart_rx_callback callback_num);
 /** @}*/
 
 #ifdef __cplusplus

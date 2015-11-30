@@ -32,7 +32,7 @@ at_ble_status_t dbg_le_set_bd_addr_req_handler(uint8_t *addr)
   * @return @ref AT_BLE_SUCCESS operation completed successfully
   * @return @ref AT_BLE_FAILURE Generic error.
   */
-uint8_t dbg_wr_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8Size, uint8_t u8WriteMode, uint8_t bDisWait)
+at_ble_status_t dbg_wr_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8Size, uint8_t u8WriteMode, uint8_t bDisWait)
 {
     uint8_t u8Status = 0;
     INTERFACE_MSG_INIT(DBG_WR_MEM_REQ, TASK_DBG);
@@ -52,7 +52,7 @@ uint8_t dbg_wr_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8
         break;
     }
     INTERFACE_DONE();
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
 /**@brief Read data chunk from specific memory address
@@ -65,7 +65,7 @@ uint8_t dbg_wr_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8
   * @return @ref AT_BLE_SUCCESS operation completed successfully
   * @return @ref AT_BLE_FAILURE Generic error.
   */
-uint8_t dbg_rd_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8Size, uint8_t u8ReadMode)
+at_ble_status_t dbg_rd_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8Size, uint8_t u8ReadMode)
 {
     uint8_t u8Status = 0;
     uint8_t u8DataSize = 0;
@@ -90,5 +90,5 @@ uint8_t dbg_rd_mem_req_handler(uint32_t u32MemAddr, uint8_t *pu8Data, uint8_t u8
         INTERFACE_UNPACK_BLOCK(pu8Data, u8Size * 4);
 	}
     INTERFACE_DONE();
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }

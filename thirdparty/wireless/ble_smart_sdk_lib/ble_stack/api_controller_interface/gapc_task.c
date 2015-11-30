@@ -217,7 +217,7 @@ at_ble_events_t gapc_cmp_evt(uint16_t src, uint8_t *data, void *params)
     return evt_num;
 }
 
-uint8_t gapc_connection_cfm_handler(uint8_t *lcsrk, uint32_t local_signcntr,
+at_ble_status_t gapc_connection_cfm_handler(uint8_t *lcsrk, uint32_t local_signcntr,
                                     uint8_t *rcsrk, uint32_t remote_signcntr,
                                     uint8_t auth, uint8_t service_enabled, uint16_t handle)
 {
@@ -232,7 +232,7 @@ uint8_t gapc_connection_cfm_handler(uint8_t *lcsrk, uint32_t local_signcntr,
     INTERFACE_PACK_ARG_UINT8(0); // pading
     INTERFACE_SEND_NO_WAIT();
     INTERFACE_DONE();
-    return (uint8_t)AT_BLE_SUCCESS;
+    return AT_BLE_SUCCESS;
 }
 
 void gapc_con_req_ind(uint8_t *data)
@@ -269,14 +269,14 @@ void gapc_con_req_ind(uint8_t *data)
                                 0, gstrConnData[index].conHandle);
 }
 
-uint8_t gapc_disconnect_cmd_handler(uint8_t reason, uint16_t handle)
+at_ble_status_t gapc_disconnect_cmd_handler(uint8_t reason, uint16_t handle)
 {
     INTERFACE_MSG_INIT(GAPC_DISCONNECT_CMD,  KE_BUILD_ID(TASK_GAPC, handle));
     INTERFACE_PACK_ARG_UINT8(GAPC_DISCONNECT);
     INTERFACE_PACK_ARG_UINT8(reason);
     INTERFACE_SEND_NO_WAIT();
     INTERFACE_DONE();
-    return (uint8_t)AT_BLE_SUCCESS;
+    return AT_BLE_SUCCESS;
 }
 
 void gapc_disconnect_ind(uint8_t *data, at_ble_disconnected_t *param)
@@ -428,7 +428,7 @@ static void gapc_key_exch(uint8_t u8Req, uint16_t ConHdl)
     INTERFACE_DONE();
 }
 
-uint8_t gapc_bond_req_ind(uint16_t src, uint8_t *data, void *param)
+at_ble_events_t gapc_bond_req_ind(uint16_t src, uint8_t *data, void *param)
 {
     uint8_t u8Req , pair_data;
     uint8_t evt_num = AT_BLE_UNDEFINED_EVENT;
@@ -479,7 +479,7 @@ uint8_t gapc_bond_req_ind(uint16_t src, uint8_t *data, void *param)
     }
     break;
     }
-    return evt_num;
+    return (at_ble_events_t)evt_num;
 }
 
 /*In case of SLAVE role*/
@@ -718,7 +718,7 @@ uint8_t gapc_sign_counter_ind_handler(uint16_t src, uint8_t *data, at_ble_sign_c
     return (uint8_t)AT_BLE_SUCCESS;
 }
 
-uint8_t gapc_get_info_cmd_handler(uint16_t conn_handle, uint8_t operation, uint8_t *param)
+at_ble_status_t gapc_get_info_cmd_handler(uint16_t conn_handle, uint8_t operation, uint8_t *param)
 {
     uint8_t u8Operation = 0, u8Status = 0;
 
@@ -749,7 +749,7 @@ uint8_t gapc_get_info_cmd_handler(uint16_t conn_handle, uint8_t operation, uint8
         INTERFACE_DONE();
         break;
     }
-    return u8Status;
+    return (at_ble_status_t)u8Status;
 }
 
 void gapc_peer_att_info_ind_handler(uint16_t src, uint8_t *data, at_ble_peer_att_info_ind_t *param)
