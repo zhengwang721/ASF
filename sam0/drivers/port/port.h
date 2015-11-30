@@ -761,8 +761,9 @@ static inline enum status_code port_input_event_set_config(
  *	</tr>
  *	<tr>
  *		<td>42113E</td>
- *		<td>11/2015</td>
- *		<td>Added input event feature and support for SAM L21/L22, SAM C21, and SAM DA1</td>
+ *		<td>12/2015</td>
+ *		<td>Added input event feature.
+ *			Added support for SAM L21/L22, SAM C21, SAM D09, and SAM DA1.</td>
  *	</tr>
  *	<tr>
  *		<td>42113D</td>
