@@ -37,6 +37,7 @@
 		<build type="define" name="SUPPORT_OQPSK" value =""/>
 		<build type="define" name="SUPPORT_OFDM" value =""/>
 		<build type="define" name="SUPPORT_FSK" value =""/>
-		<build type="define" name="RF215V1" value =""/>
+		<build type="define" name="RF215v3" value =""/>
+		<build type="define" name="DIRECT_MODULATION" value=""/>
 	</module>
 </asf>
