@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief This module contains SAML21 BSP APIs declarations.
+ * \brief This module contains SAML22 BSP APIs declarations.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
