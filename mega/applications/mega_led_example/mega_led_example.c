@@ -65,6 +65,7 @@
  *
  * This application has been tested on following boards:
  * - ATmega328p Xplained Mini
+ * - ATmega328pb Xplained Mini
  *
  * \section appdoc_mega_led_app_usage Usage
  * The application uses button to control the LED, 
