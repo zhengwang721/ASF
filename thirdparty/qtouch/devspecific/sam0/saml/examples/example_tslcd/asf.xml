@@ -1,0 +1,29 @@
+<asf xmlversion="1.0">
+	<module type="application" id="thirdparty.qtouch.devspecific.sam0.saml.examples.example_tslcd" caption="SAML22 TSLCD Example">
+		<info type="description" value="summary">
+		SAML22 is running with QTouch library enabled.
+		</info>
+		<build type="c-source" value="main.c"/>
+		<build type="include-path" value="."/>
+		<build type="c-source" value="qtouch/touch.c"/>
+		<build type="header-file" value="qtouch/touch.h"/>
+		<build type="header-file" value="qtouch/QDebugSettings.h"/>
+		<build type="include-path" value="qtouch/"/>
+		<build type="c-source" value="qdebug/BitBangSPI_Master.c"/>
+		<build type="header-file" value="qdebug/BitBangSPI_Master.h"/>
+		<build type="c-source" value="qdebug/QDebug_samd.c"/>
+		<build type="header-file" value="qdebug/QDebug_samd.h"/>
+		<build type="c-source" value="qdebug/QDebugTransport.c"/>
+		<build type="header-file" value="qdebug/QDebugTransport.h"/>
+		<build type="include-path" value="qdebug/"/>
+		<require idref="sam0.drivers.rtc"/>
+		<require idref="sam0.drivers.slcd"/>
+		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="common2.services.delay"/>
+		<require idref="thirdparty.qtouch.devspecific.sam0.saml"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
+		<device-support value="saml22"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

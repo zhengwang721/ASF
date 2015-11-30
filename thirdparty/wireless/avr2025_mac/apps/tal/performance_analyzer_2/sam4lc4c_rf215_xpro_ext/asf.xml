@@ -19,7 +19,6 @@
 
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
-		
 		<require idref="board.sam4l_xplained_pro"/>
 		
 		<generator value="doxygen"/>
@@ -29,6 +28,7 @@
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+        
 		<device-support value="atsam4lc4c"/>
 	</project>
 </asf>

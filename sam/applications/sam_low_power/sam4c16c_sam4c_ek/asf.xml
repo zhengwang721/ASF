@@ -14,7 +14,7 @@
 		<build type="c-source" value="low_power_board.c"/>
 
 		<!-- Device support -->
-		<device-support value="atsam4c16c_0"/>
+		<device-support value="atsam4c16c:0"/>
 
 		<!-- Required modules -->
 		<require idref="sam.drivers.pmc"/>

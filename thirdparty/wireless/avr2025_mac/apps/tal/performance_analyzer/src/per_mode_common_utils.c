@@ -166,7 +166,8 @@ void config_per_test_parameters(void)
 #if (TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2)
 	/* Disable antenna diversity by default. */
 	curr_trx_config_params.antenna_diversity
-		= default_trx_config_params.antenna_diversity = ENABLE_ANTENNA_DIVERSITY;
+		= default_trx_config_params.antenna_diversity
+				= ENABLE_ANTENNA_DIVERSITY;
 	curr_trx_config_params.antenna_selected
 		= default_trx_config_params.antenna_selected
 				= ANT_SELECTED;
@@ -175,9 +176,10 @@ void config_per_test_parameters(void)
 	 * config parameters to their defaults */
 	/* Disable antenna diversity by default */
 	/* Enable A1/X2 */
-	tal_ant_div_config(ENABLE_ANTENNA_DIVERSITY, ANT_SELECTED); /* Enable A1/X2
-                                                       **/
-#endif                                                      
+	tal_ant_div_config(ENABLE_ANTENNA_DIVERSITY, ANT_SELECTED); /* Enable
+	                                                            * A1/X2
+	                                                            **/
+#endif
 #endif
 
 #if (TAL_TYPE != AT86RF230B)
@@ -265,7 +267,8 @@ void config_per_test_parameters(void)
 #if (TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2)
 		curr_trx_config_params.antenna_diversity_on_peer
 			= default_trx_config_params.
-				antenna_diversity_on_peer = ENABLE_ANTENNA_DIVERSITY;
+				antenna_diversity_on_peer
+					= ENABLE_ANTENNA_DIVERSITY;
 		curr_trx_config_params.antenna_selected_on_peer
 			= default_trx_config_params.
 				antenna_selected_on_peer = ANT_SELECTED;
@@ -296,7 +299,7 @@ void pktstream_test(uint16_t gap_time, uint16_t timeout, bool start_stop,
 	/*  Send the Packet Stream Start Confirm in case of Receptor before
 	 * beginning
 	 *  packet streaming.Serial Handler will take care in sending the
-	 *confirmation
+	 * confirmation
 	 *   over the air to the Host*/
 	if ((node_info.main_state == PER_TEST_RECEPTOR)) {
 		serial_data_handler();
@@ -329,7 +332,7 @@ void pktstream_test(uint16_t gap_time, uint16_t timeout, bool start_stop,
 		}
 	} else {
 		/*stop packet streaming once the current packet transmission is
-		 *completed*/
+		 * completed*/
 		pkt_stream_stop = true;
 		sw_timer_stop(T_APP_TIMER);
 		op_mode = TX_OP_MODE;
@@ -412,6 +415,7 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 	*frame_ptr = (uint8_t)rand();
 
 	/* Set the FCF. */
+
 	/* Reserved frame type so that other apps doesnot receive and process
 	 * this data */
 	fcf |= 0x04 | FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR) |
@@ -592,7 +596,7 @@ void start_cw_transmission(uint8_t tx_mode, uint16_t tmr_val)
 		case CW_MODE: /* CW mode*/
 		{
 			/* In CW_MODE the parameter random_content is obsolete.
-			 **/
+			**/
 			tfa_continuous_tx_start(CW_MODE, false);
 		}
 		break;
