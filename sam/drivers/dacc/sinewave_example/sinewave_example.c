@@ -376,10 +376,10 @@ int main(void)
 	 * startup time   - 0x10 (1024 dacc clocks)
 	 */
 #if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
-#if !(SAM4E)
-	dacc_set_timing(DACC_BASE, 0x08, 0, 0x10);
-#else
+#if (SAM4E)
 	dacc_set_timing(DACC_BASE,0, 0x10);
+#else
+	dacc_set_timing(DACC_BASE, 0x08, 0, 0x10);
 #endif
 
 	/* Disable TAG and select output channel DACC_CHANNEL */
