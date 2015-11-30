@@ -69,7 +69,7 @@ extern "C" {
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM DA0/DA1
+ *  - Atmel | SMART SAM DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_clock_prerequisites
@@ -1452,13 +1452,13 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  *	<tr>
  *		<td>42119E</td>
- *		<td>11/2015</td>
+ *		<td>12/2015</td>
  *		<td>Added support for SAM DA1</td>
  *	</tr>
  *	<tr>

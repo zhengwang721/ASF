@@ -11,7 +11,7 @@
 			<build type="include-path" value="."/>
 			<build type="c-source" value="main.c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
-			<device-support value="atsam4cp16b_0"/>
+			<device-support value="atsam4cp16b:0"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.components.display.c42364a"/>
@@ -56,7 +56,7 @@
 			<build type="include-path" value="."/>
 			<build type="c-source" value="main.c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
-			<device-support value="atsam4cmp16c_0"/>
+			<device-support value="atsam4cmp16c:0"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.services.flash"/>
@@ -78,7 +78,7 @@
 			<build type="include-path" value="."/>
 			<build type="c-source" value="main.c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
-			<device-support value="atsam4cms16c_0"/>
+			<device-support value="atsam4cms16c:0"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.services.flash"/>
@@ -100,7 +100,7 @@
 			<build type="include-path" value="."/>
 			<build type="c-source" value="main.c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
-			<device-support value="atsam4c16c_0"/>
+			<device-support value="atsam4c16c:0"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.services.flash"/>

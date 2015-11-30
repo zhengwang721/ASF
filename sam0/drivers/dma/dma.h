@@ -849,13 +849,13 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *
  * <table>
  *    <tr>
- *        <th>Doc. Rev.</td>
- *        <th>Date</td>
- *        <th>Comments</td>
+ *        <th>Doc. Rev.</th>
+ *        <th>Date</th>
+ *        <th>Comments</th>
  *    </tr>
  *    <tr>
  *        <td>42257C</td>
- *        <td>10/2015</td>
+ *        <td>12/2015</td>
  *        <td>Added SAM L21/L22, SAM C21, and SAM DA1 support</td>
  *    </tr>
  *    <tr>
