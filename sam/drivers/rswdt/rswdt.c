@@ -82,7 +82,7 @@ extern "C" {
  * \param ul_us The desired timeout period (in us).
  * \param ul_sclk The slow clock on board (in Hz).
  *
- * \return If the desired period is beyond the watchdog period, this function
+ * \return If the desired period is beyond the reinforced safety watchdog period, this function
  * returns RSWDT_INVALID_ARGUMENT. Otherwise it returns valid value.
  */
 uint32_t rswdt_get_timeout_value(uint32_t ul_us, uint32_t ul_sclk)
@@ -105,7 +105,7 @@ uint32_t rswdt_get_timeout_value(uint32_t ul_us, uint32_t ul_sclk)
  * \param p_rswdt Pointer to a RSWDT instance.
  * \param ul_mode Bitmask of reinforced safety watchdog timer mode.
  * \param us_counter The value loaded in the 12-bit reinforced safety Watchdog Counter.
- * \param us_delta The permitted range for reloading the reinforced safety Watchdog Timer.
+ * \param us_delta The permitted range for reloading the Reinforced Safety Watchdog Timer.
  */
 void rswdt_init(Rswdt *p_rswdt, uint32_t ul_mode, uint16_t us_counter,
 		uint16_t us_delta)

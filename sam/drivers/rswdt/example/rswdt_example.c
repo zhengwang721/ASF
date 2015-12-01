@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Watchdog Timer (WDT) example for SAM.
+ * \brief Reinforced Safety Watchdog Timer (RSWDT) example for SAM.
  *
  * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
@@ -42,12 +42,12 @@
  */
 
 /**
- * \mainpage Watchdog Timer Example
+ * \mainpage Reinforced Safety Watchdog Timer Example
  *
  * \section Purpose
  *
  * This example uses a push button event to simulate a deadlock in program so
- * as to demonstrate how watchdog timer works.
+ * as to demonstrate how reinforced safety watchdog timer works.
  *
  * \section Requirements
  *
@@ -56,10 +56,10 @@
  * \section Descriptions
  *
  * At first, the example configures the pins of LED and Console UART, enables
- * the watchdog timer, and then prints some information via UART. Before user
- * presses the push button that the information mentions, the LED keeps
- * blinking and the counter of the watchdog timer is restarted before any
- * fault of the watchdog timer occurs (the interrupt in this case).
+ * the reinforced safety watchdog timer, and then prints some information via 
+ * UART. Before user presses the push button that the information mentions, 
+ * the LED keeps blinking and the counter of the watchdog timer is restarted 
+ * before any fault of the watchdog timer occurs (the interrupt in this case).
  * The example enters a deadlock status after user presses the push button
  * and it causes that the counter will not be restarted until a fault
  * occurs (the interrupt). In the interrupt handler, the counter is restarted.
@@ -74,7 +74,7 @@
  * -# Download the program into the evaluation board and run it.
  * -# Upon startup, the application will output the following lines on the UART:
  *    \code
-	-- Watchdog with IRQ Interrupt Example --
+	-- Reinforced Safety Watchdog with IRQ Interrupt Example --
 	-- xxxxxx-xx
 	-- Compiled: xxx xx xxxx xx:xx:xx --
 \endcode
@@ -100,11 +100,11 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/** Watchdog period 3000ms */
+/** Reinforced Safety Watchdog period 3000ms */
 #define RSWDT_PERIOD                        3000
 /** LED blink time 300ms */
 #define BLINK_PERIOD                      300
-/** Watchdog restart 2000ms */
+/** Reinforced Safety Watchdog restart 2000ms */
 #define RSWDT_RESTART_PERIOD                2000
 /** PIO debounce filter parameters 10 Hz*/
 #define PUSHBUTTON_FILTER_GLITCH_VAULE    10
@@ -133,7 +133,7 @@ void SysTick_Handler(void)
 }
 
 /**
- *  \brief Handler for watchdog interrupt.
+ *  \brief Handler for reinforced safety watchdog interrupt.RSWDT and WDT are the same as the interrupt number.
  */
 void WDT_Handler(void)
 {
@@ -143,7 +143,7 @@ void WDT_Handler(void)
 	rswdt_get_status(RSWDT);
 	/* Restart the RSWDT counter. */
 	rswdt_restart(RSWDT);
-	puts("The reinforced reinforced safety safety watchdog timer was restarted.\r");
+	puts("The reinforced safety watchdog timer was restarted.\r");
 }
 
 /**
@@ -209,7 +209,7 @@ static void configure_led(void)
 }
 
 /**
- * \brief Application entry point for WDT example.
+ * \brief Application entry point for RSWDT example.
  *
  * \return Unused (ANSI-C compatibility).
  */
@@ -243,19 +243,19 @@ int main(void)
 			/* Invalid timeout value, error. */
 		}
 	}
-	/* Configure WDT to trigger an interrupt (or reset). */
-	rswdt_mode = RSWDT_MR_WDFIEN |  /* Enable WDT fault interrupt. */
+	/* Configure RSWDT to trigger an interrupt (or reset). */
+	rswdt_mode = RSWDT_MR_WDFIEN |  /* Enable RSWDT fault interrupt. */
 #if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
-			RSWDT_MR_WDRPROC   |  /* WDT fault resets processor only. */
+			RSWDT_MR_WDRPROC   |  /* RSWDT fault resets processor only. */
 #endif
-			RSWDT_MR_WDDBGHLT  |  /* WDT stops in debug state. */
-			RSWDT_MR_WDIDLEHLT;   /* WDT stops in idle state. */
-	/* Initialize WDT with the given parameters. */
+			RSWDT_MR_WDDBGHLT  |  /* RSWDT stops in debug state. */
+			RSWDT_MR_WDIDLEHLT;   /* RSWDT stops in idle state. */
+	/* Initialize RSWDT with the given parameters. */
 	rswdt_init(RSWDT, rswdt_mode, timeout_value, timeout_value);
 	printf("Enable reinforced safety watchdog with %d microseconds period\n\r",
 			(int)rswdt_get_us_timeout_period(RSWDT, BOARD_FREQ_SLCK_XTAL));
 
-	/* Configure and enable WDT interrupt. */
+	/* Configure and enable RSWDT interrupt. */
 	NVIC_DisableIRQ(RSWDT_IRQn);
 	NVIC_ClearPendingIRQ(RSWDT_IRQn);
 	NVIC_SetPriority(RSWDT_IRQn, 0);
@@ -281,7 +281,7 @@ int main(void)
 #endif
 			}
 
-			/* Restart watchdog at the given period. */
+			/* Restart reinforced safety watchdog at the given period. */
 			if ((g_ul_ms_ticks % RSWDT_RESTART_PERIOD) == 0) {
 				rswdt_restart(RSWDT);
 			}
