@@ -506,7 +506,7 @@
 #endif
 
 /** TC Instance MAX ID Number. */
-#if SAMD20E || SAMD21G || SAMD21E || SAMR21
+#if SAMD20E || SAMD20G || SAMD21G || SAMD21E || SAMR21
 #  if SAMD21GXXL
 #    define TC_INST_MAX_ID  7
 #  else

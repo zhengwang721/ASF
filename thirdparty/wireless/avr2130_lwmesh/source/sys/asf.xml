@@ -12,7 +12,7 @@
 		<build type="header-file"   value="inc/sysTimer.h"/>
 		<build type="header-file"   value="inc/sysConfig.h"/>
 		<build type="include-path"  value="inc/"/>
-		<require idref="thirdparty.wireless.common_services.trx_access"/>
+		<require idref="thirdparty.wireless.services.trx_access"/>
 		<require idref="thirdparty.wireless.common_services.common_hw_timer"/>
         <require idref="thirdparty.wireless.common_services.sal"/>
 		<build type="doxygen-entry-point" value="group_lwmesh_sys"/>
