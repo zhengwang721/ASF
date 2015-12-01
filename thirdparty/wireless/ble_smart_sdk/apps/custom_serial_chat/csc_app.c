@@ -61,13 +61,12 @@
 #include "cscs.h"
 #include "ble_utils.h"
 #include "console_serial.h"
-#include "conf_extint.h"
-#include "sio2host.h"  
 
 /* =========================== GLOBALS ============================================================ */
 
-/* Received notification data structure */
-csc_report_ntf_t recv_ntf_info;
+#define APP_STACK_SIZE	(1024)
+
+volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
 /* Data length to be send over the air */
 uint16_t send_length = 0;
@@ -75,16 +74,17 @@ uint16_t send_length = 0;
 /* Buffer data to be send over the air */
 uint8_t send_data[APP_TX_BUF_SIZE];
 
+bool app_exec = true;
+
+
 /* Function used for receive data */
 static void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
 {
 	uint16_t ind = 0;
 
-	DBG_LOG("csc_app_recv_buf / Called");
-
 	if (recv_len){
 		for (ind = 0; ind < recv_len; ind++){
-			sio2host_putchar(recv_data[ind]);
+			DBG_LOG_CONT("%c", recv_data[ind]);
 		}
 		DBG_LOG("\r\n");
 	}
@@ -93,27 +93,24 @@ static void csc_app_recv_buf(uint8_t *recv_data, uint8_t recv_len)
 /* Callback called for new data from remote device */
 static void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info)
 {
-	DBG_LOG("csc_prf_report_ntf_cb / Called");
-	
 	DBG_LOG("\r\n");
+
 	csc_app_recv_buf(report_info->recv_buff, report_info->recv_buff_len);
 }
 
 /* Function used for send data */
 static void csc_app_send_buf(void)
 {
+#if 0
 	uint16_t ind = 0;
 	uint16_t len = 0;
 	uint8_t buff = 0;
 
-	len = sio2host_rx(&buff, 1);
+// mksong		len = sio2host_rx(&buff, 1);
 	if (len){
-
-		DBG_LOG("csc_app_send_buf / Called / len %d", len);
-		
 		for (ind = 0; ind < len; ind++){
 			if(buff != ENTER_BUTTON_PRESS){
-				sio2host_putchar(buff);  
+// mksong					sio2host_putchar(buff);  
 				if(send_length < APP_TX_BUF_SIZE){
 					send_data[send_length++] = buff;
 				}else{
@@ -130,32 +127,36 @@ static void csc_app_send_buf(void)
 			}
 		}
 	}
+#endif
 }
 
-bool app_exec = true;
 int main(void )
 {
+	send_length = 0;
+	memset(send_data, 0, APP_TX_BUF_SIZE);
+	app_exec = true;
+
 	platform_driver_init();
 	acquire_sleep_lock();
 	
-	/* Initialize serial console */
-	sio2host_init();
+	/* Initializing the console  */
+	serial_console_init();
 	
 	DBG_LOG("Initializing Custom Serial Chat Application");
-	
+
 	/* Initialize the buffer address and buffer length based on user input */
 	csc_prf_buf_init(&send_data[0], APP_TX_BUF_SIZE);
 	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
-	
+
 	/* Register the notification handler */
 	notify_recv_ntf_handler(csc_prf_report_ntf_cb);
 
 	/* Capturing the events  */
 	while(app_exec){
 		ble_event_task();
-		csc_app_send_buf();	
+//		csc_app_send_buf();	
 	}
 	return 0;
 }
