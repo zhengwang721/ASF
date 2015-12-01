@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<select-by-device id="sam.drivers.rswdt" caption="RSWDT - Reinforced Safety Watchdog Timer">
-		<module type="driver" id="sam.drivers.rswdt#sam4e" caption="RSWDT - Reinforced Safety Watchdog Timer">
+		<module type="driver" id="sam.drivers.rswdt#sam4" caption="RSWDT - Reinforced Safety Watchdog Timer">
 			<info type="description" value="summary">
 				The Reinforced Safety Watchdog Timer can be used to prevent system lock-up if the software becomes trapped in a deadlock. It features a 12-bit down counter that allows a watchdog period of up to 16 seconds (slow clock at 32.768 kHz).
 			</info>
