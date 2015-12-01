@@ -100,7 +100,12 @@ static void configure_uart(void)
 
 int main(void)
 {
-	SysTick->CTRL  &= ~SysTick_CTRL_ENABLE_Msk;
+	/**
+	 * For make this QS work, disable the systick to stop task switch.
+	 * Should not do it if you want the BLE functions.
+	 */
+	SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
 //! [setup_init]
