@@ -558,5 +558,29 @@
 #define LCD_SPI_BACKLIGHT_PIO     PIO_PC19_IDX
 #define	LCD_SPI_BACKLIGHT_FLAGS   (PIO_OUTPUT_1 | PIO_DEFAULT)
 
+
+/** TWI interface for maXTouch XPRO */
+#define MAXTOUCH_XPRO_TWIHS       TWIHS0
+
+#define MAXTOUCH_XPRO_CHG_PIO     PIO_PA2_IDX
+
+/** BNO055 external interrupt pin definition */
+#define PIN_BNO055_EXT_INIERRUPT       {PIO_PD28, PIOD, ID_PIOD, PIO_INPUT, \
+										PIO_DEFAULT | PIO_IT_RISE_EDGE}
+#define PIN_BNO055_EXT_INIERRUPT_MASK  PIO_PD28
+#define PIN_BNO055_EXT_INIERRUPT_PIO   PIOD
+#define PIN_BNO055_EXT_INIERRUPT_ID    ID_PIOD
+#define PIN_BNO055_EXT_INIERRUPT_TYPE  PIO_INPUT
+#define PIN_BNO055_EXT_INIERRUPT_ATTR  (PIO_DEFAULT | PIO_IT_RISE_EDGE)
+#define PIN_BNO055_EXT_INIERRUPT_IRQn  PIOD_IRQn
+
+#define BOARD_BNO055_TWIHS              TWIHS0
+#define BOARD_BNO055_ID_TWIHS        ID_TWIHS0
+
+/** TWIHS ID for simulated EEPROM application to use */
+#define BOARD_AT30TSE_ID_TWIHS         ID_TWIHS0
+/** TWIHS Base for simulated TWI EEPROM application to use */
+#define BOARD_AT30TSE_TWIHS       TWIHS0
+
 /*----------------------------------------------------------------------------*/
 #endif   /* _SAME70_XPLD_H_ */
