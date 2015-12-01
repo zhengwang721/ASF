@@ -61,9 +61,9 @@
  * \section intro Introduction
  * This is the unit test application for the RSWDT driver.
  * It consists of test cases for the following functionality:
- * - Watchdog init
- * - Watchdog restart
- * - Watchdog reset
+ * - Reinforced Safety Watchdog init
+ * - Reinforced Safety Watchdog restart
+ * - Reinforced Safety Watchdog reset
  *
  * \section files Main Files
  * - \ref unit_tests.c
@@ -90,7 +90,7 @@
 //! \name Unit test configuration
 //@{
 /**
- * \def CONF_TEST_WDT
+ * \def CONF_TEST_RSWDT
  * \brief Init reinforced safety watchdog, restart it and trigger it.
  */
 //@}
@@ -102,7 +102,7 @@ static volatile int gs_rswdt_triggered = 0U;
 static volatile uint32_t gs_ul_ms_ticks = 0U;
 
 /**
- * \brief RSWDT interrupt handler.
+ * \brief RSWDT interrupt handler.RSWDT and WDT are the same as the interrupt number.
  */
 void WDT_Handler(void)
 {
@@ -196,9 +196,6 @@ int main(void)
 		while (1) {
 		}
 	}
-
-	/* Disable the watchdog */
-	wdt_disable(WDT);
 
 	/* Define all the test cases */
 	DEFINE_TEST_CASE(rswdt_test, NULL, run_rswdt_test, NULL,

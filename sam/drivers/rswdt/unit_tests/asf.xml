@@ -7,17 +7,7 @@
 			<build type="c-source" value="unit_tests.c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 			<build type="include-path" value="."/>
-			<device-support value="sam3"/>
-			<device-support value="sam4s"/>
 			<device-support value="sam4e"/>
-			<device-support value="sam4n"/>
-			<device-support value="sam4c"/>
-			<device-support value="sam4cm"/>
-			<device-support value="sam4cp"/>
-			<device-support value="samv70"/>
-			<device-support value="samv71"/>
-			<device-support value="same70"/>
-			<device-support value="sams70"/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.rswdt"/>
