@@ -55,11 +55,11 @@ extern "C" {
 /// @endcond
 
 /**
- * \defgroup sam_drivers_wdt_group Reinforced Safety Watchdog Timer (RSWDT)
+ * \defgroup sam_drivers_rswdt_group Reinforced Safety Watchdog Timer (RSWDT)
  *
  * Driver for the RSWDT (Reinforced Safety Watchdog Timer). This driver provides access to the main
  * features of the RSWDT controller.
- * The reinforced safety Watchdog Timer can be used to prevent system lock-up if the software
+ * The Reinforced Safety Watchdog Timer can be used to prevent system lock-up if the software
  * becomes trapped in a deadlock. It features a 12-bit down counter that allows
  * a watchdog period of up to 16 seconds (slow clock at 32.768 kHz). It can
  * generate a general reset or a processor reset only. In addition, it can be
@@ -77,7 +77,7 @@ extern "C" {
  * desired timeout period (in us).
  *
  * \note The value returned by this function can be used by rswdt_init() if it is
- * not WDT_INVALID_ARGUMENT.
+ * not RSWDT_INVALID_ARGUMENT.
  *
  * \param ul_us The desired timeout period (in us).
  * \param ul_sclk The slow clock on board (in Hz).
@@ -104,7 +104,7 @@ uint32_t rswdt_get_timeout_value(uint32_t ul_us, uint32_t ul_sclk)
  *
  * \param p_rswdt Pointer to a RSWDT instance.
  * \param ul_mode Bitmask of reinforced safety watchdog timer mode.
- * \param us_counter The value loaded in the 12-bit reinforced safety Watchdog Counter.
+ * \param us_counter The value loaded in the 12-bit Reinforced Safety Watchdog Counter.
  * \param us_delta The permitted range for reloading the Reinforced Safety Watchdog Timer.
  */
 void rswdt_init(Rswdt *p_rswdt, uint32_t ul_mode, uint16_t us_counter,
@@ -130,11 +130,6 @@ void rswdt_restart(Rswdt *p_rswdt)
 	if (p_rswdt == RSWDT) {
 		p_rswdt->RSWDT_CR = RSWDT_KEY_PASSWORD | RSWDT_CR_WDRSTT;
 	}
-#if (SAM4C || SAM4CM || SAM4CP)
-	else {
-		p_rswdt->WDT_CR = RSWDT_CR_KEY(0xC4u) | RSWDT_CR_WDRSTT;
-	}
-#endif
 }
 
 /**

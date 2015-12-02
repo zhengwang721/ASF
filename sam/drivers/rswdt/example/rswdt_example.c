@@ -245,9 +245,7 @@ int main(void)
 	}
 	/* Configure RSWDT to trigger an interrupt (or reset). */
 	rswdt_mode = RSWDT_MR_WDFIEN |  /* Enable RSWDT fault interrupt. */
-#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 			RSWDT_MR_WDRPROC   |  /* RSWDT fault resets processor only. */
-#endif
 			RSWDT_MR_WDDBGHLT  |  /* RSWDT stops in debug state. */
 			RSWDT_MR_WDIDLEHLT;   /* RSWDT stops in idle state. */
 	/* Initialize RSWDT with the given parameters. */
@@ -274,11 +272,7 @@ int main(void)
 
 			/* Toggle LED at the given period. */
 			if ((g_ul_ms_ticks % BLINK_PERIOD) == 0) {
-#if (SAM4E || SAM4N || SAM4C || SAMG || SAMV70 || SAMV71 || SAME70 || SAMS70)
 				LED_Toggle(LED0);
-#else
-				LED_Toggle(LED0_GPIO);
-#endif
 			}
 
 			/* Restart reinforced safety watchdog at the given period. */
