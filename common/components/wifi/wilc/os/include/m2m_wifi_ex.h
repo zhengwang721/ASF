@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -138,6 +135,5 @@ sint8 os_m2m_wifi_set_receive_buffer(void* pvBuffer, uint16 u16BufferLen);
 sint8 os_m2m_wifi_set_control_ifc(uint8 u8IfcId);
 sint8 os_m2m_wifi_send_ethernet_pkt_ifc1(uint8* pu8Packet, uint16 u16PacketSize);
 uint8 os_m2m_wifi_get_sleep_mode(void);
-
 
 #endif /* M2M_WIFI_EX_H_INCLUDED */

@@ -28,7 +28,6 @@
 			<build type="header-file" value="driver/include/m2m_periph.h"/>
 			<build type="header-file" value="driver/include/m2m_types.h"/>
 			<build type="header-file" value="driver/include/m2m_wifi.h"/>
-			<build type="header-file" value="driver/include/wifi_firmware_1000a.h"/>
 			<build type="header-file" value="driver/include/wifi_firmware_1000b.h"/>
 			<build type="c-source" value="driver/source/m2m_hif.c"/>
 			<build type="header-file" value="driver/source/m2m_hif.h"/>
@@ -61,8 +60,8 @@
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
 
-			<build type="c-source" value="netif/source/wifi_netif.c"/>
-			<build type="header-file" value="netif/include/wifi_netif.h"/>
+			<build type="c-source" value="netif/source/wilc_netif.c"/>
+			<build type="header-file" value="netif/include/wilc_netif.h"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_wilc.h"/>
 			<build type="module-config" subtype="path" value="wilc1000_module_config/sam4s"/>
@@ -138,8 +137,8 @@
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
 
-			<build type="c-source" value="netif/source/wifi_netif.c"/>
-			<build type="header-file" value="netif/include/wifi_netif.h"/>
+			<build type="c-source" value="netif/source/wilc_netif.c"/>
+			<build type="header-file" value="netif/include/wilc_netif.h"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_wilc.h"/>
 			<build type="module-config" subtype="path" value="wilc1000_module_config/samg53"/>
@@ -215,8 +214,8 @@
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
 
-			<build type="c-source" value="netif/source/wifi_netif.c"/>
-			<build type="header-file" value="netif/include/wifi_netif.h"/>
+			<build type="c-source" value="netif/source/wilc_netif.c"/>
+			<build type="header-file" value="netif/include/wilc_netif.h"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_wilc.h"/>
 			<build type="module-config" subtype="path" value="wilc1000_module_config/samg55"/>
@@ -307,8 +306,8 @@
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
 
-			<build type="c-source" value="netif/source/wifi_netif.c"/>
-			<build type="header-file" value="netif/include/wifi_netif.h"/>
+			<build type="c-source" value="netif/source/wilc_netif.c"/>
+			<build type="header-file" value="netif/include/wilc_netif.h"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_wilc.h"/>
 			<build type="module-config" subtype="path" value="wilc3000_module_config/sam4s"/>
@@ -388,8 +387,8 @@
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
 
-			<build type="c-source" value="netif/source/wifi_netif.c"/>
-			<build type="header-file" value="netif/include/wifi_netif.h"/>
+			<build type="c-source" value="netif/source/wilc_netif.c"/>
+			<build type="header-file" value="netif/include/wilc_netif.h"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_wilc.h"/>
 			<build type="module-config" subtype="path" value="wilc3000_module_config/samg53"/>
@@ -469,8 +468,8 @@
 			<build type="c-source" value="os/source/net_init.c"/>
 			<build type="c-source" value="os/source/os_hook.c"/>
 
-			<build type="c-source" value="netif/source/wifi_netif.c"/>
-			<build type="header-file" value="netif/include/wifi_netif.h"/>
+			<build type="c-source" value="netif/source/wilc_netif.c"/>
+			<build type="header-file" value="netif/include/wilc_netif.h"/>
 
 			<build type="module-config" subtype="required-header-file" value="conf_wilc.h"/>
 			<build type="module-config" subtype="path" value="wilc3000_module_config/samg55"/>

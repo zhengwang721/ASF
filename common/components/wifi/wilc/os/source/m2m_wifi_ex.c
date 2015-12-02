@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -61,36 +58,41 @@ typedef sint8 (*func_void)(void);
 typedef sint8 (*func_ptru8)(uint8*);
 typedef sint8 (*func_uint8)(uint8);
 typedef sint8 (*func_uint8_uint8)(uint8, uint8);
+
 struct void_params {
 	struct params_dispatch dispatch;
 	func_void fn;
 };
+
 struct ptru8_params {
 	struct params_dispatch dispatch;
 	func_ptru8 fn;
-	uint8 * arg;
+	uint8 *arg;
 };
+
 struct uint_params {
 	struct params_dispatch dispatch;
 	func_uint8 fn;
 	uint32 arg;
 };
+
 struct uint8_uint8_params {
 	struct params_dispatch dispatch;
 	func_uint8_uint8 fn;
 	uint8 arg1;
 	uint8 arg2;
 };
+
 #define OS_WIFI_NOTIFY(p) do { \
-								if ((p)->dispatch.signal_semaphore) { \
-								os_hook_notify();} \
-							} while (0)
+        if ((p)->dispatch.signal_semaphore) { \
+        os_hook_notify();} \
+    } while (0)
 
 #define OS_WIFI_DISPATCH_WAIT(fn,p) do { \
-										(p)->dispatch.retval = M2M_ERR_TIME_OUT; \
-										os_hook_dispatch_wait((fn), &((p)->dispatch),(p)); \
-									} while(0)
-				 					
+        (p)->dispatch.retval = M2M_ERR_TIME_OUT; \
+        os_hook_dispatch_wait((fn), &((p)->dispatch),(p)); \
+    } while(0)
+
 static void os_m2m_wifi_init_imp(void *pv)
 {
 	struct init_params *p = (struct init_params *)pv;
@@ -106,12 +108,9 @@ static void os_m2m_wifi_init_imp(void *pv)
 	
 	/* Init WILC1000 driver. */
 	p->dispatch.retval = m2m_wifi_init(p->init);
-	//vTaskDelay(6000);
-	//m2m_wifi_deinit(NULL);
-	//vTaskDelay(6000);
-	//p->dispatch.retval = m2m_wifi_init(p->init);
+
 	if (M2M_SUCCESS == p->dispatch.retval) {
-		net_add_winc_netif();
+		net_add_wilc_netif();
 		wifi_netif_init = 1;
 	}
 
@@ -125,11 +124,10 @@ sint8 os_m2m_wifi_init(tstrWifiInitParam *param)
 	struct init_params params;
 	params.init = param;
 	params.dispatch.retval = M2M_ERR_TIME_OUT;
-	//hif_msg_t msg;
 
+    /* Initialize the netif thread. */
 	os_hook_init();
 	os_hook_send_start(os_m2m_wifi_init_imp, &params.dispatch, &params);
-	//OS_WIFI_DISPATCH_WAIT(os_m2m_wifi_init_imp, &params);
 	return params.dispatch.retval;
 }
 
@@ -162,7 +160,6 @@ sint8 os_m2m_wifi_connect(char *pcSsid, uint8 u8SsidLen, uint8 u8SecType, void *
 	params.u16Ch = u16Ch;
 	params.dispatch.retval = M2M_ERR_TIME_OUT;
 
-	//os_hook_dispatch_wait(os_m2m_wifi_connect_imp, &params);
 	OS_WIFI_DISPATCH_WAIT(os_m2m_wifi_connect_imp, &params);
 	delay_ms(200);
 	return params.dispatch.retval;
@@ -225,57 +222,16 @@ sint8 m2m_wifi_disable_ap_ex(void)
 	net_set_mode(NET_IF_C, 0);
 	return m2m_wifi_disable_ap();	
 }
-void pending_imp(void * pv);
-void pending_imp(void * pv)
-{
-	
-	struct void_params *p = (struct void_params *)pv;
-
-	p->dispatch.retval = M2M_ERR_FAIL;
-
-	OS_WIFI_NOTIFY(p);
-}
-struct wifi_deinit_params {
-	struct params_dispatch dispatch;
-	void* arg;
-};
-static void os_m2m_wifi_deinit_imp(void *pv)
-{
-	struct wifi_deinit_params *p = (struct wifi_deinit_params *) pv;
-	
-	if (wifi_netif_init) {
-		net_remove_winc_netif();
-		wifi_netif_init = 0;
-	}
-	
-	
-	p->dispatch.retval = m2m_wifi_deinit(p->arg);
-	OS_WIFI_NOTIFY(p);
-}
-sint8 os_m2m_wifi_deinit(void* arg)
-{
-	struct wifi_deinit_params params;
-	params.dispatch.retval = M2M_ERR_TIME_OUT;
-	params.arg = arg;
-	//OS_WIFI_DISPATCH_WAIT(os_m2m_wifi_deinit_imp, &params);
-	os_hook_send_stop(os_m2m_wifi_deinit_imp, &params.dispatch, &params);
-	os_hook_deinit();
-	return params.dispatch.retval;
-}
 
 static void func_void_imp(void * pv)
 {
-	
 	struct void_params *p = (struct void_params *)pv;
 	if (p->fn) {
 		p->dispatch.retval = p->fn();
 		} else {
 		p->dispatch.retval = M2M_ERR_FAIL;
 	}
-	
-	//if (p->dispatch.signal_semaphore) {
-	//	os_hook_notify();
-	//}
+
 	OS_WIFI_NOTIFY(p);
 }
 static void func_uint_imp(void *pv)
@@ -298,10 +254,6 @@ sint8 os_m2m_wifi_download_mode(void)
 	OS_WIFI_DISPATCH_WAIT(func_void_imp, &params);
 	return params.dispatch.retval;
 }
-
-
-
-
 
 sint8 os_m2m_wifi_default_connect(void)
 {
@@ -404,7 +356,6 @@ sint8 os_m2m_wifi_wps(uint8 u8TriggerType, const char* pcPinNumber)
 	OS_WIFI_DISPATCH_WAIT(os_m2m_wifi_wps_imp, &params);
 	return params.dispatch.retval;
 }
-
 
 sint8 os_m2m_wifi_wps_disable(void)
 {
@@ -933,7 +884,6 @@ sint8 os_m2m_wifi_send_ethernet_pkt_ifc1(uint8* pu8Packet, uint16 u16PacketSize)
 	return params.dispatch.retval;
 }
 
-
 uint8 os_m2m_wifi_get_sleep_mode(void)
 {
 	struct void_params params;
@@ -942,6 +892,3 @@ uint8 os_m2m_wifi_get_sleep_mode(void)
 	OS_WIFI_DISPATCH_WAIT(func_void_imp, &params);
 	return params.dispatch.retval;
 }
-
-
-

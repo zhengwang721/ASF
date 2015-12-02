@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -73,17 +70,15 @@ static volatile bool gbConnectedWifi = false;
 static volatile bool gbHostIpByName = false;
 
 /** Server host name. */
-static char server_host_name[] = MAIN_WEATHER_SERVER_NAME;
+static char server_host_name[] = STA_WEATHER_SERVER_NAME;
 
 /** Cities list. */
 static const char *city_list[] = {
-	"New York", 
 	"Paris", 
 	"Rome", 
 	"Berlin", 
 	"Cairo", 
 	"Windhoek", 
-	"Cape Town", 
 	"Chennai", 
 	"Hyderabad", 
 	"Mumbai", 
@@ -323,7 +318,7 @@ void sta_task(void *argument)
 			
 			/* Send weather forecast request. */
 			memset(request, 0, sizeof(request));
-			sprintf((char *)request, "%s%s%s", MAIN_PREFIX_BUFFER, city_list[index], MAIN_POST_BUFFER);
+			sprintf((char *)request, "%s%s%s", STA_PREFIX_BUFFER, city_list[index], STA_POST_BUFFER);
 			index = (index + 1) % (sizeof(city_list) / sizeof (char *));
 			netconn_write(conn, (char *)request, strlen((char *)request), NETCONN_COPY);
 

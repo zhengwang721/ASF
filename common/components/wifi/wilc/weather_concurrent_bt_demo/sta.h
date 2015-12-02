@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -50,26 +47,16 @@ extern "C" {
 #endif
 
 /** Wi-Fi Settings. */
-#define STA_WLAN_SSID                   "DEMO_AP" /* < Destination SSID */
-#define STA_WLAN_AUTH                   M2M_WIFI_SEC_WPA_PSK /* < Security manner */
-#define STA_WLAN_PSK                    "12345678" /* < Password for Destination SSID */
-
-/** Using IP address. */
-#define IPV4_BYTE(val, index)           ((val >> (index * 8)) & 0xFF)
+#define STA_WLAN_SSID                "DEMO_AP" /* < Destination SSID */
+#define STA_WLAN_AUTH                M2M_WIFI_SEC_WPA_PSK /* < Security manner */
+#define STA_WLAN_PSK                 "12345678" /* < Password for Destination SSID */
 
 /** Send buffer of TCP socket. */
-#define MAIN_PREFIX_BUFFER              "GET /data/2.5/weather?q="
-#define MAIN_POST_BUFFER                "&mode=xml&units=metric HTTP/1.1\r\nHost: api.openweathermap.org\r\nAccept: */*\r\n\r\n"
+#define STA_PREFIX_BUFFER            "GET /data/2.5/weather?q="
+#define STA_POST_BUFFER              "&appid=c592e14137c3471fa9627b44f6649db4&mode=xml&units=metric HTTP/1.1\r\nHost: api.openweathermap.org\r\nAccept: */*\r\n\r\n"
 
 /** Weather information provider server. */
-#define MAIN_WEATHER_SERVER_NAME        "openweathermap.org"
-
-/** Receive buffer size. */
-#define MAIN_WIFI_M2M_BUFFER_SIZE       1400
-
-#define MAIN_HEX2ASCII(x) (((x) >= 10) ? (((x) - 10) + 'A') : ((x) + '0'))
-
-#define TEMPERATURE_ABS(a) (((a) > 0) ? (a) : -(a))
+#define STA_WEATHER_SERVER_NAME      "api.openweathermap.org"
 
 void sta_task(void *argument);
 

@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -67,8 +64,8 @@ void net_init(void);
 void net_set_mode(uint32_t net_if, uint32_t mode);
 void net_interface_up(uint32_t net_if);
 void net_interface_down(uint32_t net_if);
-void net_add_winc_netif(void);
+void net_add_wilc_netif(void);
+void net_remove_wilc_netif(void);
 int net_in_tcpip_task(void);
-void net_remove_winc_netif(void);
 
 #endif /* NET_INIT_H_INCLUDED */
