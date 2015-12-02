@@ -92,7 +92,7 @@ extern "C" {
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D09/D10/D11
- *  - Atmel | SMART SAM DAx
+ *  - Atmel | SMART SAM DA1
  * \endif
  *
  * The outline of this documentation is as follows:
@@ -672,9 +672,9 @@ void system_init(void);
  *
  * <table>
  * <tr>
- *      <th>Doc. Rev.</td>
- *      <th>Date</td>
- *      <th>Comments</td>
+ *      <th>Doc. Rev.</th>
+ *      <th>Date</th>
+ *      <th>Comments</th>
  *  </tr>
  * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  <tr>
@@ -686,15 +686,15 @@ void system_init(void);
  * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>42484A</td>
- *      <td>11/2015</td>
+ *      <td>12/2015</td>
  *      <td>Initial document release.</td>
  * </tr>
  * \endif
  * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  <tr>
  *      <td>42120E</td>
- *      <td>11/2015</td>
- *      <td>Added support for SAM DA1</td>
+ *      <td>12/2015</td>
+ *      <td>Added support for SAM DA1 and SAM D09</td>
  * </tr>
  *  <tr>
  *      <td>42120D</td>

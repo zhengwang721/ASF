@@ -62,7 +62,7 @@
 			<info type="gui-flag" value="hidden"/>
 			<build type="asm-source" value="Source/portable/IAR/ARM_CM4F/portasm.s" toolchain="iarewarm"/>
 			<build type="c-source" value="Source/portable/GCC/ARM_CM4F/port.c" toolchain="armgcc"/>
-			<build type="c-source" value="Source/portable/IAR/ARM_CM4F/port_cm0_iar.c" toolchain="iarewarm"/>
+			<build type="c-source" value="Source/portable/IAR/ARM_CM4F/port.c" toolchain="iarewarm"/>
 			<build type="header-file" value="Source/portable/GCC/ARM_CM4F/portmacro.h" toolchain="armgcc"/>
 			<build type="header-file" value="Source/portable/IAR/ARM_CM4F/portmacro.h" toolchain="iarewarm"/>
 			<build type="include-path" value="Source/portable/GCC/ARM_CM4F/" toolchain="armgcc"/>
