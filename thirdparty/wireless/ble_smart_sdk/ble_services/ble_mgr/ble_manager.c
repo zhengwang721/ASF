@@ -1156,16 +1156,9 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 
 	case AT_PLATFORM_EVENT:
 	{
-		uint16_t plf_event_type;
-		uint16_t plf_event_data_len;
-		uint8_t	plf_event_data[16];		
-		DBG_LOG_DEV("AT_PLATFORM_EVENT");
-		platform_event_get(&plf_event_type,plf_event_data,&plf_event_data_len);
-		if(plf_event_type == ((TIMER_EXPIRED_CALLBACK_TYPE_DETECT << 8)| USER_TIMER_CALLBACK)) {
-			if( ble_user_event_cb )
-			{
-				ble_user_event_cb();
-			}
+		if( ble_user_event_cb )
+		{
+			ble_user_event_cb();
 		}
 	}
 	break;

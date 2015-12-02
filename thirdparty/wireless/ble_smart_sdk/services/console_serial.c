@@ -61,7 +61,7 @@ int getchar_b11()
 	uint8_t string_input[1];
 	read_complete_flag = false;
 	
-	uart_register_callback(&uart_instance, uart_read_complete_callback,UART_RX_COMPLETE);
+	uart_register_callback(&uart_instance, uart_read_complete_callback, UART_RX_COMPLETE);
 	uart_enable_callback(&uart_instance, UART_RX_COMPLETE);
 	uart_read_buffer_job(&uart_instance, string_input, sizeof(string_input));
 	
@@ -69,6 +69,12 @@ int getchar_b11()
 	
 	return string_input[0];
 	
+}
+
+void getchar_aysnc(uart_callback_t callback_func, uint8_t * input) {
+	uart_register_callback(&uart_instance, callback_func, UART_RX_COMPLETE);
+	uart_enable_callback(&uart_instance, UART_RX_COMPLETE);
+	uart_read_buffer_job(&uart_instance, input, 1);
 }
 
 /*

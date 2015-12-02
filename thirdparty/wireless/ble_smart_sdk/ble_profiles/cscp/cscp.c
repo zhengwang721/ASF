@@ -224,7 +224,8 @@ void csc_prf_notification_handler(at_ble_notification_recieved_t *params)
 	memcpy((uint8_t *)&notif, params, sizeof(at_ble_notification_recieved_t));
 	ntf_info.conn_handle = notif.conn_handle;
 	ntf_info.recv_buff_len = notif.char_len;
-	ntf_info.recv_buff = &notif.char_value[0];
+	ntf_info.recv_buff = notif.char_value;
+	
 	recv_ntf_cb(&ntf_info);
 }
 

@@ -117,10 +117,17 @@ static void app_immediate_alert(uint8_t alert_val)
  */
 static void user_callback_handler(void)
 {
-	if (app_timer_done) {
-		LED_Toggle(LED0);
-		hw_timer_start(timer_interval);
-		app_timer_done = false;
+	uint16_t plf_event_type;
+	uint16_t plf_event_data_len;
+	uint8_t	plf_event_data[16];		
+
+	platform_event_get(&plf_event_type,plf_event_data,&plf_event_data_len);
+	if(plf_event_type == ((TIMER_EXPIRED_CALLBACK_TYPE_DETECT << 8)| USER_TIMER_CALLBACK)) {
+		if (app_timer_done) {
+			LED_Toggle(LED0);
+			hw_timer_start(timer_interval);
+			app_timer_done = false;
+		}
 	}
 }
 
