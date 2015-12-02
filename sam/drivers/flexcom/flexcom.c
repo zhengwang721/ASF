@@ -66,6 +66,9 @@ extern "C" {
 void flexcom_enable(Flexcom *p_flexcom)
 {
 	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
+#if !defined(PMC_PCK_PRES_CLK_1)
+#define PMC_PCK_PRES_CLK_1   PMC_PCK_PRES(0)
+#endif
 	/* Enable PMC clock for FLEXCOM */
 #ifdef ID_FLEXCOM7
 	 if (p_flexcom == FLEXCOM7) {
