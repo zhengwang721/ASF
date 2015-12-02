@@ -496,7 +496,7 @@ const uint8_t p_uc_numberset48x48[] = {
 void ili9488_draw_number(uint32_t ul_x, uint32_t ul_y, uint8_t index)
 {
 	uint32_t row, col, i;
-	uint32_t offset,offset0, offset1;
+	uint32_t offset;
 	offset = ((uint32_t)index) * (48 * 48 / 8);
 		
 	for(row = 0; row < 6; row++) {

@@ -155,12 +155,16 @@ int main(void)
 	/* Enable SysTick interrupt for non busy wait delay. */
 #if SAMD21
 	if (SysTick_Config(system_cpu_clock_get_hz()/1000)) {
-#elif SAME70
-	if (SysTick_Config(sysclk_get_main_hz()/1000)) {
-#endif
 		puts("main: SysTick configuration error!");
 		while (1);
 	}
+#elif SAME70
+	if (SysTick_Config(sysclk_get_main_hz()/1000)) {
+		puts("main: SysTick configuration error!");
+		while (1);
+	}
+#endif
+
 
 	/* Output example information */
 	puts(STRING_HEADER);
