@@ -549,13 +549,13 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *
  * <table>
  * <tr>
- *    <th>Doc. Rev.</td>
- *    <th>Date</td>
- *    <th>Comments</td>
+ *    <th>Doc. Rev.</th>
+ *    <th>Date</th>
+ *    <th>Comments</th>
  * </tr>
  * <tr>
  *    <td>42343B</td>
- *    <td>10/2015</td>
+ *    <td>12/2015</td>
  *    <td>Fixed typos</td>
  * </tr>
  * <tr>

@@ -4,13 +4,14 @@
 		Alert Notification Client Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_sdk.apps.alert_notification"/>
-		<build type="include-path" value="."/>
-		<build type="header-file" value="conf_board.h"/>
-		<build type="header-file" value="conf_clocks.h"/>
-		<build type="header-file" value="conf_extint.h"/>
-		<build type="header-file" value="conf_serialdrv.h"/>
-		<build type="header-file" value="conf_timer.h"/>
-		<build type="header-file" value="conf_console.h"/>
+		<require idref="thirdparty.wireless.ble_sdk.apps.config.saml21"/>
+		<build type="include-path" value="../../config/saml21/"/>
+		<build type="header-file" value="../../config/saml21/conf_board.h"/>
+		<build type="header-file" value="../../config/saml21/conf_clocks.h"/>
+		<build type="header-file" value="../../config/saml21/conf_extint.h"/>
+		<build type="header-file" value="../../config/saml21/conf_serialdrv.h"/>
+		<build type="header-file" value="../../config/saml21/conf_timer.h"/>
+		<build type="header-file" value="../../config/saml21/conf_console.h"/>
 
 		<require idref="board.saml21_xplained_pro"/>
 		<require idref="sam0.drivers.extint"/>
