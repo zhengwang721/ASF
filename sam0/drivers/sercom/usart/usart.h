@@ -1559,8 +1559,8 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	</tr>
  *	<tr>
  *		<td>42118F</td>
- *		<td>10/2015</td>
- *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, SAM D09, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42118E</td>
