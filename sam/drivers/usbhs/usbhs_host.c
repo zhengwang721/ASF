@@ -1174,7 +1174,6 @@ static void uhd_interrupt(void)
 		USBHS->USBHS_HSTIDR = USBHS_HSTIDR_HWUPIEC;
 		//uhd_sleep_mode(UHD_STATE_IDLE);
 		uhd_enable_vbus(); // enable VBUS
-		//USBHS->USBHS_SFR |= USBHS_SR_VBUSRQ;
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 		UHC_VBUS_CHANGE(true);
 	}

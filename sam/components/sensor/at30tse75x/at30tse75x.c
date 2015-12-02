@@ -249,7 +249,7 @@ void at30tse_write_config_register(uint16_t value)
 {
 	uint16_t cur_reg_val = 0;
 	cur_reg_val = at30tse_read_register(AT30TSE_CONFIG_REG, AT30TSE_VOLATILE_REG, 2);	
-	cur_reg_val = ((cur_reg_val & (~AT30TSE_CONFIG_R0)) | value);
+	cur_reg_val = ((cur_reg_val & (~(AT30TSE_CONFIG_R1 | AT30TSE_CONFIG_R0))) | value);
 	at30tse_write_register(AT30TSE_CONFIG_REG,
 							AT30TSE_VOLATILE_REG,
 							AT30TSE_CONFIG_REG_SIZE,
