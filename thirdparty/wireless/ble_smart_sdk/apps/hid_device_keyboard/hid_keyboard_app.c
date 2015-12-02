@@ -43,7 +43,7 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- *Support</a>
+ * Support</a>
  */
 
 /**
@@ -64,17 +64,16 @@
 #include "timer_hw.h"
 #include "button.h"
 
-
 /* =========================== GLOBALS ============================================================ */
 
 /* Control point notification structure */
-hid_control_mode_ntf_t hid_control_point_value; 
+hid_control_mode_ntf_t hid_control_point_value;
 
 /* Report notification structure */
 hid_report_ntf_t report_ntf_info;
 
 /* Boot notification structure */
-hid_boot_ntf_t  boot_ntf_info;
+hid_boot_ntf_t boot_ntf_info;
 
 /* Protocol mode notification structure */
 hid_proto_mode_ntf_t hid_proto_mode_value;
@@ -89,47 +88,46 @@ uint8_t keyb_disp[12] = {0x0B, 0x08, 0x0F, 0x0F, 0x12, 0x2C, 0x04, 0x17, 0x10, 0
 uint8_t keyb_id = 0;
 
 /* Keyboard report value */
-uint8_t app_keyb_report[8] = {0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00};	
-	
+uint8_t app_keyb_report[8] = {0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00};
+
 /* Keyboard key status */
-volatile uint8_t key_status = 0;	
+volatile uint8_t key_status = 0;
 
 uint8_t connect_flg = 0;
 
 /* keyboard report */
-static uint8_t hid_app_keyb_report_map[] =
-{
-   0x05, 0x01,		/* Usage Page (Generic Desktop)      */
-   0x09, 0x06,		/* Usage (Keyboard)                  */
-   0xA1, 0x01,		/* Collection (Application)          */
-   0x85, 0x01,		/* REPORT ID (1) - MANDATORY         */ 
-   0x05, 0x07,		/* Usage Page (Keyboard)             */
-   0x19, 224,		/* Usage Minimum (224)               */
-   0x29, 231,		/* Usage Maximum (231)               */
-   0x15, 0x00,		/* Logical Minimum (0)               */
-   0x25, 0x01,		/* Logical Maximum (1)               */
-   0x75, 0x01,		/* Report Size (1)                   */
-   0x95, 0x08,		/* Report Count (8)                  */
-   0x81, 0x02,		/* Input (Data, Variable, Absolute)  */
-   0x81, 0x01,		/* Input (Constant)                  */
-   0x19, 0x00,		/* Usage Minimum (0)                 */
-   0x29, 101,		/* Usage Maximum (101)               */
-   0x15, 0x00,		/* Logical Minimum (0)               */
-   0x25, 101,		/* Logical Maximum (101)             */
-   0x75, 0x08,		/* Report Size (8)                   */
-   0x95, 0x06,		/* Report Count (6)                  */
-   0x81, 0x00,		/* Input (Data, Array)               */
-   0x05, 0x08,		/* Usage Page (LED)                  */
-   0x19, 0x01,		/* Usage Minimum (1)                 */
-   0x29, 0x05,		/* Usage Maximum (5)                 */
-   0x15, 0x00,		/* Logical Minimum (0)               */
-   0x25, 0x01,		/* Logical Maximum (1)               */
-   0x75, 0x01,		/* Report Size (1)                   */
-   0x95, 0x05,		/* Report Count (5)                  */
-   0x91, 0x02,		/* Output (Data, Variable, Absolute) */
-   0x95, 0x03,		/* Report Count (3)                  */
-   0x91, 0x01,		/* Output (Constant)                 */
-   0xC0				/* End Collection                    */
+static uint8_t hid_app_keyb_report_map[] = {
+	0x05, 0x01,     /* Usage Page (Generic Desktop)      */
+	0x09, 0x06,     /* Usage (Keyboard)                  */
+	0xA1, 0x01,     /* Collection (Application)          */
+	0x85, 0x01,     /* REPORT ID (1) - MANDATORY         */
+	0x05, 0x07,     /* Usage Page (Keyboard)             */
+	0x19, 224,      /* Usage Minimum (224)               */
+	0x29, 231,      /* Usage Maximum (231)               */
+	0x15, 0x00,     /* Logical Minimum (0)               */
+	0x25, 0x01,     /* Logical Maximum (1)               */
+	0x75, 0x01,     /* Report Size (1)                   */
+	0x95, 0x08,     /* Report Count (8)                  */
+	0x81, 0x02,     /* Input (Data, Variable, Absolute)  */
+	0x81, 0x01,     /* Input (Constant)                  */
+	0x19, 0x00,     /* Usage Minimum (0)                 */
+	0x29, 101,      /* Usage Maximum (101)               */
+	0x15, 0x00,     /* Logical Minimum (0)               */
+	0x25, 101,      /* Logical Maximum (101)             */
+	0x75, 0x08,     /* Report Size (8)                   */
+	0x95, 0x06,     /* Report Count (6)                  */
+	0x81, 0x00,     /* Input (Data, Array)               */
+	0x05, 0x08,     /* Usage Page (LED)                  */
+	0x19, 0x01,     /* Usage Minimum (1)                 */
+	0x29, 0x05,     /* Usage Maximum (5)                 */
+	0x15, 0x00,     /* Logical Minimum (0)               */
+	0x25, 0x01,     /* Logical Maximum (1)               */
+	0x75, 0x01,     /* Report Size (1)                   */
+	0x95, 0x05,     /* Report Count (5)                  */
+	0x91, 0x02,     /* Output (Data, Variable, Absolute) */
+	0x95, 0x03,     /* Report Count (3)                  */
+	0x91, 0x01,     /* Output (Constant)                 */
+	0xC0                    /* End Collection                    */
 };
 
 /* Callback called during disconnect */
@@ -137,44 +135,44 @@ static void hid_disconnect_cb(at_ble_handle_t handle)
 {
 	keyb_id = 0;
 	connect_flg = 0;
-    ALL_UNUSED(handle);
+	ALL_UNUSED(handle);
 }
 
 static void hid_connect_cb()
-{	
+{
 	connect_flg = 1;
 }
 
 /* Callback called when host change the control point value */
 static void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value_t)
 {
-	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d", 
-					hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
+	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d",
+			hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
 }
 
 /* Callback called when host change the protocol mode value */
 static void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 {
-	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", 
-					protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
+	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d",
+			protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
 }
 
 /* Callback called when host enable/disable the notification for boot report (Mouse/Keyboard)
-   Mouse Boot Value 4
-   Keyboard Boot Value 6
-*/
+ * Mouse Boot Value 4
+ * Keyboard Boot Value 6
+ */
 static void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
 {
-	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", 
-					boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
+	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d",
+			boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
 }
 
 /* Callback called when host enable/disable the notification for report (Mouse/Keyboard) */
 static void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 {
-	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", 
-					report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
-    report_ntf_info.serv_inst = report_info->serv_inst;
+	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d",
+			report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
+	report_ntf_info.serv_inst = report_info->serv_inst;
 	report_ntf_info.report_ID = report_info->report_ID;
 	report_ntf_info.ntf_conf = report_info->ntf_conf;
 	report_ntf_info.conn_handle = report_info->conn_handle;
@@ -189,37 +187,35 @@ static void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notificat
 /* Callback called when user press the button for writing new characteristic value */
 void button_cb(void)
 {
-	if( connect_flg )
-	{
-		send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
-		key_status = 1;	
+	if (connect_flg) {
+		send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
+		key_status = 1;
 	}
 }
 
 /* Initialize the application information for HID profile*/
 static void hid_keyboard_app_init(void)
 {
-	
 	hid_prf_data.hid_serv_instance = 1;
-	hid_prf_data.hid_device = HID_KEYBOARD_MODE; 
-	hid_prf_data.protocol_mode = HID_REPORT_PROTOCOL_MODE; 
+	hid_prf_data.hid_device = HID_KEYBOARD_MODE;
+	hid_prf_data.protocol_mode = HID_REPORT_PROTOCOL_MODE;
 	hid_prf_data.num_of_report = HID_NUM_OF_REPORT;
-	
+
 	/*Update the report information based on report id, User can allocate maximum HID_MAX_REPORT_NUM number of report*/
-	hid_prf_data.report_id[0] = 1;  
-	hid_prf_data.report_type[0] = INPUT_REPORT;  
-	
-	hid_prf_data.report_val[0] = &app_keyb_report[0];	
+	hid_prf_data.report_id[0] = 1;
+	hid_prf_data.report_type[0] = INPUT_REPORT;
+
+	hid_prf_data.report_val[0] = &app_keyb_report[0];
 	hid_prf_data.report_len[0] = sizeof(app_keyb_report);
 	hid_prf_data.report_map_info.report_map = hid_app_keyb_report_map;
 	hid_prf_data.report_map_info.report_map_len = sizeof(hid_app_keyb_report_map);
-	hid_prf_data.hid_device_info.bcd_hid = 0x0111;        
+	hid_prf_data.hid_device_info.bcd_hid = 0x0111;
 	hid_prf_data.hid_device_info.bcountry_code = 0x00;
-	hid_prf_data.hid_device_info.flags = 0x02; 
-	
-	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS){
+	hid_prf_data.hid_device_info.flags = 0x02;
+
+	if (hid_prf_conf(&hid_prf_data) == HID_PRF_SUCESS) {
 		DBG_LOG("HID Profile Configured");
-	}else{
+	} else {
 		DBG_LOG("HID Profile Configuration Failed");
 	}
 }
@@ -229,22 +225,22 @@ bool app_exec = true;
 int main(void )
 {
 	platform_driver_init();
-	acquire_sleep_lock(); 
+	acquire_sleep_lock();
 
 	/* Initialize serial console */
-	serial_console_init();	
-	
+	serial_console_init();
+
 	DBG_LOG("Initializing HID Keyboard Application");
-	
+
 	/* Initialize the profile based on user input */
 	hid_keyboard_app_init();
-	
+
 	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);	
-	
+	ble_device_init(NULL);
+
 	/* Initialize button*/
-	button_init(button_cb);	
-	
+	button_init(button_cb);
+
 	/* Register the notification handler */
 	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
 	register_ble_connected_event_cb(hid_connect_cb);
@@ -253,33 +249,32 @@ int main(void )
 	notify_boot_ntf_handler(hid_prf_boot_ntf_cb);
 	notify_protocol_mode_handler(hid_prf_protocol_mode_ntf_cb);
 	notify_control_point_handler(hid_prf_control_point_ntf_cb);
-	
+
 	/* Capturing the events  */
-	while(app_exec)
-	{
+	while (app_exec) {
 		ble_event_task();
-				
+
 		/* Check for key status */
-		if(key_status){
+		if (key_status) {
 			DBG_LOG("Key Pressed...");
-			//delay_ms(KEY_PAD_DEBOUNCE_TIME);
-			if((keyb_id == POSITION_ZERO) || (keyb_id == POSITION_SIX)){
+			/* delay_ms(KEY_PAD_DEBOUNCE_TIME); */
+			if ((keyb_id == POSITION_ZERO) || (keyb_id == POSITION_SIX)) {
 				app_keyb_report[0] = CAPS_ON;
-			}else{
+			} else {
 				app_keyb_report[0] = CAPS_OFF;
 			}
-			
+
 			app_keyb_report[2] = keyb_disp[keyb_id];
 			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, 1, app_keyb_report, sizeof(app_keyb_report));
-			//delay_ms(20);
+			/* delay_ms(20); */
 			app_keyb_report[2] = 0x00;
 			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, 1, app_keyb_report, sizeof(app_keyb_report));
-				
+
 			key_status = 0;
-			
-			if(keyb_id == MAX_TEXT_LEN){
+
+			if (keyb_id == MAX_TEXT_LEN) {
 				keyb_id = 0;
-			}else{
+			} else {
 				++keyb_id;
 			}
 		}

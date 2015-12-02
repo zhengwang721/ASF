@@ -43,12 +43,12 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- *Support</a>
+ * Support</a>
  */
 
 #ifndef __ANP_CLIENT_APP_H__
 #define __ANP_CLIENT_APP_H__
 
-#define EVENT_MAX_PARAM_LENGTH	(524)
+#define EVENT_MAX_PARAM_LENGTH  (524)
 
 #endif

@@ -43,7 +43,7 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- *Support</a>
+ * Support</a>
  */
 
 /**
@@ -62,61 +62,65 @@
 csc_serv_t csc_inst;
 
 /**
-* \CSC service Configuration function
-*/
+ * \CSC service Configuration function
+ */
 at_ble_status_t csc_serv_init(uint8_t *buf, uint16_t len)
 {
 	memset(&csc_inst, 0, sizeof(csc_serv_t));
 
 	/* Configure SPOG Service UUID info*/
-	csc_inst.serv_uuid.type =	 AT_BLE_UUID_128;
+	csc_inst.serv_uuid.type =        AT_BLE_UUID_128;
 	memcpy(&csc_inst.serv_uuid.uuid[0], CSC_SERVICE_UUID, CSC_UUID_128_LEN);
-	
+
 	/* Configure SPOG Service Handle*/
 	csc_inst.serv_handle = 0;
-	
+
 	/*Configure SPOG Endpoint Characteristic*/
 	csc_inst.endpoint_chars.uuid.type = AT_BLE_UUID_128;
 	memcpy(&csc_inst.endpoint_chars.uuid.uuid[0], CSC_ENDPOINT_CHAR_UUID, CSC_UUID_128_LEN);
-	csc_inst.endpoint_chars.properties = AT_BLE_CHAR_NOTIFY;	
+	csc_inst.endpoint_chars.properties = AT_BLE_CHAR_NOTIFY;
 	csc_inst.endpoint_chars.init_value = buf;
 	csc_inst.endpoint_chars.value_init_len = len;
 	csc_inst.endpoint_chars.value_max_len = len;
 	/* Configure the CSC characteristic permission */
-	if(BLE_PAIR_ENABLE){
+	if (BLE_PAIR_ENABLE) {
 		csc_inst.endpoint_chars.value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
-		}else{
+	} else {
 		csc_inst.endpoint_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
 	}
+
 	return(at_ble_primary_service_define(&csc_inst.serv_uuid, &csc_inst.serv_handle, NULL, 0, &csc_inst.endpoint_chars, 1));
 }
 
 /**
-* \CSC service send data function
-*/
+ * \CSC service send data function
+ */
 at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint16_t datalen)
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
 	uint8_t value = 0;
 	uint16_t length = 0;
-	
+
 	length = sizeof(uint16_t);
 	status = at_ble_characteristic_value_get(csc_inst.endpoint_chars.client_config_handle, &value, &length);
-	if (status != AT_BLE_SUCCESS){
+	if (status != AT_BLE_SUCCESS) {
 		DBG_LOG("at_ble_characteristic_value_get value get failed");
 		return status;
 	}
-	if(value == 1){
+
+	if (value == 1) {
 		status = at_ble_characteristic_value_set(csc_inst.endpoint_chars.char_val_handle, databuf, datalen);
-		if (status != AT_BLE_SUCCESS){
+		if (status != AT_BLE_SUCCESS) {
 			DBG_LOG("at_ble_characteristic_value_set value set failed");
 			return status;
 		}
+
 		status = at_ble_notification_send(connhandle, csc_inst.endpoint_chars.char_val_handle);
-		if (status != AT_BLE_SUCCESS){
+		if (status != AT_BLE_SUCCESS) {
 			DBG_LOG("at_ble_notification_send  failed");
 			return status;
 		}
 	}
+
 	return status;
 }

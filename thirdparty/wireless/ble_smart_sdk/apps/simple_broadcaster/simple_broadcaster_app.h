@@ -65,7 +65,7 @@
 #define APP_BROADCAST_ADV_TIMEOUT               (1000)
 
 /* maximum length of advertisement data */
-#define MAX_ADV_LEN								(28)
+#define MAX_ADV_LEN                                                             (28)
 
 /* maximum length of scan response data */
 #define MAX_SCAN_LEN MAX_ADV_LEN
@@ -75,7 +75,7 @@
 #define ADV_TYPE_NONCONN_UNDIRECTED AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED
 
 /* /Advertisement data type length */
-#define ADV_TYPE_LEN							(0x01)
+#define ADV_TYPE_LEN                                                    (0x01)
 
 /** @brief Return status to app from the APIs provided
  */
@@ -116,11 +116,11 @@ typedef enum {
 	ADV_DATA_TYPE_MANUFACTURER_DATA = 0xff
 } adv_data_type_t;
 
-#define BRD_ADV_DATA_UUID_LEN				(2)
+#define BRD_ADV_DATA_UUID_LEN                           (2)
 #define BRD_ADV_DATA_UUID_DATA              "\x00\x18"
 
-#define BRD_ADV_DATA_APPEARANCE_LEN			(2)
-#define BRD_ADV_DATA_APPEARANCE_DATA		"\x80\x00"
+#define BRD_ADV_DATA_APPEARANCE_LEN                     (2)
+#define BRD_ADV_DATA_APPEARANCE_DATA            "\x80\x00"
 
 #define BRD_ADV_DATA_NAME_LEN               (0x0b)
 #define BRD_ADV_DATA_NAME_DATA              "ATMEL-BROADCAST"

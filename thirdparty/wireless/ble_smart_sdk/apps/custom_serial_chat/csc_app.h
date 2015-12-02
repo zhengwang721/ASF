@@ -51,10 +51,10 @@
 #include "stdio.h"
 
 /****************************************************************************************
-*							        Macros	                                     							*
+*							        Macros	                                                                                        *
 ****************************************************************************************/
 /**@brief Keypad debounce time */
-#define KEY_PAD_DEBOUNCE_TIME	(200)
+#define KEY_PAD_DEBOUNCE_TIME   (200)
 
 /**@brief Application maximum transmit buffer size */
 #define APP_TX_BUF_SIZE   (150)

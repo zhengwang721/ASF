@@ -40,11 +40,12 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
- /**
+/**
  * \mainpage
  * \section preface Preface
  * This is the reference manual for the BLE DTM
@@ -59,9 +60,10 @@
 #include "conf_serialdrv.h"
 #include "serial_bridge.h"
 #include "conf_extint.h"
-			
+
 /* Initialize the BLE */
 static void ble_init(void);
+
 /* Initialie the DTM Mode of BLE */
 static void ble_dtm_init(void);
 
@@ -73,8 +75,7 @@ volatile bool button_pressed = false;
 /* Alert the user when something is failed */
 static void ble_critical_alert(void)
 {
-	while(1)
-	{
+	while (1) {
 		delay_ms(200);
 		LED_On(LED0);
 		delay_ms(200);
@@ -93,17 +94,16 @@ static void ble_init(void)
 {
 	at_ble_init_config_t pf_cfg;
 	platform_config busConfig;
-	
+
 	/*Memory allocation required by GATT Server DB*/
 	pf_cfg.memPool.memSize = 0;
 	pf_cfg.memPool.memStartAdd = NULL;
 	/*Bus configuration*/
 	busConfig.bus_type = AT_BLE_UART;
 	pf_cfg.plf_config = &busConfig;
-	
+
 	/* Init BLE device */
-	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
-	{
+	if (at_ble_init(&pf_cfg) != AT_BLE_SUCCESS) {
 		ble_critical_alert();
 	}
 }
@@ -112,31 +112,30 @@ static void ble_init(void)
 static void ble_dtm_init(void)
 {
 	/* initialize the BLE chip */
-	ble_init();	
+	ble_init();
 	LED_On(LED0);
 }
 
 /* main entry to the Direct Test mode Application */
-int main (void)
-{	
+int main(void)
+{
 	platform_driver_init();
 	acquire_sleep_lock();
 
 	/* Button Init */
 	button_init();
-	
+
 	/* DTM Initialization */
 	ble_dtm_init();
-	
+
 	platform_wakeup();
-	
+
 	/* Initialize serial bridge */
 	serial_bridge_init();
 
 	/* Task hadle in while loop */
-	while(1)
-	{
-		/* Serial bridge task */ 
+	while (1) {
+		/* Serial bridge task */
 		serial_bridge_task();
 	}
 }

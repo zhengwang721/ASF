@@ -43,12 +43,12 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- *Support</a>
+ * Support</a>
  */
 
-// <<< Use Configuration Wizard in Context Menu >>>
-// <h> Blood Pressure Profile Configuration
-// =======================
+/* <<< Use Configuration Wizard in Context Menu >>> */
+/* <h> Blood Pressure Profile Configuration */
+/* ======================= */
 
 #ifndef __BLP_SENSOR_H__
 #define __BLP_SENSOR_H__
@@ -57,57 +57,55 @@
 *							        Macro                                               *
 ****************************************************************************************/
 
-
 /** @brief APP_BLP_SENSOR_FAST_ADV	 between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
-//	<o> Fast Advertisement Interval <100-1000:50>
-//	<i> Defines inteval of Fast advertisement in ms.
-//	<i> Default: 100
-//	<id> blp_sensor_fast_adv
-#define BLP_SENSOR_FAST_ADV								(100) //100 ms
+/*	<o> Fast Advertisement Interval <100-1000:50> */
+/*	<i> Defines inteval of Fast advertisement in ms. */
+/*	<i> Default: 100 */
+/*	<id> blp_sensor_fast_adv */
+#define BLP_SENSOR_FAST_ADV                                                             (100) /* 100 ms */
 
 /** @brief APP_HR_SENSOR_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
-//	<o> Advertisement Timeout <1000-10000:50>
-//	<i> Defines inteval at which advertisement timout in ms.
-//	<i> Default: 1000
-//	<id> blp_sensor_adv_timeout
-#define BLP_SENSOR_ADV_TIMEOUT							(0) // 100 Secs
+/*	<o> Advertisement Timeout <1000-10000:50> */
+/*	<i> Defines inteval at which advertisement timout in ms. */
+/*	<i> Default: 1000 */
+/*	<id> blp_sensor_adv_timeout */
+#define BLP_SENSOR_ADV_TIMEOUT                                                  (0) /* 100 Secs */
 
 /** @brief scan_resp_len is the length of the scan response data */
-//	<o> Scan Response Buffer <1-20>
-//	<i> Defines size of buffer for scan response.
-//	<i> Default: 10
-//	<id> blp_scan_resp_len
-#define SCAN_RESP_LEN									(10)
-	
+/*	<o> Scan Response Buffer <1-20> */
+/*	<i> Defines size of buffer for scan response. */
+/*	<i> Default: 10 */
+/*	<id> blp_scan_resp_len */
+#define SCAN_RESP_LEN                                                                   (10)
+
 /** @brief ADV_DATA_LEN */
-#define ADV_DATA_LEN									(18)
+#define ADV_DATA_LEN                                                                    (18)
 
 /** @brief ADV_TYPE_LEN */
-#define ADV_TYPE_LEN									(0x01)
+#define ADV_TYPE_LEN                                                                    (0x01)
 
-#define UUID_16_BIT_LEN									(0x02)
-
+#define UUID_16_BIT_LEN                                                                 (0x02)
 
 /** @brief HR_SENSOR_ADV_DATA_UUID_TYPE is complete 16 bit uuid type*/
-#define BLP_SENSOR_ADV_DATA_COMP_16_UUID_TYPE			(0x03)
+#define BLP_SENSOR_ADV_DATA_COMP_16_UUID_TYPE                   (0x03)
 
 /** @brief HR_SENSOR_ADV_DATA_UUID_LEN the total length for hr uuid and dis uuid */
-#define BLP_SENSOR_ADV_DATA_UUID_LEN					(4)
+#define BLP_SENSOR_ADV_DATA_UUID_LEN                                    (4)
 
 /** @brief DEVICE_INFORMATION_SERVICE_UUID **/
-#define DEVICE_INFORMATION_SERVICE_UUID					(0x180A)
+#define DEVICE_INFORMATION_SERVICE_UUID                                 (0x180A)
 
 /** @brief BLP_SENSOR_ADV_DATA_NAME_TYPE the gap ad data type */
-#define BLP_SENSOR_ADV_DATA_NAME_TYPE					(0x09)
+#define BLP_SENSOR_ADV_DATA_NAME_TYPE                                   (0x09)
 
 /** @brief BLP_SENSOR_ADV_DATA_NAME_LEN the  length of the device name */
-#define BLP_SENSOR_ADV_DATA_NAME_LEN					(9)
+#define BLP_SENSOR_ADV_DATA_NAME_LEN                                    (9)
 
 /* @brief BLP_ADV_DATA_NAME_DATA the actual name of device */
-//	<s.9>	Advertising String
-//	<i>	String Descriptor describing in advertising packet.
-//	<id> blp_sensor_adv_data_name_data
-#define BLP_SENSOR_ADV_DATA_NAME_DATA					("ATMEL-BLP")
+/*	<s.9>	Advertising String */
+/*	<i>	String Descriptor describing in advertising packet. */
+/*	<id> blp_sensor_adv_data_name_data */
+#define BLP_SENSOR_ADV_DATA_NAME_DATA                                   ("ATMEL-BLP")
 
 /* @brief call back handler type  */
 typedef void (*blp_notification_callback_t)(bool);
@@ -116,7 +114,7 @@ typedef void (*blp_notification_callback_t)(bool);
 typedef void (*blp_indication_callback_t)(bool);
 
 /* @brief connected callback */
-typedef void (*connected_callback_t) (bool);
+typedef void (*connected_callback_t)(bool);
 
 /****************************************************************************************
 *							        Function Prototypes	                                *                                                        *
@@ -162,15 +160,15 @@ void blp_sensor_send_indication(uint8_t *blp_data, uint8_t length);
 /** @brief register_blp_indication_handler registers the indication handler
  * passed by the application
  *  @param[in] blp_indication_callback_t address of the indication handler
- *function to be called
+ * function to be called
  */
 void register_blp_indication_handler(
 		blp_indication_callback_t blp_indication_handler);
-		
+
 /** @brief register_blp_notification_handler registers the notification handler
  * passed by the application
  *  @param[in] blp_notification_callback_t address of the notification handler
- *function to be called
+ * function to be called
  */
 void register_blp_notification_handler(
 		blp_notification_callback_t blp_notificaton_handler);
@@ -178,7 +176,7 @@ void register_blp_notification_handler(
 /** @brief blp_sensor_char_changed_handler called by the ble manager after a
  * change in the characteristic
  *  @param[in] at_ble_characteristic_changed_t which contains handle of
- *characteristic and new value
+ * characteristic and new value
  */
 at_ble_status_t blp_sensor_char_changed_handler(
 		at_ble_characteristic_changed_t *char_handle);
@@ -186,7 +184,7 @@ at_ble_status_t blp_sensor_char_changed_handler(
 /** @brief hr_sensor_disconnect_event_handler called by ble manager after
  * disconnection event recieved
  *	@param[in] at_ble_disconnected_t	which has connection handle and
- *reason for disconnection
+ * reason for disconnection
  */
 at_ble_status_t blp_sensor_disconnect_event_handler(
 		at_ble_disconnected_t *disconnect);
@@ -194,7 +192,7 @@ at_ble_status_t blp_sensor_disconnect_event_handler(
 /** @brief hr_sensor_connected_state_handler called by ble manager after a
  * change in characteristic
  *  @param[in] at_ble_connected_t which has connection handle and the peer
- *device address
+ * device address
  */
 at_ble_status_t blp_sensor_connected_state_handler(
 		at_ble_connected_t *conn_params);
@@ -206,20 +204,19 @@ at_ble_status_t blp_sensor_connected_state_handler(
  */
 void register_connected_callback(connected_callback_t app_connected_cb);
 
-/** @brief blp_notification_confirmation_handler called by ble manager 
+/** @brief blp_notification_confirmation_handler called by ble manager
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
- */	
+ */
 void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);
 
-/** @brief blp_indication_confirmation_handler called by ble manager 
+/** @brief blp_indication_confirmation_handler called by ble manager
  *	to give the status of notification sent
  *  @param[in] at_ble_indication_confirmed_t address of the cmd completion
- */	
+ */
 void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params);
 
-
 #endif /*__BLP_SENSOR_H__ */
-// </h>
+/* </h> */
 
-// <<< end of configuration section >>>
+/* <<< end of configuration section >>> */

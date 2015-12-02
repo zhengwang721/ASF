@@ -45,9 +45,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
  * Support</a>
  */
-// <<< Use Configuration Wizard in Context Menu >>>
-// <h> Blood Pressure Service Configuration
-// =======================
+/* <<< Use Configuration Wizard in Context Menu >>> */
+/* <h> Blood Pressure Service Configuration */
+/* ======================= */
 
 #ifndef __BLOOD_PRESSURE_H__
 #define __BLOOD_PRESSURE_H__
@@ -55,7 +55,6 @@
 /************************************************************************/
 /*                              Includes                                */
 /************************************************************************/
-
 
 /*************************************************************************/
 /*								MACROS								     */
@@ -69,45 +68,44 @@
 /**
  * @brief Blood Pressure measurement characteristic UUID
  */
-#define BLOOD_PRESSURE_MEASUREMENT_CHAR_UUID										(0x2A35)
+#define BLOOD_PRESSURE_MEASUREMENT_CHAR_UUID                                                                            (0x2A35)
 
 /**
  * @brief Intermediate Cuff Pressure characteristic UUID
  */
-#define INTERMEDIATE_CUFF_PRESSURE_CHAR_UUID										(0x2A36)
+#define INTERMEDIATE_CUFF_PRESSURE_CHAR_UUID                                                                            (0x2A36)
 
 /**
  * @brief Blood Pressure Feature characteristic UUID
  */
-#define BLOOD_PRESSURE_FEATURE_CHAR_UUID											(0x2A49)
+#define BLOOD_PRESSURE_FEATURE_CHAR_UUID                                                                                        (0x2A49)
 
 /**
  * @brief Total no of characteristics in Blood Pressure service
  */
-#define BLP_TOTAL_CHARATERISTIC_NUM													(3)
-
+#define BLP_TOTAL_CHARATERISTIC_NUM                                                                                                     (3)
 
 /**
  * @brief Notification Mask
  */
-#define BLP_NOTIFICATION															(1)
+#define BLP_NOTIFICATION                                                                                                                        (1)
 
 /**
  * @brief Disabling the Indication
  */
-#define BLP_INDICATION																(2)
+#define BLP_INDICATION                                                                                                                          (2)
 
-/** 
+/**
  * @brief notification enable
  *
  */
-#define BLP_NOTIFICATION_ENABLE														 (1)
+#define BLP_NOTIFICATION_ENABLE                                                                                                          (1)
 
-#define BLP_NOTIFICATION_DISABLE													 (2)
+#define BLP_NOTIFICATION_DISABLE                                                                                                         (2)
 
-#define BLP_INDICATION_ENABLE														 (3)
+#define BLP_INDICATION_ENABLE                                                                                                            (3)
 
-#define BLP_INDICATION_DISABLE														 (4)
+#define BLP_INDICATION_DISABLE                                                                                                           (4)
 
 /**
  * @brief maximum size of flags field of bp mm characteristic in bytes
@@ -127,7 +125,7 @@
 /**
  * @brief maximum size of map  field of blp mm characteristic in bytes
  */
-#define BLP_MAP_VAL_SIZE		                                                     (2)
+#define BLP_MAP_VAL_SIZE                                                                     (2)
 
 /**
  * @brief maximum size of time stamp field of  blp mm characteristic in bytes
@@ -142,15 +140,14 @@
 /**
  * @brief maximum size of user id in characteristic in bytes
  */
-#define BLP_MAX_USER_ID_SIZE	                                                     (1)
+#define BLP_MAX_USER_ID_SIZE                                                         (1)
 
 /**
  * @brief maximum size of measurement status in characteristic in bytes
  */
-#define BLP_MAX_MM_STATUS_SIZE	                                                     (2)
+#define BLP_MAX_MM_STATUS_SIZE                                                       (2)
 
-
-#define DEFAULT_VALUE																 (0)
+#define DEFAULT_VALUE                                                                                                                            (0)
 /************************************************************************/
 /*							Types										*/
 /************************************************************************/
@@ -168,7 +165,7 @@ typedef struct hr_gatt_service_handler {
 } blp_gatt_service_handler_t;
 
 /************************************************************************/
-/*						  Functions 			                        */
+/*						  Functions                                             */
 /************************************************************************/
 
 /**@brief Blood Pressure service and characteristic initialization(Called only once
@@ -200,6 +197,6 @@ uint8_t blp_char_change_handler(blp_gatt_service_handler_t *blp_primary_service,
 		at_ble_characteristic_changed_t *params);
 
 #endif /* __BLOOD_PRESSURE_H__ */
-// </h>
+/* </h> */
 
-// <<< end of configuration section >>>
+/* <<< end of configuration section >>> */

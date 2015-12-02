@@ -1,4 +1,3 @@
-
 /**
  * \file
  *
@@ -41,13 +40,14 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-// <<< Use Configuration Wizard in Context Menu >>>
-// <h> Battery Service Configuration
-// =======================
+/* <<< Use Configuration Wizard in Context Menu >>> */
+/* <h> Battery Service Configuration */
+/* ======================= */
 
 #ifndef __BATTERY_H__
 #define __BATTERY_H__
@@ -70,15 +70,14 @@
 /**  @brief Characteristic presentation format descriptor */
 #define BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR 0x0000
 
-typedef struct bat_gatt_service_handler
-{
-	/// service uuid
-	at_ble_uuid_t	serv_uuid;
-	/// service handle
-	at_ble_handle_t	serv_handle;
-	/// service characteristic
-	at_ble_characteristic_t	serv_chars;
-}bat_gatt_service_handler_t;
+typedef struct bat_gatt_service_handler {
+	/* / service uuid */
+	at_ble_uuid_t serv_uuid;
+	/* / service handle */
+	at_ble_handle_t serv_handle;
+	/* / service characteristic */
+	at_ble_characteristic_t serv_chars;
+} bat_gatt_service_handler_t;
 
 /**@brief initial variables
  *
@@ -91,12 +90,12 @@ void bat_init_var(void);
  *
  * @param[in] battery_serv battery service instance
  * @param[in] char_data New battery level
- * @param[in] flag flag to track the notification sent 
+ * @param[in] flag flag to track the notification sent
  *
  * @return @ref AT_BLE_SUCCESS operation completed successfully
  * @return @ref AT_BLE_FAILURE Generic error.
  */
-at_ble_status_t bat_update_char_value (bat_gatt_service_handler_t *battery_serv , uint8_t char_data, bool volatile *flag);
+at_ble_status_t bat_update_char_value(bat_gatt_service_handler_t *battery_serv, uint8_t char_data, bool volatile *flag);
 
 /**@brief Battery service and characteristic initialization(Called only once by user).
  *
@@ -106,7 +105,7 @@ at_ble_status_t bat_update_char_value (bat_gatt_service_handler_t *battery_serv 
  */
 void bat_init_service(bat_gatt_service_handler_t *battery_serv, uint8_t *battery_value);
 
-/**@brief Register a battery service instance inside stack. 
+/**@brief Register a battery service instance inside stack.
  *
  * @param[in] battery_service battery service instance
  *
@@ -115,11 +114,11 @@ void bat_init_service(bat_gatt_service_handler_t *battery_serv, uint8_t *battery
  */
 at_ble_status_t bat_primary_service_define(bat_gatt_service_handler_t *battery_service);
 
-/**@brief function to check the client characteristic configuration value. 
+/**@brief function to check the client characteristic configuration value.
  *
  * @param[in] battery_service battery service instance
  * @param[in] char_handle characteristic changed @ref at_ble_characteristic_changed_t
- * @param[in] flag flag to track the notification sent 
+ * @param[in] flag flag to track the notification sent
  *
  * @return @ref AT_BLE_SUCCESS operation completed successfully
  * @return @ref AT_BLE_FAILURE Generic error.
@@ -127,6 +126,6 @@ at_ble_status_t bat_primary_service_define(bat_gatt_service_handler_t *battery_s
 at_ble_status_t bat_char_changed_event(bat_gatt_service_handler_t *battery_service, at_ble_characteristic_changed_t *char_handle, bool volatile *flag);
 
 #endif /* __BATTERY_H__ */
-// </h>
+/* </h> */
 
-// <<< end of configuration section >>>
+/* <<< end of configuration section >>> */

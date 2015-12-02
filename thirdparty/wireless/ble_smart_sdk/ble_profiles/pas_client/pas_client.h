@@ -1,174 +1,167 @@
-  
 /**
-* \file
-*
-* \brief Phone Alert Status Profile declarations
-*
-* Copyright (c) 2015 Atmel Corporation. All rights reserved.
-*
-* \asf_license_start
-*
-* \page License
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-* 1. Redistributions of source code must retain the above copyright notice,
-*    this list of conditions and the following disclaimer.
-*
-* 2. Redistributions in binary form must reproduce the above copyright notice,
-*    this list of conditions and the following disclaimer in the documentation
-*    and/or other materials provided with the distribution.
-*
-* 3. The name of Atmel may not be used to endorse or promote products derived
-*    from this software without specific prior written permission.
-*
-* 4. This software may only be redistributed and used in connection with an
-*    Atmel micro controller product.
-*
-* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
-* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
-* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-* POSSIBILITY OF SUCH DAMAGE.
-*
-* \asf_license_stop
-*
-*/
+ * \file
+ *
+ * \brief Phone Alert Status Profile declarations
+ *
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel micro controller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
+
 /*
-* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
-*/
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
-* 
-* \section preface Preface
-* This is the reference manual for the Time Information Profile
-*/
+ *
+ * \section preface Preface
+ * This is the reference manual for the Time Information Profile
+ */
 
 #ifndef __PAS_CLIENT_H__
 #define __PAS_CLIENT_H__
+
 /***********************************************************************************
  *									Macros			                               *
  **********************************************************************************/
 /**@brief Advertisement Interval*/
-#define APP_PAS_FAST_ADV						(100) //100 ms
+#define APP_PAS_FAST_ADV                                                (100) /* 100 ms */
 
 /**@brief Advertisement Timeout*/
-#define APP_PAS_ADV_TIMEOUT						(1000) // 100 Secs
+#define APP_PAS_ADV_TIMEOUT                                             (1000) /* 100 Secs */
 
 /**@brief Scan Response length*/
-#define SCAN_RESP_LEN							(10)
+#define SCAN_RESP_LEN                                                   (10)
 
 /**@brief ADV type UUID Type & Length*/
-#define AD_TYPE_16BIT_UUID_LEN					(2)
-#define AD_TYPE_32BIT_UUID_LEN					(4)
-#define AD_TYPE_128BIT_UUID_LEN					(16)
+#define AD_TYPE_16BIT_UUID_LEN                                  (2)
+#define AD_TYPE_32BIT_UUID_LEN                                  (4)
+#define AD_TYPE_128BIT_UUID_LEN                                 (16)
 
-#define ADV_TYPE_LEN							(0x01)
+#define ADV_TYPE_LEN                                                    (0x01)
 
-#define PAS_SERVICE_UUID						(0x180E)
-#define PAS_ADV_DATA_UUID_TYPE					(0x3)
+#define PAS_SERVICE_UUID                                                (0x180E)
+#define PAS_ADV_DATA_UUID_TYPE                                  (0x3)
 
 /**@brief TIP Service Solicitation Info*/
-#define TP_ADV_DATA_SERVSOLICITATION_16UUID_TYPE	(0x14)
-#define TP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE	(0x15)
+#define TP_ADV_DATA_SERVSOLICITATION_16UUID_TYPE        (0x14)
+#define TP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE       (0x15)
 
 /**@brief Advertisement Name Type Length & data */
-#define PAS_ADV_DATA_NAME_LEN					(9)
-#define PAS_ADV_DATA_NAME_TYPE					(0x09)
-#define PAS_ADV_DATA_NAME_DATA					("ATMEL-PAS")
+#define PAS_ADV_DATA_NAME_LEN                                   (9)
+#define PAS_ADV_DATA_NAME_TYPE                                  (0x09)
+#define PAS_ADV_DATA_NAME_DATA                                  ("ATMEL-PAS")
 
 /**@brief The length of 16bit uuid */
-#define	PAS_ADV_DATA_UUID_LEN					(2)
+#define PAS_ADV_DATA_UUID_LEN                                   (2)
 
 /**@brief UUID Type & Length*/
-#define UUID_16BIT_LEN							(2)
-#define UUID_32BIT_LEN							(4)
-#define UUID_128BIT_LEN							(16)
+#define UUID_16BIT_LEN                                                  (2)
+#define UUID_32BIT_LEN                                                  (4)
+#define UUID_128BIT_LEN                                                 (16)
 
 /**@brief No of Characteristics and No of descriptors */
-#define PAS_MAX_CHARACTERISTIC					(3)
-#define ANP_MAX_DESCRIPTOR						(2)
+#define PAS_MAX_CHARACTERISTIC                                  (3)
+#define ANP_MAX_DESCRIPTOR                                              (2)
 
 /**@brief True False*/
-#define FALSE									(0)
-#define TRUE									(1)
+#define FALSE                                                                   (0)
+#define TRUE                                                                    (1)
 
 /**@brief start and end handle */
-#define START_HANDLE							(0x0001)
-#define END_HANDLE								(0xffff)
+#define START_HANDLE                                                    (0x0001)
+#define END_HANDLE                                                              (0xffff)
 
 /**@brief characteristic uuids*/
-#define ALERT_STATUS_UUID						(0x2a3f)
-#define RINGER_SETTING_UUID						(0x2a41)
-#define RINGER_CONTROL_POINT_UUID				(0x2a40)
+#define ALERT_STATUS_UUID                                               (0x2a3f)
+#define RINGER_SETTING_UUID                                             (0x2a41)
+#define RINGER_CONTROL_POINT_UUID                               (0x2a40)
 
-#define CLIENT_CONF_CHAR_DESCRIPTOR_UUID		(0x2902)
-
+#define CLIENT_CONF_CHAR_DESCRIPTOR_UUID                (0x2902)
 
 /***********************************************************************************
  *									types			                               *
  **********************************************************************************/
-typedef struct serv_info
-{
+typedef struct serv_info {
 	bool discovery;
 	at_ble_handle_t start_handle;
-	at_ble_handle_t end_handle;	
-}serv_info_t;
+	at_ble_handle_t end_handle;
+} serv_info_t;
 
-typedef struct char_info
-{
+typedef struct char_info {
 	bool discovery;
 	at_ble_handle_t char_handle;
 	at_ble_handle_t value_handle;
 	uint8_t properties;
-}char_info_t;
+} char_info_t;
 
-typedef struct desc_info 
-{
+typedef struct desc_info {
 	bool discovery;
-	at_ble_handle_t desc_handle;	
-}desc_info_t;
+	at_ble_handle_t desc_handle;
+} desc_info_t;
 
-typedef struct pas_service_handler
-{
+typedef struct pas_service_handler {
 	at_ble_handle_t conn_handle;
-	
+
 	/* Primary Service info */
 	serv_info_t pas_service_info;
-	
+
 	/*characteristic info for alert status*/
 	char_info_t alert_status_char;
-	
+
 	/*descriptor info for alert status*/
 	desc_info_t alert_status_desc;
-	
+
 	/*characteristic info for ringer setting*/
 	char_info_t ringer_setting_char;
-	
+
 	/*descriptor info for ringer setting*/
 	desc_info_t ringer_setting_desc;
-	
+
 	/*characteristic info for ringer control point*/
 	char_info_t ringer_control_point_char;
-		
-}pas_service_handler_t;
+} pas_service_handler_t;
 
-typedef void (*read_callback_t) (uint8_t *,uint8_t);
-typedef void (*notification_callback_t) (uint8_t *,uint8_t);
-typedef void (*connected_callback_t) (bool);
-
+typedef void (*read_callback_t)(uint8_t *, uint8_t);
+typedef void (*notification_callback_t)(uint8_t *, uint8_t);
+typedef void (*connected_callback_t)(bool);
 
 /***********************************************************************************
  *									Function Prototype                             *
  **********************************************************************************/
-
 
 /**
  * @brief invoked by ble manager for initializing the profile
@@ -193,7 +186,7 @@ void pas_client_adv(void);
 
 /**
  * @brief starts the service discovery
- * @param[in] connection parameters 
+ * @param[in] connection parameters
  * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
  * @pre Called after connection by the ble manager
  */
@@ -201,7 +194,7 @@ at_ble_status_t pas_client_service_discovery(at_ble_connected_t *conn_params);
 
 /**
  * @brief Discovery Complete handler invoked by ble manager
- * @param[in] at_ble_discovery_complete_t disconnected handler 
+ * @param[in] at_ble_discovery_complete_t disconnected handler
  */
 void pas_client_discovery_complete_handler(at_ble_discovery_complete_t *params);
 
@@ -209,7 +202,7 @@ void pas_client_discovery_complete_handler(at_ble_discovery_complete_t *params);
  * @brief Service found handler invoked by ble manager
  * @param[in] at_ble_primary_service_found_t invoked when a primary service is found in peer device
  */
-void pas_client_service_found_handler(at_ble_primary_service_found_t * primary_service_params);
+void pas_client_service_found_handler(at_ble_primary_service_found_t *primary_service_params);
 
 /**
  * @brief characteristic found handler invoked by ble manager
@@ -236,7 +229,7 @@ void pas_client_disconnected_event_handler(at_ble_disconnected_t *params);
 void pas_client_notification_handler(at_ble_notification_recieved_t *params);
 
 /**
- * @brief invoked by ble manager for setting the write response handler 
+ * @brief invoked by ble manager for setting the write response handler
  * @param[in] at_ble_characteristic_write_response_t response data contains status and handle
  */
 void pas_client_char_write_response_handler(at_ble_characteristic_write_response_t *params);
@@ -265,10 +258,10 @@ at_ble_status_t pas_client_write_ringer_control_point(uint8_t ringer);
  * @param[in] enable weather notifications has to enabled or disabled.1 for enable 0 for disable
  * @return	 AT_BLE_SUCCESS if success or AT_BLE_FAILURE
  */
-at_ble_status_t pas_client_enable_char_notification(bool char_id,bool enable);
+at_ble_status_t pas_client_enable_char_notification(bool char_id, bool enable);
 
 /**
- * @brief invoked by ble manager for setting the notification 
+ * @brief invoked by ble manager for setting the notification
  */
 void pas_client_write_notifications(void *param);
 

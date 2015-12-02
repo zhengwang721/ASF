@@ -50,38 +50,38 @@
 #define __HR_SENSOR_APP_H__
 
 /**@brief Notification interval to determine the frequency of notifications */
-#define NOTIFICATION_INTERVAL									            (1)
+#define NOTIFICATION_INTERVAL                                                                               (1)
 
 /**@brief Activities of user */
-#define ACTIVITY_NORMAL										                 (0)
-#define ACTIVITY_WALKING								                     (1)
-#define ACTIVITY_BRISK_WALKING						                         (2)
-#define ACTIVITY_RUNNING						                             (3)
-#define ACTIVITY_FAST_RUNNING				                                 (4)
-#define DEFAULT_ACTIVITY													 (0xFF)
+#define ACTIVITY_NORMAL                                                                                          (0)
+#define ACTIVITY_WALKING                                                                                     (1)
+#define ACTIVITY_BRISK_WALKING                                                                   (2)
+#define ACTIVITY_RUNNING                                                                             (3)
+#define ACTIVITY_FAST_RUNNING                                                            (4)
+#define DEFAULT_ACTIVITY                                                                                                         (0xFF)
 
 /**@brief Time counter for change of activities by user*/
-#define TIME_NORMAL_LIMIT													(40)
-#define TIME_WALKING_LIMIT											        (80)
-#define TIME_BRISK_WALK_LIMIT	                                            (120)
-#define TIME_RUNNING_LIMIT			                                        (160)
-#define TIME_FAST_RUNNING_LIMIT			                                    (200)
+#define TIME_NORMAL_LIMIT                                                                                                       (40)
+#define TIME_WALKING_LIMIT                                                                                              (80)
+#define TIME_BRISK_WALK_LIMIT                                               (120)
+#define TIME_RUNNING_LIMIT                                                              (160)
+#define TIME_FAST_RUNNING_LIMIT                                                     (200)
 
 /**@brief Heart Rate maximum and minimum values for various activities*/
-#define HEART_RATE_MIN_NORM													(50)
-#define HEART_RATE_MAX_NORM													(70)
+#define HEART_RATE_MIN_NORM                                                                                                     (50)
+#define HEART_RATE_MAX_NORM                                                                                                     (70)
 
-#define HEART_RATE_MIN_WALKING												(71)
-#define HEART_RATE_MAX_WALKING												(90)
+#define HEART_RATE_MIN_WALKING                                                                                          (71)
+#define HEART_RATE_MAX_WALKING                                                                                          (90)
 
-#define HEART_RATE_MIN_BRISK_WALK											(91)
-#define HEART_RATE_MAX_BRISK_WALK											(110)
+#define HEART_RATE_MIN_BRISK_WALK                                                                                       (91)
+#define HEART_RATE_MAX_BRISK_WALK                                                                                       (110)
 
-#define HEART_RATE_MIN_RUNNING												(111)
-#define HEART_RATE_MAX_RUNNING												(130)
+#define HEART_RATE_MIN_RUNNING                                                                                          (111)
+#define HEART_RATE_MAX_RUNNING                                                                                          (130)
 
-#define HEART_RATE_MIN_FAST_RUNNING											(130)
-#define HEART_RATE_MAX_FAST_RUNNING											(151)
+#define HEART_RATE_MIN_FAST_RUNNING                                                                                     (130)
+#define HEART_RATE_MAX_FAST_RUNNING                                                                                     (151)
 
 /**@brief RR interval  maximum and minimum values for simulation of rr values */
 #define RR_VALUE_MAX                                                            (1000)
@@ -92,31 +92,32 @@
 /**@brief energy expended for various activities*/
 #define ENERGY_EXP_NORMAL                                                       (3)
 #define ENERGY_EXP_WALKING                                                      (10)
-#define ENERGY_EXP_BRISK_WALKING												(20)
+#define ENERGY_EXP_BRISK_WALKING                                                                                                (20)
 #define ENERGY_EXP_RUNNING                                                      (40)
-#define ENERGY_EXP_FAST_RUNNING													(60)
+#define ENERGY_EXP_FAST_RUNNING                                                                                                 (60)
 
 /**@brief time limit of last activity*/
-#define START_OF_FIRST_ACTIVITY													(0)
-#define END_OF_LAST_ACTIVITY													(200)
+#define START_OF_FIRST_ACTIVITY                                                                                                 (0)
+#define END_OF_LAST_ACTIVITY                                                                                                    (200)
 
 /**@brief The maximum length of the hr measurement characteristic data*/
 #define HR_CHAR_VALUE_LEN                                                       (10)
 
 /**@brief HR_VALUE_FORMAT_UINT16 the bit to represent hr value sent is 16 bit*/
-#define HR_VALUE_FORMAT_UINT16												(0x1 << 0)
+#define HR_VALUE_FORMAT_UINT16                                                                                          (0x1 << 0)
 
 /**@brief SENSOR_CONTACT_FTR_NOT_SPRTD_NOT_CONTACT to represent the sensor
- *contact info*/
-#define SENSOR_CONTACT_FTR_NOT_SPRTD_NOT_CONTACT							(0x1 << 2)
+ * contact info*/
+#define SENSOR_CONTACT_FTR_NOT_SPRTD_NOT_CONTACT                                                        (0x1 << 2)
+
 /**@brief SENSOR_CONTACT_FTR_NOT_SPRTD_NOT_CONTACT to represent the sensor
- *contact info*/
-#define SENSOR_CONTACT_FTR_NOT_SPRTD_CONTACT_DTD							(0x3 << 1)
+ * contact info*/
+#define SENSOR_CONTACT_FTR_NOT_SPRTD_CONTACT_DTD                                                        (0x3 << 1)
 
 /**@brief ENERGY_EXPENDED_FIELD_PRESENT represents energy expended inclusion*/
-#define ENERGY_EXPENDED_FIELD_PRESENT										(0x1 << 3)
+#define ENERGY_EXPENDED_FIELD_PRESENT                                                                           (0x1 << 3)
 
 /**@brief RR_INTERVAL_VALUE_PRESENT represents the rr value inclusion*/
-#define RR_INTERVAL_VALUE_PRESENT											(0x1 <<	4)
+#define RR_INTERVAL_VALUE_PRESENT                                                                                       (0x1 << 4)
 
 #endif /* __HR_SENSOR_APP_H__ */

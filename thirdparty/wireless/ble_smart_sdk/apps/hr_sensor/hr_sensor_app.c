@@ -43,11 +43,11 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- *Support</a>
+ * Support</a>
  */
 
 /****************************************************************************************
-*							        Includes	
+*							        Includes
 *                                       *
 ****************************************************************************************/
 #include <asf.h>
@@ -64,30 +64,30 @@
 #include "timer.h"
 
 /****************************************************************************************
-*							        Globals		
+*							        Globals
 *                                       *
 ****************************************************************************************/
 
-#define APP_STACK_SIZE	(1024)
+#define APP_STACK_SIZE  (1024)
 volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
-volatile bool app_state = 0 ; /*!< flag to represent the application state*/
+volatile bool app_state = 0;  /*!< flag to represent the application state*/
 volatile bool start_advertisement = 0; /*!< flag to start advertisement*/
-volatile bool advertisement_flag = false;/*!< to check if the device is in advertisement*/
+volatile bool advertisement_flag = false; /*!< to check if the device is in advertisement*/
 volatile bool notification_flag = false; /*!< flag to start notification*/
-volatile bool disconnect_flag = false;	/*!< flag for disconnection*/
+volatile bool disconnect_flag = false;  /*!< flag for disconnection*/
 volatile bool hr_initializer_flag = 1; /*!< flag for initialization of hr for each category*/
-uint8_t second_counter = 0;	/*!< second_counter to count the time*/
+uint8_t second_counter = 0;     /*!< second_counter to count the time*/
 uint16_t energy_expended_val = ENERGY_EXP_NORMAL; /*!< to count the energy expended*/
-uint16_t energy_incrementor ;	/*!< energy incrementor for various heart rate values*/
+uint16_t energy_incrementor;    /*!< energy incrementor for various heart rate values*/
 uint16_t heart_rate_value = HEART_RATE_MIN_NORM; /*!< to count the heart rate value*/
 uint16_t rr_interval_value = RR_VALUE_MIN; /*!< to count the rr interval value*/
 uint8_t activity = 0; /*!< activiy which will determine the */
-uint8_t prev_activity = DEFAULT_ACTIVITY;/*!< previous activity */
-int8_t inc_changer	= 1;/*!< increment operator to change heart rate */
-int8_t time_operator ;/*!< operator to change the seconds */
-uint8_t hr_min_value;/*!<the minimum heart rate value*/
-uint8_t hr_max_value;/*!<the maximum heart rate value*/
+uint8_t prev_activity = DEFAULT_ACTIVITY; /*!< previous activity */
+int8_t inc_changer      = 1; /*!< increment operator to change heart rate */
+int8_t time_operator; /*!< operator to change the seconds */
+uint8_t hr_min_value; /*!<the minimum heart rate value*/
+uint8_t hr_max_value; /*!<the maximum heart rate value*/
 
 /* to make app executing continuously*/
 bool app_exec = true;
@@ -134,36 +134,36 @@ static void heart_rate_value_init(void)
 {
 	activity = second_counter / 40;
 
-	if (activity != prev_activity) {		
-		switch(activity) {
+	if (activity != prev_activity) {
+		switch (activity) {
 		case ACTIVITY_NORMAL:
 			hr_min_value = HEART_RATE_MIN_NORM;
 			hr_max_value = HEART_RATE_MAX_NORM;
 			heart_rate_value = hr_min_value;
 			energy_incrementor = ENERGY_EXP_NORMAL;
 			break;
-			
+
 		case ACTIVITY_WALKING:
 			hr_min_value = HEART_RATE_MIN_WALKING;
 			hr_max_value = HEART_RATE_MAX_WALKING;
 			heart_rate_value = hr_min_value;
 			energy_incrementor = ENERGY_EXP_WALKING;
 			break;
-			
+
 		case ACTIVITY_BRISK_WALKING:
 			hr_min_value = HEART_RATE_MIN_BRISK_WALK;
 			hr_max_value = HEART_RATE_MAX_BRISK_WALK;
 			heart_rate_value = hr_min_value;
 			energy_incrementor = ENERGY_EXP_BRISK_WALKING;
 			break;
-			
+
 		case ACTIVITY_RUNNING:
 			hr_min_value = HEART_RATE_MIN_RUNNING;
 			hr_max_value = HEART_RATE_MAX_RUNNING;
 			heart_rate_value = hr_min_value;
 			energy_incrementor = ENERGY_EXP_RUNNING;
 			break;
-			
+
 		case ACTIVITY_FAST_RUNNING:
 			hr_min_value = HEART_RATE_MIN_FAST_RUNNING;
 			hr_max_value = HEART_RATE_MAX_FAST_RUNNING;
@@ -173,7 +173,7 @@ static void heart_rate_value_init(void)
 		}
 		prev_activity = activity;
 	}
-	
+
 	if (heart_rate_value == hr_max_value) {
 		inc_changer = -1;
 	} else if (heart_rate_value == hr_min_value) {
@@ -187,7 +187,7 @@ static void heart_rate_value_init(void)
 static void app_state_handler(bool state)
 {
 	app_state = state;
-	
+
 	if (app_state == false) {
 		hw_timer_stop();
 		notification_flag = false;
@@ -218,11 +218,11 @@ void button_cb(void)
 		/* To check if the device is in advertisement */
 		DBG_LOG_DEV("Going to advertisement");
 		start_advertisement = true;
-		advertisement_flag = true;	
+		advertisement_flag = true;
 	}
 
 	isButton = true;
-	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
 
 /** @brief hr_measurment_send sends the notifications after adding the hr values
@@ -237,65 +237,67 @@ static void hr_measurment_send(void)
 {
 	uint8_t hr_data[HR_CHAR_VALUE_LEN];
 	uint8_t idx = 0;
-	
+
 	if ((energy_expended_val == ENERGY_RESET) || (second_counter % 10 == 0)) {
 		hr_data[idx] = (RR_INTERVAL_VALUE_PRESENT | ENERGY_EXPENDED_FIELD_PRESENT);
 	} else {
-		hr_data[idx] = RR_INTERVAL_VALUE_PRESENT ;
+		hr_data[idx] = RR_INTERVAL_VALUE_PRESENT;
 	}
-	idx += 1;			
+
+	idx += 1;
 	DBG_LOG("Heart Rate: %d bpm", heart_rate_value);
 	heart_rate_value += (inc_changer);
 
 	/* Heart Rate Value 8bit*/
-	hr_data[idx++] = (uint8_t)heart_rate_value ;
+	hr_data[idx++] = (uint8_t)heart_rate_value;
 	if (hr_data[0] & ENERGY_EXPENDED_FIELD_PRESENT) {
 		memcpy(&hr_data[idx], &energy_expended_val, 2);
-		idx += 2;	
+		idx += 2;
 	}
-	
-	/* Appending RR interval values*/	
+
+	/* Appending RR interval values*/
 	if (rr_interval_value >= RR_VALUE_MAX) {
-		rr_interval_value = (uint8_t) RR_VALUE_MIN; 
-	}	
+		rr_interval_value = (uint8_t)RR_VALUE_MIN;
+	}
+
 	DBG_LOG_CONT("\tRR Values:(%d,%d)msec",
-				rr_interval_value, rr_interval_value + 200);
+			rr_interval_value, rr_interval_value + 200);
 	memcpy(&hr_data[idx], &rr_interval_value, 2);
 	idx += 2;
 	rr_interval_value += 200;
 	memcpy(&hr_data[idx], &rr_interval_value, 2);
 	idx += 2;
 	rr_interval_value += 200;
-	
+
 	/*printing the user activity,simulation*/
-	switch(activity) {
+	switch (activity) {
 	case ACTIVITY_NORMAL:
 		DBG_LOG_CONT(" User Status:Idle");
 		break;
-		
+
 	case ACTIVITY_WALKING:
 		DBG_LOG_CONT(" User Status:Walking");
 		break;
-		
+
 	case ACTIVITY_BRISK_WALKING:
 		DBG_LOG_CONT(" User status:Brisk walking");
 		break;
-		
+
 	case ACTIVITY_RUNNING:
 		DBG_LOG_CONT(" User status:Running");
 		break;
-		
+
 	case ACTIVITY_FAST_RUNNING:
 		DBG_LOG_CONT(" User Status:Fast Running");
-		break;	
+		break;
 	}
-	
+
 	/* Printing the energy*/
 	if ((hr_data[0] & ENERGY_EXPENDED_FIELD_PRESENT)) {
 		DBG_LOG("Energy Expended :%d KJ\n", energy_expended_val);
 		energy_expended_val += energy_incrementor;
 	}
-	
+
 	/* Sending the data for notifications*/
 	hr_sensor_send_notification(hr_data, idx);
 }
@@ -306,9 +308,9 @@ static void hr_measurment_send(void)
 static void timer_callback_handler(void)
 {
 	hw_timer_stop();
-	
+
 	isTimer = true;
-	send_plf_int_msg_ind(USER_TIMER_CALLBACK,TIMER_EXPIRED_CALLBACK_TYPE_DETECT,NULL,0);
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
 
 /**
@@ -316,23 +318,23 @@ static void timer_callback_handler(void)
  */
 int main(void)
 {
-	app_state = 0 ; /*!< flag to represent the application state*/
+	app_state = 0;  /*!< flag to represent the application state*/
 	start_advertisement = 0; /*!< flag to start advertisement*/
-	advertisement_flag = false;/*!< to check if the device is in advertisement*/
+	advertisement_flag = false; /*!< to check if the device is in advertisement*/
 	notification_flag = false; /*!< flag to start notification*/
-	disconnect_flag = false;	/*!< flag for disconnection*/
+	disconnect_flag = false;        /*!< flag for disconnection*/
 	hr_initializer_flag = 1; /*!< flag for initialization of hr for each category*/
-	second_counter = 0;	/*!< second_counter to count the time*/
+	second_counter = 0;     /*!< second_counter to count the time*/
 	energy_expended_val = ENERGY_EXP_NORMAL; /*!< to count the energy expended*/
 	energy_incrementor = 0;
 	heart_rate_value = HEART_RATE_MIN_NORM; /*!< to count the heart rate value*/
 	rr_interval_value = RR_VALUE_MIN; /*!< to count the rr interval value*/
 	activity = 0; /*!< activiy which will determine the */
-	prev_activity = DEFAULT_ACTIVITY;/*!< previous activity */
-	inc_changer	= 1;/*!< increment operator to change heart rate */
-	time_operator = 0 ;/*!< operator to change the seconds */
-	hr_min_value = 0;/*!<the minimum heart rate value*/
-	hr_max_value = 0;/*!<the maximum heart rate value*/
+	prev_activity = DEFAULT_ACTIVITY; /*!< previous activity */
+	inc_changer     = 1; /*!< increment operator to change heart rate */
+	time_operator = 0; /*!< operator to change the seconds */
+	hr_min_value = 0; /*!<the minimum heart rate value*/
+	hr_max_value = 0; /*!<the maximum heart rate value*/
 
 	app_exec = true;
 
@@ -374,13 +376,12 @@ int main(void)
 	while (app_exec) {
 		ble_event_task();
 
-		if(isButton == true)
-		{
+		if (isButton == true) {
 			isButton = false;
-			
+
 			if (start_advertisement == true || disconnect_flag == true) {
 				/* button debounce delay*/
-				//delay_ms(350);
+				/* delay_ms(350); */
 			}
 
 			/* Flag to start advertisement */
@@ -397,8 +398,7 @@ int main(void)
 			}
 		}
 
-		if(isTimer == true)
-		{
+		if (isTimer == true) {
 			isTimer = false;
 
 			if (second_counter == START_OF_FIRST_ACTIVITY) {
@@ -406,6 +406,7 @@ int main(void)
 			} else if (second_counter == END_OF_LAST_ACTIVITY) {
 				time_operator = -1;
 			}
+
 			second_counter += (time_operator);
 			heart_rate_value_init();
 			notification_flag = true;

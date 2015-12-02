@@ -43,11 +43,11 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- *Support</a>
+ * Support</a>
  */
 
 /****************************************************************************************
-*							        Includes	
+*							        Includes
 *                                       *
 ****************************************************************************************/
 #include <string.h>
@@ -60,10 +60,9 @@
 #include "ble_utils.h"
 
 /****************************************************************************************
-*							        Globals		
+*							        Globals
 *                                       *
 ****************************************************************************************/
-
 
 /** @brief device information service handler **/
 dis_gatt_service_handler_t dis_service_handler;
@@ -72,7 +71,7 @@ dis_gatt_service_handler_t dis_service_handler;
 hr_gatt_service_handler_t hr_service_handler;
 
 /** @brief callback functions pointers contains the address of application
- *functions **/
+ * functions **/
 hr_notification_callback_t notification_cb;
 hr_reset_callback_t reset_cb;
 hr_state_callback_t state_cb;
@@ -121,11 +120,11 @@ void register_hr_state_handler(hr_state_callback_t state_handler)
  *	@param[in] at_ble_status_t AT_BLE_SUCCESS on success AT_BLE_FAILURE on failure
  *  called
  */
-void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t * params)
+void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 {
-	if ( params->status == AT_BLE_SUCCESS) {
+	if (params->status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Notification confirmation successful");
-	} else { 
+	} else {
 		DBG_LOG_DEV("Notification confirmation failure");
 	}
 }
@@ -138,31 +137,31 @@ void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t * params)
 bool hr_sensor_send_notification(uint8_t *hr_data, uint8_t length)
 {
 	at_ble_status_t status;
-	
+
 	/** Updating the new characteristic value */
 	if ((status = at_ble_characteristic_value_set(
-							hr_service_handler.serv_chars[0].char_val_handle,
-							hr_data, length)) != AT_BLE_SUCCESS) {
+					hr_service_handler.serv_chars[0].char_val_handle,
+					hr_data, length)) != AT_BLE_SUCCESS) {
 		DBG_LOG("Write value for notification failed,reason %d",
 				status);
 		return false;
 	}
 
 	/** Sending the notification for the updated characteristic */
-	if ((status	= at_ble_notification_send(connection_handle,
-										hr_service_handler.serv_chars[0]
-										.char_val_handle))) {
+	if ((status     = at_ble_notification_send(connection_handle,
+					hr_service_handler.serv_chars[0]
+					.char_val_handle))) {
 		DBG_LOG("Send notification failed,reason %d", status);
-		return false;	
+		return false;
 	}
-	
+
 	return true;
 }
 
 /** @brief hr_sensor_char_changed_handler called by the ble manager after a
  * change in the characteristic
  *  @param[in] at_ble_characteristic_changed_t which contains handle of
- *characteristic and new value
+ * characteristic and new value
  */
 at_ble_status_t hr_sensor_char_changed_handler(
 		at_ble_characteristic_changed_t *char_handle)
@@ -202,15 +201,15 @@ at_ble_status_t hr_sensor_disconnect_event_handler(
 /** @brief hr_sensor_connected_state_handler called by ble manager after a
  * change in characteristic
  *  @param[in] at_ble_connected_t which has connection handle and the peer
- *device address
+ * device address
  */
 at_ble_status_t hr_sensor_connected_state_handler(
-							at_ble_connected_t *conn_params)
+		at_ble_connected_t *conn_params)
 {
 	connection_handle = (at_ble_handle_t)conn_params->handle;
 	/** calling app state call back handler */
 	state_cb(HR_APP_CONNECTION_STATE);
-	
+
 	return AT_BLE_SUCCESS;
 }
 
@@ -241,7 +240,7 @@ void hr_sensor_adv(void)
 	at_ble_status_t status;
 	uint8_t idx = 0;
 	uint8_t adv_data [ HR_SENSOR_ADV_DATA_NAME_LEN + HR_SENSOR_ADV_DATA_UUID_LEN   + (4 * 2)];
-	
+
 	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 	adv_data[idx++] = HR_SENSOR_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
@@ -300,8 +299,8 @@ void hr_sensor_service_define(void)
 				status);
 	} else {
 		DBG_LOG_DEV("hr service defined succesfully");
-	} 
-	
+	}
+
 	if ((status = dis_primary_service_define(&dis_service_handler)) !=
 			AT_BLE_SUCCESS) {
 		DBG_LOG("Dis Service definition failed,reason: %x", status);

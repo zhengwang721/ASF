@@ -43,44 +43,44 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- *Support</a>
+ * Support</a>
  */
 
-// <<< Use Configuration Wizard in Context Menu >>>
-// <h> HID Device profile Configuration
-// =======================
+/* <<< Use Configuration Wizard in Context Menu >>> */
+/* <h> HID Device profile Configuration */
+/* ======================= */
 
 #ifndef __HID_DEVICE_H__
 #define __HID_DEVICE_H__
 #include "at_ble_api.h"
 
 /****************************************************************************************
-*							        Macros	                                     		*
+*							        Macros	                                                *
 ****************************************************************************************/
 
 /** @brief Number of Report : Configure by user. */
-//	<o> HID Number of Reports <1-10>
-//	<i> Defines numbers of Reporter available for HID.
-//	<i> Default: 1
-//	<id> hid_num_of_report
-#define HID_NUM_OF_REPORT				(1)
+/*	<o> HID Number of Reports <1-10> */
+/*	<i> Defines numbers of Reporter available for HID. */
+/*	<i> Default: 1 */
+/*	<id> hid_num_of_report */
+#define HID_NUM_OF_REPORT                               (1)
 
 /** @brief HID Service Instance : Configure by user. */
-#define HID_SERV_INST 					(1) 
+#define HID_SERV_INST                                   (1)
 
 /** @brief HID Max Service Instance. */
-#define HID_MAX_SERV_INST				(2)
+#define HID_MAX_SERV_INST                               (2)
 
 /** @brief Number of Report. */
-#define HID_MAX_REPORT_NUM				(10)
+#define HID_MAX_REPORT_NUM                              (10)
 
 /** @brief Default number of characteristic. */
-#define HID_DEFAULT_CHARACTERISITC_NUM	(4)
+#define HID_DEFAULT_CHARACTERISITC_NUM  (4)
 
 /** @brief Number of characteristic for HID. */
 #if defined HID_MOUSE_DEVICE
 /** @brief Enable by user for mouse application : Configure by user. */
-#define ADV_DATA_APPEARANCE_DATA      (0x03C2)  //Mouse
+#define ADV_DATA_APPEARANCE_DATA      (0x03C2)  /* Mouse */
 #if defined BOOT_MODE
 #define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + 1)
 #else
@@ -90,7 +90,7 @@
 
 #if defined HID_KEYBOARD_DEVICE
 /** @brief Enable by user for keyboard application : Configure by user. */
-#define ADV_DATA_APPEARANCE_DATA 	  (0x03C1)    //Keyboard
+#define ADV_DATA_APPEARANCE_DATA          (0x03C1)    /* Keyboard */
 #if defined BOOT_MODE
 #define HID_CHARACTERISTIC_NUM        (HID_DEFAULT_CHARACTERISITC_NUM + 2)
 #else
@@ -99,60 +99,59 @@
 #endif
 
 /** @brief APP_HID_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
-//	<o> Fast Advertisement Interval <100-1000:50>
-//	<i> Defines inteval of Fast advertisement in ms.
-//	<i> Default: 100
-//	<id> hid_fast_adv
-#define APP_HID_FAST_ADV				(100) //100 ms
+/*	<o> Fast Advertisement Interval <100-1000:50> */
+/*	<i> Defines inteval of Fast advertisement in ms. */
+/*	<i> Default: 100 */
+/*	<id> hid_fast_adv */
+#define APP_HID_FAST_ADV                                (100) /* 100 ms */
 
 /** @brief APP_HID_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
-//	<o> Advertisement Timeout <1000-10000:50>
-//	<i> Defines inteval at which advertisement timout in ms.
-//	<i> Default: 1000
-//	<id> hid_adv_timeout
-#define APP_HID_ADV_TIMEOUT				(1000) // 100 Secs
+/*	<o> Advertisement Timeout <1000-10000:50> */
+/*	<i> Defines inteval at which advertisement timout in ms. */
+/*	<i> Default: 1000 */
+/*	<id> hid_adv_timeout */
+#define APP_HID_ADV_TIMEOUT                             (1000) /* 100 Secs */
 
 /** @brief scan_resp_len is the length of the scan response data */
-//	<o> Scan Response Buffer <1-20>
-//	<i> Defines size of buffer for scan response.
-//	<i> Default: 10
-//	<id> hid_scan_resp_len
-#define SCAN_RESP_LEN					(10)
+/*	<o> Scan Response Buffer <1-20> */
+/*	<i> Defines size of buffer for scan response. */
+/*	<i> Default: 10 */
+/*	<id> hid_scan_resp_len */
+#define SCAN_RESP_LEN                                   (10)
 
 /** @brief Advertisement data appearance len */
-#define ADV_DATA_APPEARANCE_LEN			(2)
+#define ADV_DATA_APPEARANCE_LEN                 (2)
 
 /** @brief Advertisement appearance type  */
-#define ADV_DATA_APPEARANCE_TYPE		(0x19)
+#define ADV_DATA_APPEARANCE_TYPE                (0x19)
 
 /** @brief Advertisement data name type */
-#define ADV_DATA_NAME_TYPE				(0x09)
+#define ADV_DATA_NAME_TYPE                              (0x09)
 #if defined HID_MOUSE_DEVICE
-#define ADV_DATA_NAME_LEN				(10)
-#define ADV_DATA_NAME_DATA				"ATMEL-HIDM"
+#define ADV_DATA_NAME_LEN                               (10)
+#define ADV_DATA_NAME_DATA                              "ATMEL-HIDM"
 #endif
 
 #if defined HID_KEYBOARD_DEVICE
-#define ADV_DATA_NAME_LEN				(10)
-#define ADV_DATA_NAME_DATA				"ATMEL-HIDK"
+#define ADV_DATA_NAME_LEN                               (10)
+#define ADV_DATA_NAME_DATA                              "ATMEL-HIDK"
 #endif
 /** @brief Advertisement data UUID length */
-#define ADV_DATA_UUID_LEN				(2)
+#define ADV_DATA_UUID_LEN                               (2)
 
 /** @brief Advertisement type length */
-#define ADV_TYPE_LEN					(0x01)
+#define ADV_TYPE_LEN                                    (0x01)
 
 /** @brief Advertisement UUID type */
-#define ADV_DATA_UUID_TYPE				(0x03)
-
+#define ADV_DATA_UUID_TYPE                              (0x03)
 
 /****************************************************************************************
-*							        Enumerations	                                   	*
+*							        Enumerations	                                        *
 ****************************************************************************************/
+
 /**@brief HID characteristic
-*/
-typedef enum
-{
+ */
+typedef enum {
 	PROTOCOL_MODE,
 	REPORT_MAP,
 	CHAR_REPORT,
@@ -162,90 +161,81 @@ typedef enum
 	BOOT_KEY_INPUT_REPORT,
 	HID_INFORMATION,
 	CONTROL_POINT,
-}hid_char_type_t;
+} hid_char_type_t;
 
 /**@brief HID Profile error code
-*/
-typedef enum
-{
+ */
+typedef enum {
 	HID_PRF_SUCESS = 0,
 	HID_PRF_INSTANCE_OUT_RANGE,
 	HID_PRF_NO_INSTANCE,
-}hid_prf_error_t;
+} hid_prf_error_t;
 
 /****************************************************************************************
-*							        Structures                                     		*
+*							        Structures                                              *
 ****************************************************************************************/
 /**@brief HID control point info, notify to user when control point change by user. */
-typedef struct hid_control_mode_ntf
-{
+typedef struct hid_control_mode_ntf {
 	uint8_t serv_inst;        /**< Service instance number. */
 	uint16_t control_value;   /**< Suspend or exit suspend. */
-}hid_control_mode_ntf_t;
+} hid_control_mode_ntf_t;
 
 /**@brief HID protocol mode info, notify to user when protocol mode change by user. */
-typedef struct hid_proto_mode_ntf
-{
+typedef struct hid_proto_mode_ntf {
 	at_ble_handle_t conn_handle; /**< Connection Handle. */
-	uint8_t serv_inst;			/**< Service instance number. */
-	uint16_t mode;				/**< Protocol mode or report mode. */
-}hid_proto_mode_ntf_t;
+	uint8_t serv_inst;                      /**< Service instance number. */
+	uint16_t mode;                          /**< Protocol mode or report mode. */
+} hid_proto_mode_ntf_t;
 
 /**@brief HID boot notification or indication, notify to user. */
-typedef struct hid_boot_ntf
-{
-	uint8_t serv_inst;				/**< Service instance number. */
-	uint8_t boot_value;				/**< Keyboard or mouse. */
-	uint16_t ntf_conf;				/**< Notification or Indication status. */
-	at_ble_handle_t conn_handle;	/**< Connection Handle. */
-}hid_boot_ntf_t;
+typedef struct hid_boot_ntf {
+	uint8_t serv_inst;                              /**< Service instance number. */
+	uint8_t boot_value;                             /**< Keyboard or mouse. */
+	uint16_t ntf_conf;                              /**< Notification or Indication status. */
+	at_ble_handle_t conn_handle;    /**< Connection Handle. */
+} hid_boot_ntf_t;
 
 /**@brief HID report notification or indication, notify to user. */
-typedef struct hid_report_ntf
-{
-	uint8_t serv_inst;				/**< Service instance number. */
-	uint8_t report_ID;				/**< Report ID to be notify or indicated. */
-	uint16_t ntf_conf;				/**< Notification or Indication status. */
-	at_ble_handle_t conn_handle;	/**< Connection Handle. */
-}hid_report_ntf_t;
+typedef struct hid_report_ntf {
+	uint8_t serv_inst;                              /**< Service instance number. */
+	uint8_t report_ID;                              /**< Report ID to be notify or indicated. */
+	uint16_t ntf_conf;                              /**< Notification or Indication status. */
+	at_ble_handle_t conn_handle;    /**< Connection Handle. */
+} hid_report_ntf_t;
 
 /**@brief HID info of device. */
-typedef struct hid_info
-{
-	uint16_t bcd_hid;				/**< Version number. */
-	uint8_t  bcountry_code;			/**< Country code. */
-	uint8_t  flags;					/**< Wakeup and connectable info. */
-}hid_info_t;
+typedef struct hid_info {
+	uint16_t bcd_hid;                               /**< Version number. */
+	uint8_t bcountry_code;                  /**< Country code. */
+	uint8_t flags;                                  /**< Wakeup and connectable info. */
+} hid_info_t;
 
 /**@brief HID Report Reference Descriptor. */
-typedef struct hid_report_ref
-{
-	uint8_t  report_id;				/**< Country code. */
-	uint8_t  report_type;           /**< Wakeup and connectable info. */
-}hid_report_ref_t;
+typedef struct hid_report_ref {
+	uint8_t report_id;                              /**< Country code. */
+	uint8_t report_type;            /**< Wakeup and connectable info. */
+} hid_report_ref_t;
 
 /**@brief HID Report Map Information. */
-typedef struct hid_report_map
-{
-	uint8_t *report_map;			/**< Report map info. */
-	uint16_t report_map_len;	    /**< Report map length. */
-}hid_report_map_t;
+typedef struct hid_report_map {
+	uint8_t *report_map;                    /**< Report map info. */
+	uint16_t report_map_len;            /**< Report map length. */
+} hid_report_map_t;
 
 /**@brief HID profile application info. */
-typedef struct
-{
+typedef struct {
 	uint16_t serv_handle_info;                   /**< Service handle information. */
 	uint8_t hid_serv_instance;                   /**< Number of HID service instance. */
 	uint8_t hid_device;                          /**< Type of HID device. */
-	uint8_t protocol_mode;						 /**< Protocol mode selected by user. */
-	uint8_t num_of_report;						 /**< Number of report. */
+	uint8_t protocol_mode;                                           /**< Protocol mode selected by user. */
+	uint8_t num_of_report;                                           /**< Number of report. */
 	uint8_t report_id[HID_MAX_REPORT_NUM];       /**< Report id based on number of report. */
 	uint8_t report_type[HID_MAX_REPORT_NUM];     /**< Report type based on number of report. */
 	uint8_t *report_val[HID_MAX_REPORT_NUM];     /**< Report value based on number of report. */
-	uint8_t report_len[HID_MAX_REPORT_NUM];		 /**< Report Length based on number of report. */
+	uint8_t report_len[HID_MAX_REPORT_NUM];          /**< Report Length based on number of report. */
 	hid_report_map_t report_map_info;            /**< Report map information based on device. */
-	hid_info_t hid_device_info;					 /**< HID information. */
-}hid_prf_info_t;
+	hid_info_t hid_device_info;                                      /**< HID information. */
+} hid_prf_info_t;
 
 /****************************************************************************************
 *							        Basic types                                         *
@@ -266,33 +256,33 @@ typedef void (*control_point_ntf_callback_t)(hid_control_mode_ntf_t *);
 *                                       Functions                                       *
 ****************************************************************************************/
 
-/** @brief HID device profile configuration function 
-  * 
-  * @param[in] ref	HID profile application info
-  * @return @ref	HID_PRF_SUCESS operation completed successfully
-  * @return @ref	HID_PRF_INSTANCE_OUT_RANGE Service cannot be registered
-  * @return @ref	HID_PRF_NO_INSTANCE ref value is NULL
-  */
+/** @brief HID device profile configuration function
+ *
+ * @param[in] ref	HID profile application info
+ * @return @ref	HID_PRF_SUCESS operation completed successfully
+ * @return @ref	HID_PRF_INSTANCE_OUT_RANGE Service cannot be registered
+ * @return @ref	HID_PRF_NO_INSTANCE ref value is NULL
+ */
 uint8_t hid_prf_conf(hid_prf_info_t *ref);
 
 void hid_prf_var_init(void);
 
-/** @brief HID device profile initialization function 
+/** @brief HID device profile initialization function
  */
 void hid_prf_init(void *param);
 
 /** @brief HID device disconnected handler function
-  * 
-  * @param[in] disconnect disconnect info
-  * @return @ref AT_BLE_SUCCESS operation completed successfully
-  */
+ *
+ * @param[in] disconnect disconnect info
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ */
 at_ble_status_t hid_prf_disconnect_event_handler(at_ble_disconnected_t *disconnect);
 
 /** @brief Report notification handler function
-*/
+ */
 void notify_report_ntf_handler(report_ntf_callback_t report_ntf_fn);
 
-/** @brief Boot notification handler function 
+/** @brief Boot notification handler function
  */
 void notify_boot_ntf_handler(boot_ntf_callback_t boot_ntf_fn);
 
@@ -300,7 +290,7 @@ void notify_boot_ntf_handler(boot_ntf_callback_t boot_ntf_fn);
  */
 void notify_protocol_mode_handler(protocol_mode_ntf_callback_t proto_mode_ntf_fn);
 
-/** @brief Control point notification handler function 
+/** @brief Control point notification handler function
  */
 void notify_control_point_handler(control_point_ntf_callback_t control_mode_ntf_fn);
 
@@ -312,35 +302,35 @@ void hid_prf_dev_adv(void);
  */
 at_ble_status_t hid_prf_char_changed_handler(at_ble_characteristic_changed_t *char_handle);
 
-/** @brief Called by user to notify report to HID host 
-  * 
-  * @param[in] conn_handle	Connection handle
-  * @param[in] serv_inst	Service instance
-  * @param[in] reportid		Report ID corresponding to report
-  * @param[in] report		Report info that need to send to host
-  * @param[in] len			Report length 
-  */
+/** @brief Called by user to notify report to HID host
+ *
+ * @param[in] conn_handle	Connection handle
+ * @param[in] serv_inst	Service instance
+ * @param[in] reportid		Report ID corresponding to report
+ * @param[in] report		Report info that need to send to host
+ * @param[in] len			Report length
+ */
 void hid_prf_report_update(uint16_t conn_handle, uint8_t serv_inst, uint8_t reportid, uint8_t *report, uint16_t len);
 
-/** @brief Called by user to notify boot report for mouse to HID host 
-  * 
-  * @param[in] conn_handle	Connection handle
-  * @param[in] serv_inst	Service instance
-  * @param[in] bootreport	Report info that need to send to host
-  * @param[in] len			Report length 
-  */
+/** @brief Called by user to notify boot report for mouse to HID host
+ *
+ * @param[in] conn_handle	Connection handle
+ * @param[in] serv_inst	Service instance
+ * @param[in] bootreport	Report info that need to send to host
+ * @param[in] len			Report length
+ */
 void hid_prf_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len);
 
-/** @brief Called by user to notify boot report for keyboard to HID host 
-  * 
-  * @param[in] conn_handle	Connection handle
-  * @param[in] serv_inst	Service instance
-  * @param[in] bootreport	Report info that need to send to host
-  * @param[in] len			Report length 
-  */
+/** @brief Called by user to notify boot report for keyboard to HID host
+ *
+ * @param[in] conn_handle	Connection handle
+ * @param[in] serv_inst	Service instance
+ * @param[in] bootreport	Report info that need to send to host
+ * @param[in] len			Report length
+ */
 void hid_prf_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len);
 
 #endif /*__HID_DEVICE_H__*/
-// </h>
+/* </h> */
 
-// <<< end of configuration section >>>
+/* <<< end of configuration section >>> */

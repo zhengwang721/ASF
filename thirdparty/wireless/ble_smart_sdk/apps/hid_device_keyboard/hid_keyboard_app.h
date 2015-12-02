@@ -51,27 +51,27 @@
 #include "stdio.h"
 
 /****************************************************************************************
-*							        Macros	                                     							*
+*							        Macros	                                                                                        *
 ****************************************************************************************/
 /** @brief Key pad debounce time */
-#define KEY_PAD_DEBOUNCE_TIME	(200)
+#define KEY_PAD_DEBOUNCE_TIME   (200)
 
 /** @brief Maximum text length */
-#define MAX_TEXT_LEN			(11)
+#define MAX_TEXT_LEN                    (11)
 
 /** @brief Represent zero position */
-#define POSITION_ZERO			(0)
+#define POSITION_ZERO                   (0)
 
 /** @brief Represent six position */
-#define POSITION_SIX			(6)
+#define POSITION_SIX                    (6)
 
 /** @brief Enable caps */
-#define CAPS_ON					(2)
+#define CAPS_ON                                 (2)
 
 /** @brief Disable caps */
-#define CAPS_OFF				(0)
+#define CAPS_OFF                                (0)
 
 /****************************************************************************************
-*							        Function                                     		*
+*							        Function                                                *
 ****************************************************************************************/
 #endif /*__HID_DEVICE_APP_H__*/

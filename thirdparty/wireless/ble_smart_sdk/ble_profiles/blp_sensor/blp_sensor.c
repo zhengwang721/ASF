@@ -43,11 +43,11 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- *Support</a>
+ * Support</a>
  */
 
 /****************************************************************************************
-*							        Includes	
+*							        Includes
 *                                       *
 ****************************************************************************************/
 #include <string.h>
@@ -60,7 +60,7 @@
 #include "ble_utils.h"
 
 /****************************************************************************************
-*							        Globals		
+*							        Globals
 *                                       *
 ****************************************************************************************/
 /** @brief device information service handler **/
@@ -70,10 +70,10 @@ dis_gatt_service_handler_t dis_service_handler;
 blp_gatt_service_handler_t blp_service_handler;
 
 /** @brief callback functions pointers contains the address of application
- *functions **/
+ * functions **/
 blp_notification_callback_t notification_cb;
 
-blp_indication_callback_t	indication_cb;
+blp_indication_callback_t indication_cb;
 
 connected_callback_t connected_cb;
 
@@ -91,13 +91,13 @@ at_ble_handle_t connection_handle;
  */
 void register_connected_callback(connected_callback_t app_connected_cb)
 {
-	connected_cb = app_connected_cb ;
+	connected_cb = app_connected_cb;
 }
 
 /** @brief register_blp_notification_handler registers the notification handler
  * passed by the application
  *  @param[in] blp_notification_callback_t address of the notification handler
- *function to be called
+ * function to be called
  */
 void register_blp_notification_handler(
 		blp_notification_callback_t blp_notificaton_handler)
@@ -108,18 +108,18 @@ void register_blp_notification_handler(
 /** @brief register_blp_indication_handler registers the indication handler
  * passed by the application
  *  @param[in] blp_indication_callback_t address of the indication handler
- *function to be called
+ * function to be called
  */
 void register_blp_indication_handler(
 		blp_indication_callback_t blp_indication_handler)
 {
-		indication_cb = blp_indication_handler;
+	indication_cb = blp_indication_handler;
 }
 
-/** @brief blp_notification_confirmation_handler called by ble manager 
+/** @brief blp_notification_confirmation_handler called by ble manager
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
- */	
+ */
 void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 {
 	if (params->status == AT_BLE_SUCCESS) {
@@ -129,10 +129,10 @@ void blp_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 	}
 }
 
-/** @brief blp_indication_confirmation_handler called by ble manager 
+/** @brief blp_indication_confirmation_handler called by ble manager
  *	to give the status of notification sent
  *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
- */	
+ */
 void blp_indication_confirmation_handler(at_ble_indication_confirmed_t *params)
 {
 	if (params->status == AT_BLE_SUCCESS) {
@@ -162,7 +162,7 @@ void blp_sensor_send_notification(uint8_t *blp_data, uint8_t length)
 	}
 
 	/** Sending the notification for the updated characteristic */
-	if ((status	= at_ble_notification_send(connection_handle,
+	if ((status     = at_ble_notification_send(connection_handle,
 					blp_service_handler.serv_chars[1]
 					.char_val_handle))) {
 		DBG_LOG("Send notification failed,reason %x", status);
@@ -189,25 +189,23 @@ void blp_sensor_send_indication(uint8_t *blp_data, uint8_t length)
 	}
 
 	/** Sending the indication for the updated characteristic */
-	if ((status	= at_ble_indication_send(connection_handle,
-						blp_service_handler.serv_chars[0]
-						.char_val_handle))) {
-			DBG_LOG("Send indication failed,reason %x", status);
+	if ((status     = at_ble_indication_send(connection_handle,
+					blp_service_handler.serv_chars[0]
+					.char_val_handle))) {
+		DBG_LOG("Send indication failed,reason %x", status);
 	}
-
 }
-
 
 /** @brief blp_sensor_char_changed_handler called by the ble manager after a
  * change in the characteristic
  *  @param[in] at_ble_characteristic_changed_t which contains handle of
- *characteristic and new value
+ * characteristic and new value
  */
 at_ble_status_t blp_sensor_char_changed_handler(
 		at_ble_characteristic_changed_t *char_handle)
 {
 	uint8_t action_event = 0;
-	at_ble_characteristic_changed_t change_params = {0,};
+	at_ble_characteristic_changed_t change_params = {0, };
 	memcpy((uint8_t *)&change_params, char_handle,
 			sizeof(at_ble_characteristic_changed_t));
 
@@ -217,8 +215,8 @@ at_ble_status_t blp_sensor_char_changed_handler(
 	if ((action_event == BLP_NOTIFICATION_ENABLE) ||
 			(action_event == BLP_NOTIFICATION_DISABLE)) {
 		if (action_event == BLP_NOTIFICATION_ENABLE) {
-			notification_cb(true);	
-		} else if (action_event == BLP_NOTIFICATION_DISABLE){
+			notification_cb(true);
+		} else if (action_event == BLP_NOTIFICATION_DISABLE) {
 			notification_cb(false);
 		}
 	} else if ((action_event == BLP_INDICATION_ENABLE) ||
@@ -236,29 +234,29 @@ at_ble_status_t blp_sensor_char_changed_handler(
 /** @brief blp_sensor_disconnect_event_handler called by ble manager after
  * disconnection event received
  *	@param[in] at_ble_disconnected_t	which has connection handle and
- *reason for disconnection
+ * reason for disconnection
  */
 at_ble_status_t blp_sensor_disconnect_event_handler(
 		at_ble_disconnected_t *disconnect)
 {
 	blp_sensor_adv();
 	connected_cb(false);
-//    ALL_UNUSED(disconnect);
-	
+	/*    ALL_UNUSED(disconnect); */
+
 	return AT_BLE_SUCCESS;
 }
 
 /** @brief blp_sensor_connected_state_handler called by ble manager after a
  * change in characteristic
  *  @param[in] at_ble_connected_t which has connection handle and the peer
- *device address
+ * device address
  */
 at_ble_status_t blp_sensor_connected_state_handler(
 		at_ble_connected_t *conn_params)
 {
 	connected_cb(true);
 	connection_handle = (at_ble_handle_t)conn_params->handle;
-		
+
 	return AT_BLE_SUCCESS;
 }
 
@@ -270,7 +268,7 @@ void blp_sensor_adv(void)
 {
 	at_ble_status_t status = AT_BLE_SUCCESS;
 	uint8_t idx = 0;
-	uint8_t adv_data[BLP_SENSOR_ADV_DATA_NAME_LEN + BLP_SENSOR_ADV_DATA_UUID_LEN + (3 * 2)] = {0,};
+	uint8_t adv_data[BLP_SENSOR_ADV_DATA_NAME_LEN + BLP_SENSOR_ADV_DATA_UUID_LEN + (3 * 2)] = {0, };
 	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 	adv_data[idx++] = BLP_SENSOR_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
@@ -328,12 +326,11 @@ void blp_sensor_service_define(void)
 		DBG_LOG("Blood Pressure Service definition Failed,reason: %x",
 				status);
 	}
-	
+
 	if ((status = dis_primary_service_define(&dis_service_handler)) !=
 			AT_BLE_SUCCESS) {
 		DBG_LOG("Dis Service definition failed,reason: %x", status);
 	}
-	
 }
 
 /**
@@ -363,5 +360,5 @@ void blp_sensor_init(void *param)
 	blp_sensor_service_init();
 	blp_sensor_service_define();
 	blp_sensor_adv();
-//    ALL_UNUSED(param);
+	/*    ALL_UNUSED(param); */
 }

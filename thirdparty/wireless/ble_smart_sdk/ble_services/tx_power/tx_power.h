@@ -40,87 +40,84 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-// <<< Use Configuration Wizard in Context Menu >>>
-// <h> Tx Power Service Configuration
-// =======================
+/* <<< Use Configuration Wizard in Context Menu >>> */
+/* <h> Tx Power Service Configuration */
+/* ======================= */
 
 #ifndef __TX_POWER_H__
 #define __TX_POWER_H__
 
 #include "ble_manager.h"
 
-//  <q> Enable Tx Power Service GATT Server Role
-//  <i> Defines to support GATT Server Role
-//  <id> txps_server
+/*  <q> Enable Tx Power Service GATT Server Role */
+/*  <i> Defines to support GATT Server Role */
+/*  <id> txps_server */
 #define TXPS_SERVER 0
 
  #if defined TXPS_GATT_SERVER
 
 /****************************************************************************************
-*							        Macros	                                     		*
+*							        Macros	                                                *
 ****************************************************************************************/
 
 /** @brief  DEFAULT_TX_PWR_VALUE the tx power value*/
-#define DEFAULT_TX_PWR_VALUE			(0)
-
+#define DEFAULT_TX_PWR_VALUE                    (0)
 
 /** @brief count of included service in tx power service
-  * 
-  */
-#define TXPS_INCLUDED_SERVICE_COUNT		(0)
+ *
+ */
+#define TXPS_INCLUDED_SERVICE_COUNT             (0)
 
 /** @brief count of characteristics in tx power service
-  * 
-  */
-#define TXPS_CHARACTERISTIC_COUNT		(1)
+ *
+ */
+#define TXPS_CHARACTERISTIC_COUNT               (1)
 
-typedef struct gatt_txps_char_handler
-{
+typedef struct gatt_txps_char_handler {
 	at_ble_handle_t start_handle;
 	at_ble_handle_t end_handle;
 	at_ble_handle_t char_handle;
 	at_ble_status_t char_discovery;
 	uint8_t *char_data;
-}gatt_txps_char_handler_t;
-
+} gatt_txps_char_handler_t;
 
 /****************************************************************************************
 *							        Function Declarations	                            *
 ****************************************************************************************/
 
 /** @brief Initialize the tx power service with default values
-  * 
-  *
-  * @param[in] gatt_service_handler_t  the service info which has handle range,uuid and characteristic array fields
-  *
-  * @pre Must be called before @ref txps_primary_service_define
-  *
-  * @return void
-  */
+ *
+ *
+ * @param[in] gatt_service_handler_t  the service info which has handle range,uuid and characteristic array fields
+ *
+ * @pre Must be called before @ref txps_primary_service_define
+ *
+ * @return void
+ */
 
 void init_tx_power_service(gatt_service_handler_t *tx_power_serv);
 
-
-
 /** @brief Defining the tx power service to the attribute data base
-  * 
-  *
-  * @param[in] gatt_service_handler_t  the service info which has handle range,uuid and characteristic array fields
-  *
-  * @pre Must be called after @ref init_tx_power_service
-  *
-  * @return @ref AT_BLE_SUCCESS operation completed successfully
-  * @return @ref AT_BLE_FAILURE Generic error.
-  */
+ *
+ *
+ * @param[in] gatt_service_handler_t  the service info which has handle range,uuid and characteristic array fields
+ *
+ * @pre Must be called after @ref init_tx_power_service
+ *
+ * @return @ref AT_BLE_SUCCESS operation completed successfully
+ * @return @ref AT_BLE_FAILURE Generic error.
+ */
 at_ble_status_t txps_primary_service_define(gatt_service_handler_t *txps_primary_service);
-#endif//TXPS_GATT_SERVER
 
-//  <q> Enable Tx Power Service GATT Client Role
-//  <i> Defines to support GATT Client Role
-//  <id> txps_client
+#endif /* TXPS_GATT_SERVER */
+
+/*  <q> Enable Tx Power Service GATT Client Role */
+/*  <i> Defines to support GATT Client Role */
+/*  <id> txps_client */
 #define TXPS_CLIENT 0
 
 #if defined TXPS_GATT_CLIENT
@@ -139,19 +136,18 @@ at_ble_status_t txps_primary_service_define(gatt_service_handler_t *txps_primary
 /* Tx Power invalid read Power value */
 #define TXPS_INVALID_POWER_VALUE                (0xFF)
 
-typedef struct gatt_txps_char_handler
-{
+typedef struct gatt_txps_char_handler {
 	at_ble_handle_t start_handle;
 	at_ble_handle_t end_handle;
 	at_ble_handle_t char_handle;
 	at_ble_status_t char_discovery;
 	uint8_t *char_data;
-}gatt_txps_char_handler_t;
+} gatt_txps_char_handler_t;
 
 /**@brief Send the Read Request to Tx Power service
  *
  * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
- *event
+ * event
  *
  * @param[in] conn_handle handle of the connection
  * @param[in] char_handle handle of the characteristic
@@ -160,21 +156,22 @@ typedef struct gatt_txps_char_handler
  * @return @ref AT_BLE_FAILURE Generic error.
  */
 at_ble_status_t txps_power_read(at_ble_handle_t conn_handle,
-    at_ble_handle_t char_handle);
+		at_ble_handle_t char_handle);
 
 /**@brief Read a Tx Power
  *
  * @param[in] read_value read response data available form
- *at_ble_characteristic_read_response_t
+ * at_ble_characteristic_read_response_t
  * @return TX power in dBm .
  * @return @ref TXPS_INVALID_POWER_VALUE if is not valid result
  */
 int8_t txps_power_read_response(
-    at_ble_characteristic_read_response_t *char_read_resp,
-    gatt_txps_char_handler_t *txps_handler);
-#endif //TXPS_GATT_CLIENT
+		at_ble_characteristic_read_response_t *char_read_resp,
+		gatt_txps_char_handler_t *txps_handler);
+
+#endif /* TXPS_GATT_CLIENT */
 
 #endif /* __TX_POWER_H__ */
-// </h>
+/* </h> */
 
-// <<< end of configuration section >>>
+/* <<< end of configuration section >>> */

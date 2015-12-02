@@ -1,4 +1,3 @@
-
 /**
  * \file
  *
@@ -41,13 +40,14 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
  * Support</a>
  */
 
 /****************************************************************************************
-*							        Includes	                                     	*
+*							        Includes	                                        *
 ****************************************************************************************/
 
 #include "timer_hw.h"
@@ -55,9 +55,8 @@
 #include "find_me_target.h"
 #include "immediate_alert.h"
 
-
 /****************************************************************************************
-*							        Globals	                                     		*
+*							        Globals	                                                *
 ****************************************************************************************/
 
 /* Immediate alert service declaration */
@@ -89,7 +88,7 @@ void register_find_me_handler(find_me_callback_t immediate_alert_fn)
 void fmp_target_service_init(void)
 {
 	/** Initializing the mandatory immediate alert service of find me
-	 *profile*/
+	 * profile*/
 	init_immediate_alert_service(&ias_handle);
 }
 
@@ -110,7 +109,7 @@ at_ble_status_t fmp_target_service_define(void)
 void fmp_target_adv(void)
 {
 	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
-	
+
 	uint8_t idx = 0;
 	uint8_t adv_data [ FMP_ADV_DATA_NAME_LEN + IAL_ADV_DATA_UUID_LEN   + (2 * 2)];
 
@@ -180,10 +179,10 @@ at_ble_status_t fmp_target_connected_state_handler(
 {
 	at_ble_status_t status;
 	uint16_t len;
-	
-	///* Upon connection set default value to no alert*/
-	//immediate_alert_cb(IAS_NO_ALERT);
-	
+
+	/* / * Upon connection set default value to no alert* / */
+	/* immediate_alert_cb(IAS_NO_ALERT); */
+
 	if ((status
 				= at_ble_characteristic_value_get(ias_handle.
 					serv_chars.char_val_handle,
@@ -216,7 +215,6 @@ at_ble_status_t fmp_target_disconnect_event_handler(
 
 	return AT_BLE_SUCCESS;
 }
-
 
 /**
  * \Find me Profile service initialization, declarations and advertisement

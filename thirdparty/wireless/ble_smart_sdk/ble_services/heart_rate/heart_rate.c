@@ -47,6 +47,7 @@
  */
 
 /************************************************************************/
+
 /*							Includes
  *                                   */
 /************************************************************************/
@@ -54,7 +55,8 @@
 #include "heart_rate.h"
 
 /************************************************************************/
-/*							Globals	
+
+/*							Globals
  *                                   */
 /************************************************************************/
 /** initial heart rate measurement value */
@@ -67,6 +69,7 @@ uint8_t body_sensor_location_value = CHEST;
 uint8_t hr_control_point_value = 0;
 
 /************************************************************************/
+
 /*							Implementation
  *                             */
 /************************************************************************/
@@ -83,7 +86,7 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	hr_measurement_value = 0;
 	body_sensor_location_value = CHEST;
 	hr_control_point_value = 0;
-	
+
 	heart_rate_serv->serv_handle = 0;
 	heart_rate_serv->serv_uuid.type = AT_BLE_UUID_16;
 	heart_rate_serv->serv_uuid.uuid[0] = (uint8_t)HEART_RATE_SERVICE_UUID;
@@ -111,16 +114,16 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 
 	heart_rate_serv->serv_chars[0].value_max_len = HR_MM_FLAGS_SIZE +
 			HR_MM_VAL_SIZE + HR_MM_EX_SIZE + HR_MM_RR_SIZE;
-	
+
 	/* Permissions */
 	#if BLE_PAIR_ENABLE
-		heart_rate_serv->serv_chars[0].value_permissions
-							= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+	heart_rate_serv->serv_chars[0].value_permissions
+		= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
 	#else
-		heart_rate_serv->serv_chars[0].value_permissions
-							= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	heart_rate_serv->serv_chars[0].value_permissions
+		= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
 	#endif
 
 	/* user defined name */
@@ -130,18 +133,17 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	/*user description permissions*/
 	heart_rate_serv->serv_chars[0].user_desc_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
-	
+
 	/* client config permissions */
 	#if BLE_PAIR_ENABLE
 	heart_rate_serv->serv_chars[0].client_config_permissions
-							= (AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
-	
-	#else 
+		= (AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+
+	#else
 	heart_rate_serv->serv_chars[0].client_config_permissions
-							= (AT_BLE_ATTR_NO_PERMISSIONS);
-	#endif 
-	
-	
+		= (AT_BLE_ATTR_NO_PERMISSIONS);
+	#endif
+
 	/*server config permissions*/
 	heart_rate_serv->serv_chars[0].server_config_permissions
 		= AT_BLE_ATTR_NO_PERMISSIONS;
@@ -156,8 +158,8 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 
 	/* Characteristic Info for Body Sensor Location */
 	heart_rate_serv->serv_chars[1].char_val_handle = 0;          /* handle
-	                                                              *stored
-	                                                              *here */
+	                                                              * stored
+	                                                              * here */
 	heart_rate_serv->serv_chars[1].uuid.type = AT_BLE_UUID_16;
 	/* UUID : Body Sensor Location*/
 	heart_rate_serv->serv_chars[1].uuid.uuid[0]
@@ -174,17 +176,17 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	heart_rate_serv->serv_chars[1].value_max_len = sizeof(uint8_t);
 
 	/* permissions */
-	
+
 	#if BLE_PAIR_ENABLE
-		heart_rate_serv->serv_chars[1].value_permissions
-							= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
-	#else	
-		heart_rate_serv->serv_chars[1].value_permissions
-							= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+	heart_rate_serv->serv_chars[1].value_permissions
+		= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+	#else
+	heart_rate_serv->serv_chars[1].value_permissions
+		= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
 	#endif
-	
+
 	/* user defined name */
 	heart_rate_serv->serv_chars[1].user_desc = NULL;
 	heart_rate_serv->serv_chars[1].user_desc_len = 0;
@@ -225,21 +227,20 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 
 	heart_rate_serv->serv_chars[2].value_init_len = sizeof(uint8_t);
 	heart_rate_serv->serv_chars[2].value_max_len = sizeof(uint8_t);
-	
+
 	/* permissions */
-	
+
 	#if BLE_PAIR_ENABLE
-		heart_rate_serv->serv_chars[2].value_permissions
-							= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
-	
+	heart_rate_serv->serv_chars[2].value_permissions
+		= (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+
 	#else
-		heart_rate_serv->serv_chars[2].value_permissions
-							= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-								AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
-	
+	heart_rate_serv->serv_chars[2].value_permissions
+		= (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
+			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
 	#endif
-	
+
 	/* user defined name */
 	heart_rate_serv->serv_chars[2].user_desc = NULL;
 	heart_rate_serv->serv_chars[2].user_desc_len = 0;
@@ -289,8 +290,7 @@ uint8_t hr_write_value_handler(hr_gatt_service_handler_t *hr_primary_service,
 		at_ble_characteristic_changed_t *params)
 {
 	if (params->char_handle ==
-			hr_primary_service->serv_chars[0].client_config_handle)
-	{
+			hr_primary_service->serv_chars[0].client_config_handle) {
 		if (params->char_new_value[0] == true) {
 			return HR_NOTIFICATION_ENABLE;
 		} else if (params->char_new_value[0] == false) {

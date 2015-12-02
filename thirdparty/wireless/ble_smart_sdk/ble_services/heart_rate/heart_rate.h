@@ -46,9 +46,9 @@
  * Support</a>
  */
 
-// <<< Use Configuration Wizard in Context Menu >>>
-// <h> Heart Rate Sensor Service Configuration
-// =======================
+/* <<< Use Configuration Wizard in Context Menu >>> */
+/* <h> Heart Rate Sensor Service Configuration */
+/* ======================= */
 #ifndef __HEART_RATE_H__
 #define __HEART_RATE_H__
 
@@ -56,9 +56,9 @@
 /*                              Includes                                */
 /************************************************************************/
 
-
 /************************************************************************/
-/*								MACROS					
+
+/*								MACROS
  *               */
 /************************************************************************/
 
@@ -70,37 +70,37 @@
 /**
  * @brief Heart rate measurement characteristic UUID
  */
-#define HEART_RATE_MEASUREMENT_CHAR_UUID										(0x2A37)
+#define HEART_RATE_MEASUREMENT_CHAR_UUID                                                                                (0x2A37)
 
 /**
  * @brief Body Sensor location characteristic UUID
  */
-#define BODY_SENSOR_LOCATION_CHAR_UUID											(0x2A38)
+#define BODY_SENSOR_LOCATION_CHAR_UUID                                                                                  (0x2A38)
 
 /**
  * @brief Heart Rate Control Point characteristic UUID
  */
-#define HEART_RATE_CONTROL_POINT_CHAR_UUID										(0x2A39)
+#define HEART_RATE_CONTROL_POINT_CHAR_UUID                                                                              (0x2A39)
 
 /**
  * @brief Total no of characteristic in heart rate service
  */
-#define HR_TOTAL_CHARATERISTIC_NUM													(3)
+#define HR_TOTAL_CHARATERISTIC_NUM                                                                                                      (3)
 
 /**
  * @brief number for Enabling the notification
  */
-#define HR_NOTIFICATION_DISABLE														(0)
+#define HR_NOTIFICATION_DISABLE                                                                                                         (0)
 
 /**
  * @brief number for disabling the notification
  */
-#define HR_NOTIFICATION_ENABLE														(1)
+#define HR_NOTIFICATION_ENABLE                                                                                                          (1)
 
 /**
  * @brief number for resetting energy expended
  */
-#define HR_CONTROL_POINT_RESET														(2)
+#define HR_CONTROL_POINT_RESET                                                                                                          (2)
 
 /**
  * @brief maximum size of flags field of hr mm characteristic in bytes
@@ -123,7 +123,8 @@
 #define HR_MM_RR_SIZE                                                               (2 * 2)
 
 /************************************************************************/
-/*								enum					
+
+/*								enum
  *               */
 /************************************************************************/
 
@@ -138,6 +139,7 @@ typedef enum {
 } body_sensor_location_val;
 
 /************************************************************************/
+
 /*							Types
  *                                      */
 /************************************************************************/
@@ -155,6 +157,7 @@ typedef struct hr_gatt_service_handler {
 } hr_gatt_service_handler_t;
 
 /************************************************************************/
+
 /*						Functions
  *                                      */
 /************************************************************************/
@@ -188,6 +191,6 @@ uint8_t hr_write_value_handler(hr_gatt_service_handler_t *hr_primary_service,
 		at_ble_characteristic_changed_t *params);
 
 #endif /* __HEART_RATE_H__ */
-// </h>
+/* </h> */
 
-// <<< end of configuration section >>>
+/* <<< end of configuration section >>> */
