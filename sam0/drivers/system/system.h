@@ -68,13 +68,13 @@ extern "C" {
  * The following peripherals are used by this module:
  * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  - PM (Power Manager)
- *  - RSTC(Reset Controller)
- *  - SUPC(Supply Controller)
+ *  - RSTC (Reset Controller)
+ *  - SUPC (Supply Controller)
  * \endif
  * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  - PM (Power Manager)
- *  - RSTC(Reset Controller)
- *  - SUPC(Supply Controller)
+ *  - RSTC (Reset Controller)
+ *  - SUPC (Supply Controller)
  * \endif
  * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  - SYSCTRL (System Control)
