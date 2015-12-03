@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<project caption="BNO055 Accelerometer example for SAME70-XPLD" id="thirdparty.sensor.bno055.example.same70_xplained">
+		<info type="description" value="summary">
+		This example demonstrates how to configure BNO055 accelerometer and check sensor values of nine axis by it.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_bno055.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<require idref="thirdparty.sensor.bno055.example"/>
+		<require idref="board.same70_xplained"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70q21"/>
+	</project>
+</asf>

@@ -306,13 +306,13 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
  *
  * <table>
  * <tr>
- *    <th>Doc. Rev.</td>
- *    <th>Date</td>
- *    <th>Comments</td>
+ *    <th>Doc. Rev.</th>
+ *    <th>Date</th>
+ *    <th>Comments</th>
  * </tr>
  * <tr>
  *    <td>42342B</td>
- *    <td>10/2015</td>
+ *    <td>12/2015</td>
  *    <td>Fixed typos</td>
  * </tr>
  * <tr>
