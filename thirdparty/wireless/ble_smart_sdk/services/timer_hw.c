@@ -41,9 +41,16 @@ void hw_timer_register_callback(hw_timer_callback_t timer_callback_handler)
 	NVIC_EnableIRQ(DUALTIMER0_IRQn);
 }
 
-void hw_timer_start(int dealy)
+void hw_timer_start(int delay)
 {
 	/* timer_set_value(dealy); */
+	
+	if(delay <= 0) {
+		delay = 1;
+	}
+
+	dualtimer_set_counter(0,DUALTIMER_SET_CURRUNT_REG,CONF_DUALTIMER_TIMER1_LOAD*delay);
+	//dualtimer_set_counter(0,DUALTIMER_SET_BG_REG,CONF_DUALTIMER_TIMER1_LOAD*delay);
 
 	dualtimer_enable(0);
 	/* dualtimer_enable(1); */
