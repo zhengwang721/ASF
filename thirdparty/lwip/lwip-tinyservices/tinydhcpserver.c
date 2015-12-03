@@ -1,11 +1,10 @@
 /**
- * @file
- * Tiny Dynamic Host Configuration Protocol server
  *
- */
-
-/**
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * \file
+ *
+ * \brief Tiny DHCP Server.
+ *
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -23,9 +22,6 @@
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -90,9 +86,10 @@ void lwip_dhcp_unregister_mac(uint8_t *mac)
 	}
 }
 
-/** Find a IP address for MAC.
+/**
+ * \brief Find a IP address for MAC.
  *
- * @return IP address if available, NULL if not.
+ * \return IP address if available, NULL if not.
  */
 static ip_addr_t lwip_dhcp_get_ip_address(uint8_t *mac)
 {
@@ -112,13 +109,14 @@ static ip_addr_t lwip_dhcp_get_ip_address(uint8_t *mac)
 	return offered_ip_base;
 }
 
-/** Find an option in a DHCP packet.
+/**
+ * \brief Find an option in a DHCP packet.
  *
- * @param pbuf_in the pbuf containing the a DHCP packet
- * @param option an unsigned char representing the option to search for
- * @param opt_val a pointer to place the value of the option located
- * @param opt_size a pointer to the size of the option located
- * @return 1 if option found, 0 if option not found.
+ * \param pbuf_in the pbuf containing the a DHCP packet.
+ * \param option an unsigned char representing the option to search for.
+ * \param opt_val a pointer to place the value of the option located.
+ * \param opt_size a pointer to the size of the option located.
+ * \return 1 if option found, 0 if option not found.
  */
 static uint16_t lwip_dhcp_find_option(struct pbuf * pbuf_in, uint8_t option, uint8_t * opt_val, uint8_t* opt_size)
 {
@@ -138,25 +136,23 @@ static uint16_t lwip_dhcp_find_option(struct pbuf * pbuf_in, uint8_t option, uin
             offset += *opt_size;
             opt_found = 1;
         }
-        offset++; /* len */
+        offset++;
         offset += ((pbuf_get_at(pbuf_in, offset)) + 1);
     }
 
     return opt_found;
 }
 
-
-//------------------------------------------------------------------------------
-/** Receive DHCP Discover, Request and Inform packets and respond to them by
- *  supplying one IP Address for the client and setting the DNS Server
- *  Address etc to the SmartConnect device's own static IP Address.
+/**
+ * \brief Receive DHCP discover, request and inform packets and respond to 
+ * them by supplying one IP Address for the client and setting the DNS server
+ * address.
  *
- * @param arg unused.
- * @param dhcp_pcb a pointer to the pcb that DHCP packets are received on
- * @param pbuf_in a pointer to the pbuf containing the DHCP packet
- * @param client_addr the IP Address (if any) that originated the DHCP traffic
- * @param port unused
- * @return void
+ * \param arg unused.
+ * \param dhcp_pcb a pointer to the pcb that DHCP packets are received on.
+ * \param pbuf_in a pointer to the pbuf containing the DHCP packet.
+ * \param client_addr the IP Address (if any) that originated the DHCP traffic.
+ * \param port unused.
  */
 static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struct pbuf * pbuf_in, struct ip_addr * client_addr, uint16_t port)
 {
@@ -174,7 +170,6 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
     UNUSED(arg);
     UNUSED(port);
 
-    // get at the raw packet
     Assert(pbuf_in);
 
     if ((NULL == pbuf_in) || ((dhcp_data_in_size = pbuf_in->tot_len) <= DHCP_OPTIONS_OFS)) {
@@ -206,24 +201,24 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
 	/* Read request type. */
     err = pbuf_read8(pbuf_in, DHCP_OPTIONS_OFS+2, &val);
 
-    switch (val) { /* offset into options, and hence, to locate DHCP_OPTION_MESSAGE_TYPE */
+    switch (val) {
         case DHCP_DISCOVER:
             err += pbuf_write8(pbuf_out, DHCP_OP_OFS, DHCP_BOOTREPLY);
             err += pbuf_write8(pbuf_out, DHCP_SECS_OFS, 0);
             err += pbuf_write8(pbuf_out, DHCP_FLAGS_OFS, 0x80);
 
-            /* set up the default address */
+            /* set up the default address. */
             err += pbuf_write_ip(pbuf_out, DHCP_YIADDR_OFS, avail_ip);
 
-            /* set up the default next server address */
+            /* set up the default next server address. */
             err += pbuf_write_ip(pbuf_out, DHCP_SIADDR_OFS, AP_ADDR_IP);
 
-            /* supply the cookie */
+            /* supply the cookie. */
             err += pbuf_write32be(pbuf_out, DHCP_COOKIE_OFS, DHCP_MAGIC_COOKIE);
 
             options_offset = DHCP_OPTIONS_OFS;
 
-            /* Construct a DHCP Offer Packet */
+            /* Construct a DHCP Offer Packet. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_MESSAGE_TYPE);
             options_offset++;
             err += pbuf_write8(pbuf_out, options_offset, 1 /* len */);
@@ -259,7 +254,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write_ip(pbuf_out, options_offset, AP_ADDR_IP);
             options_offset += 4;
 
-            /* set a sane renewal time */
+            /* set a sane renewal time. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_T1);
             options_offset++;
             err += pbuf_write8(pbuf_out, options_offset, 4 /* option len */);
@@ -267,7 +262,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write32be(pbuf_out, options_offset, SANE_RENEWAL_TIME);
             options_offset += 4;
 
-            /* set a rebinding time */
+            /* set a rebinding time. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_T2);
             options_offset++;
             err += pbuf_write8(pbuf_out, options_offset, 4 /* option len */);
@@ -275,7 +270,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write32be(pbuf_out, options_offset, SANE_REBINDING_TIME);
             options_offset += 4;
 
-            /* set a lease time */
+            /* set a lease time. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_LEASE_TIME);
             options_offset++;
             err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -314,7 +309,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write8(pbuf_out, DHCP_OP_OFS, DHCP_BOOTREPLY);
             err += pbuf_write8(pbuf_out, DHCP_SECS_OFS, 0);
 
-            /* Set the broadcast flag on the reply if it was set in the request */
+            /* Set the broadcast flag on the reply if it was set in the request. */
             uint8_t flags = 0;
             err += pbuf_read8(pbuf_in, DHCP_FLAGS_OFS, &flags);
             if(flags & 0x80) {
@@ -336,16 +331,16 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             }
 
             if (client_requested_addr == avail_ip.addr) {
-                /* set up the default address */
+                /* set up the default address. */
                 err += pbuf_write_ip(pbuf_out, DHCP_YIADDR_OFS, avail_ip);
 
-                /* set up the default next server address */
+                /* set up the default next server address. */
                 err += pbuf_write_ip(pbuf_out, DHCP_SIADDR_OFS, AP_ADDR_IP);
 
-                /* supply the cookie */
+                /* supply the cookie. */
                 err += pbuf_write32be(pbuf_out, DHCP_COOKIE_OFS, DHCP_MAGIC_COOKIE);
 
-                options_offset = DHCP_OPTIONS_OFS; /* Past the magic cookie */
+                options_offset = DHCP_OPTIONS_OFS; /* Past the magic cookie. */
 
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_MESSAGE_TYPE);
                 options_offset++;
@@ -354,7 +349,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_ACK);
                 options_offset++;
 
-                /* Set a Sane Subnet Mask */
+                /* Set a Sane Subnet Mask. */
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_SUBNET_MASK);
                 options_offset++;
                 err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -383,7 +378,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
                 err += pbuf_write_ip(pbuf_out, options_offset, AP_ADDR_IP);
                 options_offset += 4;
 
-                /* set a sane renewal time */
+                /* set a sane renewal time. */
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_T1);
                 options_offset++;
                 err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -391,7 +386,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
                 err += pbuf_write32be(pbuf_out, options_offset, SANE_RENEWAL_TIME);
                 options_offset += 4;
 
-                /* set a rebinding time */
+                /* set a rebinding time. */
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_T2);
                 options_offset++;
                 err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -399,7 +394,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
                 err += pbuf_write32be(pbuf_out, options_offset, SANE_REBINDING_TIME);
                 options_offset += 4;
 
-                /* set a lease time */
+                /* set a lease time. */
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_LEASE_TIME);
                 options_offset++;
                 err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -407,7 +402,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
                 err += pbuf_write32be(pbuf_out, options_offset, SANE_LEASE_TIME);
                 options_offset += 4;
 
-                /* Identify ourselves as the DHCP Server */
+                /* Identify ourselves as the DHCP Server. */
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_SERVER_ID);
                 options_offset++;
                 err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -420,15 +415,15 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
                 err += pbuf_write8(pbuf_out, options_offset, 0);
                 options_offset++;
 
-                /* Set the end option */
+                /* Set the end option. */
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_END);
                 options_offset++;
             }
             else {
-                /* supply the cookie */
+                /* Supply the cookie. */
                 err += pbuf_write32be(pbuf_out, DHCP_COOKIE_OFS, DHCP_MAGIC_COOKIE);
 
-                options_offset = DHCP_OPTIONS_OFS; /* Past the magic cookie */
+                options_offset = DHCP_OPTIONS_OFS; /* Past the magic cookie. */
 
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_MESSAGE_TYPE);
                 options_offset++;
@@ -437,7 +432,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_NAK);
                 options_offset++;
 
-                /* Set the end option */
+                /* Set the end option. */
                 err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_END);
                 options_offset++;
             }
@@ -459,16 +454,16 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write8(pbuf_out, DHCP_SECS_OFS, 0);
             err += pbuf_write8(pbuf_out, DHCP_FLAGS_OFS, 0);
 
-            /* set up the default address */
+            /* Set up the default address. */
             err += pbuf_write_ip(pbuf_out, DHCP_YIADDR_OFS, avail_ip);
 
-            /* set up the default next server address */
+            /* Set up the default next server address. */
             err += pbuf_write_ip(pbuf_out, DHCP_SIADDR_OFS, AP_ADDR_IP);
 
-            /* supply the cookie */
+            /* Supply the cookie. */
             err += pbuf_write32be(pbuf_out, DHCP_COOKIE_OFS, DHCP_MAGIC_COOKIE);
 
-            options_offset = DHCP_OPTIONS_OFS; /* Past the magic cookie */
+            options_offset = DHCP_OPTIONS_OFS; /* Past the magic cookie. */
 
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_MESSAGE_TYPE);
             options_offset++;
@@ -477,7 +472,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write8(pbuf_out, options_offset, DHCP_ACK);
             options_offset++;
 
-            /* Set a Sane Subnet Mask */
+            /* Set a Sane Subnet Mask. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_SUBNET_MASK);
             options_offset++;
             err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -506,7 +501,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write_ip(pbuf_out, options_offset, AP_ADDR_IP);
             options_offset += 4;
 
-            /* set a sane renewal time */
+            /* Set a sane renewal time. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_T1);
             options_offset++;
             err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -514,7 +509,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write32be(pbuf_out, options_offset, SANE_RENEWAL_TIME);
             options_offset += 4;
 
-            /* set a rebinding time */
+            /* Set a rebinding time. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_T2);
             options_offset++;
             err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -522,7 +517,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write32be(pbuf_out, options_offset, SANE_REBINDING_TIME);
             options_offset += 4;
 
-            /* set a lease time */
+            /* Set a lease time. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_LEASE_TIME);
             options_offset++;
             err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -530,7 +525,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write32be(pbuf_out, options_offset, SANE_LEASE_TIME);
             options_offset += 4;
 
-            /* Identify ourselves as the DHCP Server */
+            /* Identify ourselves as the DHCP Server. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_SERVER_ID);
             options_offset++;
             err += pbuf_write8(pbuf_out, options_offset, 4);
@@ -543,7 +538,7 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
             err += pbuf_write8(pbuf_out, options_offset, 0);
             options_offset++;
 
-            /* Set the end option */
+            /* Set the end option. */
             err += pbuf_write8(pbuf_out, options_offset, DHCP_OPTION_END);
             options_offset++;
 
@@ -570,15 +565,13 @@ free1_and_return:
 }
 
 
-/** Start the Tiny DNS Server. Create a new UDP PCB, bind that PCB
+/**
+ * \brief Start the Tiny DNS Server. Create a new UDP PCB, bind that PCB
  * to the DHCP_SERVER_PORT and set up a receiver for that PCB.
  *
  * This variant of the start function must only be called from within LWIP's main thread.
  *
  * This function must be invoked via lwip_tiny_dhcpserver_start
- *
- * @param  unused
- * @return void
  */
 static void lwip_dhcpserver_start_threadsafe(void * arg)
 {
@@ -601,33 +594,27 @@ static void lwip_dhcpserver_start_threadsafe(void * arg)
     }
 }
 
-
-/** Start the Tiny DHCP Server. Create a new UDP PCB, bind that PCB
+/**
+ * \brief Start the Tiny DHCP Server. Create a new UDP PCB, bind that PCB
  * to the DHCP_SERVER_PORT and set up a receiver for that PCB.
  *
- * Thread-safe variant of this function.  This function posts
+ * Thread-safe variant of this function. This function posts
  * the LWIP-thread-only variant of this function (with dummy
  * argument) to the LWIP thread's mailbox and returns.
  *
- * NOTE: This function cannot wait.  It may be called
+ * NOTE: This function cannot wait. It may be called
  * from within the LWIP main thread of execution.
- *
- * @param none
- * @return nothing
  */
 void lwip_tiny_dhcpserver_start(void)
 {
     tcpip_callback(lwip_dhcpserver_start_threadsafe, 0);
 }
 
-
-/** Stop a Tiny DHCP Server.  Disconnect and remove the UDP PCB.
+/**
+ * \brief Stop a Tiny DHCP Server. Disconnect and remove the UDP PCB.
  *
  * This function must only be called from within LWIP's main thread.
  * It must be invoked via lwip_tiny_dhcp_server_stop.
- *
- * @param  dummy
- * @return void
  */
 static void lwip_tiny_dhcpserver_stop_threadsafe(void * arg)
 {
@@ -640,20 +627,17 @@ static void lwip_tiny_dhcpserver_stop_threadsafe(void * arg)
     }
 }
 
-/** Stop a Tiny DHCP Server.  Disconnect and remove the UDP PCB.
+/**
+ * \brief Stop a Tiny DHCP Server. Disconnect and remove the UDP PCB.
  *
- * Thread-safe variant of this function.  This function posts
+ * Thread-safe variant of this function. This function posts
  * the lwip-main-thread only function and a dummy argument to
  * the main lwip thread.
  *
- * NOTE: This function cannot wait.  It may be called
+ * NOTE: This function cannot wait. It may be called
  * from within the LWIP main thread of execution.
- *
- * @param void
- * @return nothing
  */
 void lwip_tiny_dhcpserver_stop(void)
 {
     tcpip_callback(lwip_tiny_dhcpserver_stop_threadsafe, 0);
 }
-

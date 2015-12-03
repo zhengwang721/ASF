@@ -1,11 +1,10 @@
 /**
- * @file
- * Tiny Dynamic Name system Protocol server
  *
- */
-
-/**
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * \file
+ *
+ * \brief Tiny DNS Server.
+ *
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -24,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -42,8 +38,6 @@
  * \asf_license_stop
  *
  */
-
-//------------------------------------------------------------------------------
 
 #include "conf_tinyservices.h"
 #include "tinyservices.h"
@@ -101,8 +95,6 @@ err_t pbuf_take_partial(struct pbuf *pbuf, uint32_t offset, const void *dataptr,
   return ERR_OK;
 }
 
-
-
 /**
  * Read a byte from a pbuf. If the read is beyond the end of the
  * pbuf chain's payload, then return an error instead.
@@ -125,7 +117,6 @@ uint32_t pbuf_read8(struct pbuf * pbuf, uint32_t offset, uint8_t * pval)
 
     return err;
 }
-
 
 /**
  * Write a byte to a pbuf. If the requested write is beyond the 
@@ -157,7 +148,6 @@ uint32_t pbuf_write8(struct pbuf * pbuf, uint32_t offset, uint8_t val)
     return err;
 }
 
-
 /**
  * Write two bytes (big-endian) to a pbuf. If the requested write is 
  * beyond the * end of the pbuf chain's payload, then this function does not
@@ -187,7 +177,6 @@ uint32_t pbuf_write16be(struct pbuf * pbuf, uint32_t offset, uint16_t val)
 
     return err;
 }
-
 
 /**
  * Read two bytes (big-endian) from a pbuf. If the read is beyond the end 
@@ -245,9 +234,6 @@ uint32_t pbuf_read32le(struct pbuf * pbuf, uint32_t offset, uint32_t * pval)
     return err;
 }
 
-
-
-
 /**
  * Write four bytes (little-endian) to a pbuf. If the requested write is 
  * beyond the * end of the pbuf chain's payload, then this function does not
@@ -278,7 +264,6 @@ uint32_t pbuf_write32le(struct pbuf * pbuf, uint32_t offset, uint32_t val)
     return err;
 }
 
-
 /**
  * Write four bytes (big-endian) to a pbuf. If the requested write is 
  * beyond the * end of the pbuf chain's payload, then this function does not
@@ -308,4 +293,3 @@ uint32_t pbuf_write32be(struct pbuf * pbuf, uint32_t offset, uint32_t val)
 
     return err;
 }
-

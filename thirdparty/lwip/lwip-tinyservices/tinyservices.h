@@ -1,10 +1,10 @@
 /**
- * @file
  *
- */
-
-/**
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * \file
+ *
+ * \brief Tiny DNS Server.
+ *
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -22,9 +22,6 @@
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -45,60 +42,9 @@
 #ifndef TINYSERVICES_H_INCLUDED
 #define TINYSERVICES_H_INCLUDED
 
-#include <lwip/ip_addr.h>
-
-/**
-* \defgroup asfdoc_samd20_lwip_tiny_group Tiny lwip services for IOT devices
-*
-* A collection of smaller replacements for some lwip services.
-*
-* The outline of this documentation is as follows:
-* - \ref asfdoc_samd20_lwip_tiny_prerequisites
-* - \ref asfdoc_samd20_lwip_tiny_module_overview
-* - \ref asfdoc_samd20_lwip_tiny_special_considerations
-* - \ref asfdoc_samd20_lwip_tiny_extra_info
-* - \ref asfdoc_samd20_lwip_tiny_examples
-* - \ref asfdoc_samd20_lwip_tiny_dhcp_api_overview
-* - \ref asfdoc_samd20_lwip_tiny_dns_api_overview
-*
-*
-* \section asfdoc_samd20_lwip_tiny_prerequisites Prerequisites
-*
-* This module requires lwip and FreeRTOS.
-*
-*
-* \section asfdoc_samd20_lwip_tiny_module_overview Module Overview
-*
-* Currently there are tiny implementations of DNS Client, DNS Server & DHCP Server.
-*
-* \section asfdoc_samd20_lwip_tiny_special_considerations Special Considerations
-*
-* None.
-*
-* \section asfdoc_samd20_lwip_tiny_extra_info Extra Information for lwip_tiny
-*
-* For extra information see \ref asfdoc_samd20_lwip_tiny_extra. This includes:
-* - \ref asfdoc_samd20_lwip_tiny_extra_acronyms
-* - \ref asfdoc_samd20_lwip_tiny_extra_dependencies
-* - \ref asfdoc_samd20_lwip_tiny_extra_errata
-* - \ref asfdoc_samd20_lwip_tiny_extra_history
-*
-*
-* \section asfdoc_samd20_lwip_tiny_examples Examples
-*
-* For a list of examples related to this driver, see
-* \ref asfdoc_samd20_lwip_tiny_exqsg.
-*
-*
-* \section asfdoc_samd20_lwip_tiny_dhcp_api_overview DHCP API Overview
-* @{
-*/
 #include "lwip/ip_addr.h"
 #include "lwip/pbuf.h"
 #include "lwip/sys.h"
-//#include "wifi.h"
-
-/* DHCP */
 
 /* DHCP options */
 #define DHCP_OPTION_DOMAIN_NAME 15
@@ -107,19 +53,6 @@
 /** Handle slightly smaller response than standard implementations */
 #define DHCP_RESPONSE_DEFAULT_SIZE (512)
 
-struct wifi_module;
-
-#if 0
-struct udp_pcb * lwip_dhcpserver_start(void);
-void lwip_dhcpserver_stop(struct udp_pcb *);
-#endif
-
-/**
- * \section asfdoc_samd20_lwip_tiny_dns_api_overview DNS API Overview
- */
-
-/* DNS */
-/* DNS */
 /** DNS client port is set to 53000 */
 #define DNS_CLIENT_PORT (53000)
 
@@ -217,7 +150,6 @@ void lwip_dhcpserver_stop(struct udp_pcb *);
 /** Handle default DNS Response size */
 #define DNS_RESPONSE_DEFAULT_SIZE (512)
 
-
 #define TINY_DNS_CLIENT_TIMEOUT        (5000) /* default to 5 seconds */
 
 #define MDNS_ADDRESS             224, 0, 0, 251
@@ -276,17 +208,9 @@ void lwip_tiny_dhcpserver_stop(void);
 void lwip_dhcp_register_mac(uint8_t *mac);
 void lwip_dhcp_unregister_mac(uint8_t *mac);
 
-/** Start Tiny DNS server */
-//void lwip_tiny_dnsserver_start(struct wifi_module *wifi, dns_transmission_type_t transmission_type, uint16_t record_mask);
-/** Stop Tiny DNS server */
-//void lwip_tiny_dnsserver_stop(dns_transmission_type_t transmission_type);
-
 /** Start Tiny DNS-SD server */
 void lwip_tiny_dnssdserver_start(void);
 void lwip_tiny_dnssdserver_stop(void);
-
-/** Tiny get host by name - only one instance can run successfully */
-//err_t tinydns_gethostbyname(struct wifi_module *wifi, const char * name, ip_addr_t * addr);
 
 /** Put host name into DNS RDATA format */
 uint32_t lwip_dns_hton_string(struct pbuf * pbuf, uint32_t offset, char const * name, bool flag, uint32_t * plen);
@@ -316,81 +240,4 @@ static inline uint32_t pbuf_read_ip(struct pbuf * pbuf, uint32_t offset, ip_addr
     return pbuf_read32le(pbuf, offset, (uint32_t *)(&(p_addr->addr)));
 }
 
-/** @} */
-/**
-* \page asfdoc_samd20_lwip_tiny_extra Extra Information for lwip_tiny Driver
-*
-* \section asfdoc_samd20_lwip_tiny_extra_acronyms Acronyms
-* Below is a table listing the acronyms used in this module, along with their
-* intended meanings.
-*
-* \anchor asfdoc_samd20_lwip_tiny_extra_acronyms_table_acronyms
-* <table>
-* <caption>Acronyms</caption>
-* <tr>
-* <th>Acronym</td>
-* <th>Description</td>
-* </tr>
-* <tr>
-* <td>TLA</td>
-* <td>Three letter acronym</td>
-* </tr>
-* </table>
-*
-*
-* \section asfdoc_samd20_lwip_tiny_extra_dependencies Dependencies
-* This driver has the following dependencies:
-*
-* - None
-*
-*
-* \section asfdoc_samd20_lwip_tiny_extra_errata Errata
-* There are no errata related to this driver.
-*
-*
-* \section asfdoc_samd20_lwip_tiny_extra_history Module History
-* An overview of the module history is presented in
-* \ref asfdoc_samd20_lwip_tiny_extra_history_table_history, with details on
-* the enhancements and fixes made to the module since its first release. The
-* current version of this corresponds to the newest version in the table.
-*
-* \anchor asfdoc_samd20_lwip_tiny_extra_history_table_history
-* <table>
-* <caption>Module History</caption>
-* <tr>
-* <th>Changelog</th>
-* </tr>
-* <tr>
-* <td>Initial Release</td>
-* </tr>
-* </table>
-*/
-/**
-* \page asfdoc_samd20_lwip_tiny_exqsg Examples for lwip_tiny Driver
-*
-* This is a list of the available Quick Start guides (QSGs) and example
-* applications for \ref asfdoc_samd20_lwip_tiny_group. QSGs are simple examples with
-* step-by-step instructions to configure and use this driver in a selection of
-* use cases. Note that QSGs can be compiled as a standalone application or be
-* added to the user application.
-*
-* - \subpage asfdoc_samd20_lwip_tiny_basic_use_case
-*
-* \page asfdoc_samd20_lwip_tiny_document_revision_history Document Revision History
-*
-* <table>
-* <tr>
-* <th>Doc. Rev.</td>
-* <th>Date</td>
-* <th>Comments</td>
-* </tr>
-* <tr>
-* <td>A</td>
-* <td>06/2013</td>
-* <td>Initial release</td>
-* </tr>
-* </table>
-*/
-
-#endif // TINYSERVICES_H_INCLUDED
-
+#endif /* TINYSERVICES_H_INCLUDED */
