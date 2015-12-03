@@ -58,7 +58,8 @@
  *  \section Description
  *
  *  Upon startup, the program will configure the GMAC with a default IP and
- *  MAC address and then ask the transceiver to auto-negotiate the best mode
+ *  MAC address. If the device support AT24MAC EEPROM, EIA-48 MAC address is
+ *  stored in it. And then ask the transceiver to auto-negotiate the best mode
  *  of operation. Once this is done, it will start to monitor incoming packets
  *  and process them whenever appropriate.
  *
