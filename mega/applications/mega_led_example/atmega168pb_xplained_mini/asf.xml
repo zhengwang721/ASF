@@ -1,0 +1,14 @@
+<asf xmlversion="1.0">
+	<project caption="led example for the ATmega168pb" id="mega.applications.mega_led_example.atmega168pb_xplained_mini">
+		<info type="description" value="summary">
+		ATmega168pb Xplained MINI Led example
+		</info>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="include-path" value="."/>
+		<require idref="board.atmega168pb_x_plained_mini"/>
+		<require idref="mega.applications.mega_led_example"/>
+		<generator value="as5_8"/>
+		<generator value="doxygen"/>
+		<device-support value="atmega168pb"/>
+	</project>
+</asf>

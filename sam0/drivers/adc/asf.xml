@@ -220,6 +220,7 @@
 
 			<build type="define" name="ADC_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="ADC_CALLBACK_MODE"/>
+			<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
 
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>

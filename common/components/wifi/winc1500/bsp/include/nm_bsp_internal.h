@@ -79,6 +79,10 @@
 #include "bsp/include/nm_bsp_saml21.h"
 #endif
 
+#if (defined __SAML22N18A__)
+#include "bsp/include/nm_bsp_saml22.h"
+#endif
+
 #if (defined __SAMD21J18A__) || (defined __SAMD21G18A__)
 #include "bsp/include/nm_bsp_samd21.h"
 #endif
@@ -95,7 +99,7 @@
 #include "bsp/include/nm_bsp_samg55.h"
 #endif
 
-#ifdef __SAME70Q21__
+#if (defined __SAME70Q21__) || (defined __SAMV71Q21__)
 #include "bsp/include/nm_bsp_same70.h"
 #endif
 
