@@ -93,11 +93,11 @@
 #  define CONF_CLOCK_DFLL_ON_DEMAND               false
 
 /* DFLL open loop mode configuration */
-#  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
+#  define CONF_CLOCK_DFLL_FINE_VALUE              (512)
 
 /* DFLL closed loop mode configuration */
 #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
-#  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         1465 /* (48000000 / 32768) */
+#  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         1465 //(48000000 / 32768)
 #  define CONF_CLOCK_DFLL_QUICK_LOCK              true
 #  define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK   true
 #  define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP     true

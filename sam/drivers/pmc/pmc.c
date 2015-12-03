@@ -57,13 +57,13 @@
 #elif (SAM4E)
 # define MAX_PERIPH_ID    47
 #elif (SAMV71)
-# define MAX_PERIPH_ID    60
+# define MAX_PERIPH_ID    63
 #elif (SAMV70)
-# define MAX_PERIPH_ID    60
+# define MAX_PERIPH_ID    63
 #elif (SAME70)
-# define MAX_PERIPH_ID    60
+# define MAX_PERIPH_ID    63
 #elif (SAMS70)
-# define MAX_PERIPH_ID    60
+# define MAX_PERIPH_ID    63
 #elif (SAM4N)
 # define MAX_PERIPH_ID    31
 #elif (SAM4C || SAM4CM || SAM4CP)
@@ -1359,8 +1359,8 @@ void pmc_set_flash_in_wait_mode(uint32_t ul_flash_state)
 /**
  * \brief Enable Wait Mode. Enter condition: (WAITMODE bit = 1) + FLPM
  *
- * \note In this function, FLPM will retain, WAITMODE bit will be set, 
- * Generally, this function will be called by pmc_sleep() in order to 
+ * \note In this function, FLPM will retain, WAITMODE bit will be set,
+ * Generally, this function will be called by pmc_sleep() in order to
  * complete all sequence entering wait mode.
  * See \ref pmc_sleep() for entering different sleep modes.
  */
@@ -1371,7 +1371,11 @@ void pmc_enable_waitmode(void)
 	/* Flash in wait mode */
 	i = PMC->PMC_FSMR;
 	i &= ~PMC_FSMR_FLPM_Msk;
+#if !(SAMV71 || SAMV70 || SAME70 || SAMS70)
 	i |= ul_flash_in_wait_mode;
+#else
+	i |= PMC_WAIT_MODE_FLASH_IDLE;
+#endif
 	PMC->PMC_FSMR = i;
 
 	/* Set the WAITMODE bit = 1 */
@@ -1540,7 +1544,7 @@ uint32_t pmc_enable_sleepwalking(uint32_t ul_id)
 			return 1;
 		}
 		return 0;
-	}	
+	}
 #if (SAMV71 || SAMV70 || SAME70 || SAMS70)
 	else if ((32 <= ul_id) && (ul_id<= 60)) {
 		ul_id -= 32;
@@ -1556,7 +1560,7 @@ uint32_t pmc_enable_sleepwalking(uint32_t ul_id)
 		}
 		return 0;
 	}
-#endif	
+#endif
 	else {
 		return 1;
 	}
@@ -1578,7 +1582,7 @@ uint32_t pmc_disable_sleepwalking(uint32_t ul_id)
 	if ((7 <= ul_id) && (ul_id<= 29)) {
 #else
 	if ((8 <= ul_id) && (ul_id<= 29)) {
-#endif		
+#endif
 		PMC->PMC_SLPWK_DR0 = 1 << ul_id;
 		return 0;
 	}
@@ -1587,8 +1591,8 @@ uint32_t pmc_disable_sleepwalking(uint32_t ul_id)
 		ul_id -= 32;
 		PMC->PMC_SLPWK_DR1 = 1 << ul_id;
 		return 0;
-	}	
-#endif	
+	}
+#endif
 	else {
 		return 1;
 	}

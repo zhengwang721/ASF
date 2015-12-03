@@ -8,6 +8,7 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.freqm"/>
 		<require idref="sam0.drivers.system"/>
+		<device-support value="saml22"/>
 		<device-support value="samc21"/>
 	</module>
 </asf>

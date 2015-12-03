@@ -71,8 +71,11 @@ extern "C" {
 #define DEMO_WLAN_AP_WEP_KEY				"1234567890"			// Wep key.
 #define DEMO_WLAN_AP_SECURITY				M2M_WIFI_SEC_OPEN		// Security mode.
 #define DEMO_WLAN_AP_MODE					0						// Visible.
-
+#if SAME70
+#define CREDENTIAL_ENTRY_BUTTON				PIO_PA11_IDX
+#elif SAMD21
 #define CREDENTIAL_ENTRY_BUTTON				PIN_PA15
+#endif
 
 void demo_start(void);
 

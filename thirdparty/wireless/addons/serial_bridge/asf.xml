@@ -40,6 +40,7 @@
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="saml21"/>
 			<build type="doxygen-entry-point" value="group_serial_bridge"/>
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>

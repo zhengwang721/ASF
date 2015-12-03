@@ -80,7 +80,7 @@
 #  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       false
 
 /* SYSTEM_CLOCK_SOURCE_OSC32K configuration - Internal 32KHz oscillator */
-#  define CONF_CLOCK_OSC32K_ENABLE                false
+#  define CONF_CLOCK_OSC32K_ENABLE                true
 #  define CONF_CLOCK_OSC32K_STARTUP_TIME          SYSTEM_OSC32K_STARTUP_10
 #  define CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT    true
 #  define CONF_CLOCK_OSC32K_ENABLE_32KHZ_OUTPUT   true
@@ -93,11 +93,11 @@
 #  define CONF_CLOCK_DFLL_ON_DEMAND               false
 
 /* DFLL open loop mode configuration */
-#  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
+#  define CONF_CLOCK_DFLL_FINE_VALUE              (512)
 
 /* DFLL closed loop mode configuration */
 #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
-#  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         1465//(48000000 / 32768)
+#  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         (48000000 / 32768)
 #  define CONF_CLOCK_DFLL_QUICK_LOCK              true
 #  define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK   true
 #  define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP     true

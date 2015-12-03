@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<project caption="SAM D21 ADC Configurations Example" id="sam0.applications.adc_configurations_example.samd21_xplained_pro">
+		
+		<require idref="board.samd21_xplained_pro"/>
+		<require idref="sam0.applications.adc_configurations_example"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_example.h"/>			
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd21j18a"/>
+	</project>
+</asf>

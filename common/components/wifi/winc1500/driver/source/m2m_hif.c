@@ -284,7 +284,6 @@ sint8 hif_deinit(void * arg)
 	pfOtaCb = NULL;
 	pfHifCb = NULL;
 
-
 	return ret;
 }
 /**
@@ -371,11 +370,17 @@ sint8 hif_send(uint8 u8Gid,uint8 u8Opcode,uint8 *pu8CtrlBuf,uint16 u16CtrlBufSiz
 			u32CurrAddr = dma_addr;
 			strHif.u16Length=NM_BSP_B_L_16(strHif.u16Length);
 			ret = nm_write_block(u32CurrAddr, (uint8*)&strHif, M2M_HIF_HDR_OFFSET);
+		#ifdef CONF_WINC_USE_I2C
+			nm_bsp_sleep(1);
+		#endif
 			if(M2M_SUCCESS != ret) goto ERR1;
 			u32CurrAddr += M2M_HIF_HDR_OFFSET;
 			if(pu8CtrlBuf != NULL)
 			{
 				ret = nm_write_block(u32CurrAddr, pu8CtrlBuf, u16CtrlBufSize);
+			#ifdef CONF_WINC_USE_I2C
+				nm_bsp_sleep(1);
+			#endif
 				if(M2M_SUCCESS != ret) goto ERR1;
 				u32CurrAddr += u16CtrlBufSize;
 			}
@@ -383,6 +388,9 @@ sint8 hif_send(uint8 u8Gid,uint8 u8Opcode,uint8 *pu8CtrlBuf,uint16 u16CtrlBufSiz
 			{
 				u32CurrAddr += (u16DataOffset - u16CtrlBufSize);
 				ret = nm_write_block(u32CurrAddr, pu8DataBuf, u16DataSize);
+			#ifdef CONF_WINC_USE_I2C	
+				nm_bsp_sleep(1);
+			#endif
 				if(M2M_SUCCESS != ret) goto ERR1;
 				u32CurrAddr += u16DataSize;
 			}
@@ -614,9 +622,11 @@ sint8 hif_receive(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz, uint8 isDone)
 	size = (uint16)((reg >> 2) & 0xfff);
 	ret = nm_read_reg_with_ret(WIFI_HOST_RCV_CTRL_1,&address);
 	if(ret != M2M_SUCCESS)goto ERR1;
-
 	/* Receive the payload */
 	ret = nm_read_block(u32Addr, pu8Buf, u16Sz);
+#ifdef CONF_WINC_USE_I2C
+	nm_bsp_sleep(100);
+#endif
 	if(ret != M2M_SUCCESS)goto ERR1;
 
 	if(u16Sz > size)

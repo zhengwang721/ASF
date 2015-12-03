@@ -1,7 +1,7 @@
-﻿<asf xmlversion="1.0">
-	<module type="meta" id="sam0.drivers.system.appnote_1" caption="SYSTEM - Core System Driver For SAM D20/D21/R21/D10/D11/DA0/DA1">
+<asf xmlversion="1.0">
+	<module type="meta" id="sam0.drivers.system.appnote_1" caption="SYSTEM - Core System Driver For SAM D20/D21/R21/D09/D10/D11/DA0/DA1">
 		<info type="description" value="summary">
-			Driver for the SAM D20/D21/R21/D10/D11/DA0/DA1 core system modules. Provides a unified
+			Driver for the SAM D20/D21/R21/D09/D10/D11/DA0/DA1 core system modules. Provides a unified
 			interface for the configuration and management of the core device
 			functionality required for a functional system.
 		</info>
@@ -116,31 +116,55 @@
 		<device-support value="samc20"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
 	</module>
-	<module type="driver" id="sam0.drivers.system" caption="SYSTEM - Core System Driver">
-		<info type="description" value="summary">
-			Driver for the SAM core system modules. Provides a unified
-			interface for the configuration and management of the core device
-			functionality required for a functional system.
-		</info>
 
-		<info type="keyword" value="technology">
-			<keyword value="I/O" />
-			<keyword value="CPU" />
-			<keyword value="Clocks" />
-		</info>
+	<select-by-device id="sam0.drivers.system" caption="SYSTEM - Core System Driver">
+		<module type="driver" id="sam0.drivers.system#sam0" caption="SYSTEM - Core System Driver">
+			<info type="description" value="summary">
+				Driver for the SAM core system modules. Provides a unified
+				interface for the configuration and management of the core device
+				functionality required for a functional system.
+			</info>
 
-		<build type="include-path" value="."/>
-		<build type="header-file" subtype="api" value="system.h"/>
-		<build type="c-source" value="system.c"/>
+			<info type="keyword" value="technology">
+				<keyword value="I/O" />
+				<keyword value="CPU" />
+				<keyword value="Clocks" />
+			</info>
 
-		<require idref="sam0.drivers.system.clock"/>
-		<require idref="sam0.drivers.system.pinmux"/>
-		<require idref="sam0.drivers.system.interrupt"/>
-		<require idref="sam0.drivers.system.power"/>
-		<require idref="sam0.drivers.system.reset"/>
-		<require idref="thirdparty.cmsis"/>
-		<require idref="sam0.utils"/>
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="system.h"/>
+			<build type="c-source" value="system.c"/>
 
-		<device-support value="sam0"/>
-	</module>
+			<require idref="sam0.drivers.system.clock"/>
+			<require idref="sam0.drivers.system.pinmux"/>
+			<require idref="sam0.drivers.system.interrupt"/>
+			<require idref="sam0.drivers.system.power"/>
+			<require idref="sam0.drivers.system.reset"/>
+			<require idref="thirdparty.cmsis"/>
+			<require idref="sam0.utils"/>
+
+			<device-support value="sam0"/>
+		</module>
+
+		<module type="driver" id="sam0.drivers.system#samb" caption="SYSTEM - Core System Driver for SAMB">
+			<info type="description" value="summary">
+				Driver for the SAMB core system modules. Provides a unified
+				interface for the configuration and management of the core device
+				functionality required for a functional system.
+			</info>
+
+			<info type="keyword" value="technology">
+				<keyword value="I/O" />
+				<keyword value="CPU" />
+				<keyword value="Clocks" />
+			</info>
+
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="system_sam_b.h"/>
+			<build type="c-source" value="system_sam_b.c"/>
+
+			<require idref="sam0.utils"/>
+			<device-support value="samb"/>
+		</module>
+	</select-by-device>
 </asf>

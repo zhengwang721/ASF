@@ -20,6 +20,7 @@
 			<require idref="sam0.drivers.system" />
 
 			<device-support value="saml21" />
+			<device-support value="saml22" />
 		</module>
 
 		<module caption="TRNG - True Random Number Generator (Callback APIs)" id="sam0.drivers.trng#callback" type="driver">
@@ -39,6 +40,7 @@
 			<require idref="sam0.drivers.system" />
 
 			<device-support value="saml21" />
+			<device-support value="saml22" />
 		</module>
 	</select-by-config>
 
@@ -68,6 +70,7 @@
 		<build type="doxygen-quick-start" value="asfdoc_sam0_trng_exqsg"/>
 
 		<device-support value="saml21"/>
+		<device-support value="saml22" />
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
 	</module>
 </asf>

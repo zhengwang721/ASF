@@ -311,7 +311,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 
 	if (!_dma_inst._dma_init) {
 		/* Initialize clocks for DMA */
-#if (SAML21) || (SAMC20) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
 		system_ahb_clock_set_mask(MCLK_AHBMASK_DMAC);
 #else
 		system_ahb_clock_set_mask(PM_AHBMASK_DMAC);
@@ -472,7 +472,7 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
  *
  * This function will abort a DMA transfer. The DMA channel used for the DMA
  * resource will be disabled.
- * The block transfer count will be also calculated and written to the DMA
+ * The block transfer count will also be calculated and written to the DMA
  * resource structure.
  *
  * \note The DMA resource will not be freed after calling this function.

@@ -11,6 +11,8 @@
 		<device-support value="xmega"/>
 		<device-support value="sam3"/>
 		<device-support value="sam4s"/>
+		<device-support value="samv71"/>
+		<device-support value="same70"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="ili9341_group"/>
 		<build type="doxygen-quick-start" value="common_ili9341_qs"/>
@@ -40,6 +42,8 @@
 			<device-support value="sam3u"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
+			<device-support value="samv71"/>
+			<device-support value="same70"/>
 			<info type="gui-flag" value="hidden"/>
 			<!-- Currently no DMA acceleration for these SAM devices -->
 		</module>
