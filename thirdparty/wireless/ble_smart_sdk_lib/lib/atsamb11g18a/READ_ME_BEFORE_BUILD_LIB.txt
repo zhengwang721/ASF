@@ -1,6 +1,0 @@
-add SAMB11 define
-add NEW_EVT_HANDLER define
-
-
-below defines are on Keil
-SAMB11 TARGET_TYPE_LIB=1 CHIPVERSION_B0 NEW_EVT_HANDLER
