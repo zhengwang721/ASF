@@ -47,7 +47,7 @@
  * board to communicate with Atmel IoT Android app & PubNub cloud. <br>
  * It uses the following hardware:
  * - SAM Xplained Pro.
- * - I/O1 Xplained Pro on EXT1.
+ * - the WINC1500 module on EXT1.
  *
  * \section files Main Files
  * - main.c : Initialize the SAM board and communicate with Android App & PubNub cloud.
