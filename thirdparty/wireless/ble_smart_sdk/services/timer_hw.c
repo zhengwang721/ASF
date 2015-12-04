@@ -6,15 +6,7 @@
 
 extern struct uart_module uart_instance;
 
-static void dualtimer_callback1(void)
-{
-	puts("Timer1 trigger\r\n");
-}
-
-/* ! [print_timer1] */
-
-/* ! [print_timer2] */
-static void dualtimer_callback2(void)
+void dualtimer_callback2(void)
 {
 	puts("Timer2 trigger\r\n");
 }
@@ -48,11 +40,10 @@ void hw_timer_start(int delay)
 	}
 
 	dualtimer_set_counter(DUALTIMER_TIMER1,DUALTIMER_SET_CURRUNT_REG,CONF_DUALTIMER_TIMER1_LOAD*delay);
-	
 	dualtimer_enable(DUALTIMER_TIMER1);
 }
 
-void hw_timer_stop()
+void hw_timer_stop(void)
 {
 	dualtimer_disable(DUALTIMER_TIMER1);
 }
