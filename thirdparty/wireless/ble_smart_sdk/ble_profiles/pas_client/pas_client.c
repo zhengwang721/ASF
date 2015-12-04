@@ -93,7 +93,7 @@ void pas_data_init(void)
 	alert_status_notification_cb = NULL;
 	ringer_setting_notification_cb = NULL;
 
-	connected_callback_t connected_cb = NULL;
+	connected_cb = NULL;
 
 	memset(&pas_service_data, 0, sizeof(pas_service_data));
 }

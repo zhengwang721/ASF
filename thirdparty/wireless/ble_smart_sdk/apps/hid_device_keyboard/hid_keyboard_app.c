@@ -138,7 +138,7 @@ static void hid_disconnect_cb(at_ble_handle_t handle)
 	ALL_UNUSED(handle);
 }
 
-static void hid_connect_cb()
+static void hid_connect_cb(void)
 {
 	connect_flg = 1;
 }
@@ -185,7 +185,7 @@ static void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notificat
 }
 
 /* Callback called when user press the button for writing new characteristic value */
-void button_cb(void)
+static void button_cb(void)
 {
 	if (connect_flg) {
 		send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
@@ -243,7 +243,7 @@ int main(void )
 
 	/* Register the notification handler */
 	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
-	register_ble_connected_event_cb(hid_connect_cb);
+	register_ble_connected_event_cb((ble_gap_event_callback_t)hid_connect_cb);
 	register_ble_disconnected_event_cb(hid_disconnect_cb);
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
 	notify_boot_ntf_handler(hid_prf_boot_ntf_cb);

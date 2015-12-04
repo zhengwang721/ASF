@@ -1,6 +1,8 @@
 #include "gpio.h"
 #include "gpio_from_sdk.h"
 
+#include "common.h"
+
 /* ************************ start ****************************************** // */
 /* chris.choi : should ask china's driver team that it can be used like this */
 /* this code is come from keil driver version code */
@@ -20,15 +22,15 @@
  * #endif	//CHIPVERSION_B0
  */
 
-extern void (*handle_ext_wakeup_isr)(void);
-void gpio1_combined_isr_handler(void);
+//extern void (*handle_ext_wakeup_isr)(void);
+//handle_ext_wakeup_isrvoid gpio1_combined_isr_handler(void);
 
 /* chris.choi : jeffy's code 150908, so it's better code i think so use this */
 void gpio1_combined_isr_handler(void)
 {
 	uint8_t index = 0;
 	/* portint_callback_t callback; */
-	uint8_t port = LPGPIO_16;
+	uint8_t port_gpio1 = LPGPIO_16;
 	uint32_t intstatus = GPIO1->INTSTATUSCLEAR.reg; /* jeffy */
 	GPIO1->INTTYPESET.reg |= (1 << 15); /* jeffy */
 
@@ -40,9 +42,9 @@ void gpio1_combined_isr_handler(void)
 		#endif
 		index = 0;
 		if (intstatus != 0) {
-			port = (intstatus & ~(intstatus - 1));
-			while (!(port == 1)) {
-				port = port >> 1;
+			port_gpio1 = (intstatus & ~(intstatus - 1));
+			while (!(port_gpio1 == 1)) {
+				port_gpio1 = port_gpio1 >> 1;
 				index++;
 			}
 
@@ -75,7 +77,7 @@ void gpio0_combined_isr_handler(void)
 {
 	uint8_t index = 0;
 	/* portint_callback_t callback; */
-	uint8_t port = LPGPIO_0;
+	uint8_t port_gpio0 = LPGPIO_0;
 	uint32_t intstatus = GPIO0->INTSTATUSCLEAR.reg; /* jeffy */
 	GPIO0->INTTYPESET.reg |= (1 << 15); /* jeffy */
 
@@ -87,9 +89,9 @@ void gpio0_combined_isr_handler(void)
 		#endif
 		index = 0;
 		if (intstatus != 0) {
-			port = (intstatus & ~(intstatus - 1));
-			while (!(port == 1)) {
-				port = port >> 1;
+			port_gpio0 = (intstatus & ~(intstatus - 1));
+			while (!(port_gpio0 == 1)) {
+				port_gpio0 = port_gpio0 >> 1;
 				index++;
 			}
 

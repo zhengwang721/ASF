@@ -545,7 +545,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 	switch (adv_data_type) {
 	case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID16:
 	{
-		if ((status = brd_adv_incomp_list_service_uuid16(adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_incomp_list_service_uuid16(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG( "adding incomplete list of service uuid16 failed");
 			return status;
 		}
@@ -556,7 +556,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID32:
 	{
-		if ((status = brd_adv_incomp_list_service_uuid32(adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_incomp_list_service_uuid32(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG("adding incomplete list of service uuid32 failed");
 			return status;
 		}
@@ -567,7 +567,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID128:
 	{
-		if ((status = brd_adv_incomp_list_service_uuid128( adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_incomp_list_service_uuid128( adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG(
 					"adding incomplete list of service uuid128 failed");
 			return status;
@@ -579,7 +579,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16:
 	{
-		if ((status = brd_adv_comp_list_service_uuid16( adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_comp_list_service_uuid16( adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG("adding complete list of service uuid16 failed");
 			return status;
 		}
@@ -591,7 +591,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 	case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID32:
 	{
 		DBG_LOG("name set");
-		if ((status = brd_adv_comp_list_service_uuid32( adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_comp_list_service_uuid32( adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG("adding complete list of service uuid32 failed");
 			return status;
 		}
@@ -602,7 +602,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID128:
 	{
-		if ((status = brd_adv_comp_list_service_uuid128(adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_comp_list_service_uuid128(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG("adding complete list of service uuid128 failed");
 			return status;
 		}
@@ -613,7 +613,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_COMPLETE_LOCAL_NAME:
 	{
-		if ((status = brd_adv_comp_local_name(adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_comp_local_name(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG("adding complete local name failed");
 			return status;
 		}
@@ -624,7 +624,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_SHORTENED_LOCAL_NAME:
 	{
-		if ((status = brd_adv_shortened_local_name( adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_shortened_local_name( adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG("adding shortened complete local name failed");
 			return status;
 		}
@@ -635,7 +635,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_MANUFACTURER_DATA:
 	{
-		if ((status = brd_adv_manufacturer_data(adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_manufacturer_data(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG("adding manufacturer data failed");
 			return status;
 		}
@@ -646,7 +646,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_APPEARANCE:
 	{
-		if ((status = brd_adv_appearance(adv_usr_data, length)) != STATUS_SUCCESS) {
+		if ((status = brd_adv_appearance(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
 			DBG_LOG("adding appearance failed");
 			return status;
 		}
@@ -673,14 +673,14 @@ static status_t brd_adv_init(void)
 	status_t status;
 
 	status = brd_set_advertisement_type(ADV_TYPE_NONCONN_UNDIRECTED);
-	if (status != STATUS_SUCCESS) {
+	if (status != STATUS_SUCCESS_APP) {
 		DBG_LOG("Advertisement type set failed(%d)", status);
 		return STATUS_FAILED;
 	}
 
 	/*set advertisement data type */
 	status = brd_set_data_type(ADVERTISEMENT_DATA);
-	if (status != STATUS_SUCCESS) {
+	if (status != STATUS_SUCCESS_APP) {
 		DBG_LOG("Advertisement data type set failed(%d)", status);
 		return STATUS_FAILED;
 	}

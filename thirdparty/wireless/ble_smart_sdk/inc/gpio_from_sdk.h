@@ -61,7 +61,7 @@ typedef union {
 	struct {
 		uint8_t muxval : 8;
 		uint8_t pinnum : 8;
-	} bit;
+	} bit_pinumx;
 } pinumx;
 
 typedef union {

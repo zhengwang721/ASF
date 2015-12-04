@@ -173,7 +173,7 @@ static void app_ringer_setting_notify(uint8_t *data, uint8_t len)
 /**
  * @brief Button Press Callback
  */
-void button_cb(void)
+static void button_cb(void)
 {
 	if (app_state) {
 		flag = true;

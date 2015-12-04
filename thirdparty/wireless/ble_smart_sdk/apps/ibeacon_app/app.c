@@ -13,6 +13,9 @@ static uint8_t scan_rsp_data[31];
 struct uart_module uart_instance;
 at_ble_init_config_t pf_cfg;
 
+void ble_init(void);
+int main(void);
+
 static void configure_uart(void)
 {
 	struct uart_config config_uart;
@@ -68,7 +71,7 @@ void ble_init(void)
 }
 
 static uint8_t params[100];
-int main()
+int main(void)
 {
 	at_ble_events_t event;
 	uint16_t handle;
@@ -90,7 +93,9 @@ int main()
 		switch (event) {
 		case AT_BLE_CONNECTED:
 		{
-			at_ble_connected_t *conn_params = (at_ble_connected_t *)params;
+			//at_ble_connected_t *conn_params = (at_ble_connected_t*)params;
+			at_ble_connected_t *conn_params = NULL;
+			memcpy(conn_params, params, sizeof(at_ble_connected_t));
 			handle = conn_params->handle;
 			handle = handle;
 		}

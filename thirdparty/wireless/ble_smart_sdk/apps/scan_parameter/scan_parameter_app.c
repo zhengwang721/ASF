@@ -116,7 +116,7 @@ at_ble_handle_t device_conn_handle;
 /**
  * \Timer callback handler called on timer expiry
  */
-void timer_callback_handler(void)
+static void timer_callback_handler(void)
 {
 	/* Timer call back */
 	timer_cb_done = true;
@@ -124,7 +124,7 @@ void timer_callback_handler(void)
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
 
-void init_var()
+static void init_var(void)
 {
 	memset(&sps_service_handler, 0, sizeof(sps_gatt_service_handler_t));
 	scan_interval_window[0] = 0x00;

@@ -58,11 +58,13 @@
 /** characteristics of the device information service */
 device_info_char_value_t char_value;
 
-bool volatile dis_notification_flag[DIS_TOTAL_CHARATERISTIC_NUM] = {false};
+//bool volatile dis_notification_flag[DIS_TOTAL_CHARATERISTIC_NUM] = {false};
 
 /**@brief Initialize the dis service related information. */
 void dis_init_service(dis_gatt_service_handler_t *device_info_serv)
 {
+	bool dis_notification_flag[DIS_TOTAL_CHARATERISTIC_NUM] = {false};
+	
 	/* added by jini */
 	memset(dis_notification_flag, 0x00, sizeof(bool) * DIS_TOTAL_CHARATERISTIC_NUM);
 	memset(&char_value, 0x00, sizeof(device_info_char_value_t));

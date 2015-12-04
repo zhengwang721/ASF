@@ -329,7 +329,7 @@ void htpt_set_advertisement_data(void)
 	}
 }
 
-void button_cb(void)
+static void button_cb(void)
 {
 	DBG_LOG("button_cb\r\n");
 
@@ -374,11 +374,11 @@ int main(void)
 	memset(&app_bond_info, 0, sizeof(at_ble_LTK_t));
 	memset(&auth_info, 0, sizeof(at_ble_auth_t));
 	memset(&htp_data, 0, sizeof(htp_app_t));
+	memset(&htpt_conn_handle,0,sizeof(at_ble_handle_t));
 
 	app_device_bond = false;
 	app_timer_done = false;
 	button_pressed = false;
-	htpt_conn_handle = NULL;
 
 	memcpy(scan_rsp_data, ro_scan_rsp_data, sizeof(uint8_t) * SCAN_RESP_LEN);
 

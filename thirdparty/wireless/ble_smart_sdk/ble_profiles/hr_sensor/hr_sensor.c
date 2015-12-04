@@ -328,9 +328,9 @@ void hr_sensor_init(void *param)
 {
 	memset(&dis_service_handler, 0, sizeof(dis_gatt_service_handler_t));
 	memset(&hr_service_handler, 0, sizeof(hr_gatt_service_handler_t));
-	hr_notification_callback_t notification_cb = 0;
-	hr_reset_callback_t reset_cb = 0;
-	hr_state_callback_t state_cb = 0;
+	notification_cb = 0;
+	reset_cb = 0;
+	state_cb = 0;
 	notification_confirm = true;
 	connection_handle = 0;
 

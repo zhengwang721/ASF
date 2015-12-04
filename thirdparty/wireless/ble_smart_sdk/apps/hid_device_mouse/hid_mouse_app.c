@@ -188,7 +188,7 @@ static void hid_disconnect_cb(at_ble_handle_t handle)
 }
 
 /* Callback called when user press the button for writing new characteristic value */
-void button_cb(void)
+static void button_cb(void)
 {
 	if (connect_flg) {
 		mouse_status = 1;

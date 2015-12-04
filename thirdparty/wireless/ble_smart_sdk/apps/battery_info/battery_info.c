@@ -186,11 +186,8 @@ static at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_
 	isCharChanged = true;
 	memcpy(&bas_char_handle, char_handle, sizeof(at_ble_characteristic_changed_t));
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
-}
-
-void button_cb(void)
-{
-	/* For user usage */
+	
+	return AT_BLE_SUCCESS;
 }
 
 /**

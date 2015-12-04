@@ -209,7 +209,7 @@ static void app_state_handler(bool state)
 /**
  * @brief Button Press Callback
  */
-void button_cb(void)
+static void button_cb(void)
 {
 	if (app_state) {
 		DBG_LOG_DEV("Going to disconnect ");

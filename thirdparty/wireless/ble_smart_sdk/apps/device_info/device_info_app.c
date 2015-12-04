@@ -144,7 +144,7 @@ static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	device_information_advertise();
 }
 
-void button_cb(void)
+static void button_cb(void)
 {
 	/* For user usage */
 	DBG_LOG("button_cb");

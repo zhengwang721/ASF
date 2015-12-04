@@ -96,7 +96,7 @@ extern volatile bool time_update_state_char_found;
 /**
  * @brief Button Press Callback
  */
-void button_cb(void)
+static void button_cb(void)
 {
 	button_pressed = true;
 

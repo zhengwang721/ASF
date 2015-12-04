@@ -81,8 +81,6 @@
 
 #define APP_STACK_SIZE  (1024)
 
-volatile unsigned char app_stack_patch[APP_STACK_SIZE];
-
 extern gatt_txps_char_handler_t txps_handle;
 extern gatt_lls_char_handler_t lls_handle;
 extern gatt_ias_char_handler_t ias_handle;
@@ -91,8 +89,6 @@ extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
 extern bool pxp_connect_request_flag;
 
 volatile bool app_timer_done;
-
-volatile unsigned char app_stack_patch[1024];
 
 pxp_current_alert_t alert_level;
 

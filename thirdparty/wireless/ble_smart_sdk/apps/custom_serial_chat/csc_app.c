@@ -107,14 +107,14 @@ static void uart_rx_callback(void)
 		
 		memset(send_data, 0, APP_TX_BUF_SIZE);
 		send_length = 0;
-		DBG_LOG("");
+		DBG_LOG(" ");
 	}
 	else {
 		send_data[send_length++] = buff;
 		DBG_LOG_CONT("%c", buff);
 	}
 	
-	getchar_aysnc(uart_rx_callback, &buff);
+	getchar_aysnc((uart_callback_t)uart_rx_callback, &buff);
 }
 
 static void user_event_callback(struct uart_module *const module) {
@@ -145,12 +145,12 @@ int main(void)
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 
-	register_ble_user_event_cb(user_event_callback);
+	register_ble_user_event_cb((ble_user_event_callback_t)user_event_callback);
 
 	/* Register the notification handler */
 	notify_recv_ntf_handler(csc_prf_report_ntf_cb);
 
-	getchar_aysnc(uart_rx_callback, &buff);
+	getchar_aysnc((uart_callback_t)uart_rx_callback, &buff);
 
 	/* Capturing the events  */
 	while (app_exec) {

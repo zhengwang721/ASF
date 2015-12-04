@@ -541,7 +541,7 @@ static void app_indication_handler(bool enable)
 /**
  * @brief Button Press Callback
  */
-void button_cb(void)
+static void button_cb(void)
 {
 	isButton = true;
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
