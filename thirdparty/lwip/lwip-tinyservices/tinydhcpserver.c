@@ -47,6 +47,8 @@
 #include "common/include/nm_common.h"
 #include <string.h>
 
+#if LWIP_UDP && LWIP_DHCP
+
 static struct udp_pcb * dhcp_pcb = 0;
 
 /* This is the broadcast address used by concurrent mode: 192.168.5.255 */
@@ -641,3 +643,5 @@ void lwip_tiny_dhcpserver_stop(void)
 {
     tcpip_callback(lwip_tiny_dhcpserver_stop_threadsafe, 0);
 }
+
+#endif

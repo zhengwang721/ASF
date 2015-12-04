@@ -173,6 +173,27 @@ void HardFault_Handler(void)
 }
 
 /**
+ * \brief Configure UART console (RTOS API).
+ */
+static void configure_console(void)
+{
+	const usart_serial_options_t uart_serial_options = {
+		.baudrate = CONF_STDIO_BAUDRATE,
+#ifdef CONF_STDIO_CHAR_LENGTH
+		.charlength = CONF_STDIO_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_STDIO_PARITY,
+#ifdef CONF_STDIO_STOP_BITS
+		.stopbits = CONF_STDIO_STOP_BITS
+#endif
+	};
+
+	/* Configure UART console. */
+	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
+	osprintf_init(CONF_STDIO_USART_MODULE, &uart_serial_options);
+}
+
+/**
  * \brief Main program function.
  */
 int main(void)
@@ -182,7 +203,7 @@ int main(void)
 	board_init();
 
 	/* Initialize the UART console. */
-	osprintf_init();
+	configure_console();
 	puts(STRING_HEADER);
 	
 	/* Create main task. */

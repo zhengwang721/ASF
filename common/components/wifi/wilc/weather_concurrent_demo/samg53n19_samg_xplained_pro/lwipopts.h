@@ -273,11 +273,6 @@ extern int random_number(void);
 */
 
 /**
- * SYS_THREAD_MAX: Number of threads that can be started with sys_thread_new().
- */
-#define SYS_THREAD_MAX                    8
-
-/**
  * TCPIP_THREAD_NAME: The name assigned to the main tcpip thread.
  */
 #define TCPIP_THREAD_NAME               "TCP/IP"

@@ -85,8 +85,9 @@ static void status_callback(struct netif *netif)
 		tstrM2MIPConfig2 strIpConfig;
 		strIpConfig.u8StaticIP = (uint8_t *)&netif->ip_addr;
 		strIpConfig.u8SubnetMask = (uint8_t *)&netif->netmask;
+#if LWIP_IPV6
 		strIpConfig.u8StaticIPv6 = (uint8_t *)netif->ip6_addr;
-						
+#endif
 		if (gpfAppWifiCb && (netif == &wilc_netif_sta)) {
 			gpfAppWifiCb(M2M_WIFI_REQ_DHCP_CONF, &strIpConfig);		
 		}
@@ -101,8 +102,12 @@ void net_add_wilc_netif(void)
 	/* Add WILC1000 STA interface. */
 	netif_add(&wilc_netif_sta, &ip_addr, &ip_addr, &ip_addr, 0, wilc_netif_init, tcpip_input);
 	netif_set_default(&wilc_netif_sta);
+#if LWIP_IPV6
 	netif_create_ip6_linklocal_address(&wilc_netif_sta, 1); /* Needed to sent data on the internet, not matching local netmask. */
+#endif
+#if LWIP_NETIF_STATUS_CALLBACK
 	netif_set_status_callback(&wilc_netif_sta, status_callback);
+#endif
 	
 	/* Add WILC1000 AP/WD interface. */
 	struct ip_addr mask = SN_MASK_IP;
@@ -138,11 +143,15 @@ static void net_interface_up_imp(uint32_t net_if)
 		
 		/* Interface 1 (STA). */
 		if (net_mode_sta & NET_MODE_USE_DHCP) {
+#if LWIP_DHCP
 			dhcp_start(&wilc_netif_sta);
 			net_state_sta |= NET_S_DHCP_RUNNING;
+#endif
 		} else if (net_mode_sta & NET_MODE_USE_LINK_LOCAL) {
+#if LWIP_AUTOIP
 			autoip_start(&wilc_netif_sta);
 			net_state_sta |= NET_S_AUTOIP_RUNNING;
+#endif
 		}
 	}
 	else {
@@ -153,7 +162,9 @@ static void net_interface_up_imp(uint32_t net_if)
 		/* Interface 2 (Concurrent mode). */
 		if (net_mode_c & NET_MODE_USE_DHCP_SVR) {
 			netif_set_up(&wilc_netif_c_mode);
+#if LWIP_UDP && LWIP_DHCP
 			lwip_tiny_dhcpserver_start();
+#endif
 			net_state_c |= NET_S_DHCP_SVR_RUNNING;
 		}
 	}
@@ -166,12 +177,16 @@ static void net_interface_down_imp(uint32_t net_if)
 		net_state_sta &= ~NET_S_NET_UP;
 		net_mode_sta &= ~(NET_MODE_USE_DHCP | NET_MODE_AP);
 		if (net_state_sta & NET_S_DHCP_RUNNING) {
+#if LWIP_DHCP
 			dhcp_stop(&wilc_netif_sta);
 			net_state_sta &= ~NET_S_DHCP_RUNNING;
+#endif
 		}
 		if (net_state_sta & NET_S_AUTOIP_RUNNING) {
+#if LWIP_AUTOIP
 			autoip_stop(&wilc_netif_sta);
 			net_state_sta &= ~NET_S_AUTOIP_RUNNING;
+#endif
 		}
 		netif_set_down(&wilc_netif_sta);
 	}
@@ -180,7 +195,9 @@ static void net_interface_down_imp(uint32_t net_if)
 		net_state_c &= ~NET_S_NET_UP;
 		net_mode_c &= ~NET_MODE_AP;
 		if (net_state_c & NET_S_DHCP_SVR_RUNNING) {
+#if LWIP_UDP && LWIP_DHCP
 			lwip_tiny_dhcpserver_stop();
+#endif
 			net_state_c &= ~NET_S_DHCP_SVR_RUNNING;
 		}
 		netif_set_down(&wilc_netif_c_mode);
@@ -204,13 +221,17 @@ void net_set_mode(uint32_t net_if, uint32_t mode)
 		
 		if ((mode & NET_MODE_USE_DHCP)) {
 			if ((net_state_sta & (NET_S_DHCP_RUNNING | NET_S_NET_UP)) == NET_S_NET_UP) {
+#if LWIP_DHCP
 				dhcp_start(&wilc_netif_sta);
 				net_state_sta |= NET_S_DHCP_RUNNING;
+#endif
 			}
 			} else {
 			if (net_state_sta & NET_S_DHCP_RUNNING) {
+#if LWIP_DHCP
 				dhcp_stop(&wilc_netif_sta);
 				net_state_sta &= ~NET_S_DHCP_RUNNING;
+#endif
 			}
 		}
 	}

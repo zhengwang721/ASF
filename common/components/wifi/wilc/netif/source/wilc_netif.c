@@ -300,7 +300,9 @@ err_t wilc_netif_init(struct netif *netif)
 	netif->name[1] = IFNAME1;
 	netif->output = etharp_output;
 	netif->linkoutput = wilc_netif_tx;
+#if LWIP_IPV6
 	netif->output_ip6 = ethip6_output;
+#endif
 #if LWIP_IGMP
 	netif->igmp_mac_filter = wilc_netif_ipv4_mac_filter;
 #endif // #if LWIP_IGMP

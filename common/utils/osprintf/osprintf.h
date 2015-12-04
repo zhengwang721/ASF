@@ -47,7 +47,7 @@
 
 #include "compiler.h"
 
-void osprintf_init(void);
+void osprintf_init(void *usart, const void *opt);
 void osprintf(const char *fmt, ...) __attribute__ ((format (gnu_printf, 1, 0)));
 
 void osprint(const char *s);

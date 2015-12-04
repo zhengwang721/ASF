@@ -46,19 +46,6 @@
 
 #define SYS_ARCH_BLOCKING_TICKTIMEOUT    ((portTickType)10000)
 
-/* Structure associating a thread to a struct sys_timeouts */
-struct TimeoutlistPerThread {
-	sys_thread_t pid;        /* The thread id */
-};
-
-/* Thread & struct sys_timeouts association statically allocated per thread.
-   Note: SYS_THREAD_MAX is the max number of thread created by sys_thread_new()
-   that can run simultaneously; it is defined in lwipopts.h. */
-static struct TimeoutlistPerThread Threads_TimeoutsList[SYS_THREAD_MAX];
-
-/* Number of active threads. */
-static u16_t NbActiveThreads = 0;
-
 /**
  * \brief Return systick value.
  */
@@ -72,16 +59,6 @@ u32_t sys_now(void)
  */
 void sys_init(void)
 {
-	int i;
-
-	/* Initialize the the per-thread sys_timeouts structures
-	   make sure there are no valid pids in the list */
-	for (i = 0; i < SYS_THREAD_MAX; i++) {
-		Threads_TimeoutsList[i].pid = 0;
-	}
-
-	/* Keep track of how many threads have been created */
-	NbActiveThreads = 0;
 }
 
 /**
@@ -492,12 +469,7 @@ sys_thread_t sys_thread_new(const char *name, lwip_thread_fn thread, void *arg,
 
 	/* Need to protect this -- preemption here could be a problem! */
 	SYS_ARCH_PROTECT(protectionLevel);
-	if (pdPASS == result) {
-		/* For each task created, store the task handle (pid) in the
-		 * timers array. */
-		/* This scheme doesn't allow for threads to be deleted */
-		Threads_TimeoutsList[NbActiveThreads++].pid = newthread;
-	} else {
+	if (pdPASS != result) {
 		newthread = NULL;
 	}
 

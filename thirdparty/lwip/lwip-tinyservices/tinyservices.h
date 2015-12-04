@@ -200,6 +200,8 @@ struct label_t {
     uint16_t location;
 };
 
+#if LWIP_UDP && LWIP_DHCP
+
 /** Start Tiny DHCP server */
 void lwip_tiny_dhcpserver_start(void);
 /** Stop Tiny DHCP server */
@@ -211,6 +213,8 @@ void lwip_dhcp_unregister_mac(uint8_t *mac);
 /** Start Tiny DNS-SD server */
 void lwip_tiny_dnssdserver_start(void);
 void lwip_tiny_dnssdserver_stop(void);
+
+#endif
 
 /** Put host name into DNS RDATA format */
 uint32_t lwip_dns_hton_string(struct pbuf * pbuf, uint32_t offset, char const * name, bool flag, uint32_t * plen);

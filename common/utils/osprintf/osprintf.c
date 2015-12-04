@@ -49,20 +49,10 @@
 
 xSemaphoreHandle trace_lock;
 
-void osprintf_init(void)
+void osprintf_init(void *usart, const void *opt)
 {
-	static usart_serial_options_t usart_options = {
-		.baudrate = CONF_STDIO_BAUDRATE,
-#ifdef CONF_STDIO_CHAR_LENGTH
-		.charlength = CONF_STDIO_CHAR_LENGTH,
-#endif
-		.paritytype = CONF_STDIO_PARITY,
-#ifdef CONF_STDIO_STOP_BITS
-		.stopbits = CONF_STDIO_STOP_BITS
-#endif
-	};
 	trace_lock = xSemaphoreCreateMutex();
-	stdio_serial_init(CONF_STDIO_USART_MODULE, &usart_options);
+	stdio_serial_init(usart, opt);
 }
 
 void osprintf(const char *fmt, ...)
