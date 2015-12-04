@@ -43,12 +43,12 @@
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 INCLUDES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
-#include "driver\include\m2m_ate_mode.h"
-#include "driver\source\nmasic.h"
-#include "driver\source\nmdrv.h"
+#include "driver/include/m2m_ate_mode.h"
+#include "driver/source/nmasic.h"
+#include "driver/source/nmdrv.h"
 #include "m2m_hif.h"
-#include "driver\source\nmbus.h"
-#include "bsp\include\nm_bsp.h"
+#include "driver/source/nmbus.h"
+#include "bsp/include/nm_bsp.h"
 
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 MACROS

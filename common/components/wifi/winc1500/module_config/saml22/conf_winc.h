@@ -48,6 +48,8 @@ extern "C" {
 
 #include "board.h"
 
+/** Default settings for SAML22 Xplained Pro with WINC on EXT1. */
+
 /*
    ---------------------------------
    ---------- PIN settings ---------
@@ -67,17 +69,17 @@ extern "C" {
 #define CONF_WINC_USE_SPI				(1)
 
 /** SPI pin and instance settings. */
-#define CONF_WINC_SPI_MODULE			EXT1_SPI_MODULE
-#define CONF_WINC_SPI_SERCOM_MUX		EXT1_SPI_SERCOM_MUX_SETTING
-#define CONF_WINC_SPI_PINMUX_PAD0		EXT1_SPI_SERCOM_PINMUX_PAD0 /* in */
-#define CONF_WINC_SPI_PINMUX_PAD1		PINMUX_UNUSED /* cs driven from software */
-#define CONF_WINC_SPI_PINMUX_PAD2		EXT1_SPI_SERCOM_PINMUX_PAD2 /* out */
-#define CONF_WINC_SPI_PINMUX_PAD3		EXT1_SPI_SERCOM_PINMUX_PAD3 /* sck */
-#define CONF_WINC_SPI_CS_PIN			EXT1_PIN_SPI_SS_0
+#define CONF_WINC_SPI_MODULE			SERCOM3
+#define CONF_WINC_SPI_SERCOM_MUX		SPI_SIGNAL_MUX_SETTING_E
+#define CONF_WINC_SPI_PINMUX_PAD0		PINMUX_PB02C_SERCOM3_PAD0 /* in */
+#define CONF_WINC_SPI_PINMUX_PAD1		PINMUX_PB02C_SERCOM3_PAD1 /* cs driven from software */
+#define CONF_WINC_SPI_PINMUX_PAD2		PINMUX_PB02C_SERCOM3_PAD2 /* out */
+#define CONF_WINC_SPI_PINMUX_PAD3		PINMUX_PB02C_SERCOM3_PAD3 /* sck */
+#define CONF_WINC_SPI_CS_PIN			PIN_PB21
 
 /** SPI interrupt pin. */
-#define CONF_WINC_SPI_INT_PIN			EXT1_IRQ_PIN
-#define CONF_WINC_SPI_INT_MUX			EXT1_IRQ_MUX
+#define CONF_WINC_SPI_INT_PIN			PIN_PC02A_EIC_EXTINT10
+#define CONF_WINC_SPI_INT_MUX			PINMUX_PC02A_EIC_EXTINT10
 #define CONF_WINC_SPI_INT_EIC			(10)
 
 /** SPI clock. */

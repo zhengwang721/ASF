@@ -109,7 +109,7 @@
 #include "common/include/nm_common.h"
 #include "driver/include/m2m_wifi.h"
 #include "socket/include/socket.h"
-#include "main.h"
+#include "demo.h"
 #include "PubNub.h"
 
 #define STRING_EOL    "\r\n"

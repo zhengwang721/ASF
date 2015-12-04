@@ -61,9 +61,9 @@
  
 #include <asf.h>
 #include "common/include/nm_common.h"
-#include "bsp/include/nm_bsp_samr21.h"
+#include "bsp/include/nm_bsp.h"
 #include "bus_wrapper/include/nm_bus_wrapper.h"
-#include "driver\source\nmbus.h"
+#include "driver/source/nmbus.h"
 #include "driver/include/m2m_wifi.h"
 #include "stdio_serial.h"
 

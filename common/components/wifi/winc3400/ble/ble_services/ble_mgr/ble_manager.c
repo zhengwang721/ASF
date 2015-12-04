@@ -47,7 +47,6 @@
 #include "ble/ble_stack/include/wifiprov_task.h"
 
 #include "driver/include/m2m_wifi.h"
-#include "main.h"
 
 extern volatile bool init_done;
 at_ble_wifiprov_complete_ind gwifiprov_complete_ind = {.status = APP_PROV_IDLE};
