@@ -89,10 +89,6 @@
 		<build type="header-file" value="include/netif/ppp/ppp.h"/>
 		<build type="header-file" value="include/netif/ppp/pppdebug.h"/>
 		<build type="header-file" value="include/netif/ppp/pppol2tp.h"/>
-
-
-
-
 <!--		<build type="c-source" value="netif/ppp/auth.c"/>
 		<build type="c-source" value="netif/ppp/ccp.c"/>
 		<build type="c-source" value="netif/ppp/chap-md5.c"/>

@@ -38,11 +38,11 @@
  * \asf_license_stop
  *
  */
- #include "common\include\nm_common.h"
+ #include "common/include/nm_common.h"
  
 #ifdef CONF_WILC_USE_3000
 
-#include "driver\include\m2m_coex.h"
+#include "driver/include/m2m_coex.h"
 #include "nmasic.h"
 
 NMI_API sint8  m2m_coex_set_mode(tenuCoexMode enuCoexMode)

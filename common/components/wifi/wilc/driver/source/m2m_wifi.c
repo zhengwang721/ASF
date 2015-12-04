@@ -39,13 +39,12 @@
  *
  */
 
-
-#include "driver\include\m2m_wifi.h"
-#include "driver\source\nmdrv.h"
-#include "m2m_hif.h"
-#include "nmasic.h"
+#include "driver/include/m2m_wifi.h"
+#include "driver/source/nmdrv.h"
+#include "driver/source/m2m_hif.h"
+#include "driver/source/nmasic.h"
 #if defined(M2M_WILC1000) && defined(COMPUTE_PMK_IN_HOST)
-#include "drv_hash\crypto.h" 
+#include "drv_hash/crypto.h" 
 #endif
 
 static volatile uint8 gu8ChNum;

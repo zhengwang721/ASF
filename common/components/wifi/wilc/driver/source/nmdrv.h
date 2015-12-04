@@ -42,9 +42,9 @@
 #ifndef _NMDRV_H_
 #define _NMDRV_H_
 
-#include "common\include\nm_common.h"
-#include "driver\include\m2m_wifi.h"
-#include "driver\source\m2m_hif.h"
+#include "common/include/nm_common.h"
+#include "driver/include/m2m_wifi.h"
+#include "driver/source/m2m_hif.h"
 
 #ifdef __cplusplus
      extern "C" {

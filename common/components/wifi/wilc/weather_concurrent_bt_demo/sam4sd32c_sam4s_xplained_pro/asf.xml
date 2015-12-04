@@ -4,7 +4,6 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_tinyservices.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_wilc.h"/>

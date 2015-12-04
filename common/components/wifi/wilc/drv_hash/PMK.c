@@ -1,29 +1,48 @@
-/*!
-@file       		
-	hash.c
+/**
+ *
+ * \file
+ *
+ * \brief Implementation of HASH algorithms.
+ *
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
 
-@brief	
-	Implementation of HASH algorithms used in Wi-Fi M2M.
+#include "driver/include/m2m_types.h"
+#include "drv_hash/crypto.h"
 
-@author   	
-	Ahmed Ezzat
-
-@date      	
-	4 March 2013
-@sa			
-*/
-
-
-#include "driver\include\m2m_types.h"
-#include "crypto.h"
-
-#define A_SHA_DIGEST_LEN    20
-
-/*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-INCLUDES & FUNCTION DECLARATIONS
-*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
-
-#include "crypto.h"
+#define A_SHA_DIGEST_LEN                20
 
 uint8 pbkdf2_sha1_f(uint8 *key, uint8 key_length,
 		uint8 *data, uint32 data_len,
@@ -35,26 +54,18 @@ void Sha_HashUpdate(tstrHashContext * pstrHashCxt, uint8 * pu8Data, uint32 u32Da
 
 void SHA1ProcessBlock(uint32* pu32Sha1State, const uint8* pu8MessageBlock);
 
-/*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-MACROS
-*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
+#define SHA_PAD_BYTE                    0x80
 
-#define SHA_PAD_BYTE				0x80
+#define F1(x, y, z)                     (((x) & (y)) | (~(x) & (z)))
+#define F2(x, y, z)                     (((x) & (z)) | ((y) & ~(z)))
+#define F3(x, y, z)                     ((x) ^ (y) ^ (z))
+#define F4(x, y, z)                     (((x) & (y)) | ((x) & (z)) | ((y) & (z)))
+#define F5(x, y, z)                     ((y) ^ ((x) | ~(z)))
 
-#define F1(x, y, z) 					(((x) & (y)) | (~(x) & (z)))
-#define F2(x, y, z) 					(((x) & (z)) | ((y) & ~(z)))
-#define F3(x, y, z) 					((x) ^ (y) ^ (z))
-#define F4(x, y, z)     					(((x) & (y)) | ((x) & (z)) | ((y) & (z)))
-#define F5(x, y, z) 					((y) ^ ((x) | ~(z)))
-
-/*======*======*======*======*======*
-			SHA1 SPECIFIC DEFINES
-*======*======*======*======*======*/
-
-#define SHA1_CH(x, y, z)      			F1(x,y,z)
-#define SHA1_MAJ(x, y, z)     			F4(x,y,z)
-#define SHA_PARITY(x, y, z) 			F3(x,y,z)
-
+/** SHA1 specific defines. */
+#define SHA1_CH(x, y, z)                F1(x,y,z)
+#define SHA1_MAJ(x, y, z)               F4(x,y,z)
+#define SHA_PARITY(x, y, z)             F3(x,y,z)
 #define SHA1_INERMEDIATE(A,B,C,D,E,W,K)		\
 {	\
 	W += SHA_ROTL(A,5) + E  + K;	\
@@ -65,29 +76,14 @@ MACROS
 	A = W;				\
 }
 
-/*======*======*======*======*======*
-			SHA256 SPECIFIC DEFINES
-*======*======*======*======*======*/
+/** SHA256 specific defines. */
+#define SHA256_SMALL_SIGMA0(x)          (SHA_ROTR(x, 7) ^ SHA_ROTR(x,18) ^  SHA_SHR(x, 3))
+#define SHA256_SMALL_SIGMA1(x)          (SHA_ROTR(x,17) ^ SHA_ROTR(x,19) ^ SHA_SHR(x,10))
+#define SHA256_CAP_SIGMA0(x)            (SHA_ROTR(x, 2) ^ SHA_ROTR(x,13) ^ SHA_ROTR(x,22))
+#define SHA256_CAP_SIGMA1(x)            (SHA_ROTR(x, 6) ^ SHA_ROTR(x,11) ^ SHA_ROTR(x,25))
+#define SHA256_MAJ(x,y,z)               ((x & y) | (z & (x | y)))
+#define SHA256_CH(x,y,z)                (z ^ (x & (y ^ z)))
 
-#define SHA256_SMALL_SIGMA0(x) 	(SHA_ROTR(x, 7) ^ SHA_ROTR(x,18) ^  SHA_SHR(x, 3))
-#define SHA256_SMALL_SIGMA1(x) 	(SHA_ROTR(x,17) ^ SHA_ROTR(x,19) ^ SHA_SHR(x,10))
-#define SHA256_CAP_SIGMA0(x) 		(SHA_ROTR(x, 2) ^ SHA_ROTR(x,13) ^ SHA_ROTR(x,22))
-#define SHA256_CAP_SIGMA1(x) 		(SHA_ROTR(x, 6) ^ SHA_ROTR(x,11) ^ SHA_ROTR(x,25))
-#define SHA256_MAJ(x,y,z) 			((x & y) | (z & (x | y)))
-#define SHA256_CH(x,y,z) 			(z ^ (x & (y ^ z)))
-/*********************************************************************
-Function: SHA1ProcessBlock
-
-Description: 
-
-Return:
-
-Author:
-
-Version:
-
-Date:
-*********************************************************************/
 void SHA1ProcessBlock(uint32* pu32Sha1State, const uint8* pu8MessageBlock)
 {
 	/* Constants defined in FIPS-180-2, section 4.2.1 */
@@ -97,13 +93,11 @@ void SHA1ProcessBlock(uint32* pu32Sha1State, const uint8* pu8MessageBlock)
 		0x8F1BBCDC,
 		0xCA62C1D6
 	};
-	int        		t;              	 /* Loop counter */
-	uint32	W[80];           /* Word sequence */
-	uint32   	A, B, C, D, E;   /* Word buffers */
+	int t;                  /* Loop counter */
+	uint32 W[80];           /* Word sequence */
+	uint32 A, B, C, D, E;   /* Word buffers */
 
-	/*
-	* Initialize the first 16 words in the array W
-	*/
+	/* Initialize the first 16 words in the array W. */
 	for (t = 0; t < 16; t++) 
 		W[t] = GETU32(pu8MessageBlock, (t * 4));
 
@@ -116,26 +110,22 @@ void SHA1ProcessBlock(uint32* pu32Sha1State, const uint8* pu8MessageBlock)
 	D = pu32Sha1State[3];
 	E = pu32Sha1State[4];
 
-	for (t = 0; t < 20; t++) 
-	{
+	for (t = 0; t < 20; t++) {
 		W[t] += SHA1_CH(B, C, D);
 		SHA1_INERMEDIATE(A, B, C, D, E, W[t], K[0])
 	}
 
-	for (t = 20; t < 40; t++) 
-	{
+	for (t = 20; t < 40; t++) {
 		W[t] += SHA_PARITY(B, C, D);
 		SHA1_INERMEDIATE(A, B, C, D, E, W[t], K[1])
 	}
 
-	for (t = 40; t < 60; t++) 
-	{
+	for (t = 40; t < 60; t++) {
 		W[t] += SHA1_MAJ(B, C, D);
 		SHA1_INERMEDIATE(A, B, C, D, E, W[t], K[2])
 	}
 
-	for (t = 60; t < 80; t++) 
-	{
+	for (t = 60; t < 80; t++) {
 		W[t] += SHA_PARITY(B, C, D);
 		SHA1_INERMEDIATE(A, B, C, D, E, W[t], K[3])
 	}
@@ -146,19 +136,7 @@ void SHA1ProcessBlock(uint32* pu32Sha1State, const uint8* pu8MessageBlock)
 	pu32Sha1State[3] += D;
 	pu32Sha1State[4] += E;
 }
-/*********************************************************************
-Function: Sha_HashUpdate
 
-Description: 
-
-Return:
-
-Author:
-
-Version:
-
-Date:
-*********************************************************************/
 void Sha_HashUpdate(tstrHashContext * pstrHashCxt, uint8 * pu8Data, uint32 u32DataLength)
 {
 	if((pstrHashCxt != NULL) && (pu8Data != NULL) && (u32DataLength != 0))
@@ -209,19 +187,7 @@ void Sha_HashUpdate(tstrHashContext * pstrHashCxt, uint8 * pu8Data, uint32 u32Da
 		}
 	}
 }
-/*********************************************************************
-Function: Sha_HashFinish
 
-Description: 
-
-Return:
-
-Author:
-
-Version:
-
-Date:
-*********************************************************************/
 void Sha_HashFinish(tstrHashContext * pstrHashCxt,uint8 *pu8LengthPadding)
 {
 	if(pstrHashCxt != NULL)
@@ -237,15 +203,12 @@ void Sha_HashFinish(tstrHashContext * pstrHashCxt,uint8 *pu8LengthPadding)
 			/* Add the padding byte 0x80. */
 			pstrHashCxt->au8CurrentBlock[u32Offset ++] = SHA_PAD_BYTE;
 
-			/* Calculate the required padding to complete 
-			one Hash Block Size. 
-			*/
+			/* Calculate the required padding to complete one Hash Block Size. */
 			u32PaddingLength = pstrHashCxt->u8BlockSize - u32Offset;
 			M2M_MEMSET(&pstrHashCxt->au8CurrentBlock[u32Offset],0,u32PaddingLength);
 
-			/* If the padding count is not enough to hold 64-bit representation of 
-			the total input message length, one padding block is required.
-			*/
+			/* If the padding count is not enough to hold 64-bit representation of */
+			/* the total input message length, one padding block is required. */
 			if(u32PaddingLength < 8)
 			{
 				pstrHashCxt->fpHash(pstrHashCxt->au32HashState,pstrHashCxt->au8CurrentBlock);
@@ -256,33 +219,13 @@ void Sha_HashFinish(tstrHashContext * pstrHashCxt,uint8 *pu8LengthPadding)
 		}
 	}
 }
-/*********************************************************************
-Function: SHA1_Hash
 
-Description: 
-
-Return:
-
-Author:
-
-Version:
-
-Date:
-*********************************************************************/
-void DRV_SHA1_Hash
-(
-tstrHashContext	*pstrSha1Context,
-uint8			u8Flags,
-uint8 		*pu8Data, 
-uint32 		u32DataLength, 
-uint8 		*pu8Digest
-)
+void DRV_SHA1_Hash(tstrHashContext *pstrSha1Context, uint8 u8Flags, uint8 *pu8Data,
+		uint32 u32DataLength, uint8 *pu8Digest)
 {
 	if(pstrSha1Context != NULL)
 	{		
-		/*======*======*======*======*======*
-					SHA1 HASH INITIALIZATION
-		*======*======*======*======*======*/
+		/* SHA1 hash initialization. */
 		if(u8Flags & SHA_FLAGS_INIT)
 		{
 			/* Initialize the Hash Context. */
@@ -301,64 +244,38 @@ uint8 		*pu8Digest
 			pstrSha1Context->au32HashState[4] = 0xC3D2E1F0;
 		}
 
-		/*======*======*======*
-				SHA1 HASH UPDATE
-		*======*======*======*/
+		/* SHA1 hash update. */
 		if((u8Flags & SHA_FLAGS_UPDATE) && (pu8Data != NULL))
 		{
 			Sha_HashUpdate(pstrSha1Context, pu8Data, u32DataLength);
 		}
 
-		/*======*======*======*
-				SHA1 HASH FINISH
-		*======*======*======*/
+		/* SHA1 hash finish. */
 		if(u8Flags & SHA_FLAGS_FINISH)
 		{
 			uint8	au8Tmp[8];
 
-			/* pack the length at the end of the padding block */
+			/* Pack the length at the end of the padding block. */
 			PUTU32(pstrSha1Context->u32TotalLength >> 29, au8Tmp,0);
 			PUTU32(pstrSha1Context->u32TotalLength << 3, au8Tmp, 4);
 			Sha_HashFinish(pstrSha1Context,au8Tmp);
 
-			/* compute digest */
-			PUTU32(pstrSha1Context->au32HashState[0], pu8Digest,  0);
-			PUTU32(pstrSha1Context->au32HashState[1], pu8Digest,  4);
-			PUTU32(pstrSha1Context->au32HashState[2], pu8Digest,  8);
-			PUTU32(pstrSha1Context->au32HashState[3], pu8Digest,  12);
-			PUTU32(pstrSha1Context->au32HashState[4], pu8Digest,  16);
+			/* Compute digest. */
+			PUTU32(pstrSha1Context->au32HashState[0], pu8Digest, 0);
+			PUTU32(pstrSha1Context->au32HashState[1], pu8Digest, 4);
+			PUTU32(pstrSha1Context->au32HashState[2], pu8Digest, 8);
+			PUTU32(pstrSha1Context->au32HashState[3], pu8Digest, 12);
+			PUTU32(pstrSha1Context->au32HashState[4], pu8Digest, 16);
 		}
 	}
 }
-/*********************************************************************
-Function
-		DRV_HMAC_Vector
 
-Description
-		Perform the HMAC operation on a given vector of data streams using the 
-		hash function passed to the DRV_HMAC_Vector.
-
-Return
-		None.
-
-Author
-		Ahmed Ezzat
-
-Version
-		1.0
-
-Date
-		March 2013
-*********************************************************************/
-void DRV_HMAC_Vector
-(
-	tpfHash			fpHash,
-	uint8			*pu8Key,
-	uint32 		u32KeyLength, 
-	tstrBuffer			*pstrInData,
-	uint8			u8NumInputs,
-	uint8			*pu8Out
-)
+/**
+ * \brief Perform the HMAC operation on a given vector of data streams
+ * using the hash function passed to the DRV_HMAC_Vector.
+ */
+void DRV_HMAC_Vector(tpfHash fpHash, uint8 *pu8Key, uint32 u32KeyLength,
+		tstrBuffer *pstrInData, uint8 u8NumInputs, uint8 *pu8Out)
 {
 	if((pu8Key != NULL) && (pstrInData != NULL) && (pu8Out != NULL) && (fpHash != NULL))
 	{
@@ -367,9 +284,7 @@ void DRV_HMAC_Vector
 		uint8			au8TmpBuffer[SHA_BLOCK_SIZE];
 		uint8			au8TmpHash[SHA_MAX_DIGEST_SIZE];
 		uint8			au8TmpKey[SHA_MAX_DIGEST_SIZE];
-		/*=*=*=*=*=*=*=*=*=*=*=*
-				HMAC INIT
-		*=*=*=*=*=*=*=*=*=*=*=*/
+		/* HMAC initialize. */
 		/* Adjust the key size. */
 		if(u32KeyLength > SHA_BLOCK_SIZE)
 		{
@@ -387,9 +302,7 @@ void DRV_HMAC_Vector
 		/* Start hashing. */
 		fpHash(&strHashContext , SHA_FLAGS_INIT | SHA_FLAGS_UPDATE, au8TmpBuffer, SHA_BLOCK_SIZE, NULL);
 		
-		/*=*=*=*=*=*=*=*=*=*=*=*=*
-				HMAC UPDATE
-		*=*=*=*=*=*=*=*=*=*=*=*=*/
+		/* HMAC update. */
 		for(i = 0 ; i < u8NumInputs ; i ++)
 		{
 			fpHash(
@@ -401,9 +314,7 @@ void DRV_HMAC_Vector
 			&strHashContext , SHA_FLAGS_FINISH, 
 			NULL, 0, au8TmpHash);
 		
-		/*=*=*=*=*=*=*=*=*=*=*=*=*=*
-				HMAC Finalize
-		*=*=*=*=*=*=*=*=*=*=*=*=*=*/		
+		/* HMAC finalize. */		
 		M2M_MEMSET(au8TmpBuffer, 0x5C, SHA_BLOCK_SIZE);
 		for(i = 0; i< u32KeyLength ; i++)
 		{
@@ -414,33 +325,8 @@ void DRV_HMAC_Vector
 		fpHash(&strHashContext, SHA_FLAGS_UPDATE | SHA_FLAGS_FINISH, au8TmpHash, strHashContext.u8DigestSize, pu8Out);
 	}
 }
-/*********************************************************************
-Function
-		hmac_sha1
 
-Description
-		
-
-Return
-		None.
-
-Author
-		Ahmed Ezzat
-
-Version
-		1.0
-
-Date
-		14 April 2013
-*********************************************************************/
-void DRV_hmac_sha1
-(	
-uint8		*pu8Key, 
-uint32 	u32KeyLength,
-uint8		*pu8Data, 
-uint32 	u32DataLength, 
-uint8		*pu8Digest
-)
+void DRV_hmac_sha1(uint8 *pu8Key, uint32 u32KeyLength, uint8 *pu8Data, uint32 u32DataLength, uint8 *pu8Digest)
 {
 	tstrBuffer	strIn;
 	strIn.pu8Data = pu8Data;
@@ -448,55 +334,25 @@ uint8		*pu8Digest
 	DRV_HMAC_Vector(DRV_SHA1_Hash,pu8Key,u32KeyLength,&strIn,1,pu8Digest);
 }
 
-/*****************************************************************************/
-/*                                                                           */
-/*  Function Name    : P2P_pbkdf2_sha1_f                                     */
-/*                                                                           */
-/*  Description      : This function iterates the hashing of digest as per   */
-/*                     the key                                               */
-/*                                                                           */
-/*  Inputs           : 1) key                                                */
-/*                     2) data                                               */
-/*                     3) key len                                            */
-/*                     4) iterations                                         */
-/*                     5) count                                              */
-/*                     6) digest                                             */
-/*                                                                           */
-/*  Globals          : None                                                  */
-/*                                                                           */
-/*  Processing       : F(P, S, c, i) = U1 xor U2 xor ... Uc                  */
-/*                     U1 = PRF(P, S || Int(i))                              */
-/*                     U2 = PRF(P, U1)                                       */
-/*                     Uc = PRF(P, Uc-1)                                     */
-/*                                                                           */
-/*  Outputs          : Iterated hashed password                              */
-/*                                                                           */
-/*  Returns          : Returns 0 on failure 1 otherwise returns 1            */
-/*                                                                           */
-/*  Issues           : None                                                  */
-/*                                                                           */
-/*  Revision History:                                                        */
-/*                                                                           */
-/*         DD MM YYYY   Author(s)       Changes                              */
-/*         01 05 2005   Ittiam          Draft                                */
-/*                                                                           */
-/*****************************************************************************/
-
-uint8 pbkdf2_sha1_f(uint8 *key, uint8 key_length,
-                     uint8 *data, uint32 data_len,
-                   uint32 iterations, uint32 count, uint8 *digest)
+/**
+ * \brief This function iterates the hashing of digest as per the key.
+ *
+ * \return 1 on success, 0 on failure.
+ */
+uint8 pbkdf2_sha1_f(uint8 *key, uint8 key_length, uint8 *data, uint32 data_len,
+		uint32 iterations, uint32 count, uint8 *digest)
 {
-    uint8 tmp1[36] = {0}; // [36]
-    uint8 tmp2[A_SHA_DIGEST_LEN] = {0}; // [A_SHA_DIGEST_LEN];
+    uint8 tmp1[36] = {0};
+    uint8 tmp2[A_SHA_DIGEST_LEN] = {0};
     uint16 i, j;
     
     for (i = 0; i < key_length ; i++)
     {
-        if(key[i] < 32)
+        if (key[i] < 32)
         {           
             return 0;
         }
-        else if(key[i] > 126)
+        else if (key[i] > 126)
         {           
             return 0;
         }
@@ -533,22 +389,17 @@ uint8 pbkdf2_sha1_f(uint8 *key, uint8 key_length,
     return 1;
 }
 
-
-/* This function runs the PBKDF2 on the data with a given                    */
-/* key. To obtain the PSK from the password, PBKDF2 is                       */
-/* run on SSID (data) with password (key)                                    */
-uint8 pbkdf2_sha1(uint8 *key, uint8 key_len,
-                          uint8 *data, uint8 data_len,
-                     uint8 *digest)
+/**
+ * \brief This function runs the PBKDF2 on the data with a given key.
+ * To obtain the PSK from the password, PBKDF2 is run on SSID (data) with password (key).
+ */
+uint8 pbkdf2_sha1(uint8 *key, uint8 key_len, uint8 *data, uint8 data_len, uint8 *digest)
 {
     if ((key_len > 64) || (data_len > 32))
         return 0;
 
-    if(pbkdf2_sha1_f(key, key_len, data, data_len, 4096, 1, digest) == 0)
-    {
+    if (pbkdf2_sha1_f(key, key_len, data, data_len, 4096, 1, digest) == 0) {
         return 0;
     }
-    return pbkdf2_sha1_f(key, key_len, data, data_len,
-                            4096, 2, &digest[A_SHA_DIGEST_LEN]);
+    return pbkdf2_sha1_f(key, key_len, data, data_len, 4096, 2, &digest[A_SHA_DIGEST_LEN]);
 }
-

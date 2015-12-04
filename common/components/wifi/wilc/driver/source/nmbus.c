@@ -41,10 +41,8 @@
 #ifndef CORTUS_APP
 
 #include "nmbus.h"
-#include "nmi2c.h"
 #include "nmspi.h"
 //#include "nmsdio.h"
-#include "nmuart.h"
 
 #define MAX_TRX_CFG_SZ		8
 
@@ -91,9 +89,6 @@ sint8 nm_bus_iface_deinit(void)
 sint8 nm_bus_iface_reconfigure(void *ptr)
 {
 	sint8 ret = M2M_SUCCESS;
-#ifdef CONF_WILC_USE_UART
-	ret = nm_uart_reconfigure(ptr);
-#endif
 	return ret;
 }
 /*
@@ -108,12 +103,8 @@ sint8 nm_bus_iface_reconfigure(void *ptr)
 */ 
 uint32 nm_read_reg(uint32 u32Addr)
 {
-#ifdef CONF_WILC_USE_UART
-	return nm_uart_read_reg(u32Addr);
-#elif defined (CONF_WILC_USE_SPI)
+#ifdef CONF_WILC_USE_SPI
 	return nm_spi_read_reg(u32Addr);
-#elif defined (CONF_WILC_USE_I2C)
-	return nm_i2c_read_reg(u32Addr);
 #elif defined (CONF_WILC_USE_SDIO)
 	return nm_sdio_read_reg(u32Addr);
 #else
@@ -136,12 +127,8 @@ uint32 nm_read_reg(uint32 u32Addr)
 */ 
 sint8 nm_read_reg_with_ret(uint32 u32Addr, uint32* pu32RetVal)
 {
-#ifdef CONF_WILC_USE_UART
-	return nm_uart_read_reg_with_ret(u32Addr,pu32RetVal);
-#elif defined (CONF_WILC_USE_SPI)
+#ifdef CONF_WILC_USE_SPI
 	return nm_spi_read_reg_with_ret(u32Addr,pu32RetVal);
-#elif defined (CONF_WILC_USE_I2C)
-	return nm_i2c_read_reg_with_ret(u32Addr,pu32RetVal);
 #elif defined (CONF_WILC_USE_SDIO)
 	return nm_sdio_read_reg_with_ret(u32Addr,pu32RetVal);
 #else
@@ -163,12 +150,8 @@ sint8 nm_read_reg_with_ret(uint32 u32Addr, uint32* pu32RetVal)
 */ 
 sint8 nm_write_reg(uint32 u32Addr, uint32 u32Val)
 {
-#ifdef CONF_WILC_USE_UART
-	return nm_uart_write_reg(u32Addr,u32Val);
-#elif defined (CONF_WILC_USE_SPI)
+#ifdef CONF_WILC_USE_SPI
 	return nm_spi_write_reg(u32Addr,u32Val);
-#elif defined (CONF_WILC_USE_I2C)
-	return nm_i2c_write_reg(u32Addr,u32Val);
 #elif defined (CONF_WILC_USE_SDIO)
 	return nm_sdio_write_reg(u32Addr,u32Val);
 #else
@@ -178,12 +161,8 @@ sint8 nm_write_reg(uint32 u32Addr, uint32 u32Val)
 
 static sint8 p_nm_read_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 {
-#ifdef CONF_WILC_USE_UART
-	return nm_uart_read_block(u32Addr,puBuf,u16Sz);
-#elif defined (CONF_WILC_USE_SPI)
+#ifdef CONF_WILC_USE_SPI
 	return nm_spi_read_block(u32Addr,puBuf,u16Sz);
-#elif defined (CONF_WILC_USE_I2C)
-	return nm_i2c_read_block(u32Addr,puBuf,u16Sz);
 #elif defined (CONF_WILC_USE_SDIO)
 	return nm_sdio_read_block(u32Addr,puBuf,u16Sz);
 #else
@@ -233,12 +212,8 @@ sint8 nm_read_block(uint32 u32Addr, uint8 *puBuf, uint32 u32Sz)
 
 static sint8 p_nm_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 {
-#ifdef CONF_WILC_USE_UART
-	return nm_uart_write_block(u32Addr,puBuf,u16Sz);
-#elif defined (CONF_WILC_USE_SPI)
+#ifdef CONF_WILC_USE_SPI
 	return nm_spi_write_block(u32Addr,puBuf,u16Sz);
-#elif defined (CONF_WILC_USE_I2C)
-	return nm_i2c_write_block(u32Addr,puBuf,u16Sz);
 #elif defined (CONF_WILC_USE_SDIO)
 	return nm_sdio_write_block(u32Addr,puBuf,u16Sz);
 #else

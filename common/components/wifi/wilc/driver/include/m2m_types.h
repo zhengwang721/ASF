@@ -49,7 +49,7 @@ INCLUDES
 
 #ifndef	_BOOT_
 #ifndef _FIRMWARE_
-#include "common\include\nm_common.h"
+#include "common/include/nm_common.h"
 #else
 #include "m2m_common.h"
 #endif

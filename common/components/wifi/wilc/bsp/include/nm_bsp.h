@@ -61,7 +61,7 @@
 
 /*!
  * @typedef      void (*tpfNmBspIsr) (void);
- * @brief           Pointer to function.\n
+ * @brief           Pointer to function.
  *                     Used as a data type of ISR function registered by \ref nm_bsp_register_isr
  * @return         None
  */
@@ -153,9 +153,9 @@ extern "C"{
  /**@{*/
 /*!
  * @fn           sint8 nm_bsp_init(void);
- * @brief        Initialization for bsp (\e Board \e Support \e Package) such as Reset and Chip Enable Pins for WINC, delays, register ISR, enable/disable IRQ for WINC, ...etc.\n
+ * @brief        Initialization for bsp (\e Board \e Support \e Package) such as Reset and Chip Enable Pins for WINC, delays, register ISR, enable/disable IRQ for WINC, ...etc.
  *                   You must use this function in the head of your application to enable WINC and Host Driver communicate each other.
- * @warning      Missing use will lead to unavailability of host communication.\n
+ * @warning      Missing use will lead to unavailability of host communication.
  *  @note        Implementation of this function is host dependent.
  * @return       The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
 
@@ -172,7 +172,7 @@ sint8 nm_bsp_init(void);
 /*!
  * @fn           sint8 nm_bsp_deinit(void);
  * @pre          Initialize \ref nm_bsp_init first
- * @warning      Missing use may lead to unknown behavior in case of soft reset.\n
+ * @warning      Missing use may lead to unknown behavior in case of soft reset.
  * @note         Implementation of this function is host dependent.
  * @see          nm_bsp_init               
  * @return      The function returns @ref M2M_SUCCESS for successful operations and a negative value otherwise.
@@ -204,7 +204,7 @@ void nm_bsp_reset(void);
  
 /** @defgroup NmBspSleepFn nm_bsp_sleep
 *     @ingroup BSPAPI
-*     Sleep in units of milliseconds.\n
+*     Sleep in units of milliseconds.
 *    This function used by HIF Layer according to different situations. 
 */
 /**@{*/
@@ -214,7 +214,7 @@ void nm_bsp_reset(void);
  * @param [in]   u32TimeMsec
  *               Time unit in milliseconds
  * @pre          Initialize \ref nm_bsp_init first
- * @warning      Maximum value must nor exceed 4294967295 milliseconds which is equal to 4294967.295 seconds.\n
+ * @warning      Maximum value must nor exceed 4294967295 milliseconds which is equal to 4294967.295 seconds.
  * @note         Implementation of this function is host dependent.
  * @see           nm_bsp_init               
  * @return       None
@@ -279,11 +279,11 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #endif
 
 #ifdef _FREESCALE_MCF51CN128_
-#include "bsp\include\nm_bsp_mcf51cn128.h"
+#include "bsp/include/nm_bsp_mcf51cn128.h"
 #endif
 
 #ifdef __MCF964548__
-#include "bsp\include\nm_bsp_mc96f4548.h"
+#include "bsp/include/nm_bsp_mc96f4548.h"
 #endif
 
 #ifdef __APP_APS3_CORTUS__
@@ -291,15 +291,15 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #endif
 
 #if (defined __SAMD21J18A__) || (defined __SAMD21G18A__)
-#include "bsp\include\nm_bsp_samd21.h"
+#include "bsp/include/nm_bsp_samd21.h"
 #endif
 
 #if (defined __SAM4S16C__) || (defined __SAM4SD32C__)
-#include "bsp\include\nm_bsp_sam4s.h"
+#include "bsp/include/nm_bsp_sam4s.h"
 #endif
 
 #ifdef __SAMG53N19__
-#include "bsp\include\nm_bsp_samg53.h"
+#include "bsp/include/nm_bsp_samg53.h"
 #endif
 
 #ifdef __SAMG55J19__

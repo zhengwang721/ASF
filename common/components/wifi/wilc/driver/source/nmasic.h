@@ -41,7 +41,7 @@
 #ifndef _NMASIC_H_
 #define _NMASIC_H_
 
-#include "common\include\nm_common.h"
+#include "common/include/nm_common.h"
 
 #define NMI_PERIPH_REG_BASE     0x1000
 #define NMI_CHIPID	            (NMI_PERIPH_REG_BASE)

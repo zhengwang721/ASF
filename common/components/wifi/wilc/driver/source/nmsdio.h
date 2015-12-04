@@ -42,7 +42,7 @@
 #ifndef _NMSDIO_H_
 #define _NMSDIO_H_
 
-#include "common\include\nm_common.h"
+#include "common/include/nm_common.h"
 
 #ifdef __cplusplus
      extern "C" {

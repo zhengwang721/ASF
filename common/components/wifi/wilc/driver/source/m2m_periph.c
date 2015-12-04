@@ -39,30 +39,14 @@
  *
  */
 
+#include "driver/include/m2m_periph.h"
+#include "driver/source/nmasic.h"
+#include "driver/source/m2m_hif.h"
 
-/*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-INCLUDES
-*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
-
-#include "driver\include\m2m_periph.h"
-#include "driver\source\nmasic.h"
-#include "m2m_hif.h"
-
-#ifdef CONF_PERIPH
-
-/*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-MACROS
-*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 #define GPIO_OP_DIR     0
 #define GPIO_OP_SET     1
 #define GPIO_OP_GET     2
-/*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-DATA TYPES
-*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 
-/*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-STATIC FUNCTIONS
-*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 static sint8 get_gpio_idx(uint8 u8GpioNum)
 {
 	if(u8GpioNum >= M2M_PERIPH_GPIO_MAX) return -1;
@@ -73,8 +57,9 @@ static sint8 get_gpio_idx(uint8 u8GpioNum)
 		return -2;
 	}
 }
-/*
- * GPIO read/write skeleton with wakeup/sleep capability. 
+
+/**
+ * \brief GPIO read/write skeleton with wakeup/sleep capability. 
  */
 static sint8 gpio_ioctl(uint8 op, uint8 u8GpioNum, uint8 u8InVal, uint8 * pu8OutVal)
 {
@@ -100,10 +85,6 @@ _EXIT1:
 _EXIT:
 	return ret;
 }
-/*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
-FUNCTION IMPLEMENTATION
-*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
-
 
 sint8 m2m_periph_init(tstrPerphInitParam * param)
 {
@@ -149,9 +130,7 @@ sint8 m2m_periph_i2c_master_read(uint8 u8SlaveAddr, uint8 * pu8Buf, uint16 u16Bu
 	return M2M_SUCCESS;
 }
 
-
 sint8 m2m_periph_pullup_ctrl(uint32 pinmask, uint8 enable)
 {		
 	return pullup_ctrl(pinmask, enable);	
 }
-#endif /* CONF_PERIPH */

@@ -46,10 +46,10 @@
 INCLUDES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 
-#include "common\include\nm_common.h"
-#include "driver\include\m2m_types.h"
+#include "common/include/nm_common.h"
+#include "driver/include/m2m_types.h"
 #ifdef CONF_WILC_USE_3000_REV_A
-#include "driver\include\m2m_coex.h"
+#include "driver/include/m2m_coex.h"
 #endif
 
 #ifdef CONF_MGMT

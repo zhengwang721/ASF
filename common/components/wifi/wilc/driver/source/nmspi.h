@@ -42,7 +42,7 @@
 #ifndef _NMSPI_H_
 #define _NMSPI_H_
 
-#include "common\include\nm_common.h"
+#include "common/include/nm_common.h"
 
 #ifdef __cplusplus
      extern "C" {

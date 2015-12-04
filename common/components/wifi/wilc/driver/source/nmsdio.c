@@ -38,11 +38,11 @@
  * \asf_license_stop
  *
  */
-#include "common\include\nm_common.h"
+#include "common/include/nm_common.h"
 
 #ifdef CONF_WILC_USE_SDIO
 
-#include "bus_wrapper\include\nm_bus_wrapper.h"
+#include "bus_wrapper/include/nm_bus_wrapper.h"
 
 #define WILC_SDIO_BLOCK_SIZE 512
 
