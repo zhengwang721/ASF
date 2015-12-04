@@ -67,9 +67,10 @@
 
 			<build type="include-path" value="firmware/Tools/root_certificate_downloader"/>
 			<build type="include-path" value="firmware/Tools/root_certificate_downloader/crt"/>
-			<build type="distribute" subtype="file" value="firmware/Tools/root_certificate_downloader/crt/FreeRadius_Root.cer"/>
-			<build type="distribute" subtype="file" value="firmware/Tools/root_certificate_downloader/crt/NMA_Root.cer"/>
-			<build type="distribute" subtype="file" value="firmware/Tools/root_certificate_downloader/crt/PROWL_Root.cer"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/root_certificate_downloader/crt/DigiCertSHA2_Root.cer"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/root_certificate_downloader/crt/GeoTrustGlobalCA_Root.cer"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/root_certificate_downloader/crt/VeriSign_Root.cer"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/root_certificate_downloader/crt/Digicert_Root.cer"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/root_certificate_downloader/crt/Radius_Root.cer"/>
 
 			<build type="include-path" value="firmware/Tools/root_certificate_downloader/debug_uart"/>
