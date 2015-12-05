@@ -51,7 +51,7 @@ extern "C" {
 /* This configuration files comes with empty settings! */
 /* Default settings for SAMR21 Xplained Pro with WINC on EXT1 are */
 /* available in comments for reference. */
-#warn Please modify conf_winc.h for WINC module settings!
+#warning Please modify conf_winc.h for WINC module settings!
 
 /*
    ---------------------------------

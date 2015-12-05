@@ -53,7 +53,7 @@ extern "C" {
 /* This configuration files comes with empty settings! */
 /* Default settings for SAMW25 Xplained Pro with WINC on EXT1 are */
 /* available in comments for reference. */
-#warn Please modify conf_winc.h for WINC module settings!
+#warning Please modify conf_winc.h for WINC module settings!
 
 /*
    ---------------------------------
@@ -106,7 +106,7 @@ extern "C" {
 /* This configuration files comes with empty settings! */
 /* Default settings for SAMD21 Xplained Pro with WINC on EXT1 are */
 /* available in comments for reference. */
-#warn Please modify conf_winc.h for WINC module settings!
+#warning Please modify conf_winc.h for WINC module settings!
 
 /*
    ---------------------------------
