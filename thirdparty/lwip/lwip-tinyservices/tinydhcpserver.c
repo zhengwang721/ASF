@@ -44,7 +44,6 @@
 #include "wifi_private.h"
 #include "lwip/dhcp.h"
 #include "lwip/tcpip.h"
-#include "common/include/nm_common.h"
 #include <string.h>
 
 #if LWIP_UDP && LWIP_DHCP
@@ -83,7 +82,7 @@ void lwip_dhcp_unregister_mac(uint8_t *mac)
 		if (lwip_dhcp_known_mac[i][0] == mac[0] && lwip_dhcp_known_mac[i][1] == mac[1] &&
 				lwip_dhcp_known_mac[i][2] == mac[2] && lwip_dhcp_known_mac[i][3] == mac[3] && 
 				lwip_dhcp_known_mac[i][4] == mac[4] && lwip_dhcp_known_mac[i][5] == mac[5]) {
-			m2m_memset(lwip_dhcp_known_mac[i], 0, 6);
+			memset(lwip_dhcp_known_mac[i], 0, 6);
 		}
 	}
 }
@@ -581,7 +580,7 @@ static void lwip_dhcpserver_start_threadsafe(void * arg)
 
 	/* Clean known mac array. */
 	for (uint32_t i = 0; i < LWIP_DHCP_MAX_CLIENT; ++i) {
-		m2m_memset(lwip_dhcp_known_mac[i], 0, 6);
+		memset(lwip_dhcp_known_mac[i], 0, 6);
 	}
 
     if(0 == dhcp_pcb) {
