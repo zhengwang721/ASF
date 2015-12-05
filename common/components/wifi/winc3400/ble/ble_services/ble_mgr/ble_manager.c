@@ -608,7 +608,6 @@ void ble_pair_key_request_handler (at_ble_pair_key_request_t *pair_key)
           /* Convert passkey to ASCII format */
           for(idx=0; idx<AT_BLE_PASSKEY_LEN; idx++)
           {
-                  passkey[idx] = (passkey[idx]);
                   DBG_LOG_CONT("%c",passkey[idx]);
           }		
           

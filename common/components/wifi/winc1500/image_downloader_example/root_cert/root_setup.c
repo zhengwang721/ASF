@@ -188,7 +188,6 @@ static sint8 UpdateRootList(tstrX509Cert *pstrRootCert)
 
 	/* E */
 	memcpy(&gau8RootCertMem[u16BufferOffset + pstrKey->u16NSize], pstrKey->pu8E, pstrKey->u16ESize);
-	u16BufferOffset += WORD_ALIGN(pstrKey->u16NSize + pstrKey->u16ESize);
 
 	return 0;
 }

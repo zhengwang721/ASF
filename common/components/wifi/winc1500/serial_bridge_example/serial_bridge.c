@@ -274,8 +274,6 @@ struct usart_frame usart_handler[] = {
  */
 static void usart_frame_parse(uint8_t *buffer, uint8_t size)
 {
-	int ret;
-
 	if (size == 0) {
 		return;
 	}
@@ -284,7 +282,7 @@ static void usart_frame_parse(uint8_t *buffer, uint8_t size)
 		if (size >= usart_handler[i].min_size &&
 				!memcmp(usart_handler[i].header, buffer, usart_handler[i].header_size)) {
 			if (usart_handler[i].handler) {
-				if ((ret = usart_handler[i].handler(buffer, size)) == 0) {
+				if ((usart_handler[i].handler(buffer, size)) == 0) {
 					return;
 				} else {
 					break;

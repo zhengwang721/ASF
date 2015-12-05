@@ -285,13 +285,13 @@ static void handle_tcpip_recv(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 			uint8_t *length = m2m_strstr(pstrRecv->pu8Buffer, (uint8 *)"Content-Length: ") + 16;
 			pb->http_content_len = atoi((const char *)length);
 			pb->http_content_remaining_len = pstrRecv->u16RemainingSize;
-			PUBNUB_PRINTF(("Content-Length = %d\r\n", pb->http_content_len));
+			PUBNUB_PRINTF(("Content-Length = %d\r\n", (int)pb->http_content_len));
 
 			uint8_t *content = m2m_strstr(pstrRecv->pu8Buffer, (uint8 *)"[");
 			memcpy(pb->http_reply, content, pb->http_content_len - pstrRecv->u16RemainingSize);
 			PUBNUB_PRINTF(("http_reply = %s\r\n", pb->http_reply));
 		} else if (pstrRecv->u16RemainingSize == 0) {
-			PUBNUB_PRINTF(("http_content_remaining_len = %d\r\n", pb->http_content_remaining_len));
+			PUBNUB_PRINTF(("http_content_remaining_len = %d\r\n", (int)pb->http_content_remaining_len));
 
 			memcpy(pb->http_reply + (pb->http_content_len - pb->http_content_remaining_len), pstrRecv->pu8Buffer, pstrRecv->s16BufferSize);
 			PUBNUB_PRINTF(("http_reply = %s\r\n", pb->http_reply));
