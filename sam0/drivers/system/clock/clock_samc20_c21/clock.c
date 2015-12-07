@@ -375,7 +375,7 @@ void system_clock_source_dpll_set_config(
 	_system_clock_inst.dpll.frequency =
 			(config->reference_frequency *
 			 (((tmpldr + 1) << 4) + tmpldrfrac)
-			) >> 4;
+			) >> (4 + OSCCTRL->DPLLPRESC.bit.PRESC);
 }
 
 /**

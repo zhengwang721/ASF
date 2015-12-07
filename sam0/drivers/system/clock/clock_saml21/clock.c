@@ -502,7 +502,7 @@ void system_clock_source_dpll_set_config(
 	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16)
 	 */
 	_system_clock_inst.dpll.frequency =
-			(refclk * (((tmpldr + 1) << 4) + tmpldrfrac)) >> 4;
+			(refclk * (((tmpldr + 1) << 4) + tmpldrfrac)) >> (4 + OSCCTRL->DPLLPRESC.bit.PRESC);
 }
 
 /**
