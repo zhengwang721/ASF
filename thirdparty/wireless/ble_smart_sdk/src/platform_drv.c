@@ -298,9 +298,7 @@ static void at_ke_msg_send(void const *param_ptr)
 /* struct ke_msg * p_msg; */
 void platform_interface_send(uint8_t *data, uint32_t len)
 {
-	//struct ke_msghdr *p_msg_hdr = (struct ke_msghdr *)(data);
-	struct ke_msghdr *p_msg_hdr = NULL;
-	memcpy(p_msg_hdr,data,sizeof(struct ke_msghdr));
+	struct ke_msghdr *p_msg_hdr = (struct ke_msghdr *)(data);
 	void *params;
 
 	#if (CHIPVERSION_B0)
@@ -375,8 +373,7 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 			} else {
                                 /* BLE stack messages */
 				if (ble_stack_message_handler) {
-					//ke_msg_hdr = (struct ke_msghdr *)&rx_buffer[BLE_EVENT_BUFFER_START_INDEX];
-					memcpy(ke_msg_hdr,&rx_buffer[BLE_EVENT_BUFFER_START_INDEX],sizeof(struct ke_msghdr));
+					ke_msg_hdr = (struct ke_msghdr *)&rx_buffer[BLE_EVENT_BUFFER_START_INDEX];
 					ke_msg_hdr->id = rcv_msg->id;
 //#if (CHIPVERSION_A3 || CHIPVERSION_A4)
 					//ke_msg_hdr->src_id = rcv_msg->src_id;

@@ -94,9 +94,10 @@ int main(void)
 		case AT_BLE_CONNECTED:
 		{
 			//at_ble_connected_t *conn_params = (at_ble_connected_t*)params;
-			at_ble_connected_t *conn_params = NULL;
-			memcpy(conn_params, params, sizeof(at_ble_connected_t));
-			handle = conn_params->handle;
+			at_ble_connected_t conn_params;
+			
+			memcpy(&conn_params, params, sizeof(at_ble_connected_t));
+			handle = conn_params.handle;
 			handle = handle;
 		}
 		break;
