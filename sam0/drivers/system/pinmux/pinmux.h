@@ -641,8 +641,8 @@ void system_pinmux_group_set_output_drive(
  *	</tr>
  *	<tr>
  *		<td>42121F</td>
- *		<td>11/2015</td>
- *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, SAM D09, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42121E</td>
