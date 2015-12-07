@@ -12,10 +12,10 @@
 		<build type="header-file" subtype="api" value="sniffer_if.h"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="sniffer_plc_group"/>
-		<device-support value="atsam4cp16b_0"/>
+		<device-support value="atsam4cp16b:0"/>
 		<device-support value="atsam4sd32c"/>
-		<device-support value="atsam4cmp16c_0"/>
-		<device-support value="atsam4cms16c_0"/>
-		<device-support value="atsam4c16c_0"/>
+		<device-support value="atsam4cmp16c:0"/>
+		<device-support value="atsam4cms16c:0"/>
+		<device-support value="atsam4c16c:0"/>
 	</module>
 </asf>
