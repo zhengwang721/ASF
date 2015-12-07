@@ -57,7 +57,7 @@
  *
  * \section Description
  *
- * The program demo how LED,button,interrupt and timer work.
+ * The program demo how LED,button,interrupt and dualtimer work.
  * It makes the LED on the board blink at a fixed rate.
  * The blinking can be stopped/started by using the push button.
  *
@@ -173,39 +173,42 @@ static void configure_gpio_pins(void)
 }
 
 
-/** Timer Callback function.
+/** Dual Timer 1 Callback function.
  */
-static void timer_callback(void)
+static void dualtimer_callback1(void)
 {
-	puts("The output is triggered by Timer \r\n");
+	puts("Timer1 trigger\r\n");
+}
+
+/** Dual Timer 2 Callback function.
+ */
+static void dualtimer_callback2(void)
+{
+	puts("Timer2 trigger\r\n");
 }
 
 /** Configures Timer function with the  driver.
  */
-static void configure_timer(void)
+static void configure_dualtimer(void)
 {
-	struct timer_config config_timer;
+	struct dualtimer_config config_dualtimer;
 
-	timer_get_config_defaults(&config_timer);
+	dualtimer_get_config_defaults(&config_dualtimer);
 
-	config_timer.reload_value = CONF_TIMER_RELOAD_VALUE;
+	config_dualtimer.timer1.load_value = CONF_DUALTIMER_TIMER1_LOAD_VALUE;
+	config_dualtimer.timer2.load_value = CONF_DUALTIMER_TIMER2_LOAD_VALUE;
 
-	timer_init(&config_timer);
-
-	timer_enable();
+	dualtimer_init(&config_dualtimer);
 }
 
 /** Registers Timer callback function with the  driver.
  */
-static void configure_timer_callback(void)
+static void configure_dualtimer_callback(void)
 {
-	//! [setup_register_callback]
-	timer_register_callback(timer_callback);
-	//! [setup_register_callback]
+	dualtimer_register_callback(DUALTIMER_TIMER1, dualtimer_callback1);
+	dualtimer_register_callback(DUALTIMER_TIMER2, dualtimer_callback2);
 
-	//! [enable_IRQ]
-	NVIC_EnableIRQ(TIMER0_IRQn);
-	//! [enable_IRQ]
+	NVIC_EnableIRQ(DUALTIMER0_IRQn);
 }
 
 /**
@@ -229,11 +232,11 @@ int main(void)
 	/*Configures GPIO callback */
 	configure_gpio_callback();
 
-	/* Configures Timer driver */
-	configure_timer();
+	/* Configures Dual Timer driver */
+	configure_dualtimer();
 
-	/* Configures Timer callback */
-	configure_timer_callback();
+	/* Configures Dual Timer callback */
+	configure_dualtimer_callback();
 
 	g_b_led0_active = true;
 

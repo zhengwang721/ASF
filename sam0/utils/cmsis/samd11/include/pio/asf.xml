@@ -6,6 +6,7 @@
 		<build type="header-file" value="samd11c14a.h"/>
 		<build type="header-file" value="samd11d14as.h"/>
 		<build type="header-file" value="samd11d14am.h"/>
+		<build type="header-file" value="samd11d14au.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="samd11"/>
 	</module>

@@ -103,10 +103,10 @@ typedef union {
 #define ARM_BPU_BP_COMP0_BP_MATCH_Pos         30  /**< \brief (ARM_BPU_BP_COMP0) Behavior when the COMP address is matched */
 #define ARM_BPU_BP_COMP0_BP_MATCH_Msk         (0x3ul << ARM_BPU_BP_COMP0_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP0_BP_MATCH(value)      (ARM_BPU_BP_COMP0_BP_MATCH_Msk & ((value) << ARM_BPU_BP_COMP0_BP_MATCH_Pos))  
-  #define ARM_BPU_BP_COMP0_BP_MATCH_0_Val        0X0ul  /**< \brief (ARM_BPU_BP_COMP0) No Breakpoint Matching  */
-  #define ARM_BPU_BP_COMP0_BP_MATCH_1_Val        0X1ul  /**< \brief (ARM_BPU_BP_COMP0) Breakpoint on lower halfword  */
-  #define ARM_BPU_BP_COMP0_BP_MATCH_2_Val        0X2ul  /**< \brief (ARM_BPU_BP_COMP0) Breakpoint on upper halfword  */
-  #define ARM_BPU_BP_COMP0_BP_MATCH_3_Val        0X3ul  /**< \brief (ARM_BPU_BP_COMP0) Breakpoint on both halfwords  */
+#define   ARM_BPU_BP_COMP0_BP_MATCH_0_Val        0X0ul  /**< \brief (ARM_BPU_BP_COMP0) No Breakpoint Matching  */
+#define   ARM_BPU_BP_COMP0_BP_MATCH_1_Val        0X1ul  /**< \brief (ARM_BPU_BP_COMP0) Breakpoint on lower halfword  */
+#define   ARM_BPU_BP_COMP0_BP_MATCH_2_Val        0X2ul  /**< \brief (ARM_BPU_BP_COMP0) Breakpoint on upper halfword  */
+#define   ARM_BPU_BP_COMP0_BP_MATCH_3_Val        0X3ul  /**< \brief (ARM_BPU_BP_COMP0) Breakpoint on both halfwords  */
 #define ARM_BPU_BP_COMP0_BP_MATCH_0           (ARM_BPU_BP_COMP0_BP_MATCH_0_Val << ARM_BPU_BP_COMP0_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP0_BP_MATCH_1           (ARM_BPU_BP_COMP0_BP_MATCH_1_Val << ARM_BPU_BP_COMP0_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP0_BP_MATCH_2           (ARM_BPU_BP_COMP0_BP_MATCH_2_Val << ARM_BPU_BP_COMP0_BP_MATCH_Pos)
@@ -138,10 +138,10 @@ typedef union {
 #define ARM_BPU_BP_COMP1_BP_MATCH_Pos         30  /**< \brief (ARM_BPU_BP_COMP1) Behavior when the COMP address is matched */
 #define ARM_BPU_BP_COMP1_BP_MATCH_Msk         (0x3ul << ARM_BPU_BP_COMP1_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP1_BP_MATCH(value)      (ARM_BPU_BP_COMP1_BP_MATCH_Msk & ((value) << ARM_BPU_BP_COMP1_BP_MATCH_Pos))  
-  #define ARM_BPU_BP_COMP1_BP_MATCH_0_Val        0X0ul  /**< \brief (ARM_BPU_BP_COMP1) No Breakpoint Matching  */
-  #define ARM_BPU_BP_COMP1_BP_MATCH_1_Val        0X1ul  /**< \brief (ARM_BPU_BP_COMP1) Breakpoint on lower halfword  */
-  #define ARM_BPU_BP_COMP1_BP_MATCH_2_Val        0X2ul  /**< \brief (ARM_BPU_BP_COMP1) Breakpoint on upper halfword  */
-  #define ARM_BPU_BP_COMP1_BP_MATCH_3_Val        0X3ul  /**< \brief (ARM_BPU_BP_COMP1) Breakpoint on both halfwords  */
+#define   ARM_BPU_BP_COMP1_BP_MATCH_0_Val        0X0ul  /**< \brief (ARM_BPU_BP_COMP1) No Breakpoint Matching  */
+#define   ARM_BPU_BP_COMP1_BP_MATCH_1_Val        0X1ul  /**< \brief (ARM_BPU_BP_COMP1) Breakpoint on lower halfword  */
+#define   ARM_BPU_BP_COMP1_BP_MATCH_2_Val        0X2ul  /**< \brief (ARM_BPU_BP_COMP1) Breakpoint on upper halfword  */
+#define   ARM_BPU_BP_COMP1_BP_MATCH_3_Val        0X3ul  /**< \brief (ARM_BPU_BP_COMP1) Breakpoint on both halfwords  */
 #define ARM_BPU_BP_COMP1_BP_MATCH_0           (ARM_BPU_BP_COMP1_BP_MATCH_0_Val << ARM_BPU_BP_COMP1_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP1_BP_MATCH_1           (ARM_BPU_BP_COMP1_BP_MATCH_1_Val << ARM_BPU_BP_COMP1_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP1_BP_MATCH_2           (ARM_BPU_BP_COMP1_BP_MATCH_2_Val << ARM_BPU_BP_COMP1_BP_MATCH_Pos)
@@ -173,10 +173,10 @@ typedef union {
 #define ARM_BPU_BP_COMP2_BP_MATCH_Pos         30  /**< \brief (ARM_BPU_BP_COMP2) Behavior when the COMP address is matched */
 #define ARM_BPU_BP_COMP2_BP_MATCH_Msk         (0x3ul << ARM_BPU_BP_COMP2_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP2_BP_MATCH(value)      (ARM_BPU_BP_COMP2_BP_MATCH_Msk & ((value) << ARM_BPU_BP_COMP2_BP_MATCH_Pos))  
-  #define ARM_BPU_BP_COMP2_BP_MATCH_0_Val        0X0ul  /**< \brief (ARM_BPU_BP_COMP2) No Breakpoint Matching  */
-  #define ARM_BPU_BP_COMP2_BP_MATCH_1_Val        0X1ul  /**< \brief (ARM_BPU_BP_COMP2) Breakpoint on lower halfword  */
-  #define ARM_BPU_BP_COMP2_BP_MATCH_2_Val        0X2ul  /**< \brief (ARM_BPU_BP_COMP2) Breakpoint on upper halfword  */
-  #define ARM_BPU_BP_COMP2_BP_MATCH_3_Val        0X3ul  /**< \brief (ARM_BPU_BP_COMP2) Breakpoint on both halfwords  */
+#define   ARM_BPU_BP_COMP2_BP_MATCH_0_Val        0X0ul  /**< \brief (ARM_BPU_BP_COMP2) No Breakpoint Matching  */
+#define   ARM_BPU_BP_COMP2_BP_MATCH_1_Val        0X1ul  /**< \brief (ARM_BPU_BP_COMP2) Breakpoint on lower halfword  */
+#define   ARM_BPU_BP_COMP2_BP_MATCH_2_Val        0X2ul  /**< \brief (ARM_BPU_BP_COMP2) Breakpoint on upper halfword  */
+#define   ARM_BPU_BP_COMP2_BP_MATCH_3_Val        0X3ul  /**< \brief (ARM_BPU_BP_COMP2) Breakpoint on both halfwords  */
 #define ARM_BPU_BP_COMP2_BP_MATCH_0           (ARM_BPU_BP_COMP2_BP_MATCH_0_Val << ARM_BPU_BP_COMP2_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP2_BP_MATCH_1           (ARM_BPU_BP_COMP2_BP_MATCH_1_Val << ARM_BPU_BP_COMP2_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP2_BP_MATCH_2           (ARM_BPU_BP_COMP2_BP_MATCH_2_Val << ARM_BPU_BP_COMP2_BP_MATCH_Pos)
@@ -208,10 +208,10 @@ typedef union {
 #define ARM_BPU_BP_COMP3_BP_MATCH_Pos         30  /**< \brief (ARM_BPU_BP_COMP3) Behavior when the COMP address is matched */
 #define ARM_BPU_BP_COMP3_BP_MATCH_Msk         (0x3ul << ARM_BPU_BP_COMP3_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP3_BP_MATCH(value)      (ARM_BPU_BP_COMP3_BP_MATCH_Msk & ((value) << ARM_BPU_BP_COMP3_BP_MATCH_Pos))  
-  #define ARM_BPU_BP_COMP3_BP_MATCH_0_Val        0X0ul  /**< \brief (ARM_BPU_BP_COMP3) No Breakpoint Matching  */
-  #define ARM_BPU_BP_COMP3_BP_MATCH_1_Val        0X1ul  /**< \brief (ARM_BPU_BP_COMP3) Breakpoint on lower halfword  */
-  #define ARM_BPU_BP_COMP3_BP_MATCH_2_Val        0X2ul  /**< \brief (ARM_BPU_BP_COMP3) Breakpoint on upper halfword  */
-  #define ARM_BPU_BP_COMP3_BP_MATCH_3_Val        0X3ul  /**< \brief (ARM_BPU_BP_COMP3) Breakpoint on both halfwords  */
+#define   ARM_BPU_BP_COMP3_BP_MATCH_0_Val        0X0ul  /**< \brief (ARM_BPU_BP_COMP3) No Breakpoint Matching  */
+#define   ARM_BPU_BP_COMP3_BP_MATCH_1_Val        0X1ul  /**< \brief (ARM_BPU_BP_COMP3) Breakpoint on lower halfword  */
+#define   ARM_BPU_BP_COMP3_BP_MATCH_2_Val        0X2ul  /**< \brief (ARM_BPU_BP_COMP3) Breakpoint on upper halfword  */
+#define   ARM_BPU_BP_COMP3_BP_MATCH_3_Val        0X3ul  /**< \brief (ARM_BPU_BP_COMP3) Breakpoint on both halfwords  */
 #define ARM_BPU_BP_COMP3_BP_MATCH_0           (ARM_BPU_BP_COMP3_BP_MATCH_0_Val << ARM_BPU_BP_COMP3_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP3_BP_MATCH_1           (ARM_BPU_BP_COMP3_BP_MATCH_1_Val << ARM_BPU_BP_COMP3_BP_MATCH_Pos)
 #define ARM_BPU_BP_COMP3_BP_MATCH_2           (ARM_BPU_BP_COMP3_BP_MATCH_2_Val << ARM_BPU_BP_COMP3_BP_MATCH_Pos)

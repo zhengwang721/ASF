@@ -26,7 +26,7 @@
 			<build type="c-source" value="main_sam_b.c"/>
 			<build type="include-path" value="."/>
 			<require idref="sam0.drivers.gpio"/>
-			<require idref="sam0.drivers.timer"/>
+			<require idref="sam0.drivers.dualtimer"/>
 			<require idref="sam0.utils.stdio.stdio_serial"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
