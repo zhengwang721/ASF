@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Heart Rate Sensor Application- SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.hr_sensor.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Heart Rate Sensor Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.hr_sensor.samb11_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		Heart Rate Sensor Application for BLE stack.
 		</info>	

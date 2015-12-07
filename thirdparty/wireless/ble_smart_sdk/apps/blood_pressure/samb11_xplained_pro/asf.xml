@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="Blood Pressure Sensor Application- SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.blood_pressure.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Blood Pressure Sensor Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.blood_pressure.samb11_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		Heart Rate Sensor Application for BLE stack.
+		Blood Pressure Sensor Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_smart_sdk.apps.blood_pressure"/>
 		<build type="include-path" value="."/>
