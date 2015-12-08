@@ -170,8 +170,8 @@ void configu_tcc(void)
 {
 	struct tcc_config config_tcc;
 	tcc_get_config_defaults(&config_tcc, TCC0);
-	config_tcc.counter.clock_source 		= GCLK_GENERATOR_3;
-	config_tcc.counter.clock_prescaler 		= TCC_CLOCK_PRESCALER_DIV1;
+	config_tcc.counter.clock_source			= GCLK_GENERATOR_3;
+	config_tcc.counter.clock_prescaler		= TCC_CLOCK_PRESCALER_DIV1;
 	config_tcc.compare.channel_function[0] 	= TCC_CHANNEL_FUNCTION_CAPTURE;
 	config_tcc.compare.channel_function[1] 	= TCC_CHANNEL_FUNCTION_CAPTURE;
 	config_tcc.compare.channel_function[2] 	= TCC_CHANNEL_FUNCTION_CAPTURE;
