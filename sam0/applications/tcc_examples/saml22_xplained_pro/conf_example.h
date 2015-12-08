@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L22 Xplained Pro board configuration.
+ * \brief SAM L22 TCC Feature configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -112,8 +112,8 @@ TCC_CHANNEL_NUM_6
 #define CONF_PWM_OUT_MUX     MUX_PA04E_TCC0_WO0
 
 // Configurable default period and match compare values.
-#define CONF_DEFAULT_PERIOD				    0x3FF
-#define CONF_DEFAULT_MATCH_COMPARE		    0x1FF
+#define CONF_DEFAULT_PERIOD         0x3FF
+#define CONF_DEFAULT_MATCH_COMPARE  0x1FF
 
 // Configurable options for Fault operations
 #define CONF_FAULT_EIC_PIN          PIN_PA18A_EIC_EXTINT2
@@ -121,9 +121,9 @@ TCC_CHANNEL_NUM_6
 #define CONF_FAULT_EIC_LINE         2
 
 // Configurable options for Capture Mode
-#define CONF_TEST_PIN_OUT			PIN_PA07
-#define CONF_EVENT_GENERATOR_ID    EVSYS_ID_GEN_EIC_EXTINT_2
-#define CONF_EVENT_CAPTURE         EVSYS_ID_GEN_TCC0_MCX_0
+#define CONF_TEST_PIN_OUT         PIN_PA07
+#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_2
+#define CONF_EVENT_CAPTURE        EVSYS_ID_GEN_TCC0_MCX_0
 
 // Configurable Fault events used by FAULT Feature and CAPTURE Features.
 #define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC0_MC_0

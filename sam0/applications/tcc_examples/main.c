@@ -54,7 +54,6 @@
 #include "conf_example.h"
 
 struct tcc_module tcc_instance;
-//struct usart_module usart_instance;
 enum status_code stat = STATUS_OK;
 
 #ifdef TCC_MODE_PATTERN_GENERATION
@@ -63,21 +62,17 @@ uint8_t sm_pattern[PATTERN_SIZE] = {8, 2, 4, 1};
 uint8_t iIndex = 0;
 #endif
 
-
-#if defined(TCC_MODE_FAULT) //|| defined (TCC_MODE_CAPTURE)
+#ifdef TCC_MODE_FAULT 
 //! [events_resource]
 struct events_resource event_resource;
-//! [events_resource]
 #endif
 
-
-
 #ifdef TCC_MODE_COUNTER
-//counter callback to toggle LED.
+// counter callback to toggle LED.
 static void tcc_callback_to_toggle_led(struct tcc_module *const module_inst);
 #endif
 
-#if defined (TCC_MODE_FAULT) 
+#ifdef  TCC_MODE_FAULT 
 // configure event, for event trigger.
 static void configure_event(void);
 #endif
@@ -86,7 +81,7 @@ static void configure_event(void);
 static void configure_eic(void);
 static void eic_callback_to_fault_detect(void);
 #endif
-//
+
 #ifdef  TCC_MODE_CAPTURE
 void configure_usart(void);
 void configu_eic(void);
@@ -102,7 +97,7 @@ void configure_evsys (void);
 /* Configure the TCC module as per the application requirement */
 
 /* Example - 1. Circular Buffer
-             2. Oneshot Operation 
+             2.	Oneshot Operation 
              3. Pattern Generation
              4. PWM with OTMX(Output Matrix) and DTI(Dead Time Insertion) 
              5. RAMP2 Operation
@@ -130,8 +125,7 @@ void configure_evsys (void);
 	captured period values are displayed using USART of 96008N1 serial configuration */
 
 #ifdef TCC_MODE_CAPTURE
-//
-//// Function to configure usart, eic,tcc and event system. configures the usart with CONF_BAUD_RATE baud rate.
+// Function to configure usart, eic,tcc and event system. configures the usart with CONF_BAUD_RATE baud rate.
 
 struct usart_module usart_instances;
 struct tcc_module tcc_instances;
@@ -176,23 +170,22 @@ void configu_tcc(void)
 {
 	struct tcc_config config_tcc;
 	tcc_get_config_defaults(&config_tcc, TCC0);
-	config_tcc.counter.clock_source = GCLK_GENERATOR_3;
-	config_tcc.counter.clock_prescaler = TCC_CLOCK_PRESCALER_DIV1;
-	config_tcc.compare.channel_function[0] = TCC_CHANNEL_FUNCTION_CAPTURE;
-	config_tcc.compare.channel_function[1] = TCC_CHANNEL_FUNCTION_CAPTURE;
-	config_tcc.compare.channel_function[2] = TCC_CHANNEL_FUNCTION_CAPTURE;
-	config_tcc.compare.channel_function[3] = TCC_CHANNEL_FUNCTION_CAPTURE;
-	config_tcc.double_buffering_enabled = false;
+	config_tcc.counter.clock_source 		= GCLK_GENERATOR_3;
+	config_tcc.counter.clock_prescaler 		= TCC_CLOCK_PRESCALER_DIV1;
+	config_tcc.compare.channel_function[0] 	= TCC_CHANNEL_FUNCTION_CAPTURE;
+	config_tcc.compare.channel_function[1] 	= TCC_CHANNEL_FUNCTION_CAPTURE;
+	config_tcc.compare.channel_function[2] 	= TCC_CHANNEL_FUNCTION_CAPTURE;
+	config_tcc.compare.channel_function[3]	= TCC_CHANNEL_FUNCTION_CAPTURE;
+	config_tcc.double_buffering_enabled 	= false;
 	tcc_init(&tcc_instances, TCC0, &config_tcc);
 	
 	struct tcc_events events_tcc = {
-		.input_config[0].modify_action = false,
-		.input_config[1].modify_action = true,
-		.on_input_event_perform_action[1] = true,
-		.input_config[1].action = TCC_EVENT1_ACTION_PULSE_WIDTH_PERIOD_CAPTURE,
+		.input_config[0].modify_action 		= false,
+		.input_config[1].modify_action 		= true,
+		.on_input_event_perform_action[1] 	= true,
+		.input_config[1].action 			= TCC_EVENT1_ACTION_PULSE_WIDTH_PERIOD_CAPTURE,
 	};
 	tcc_enable_events(&tcc_instances, &events_tcc);
-
 	tcc_enable(&tcc_instances);
 }
 
@@ -201,15 +194,12 @@ void configure_evsys(void)
 	struct events_config config;
 	events_get_config_defaults(&config);
 	config.clock_source = GCLK_GENERATOR_3;
-	config.generator = EVSYS_ID_GEN_EIC_EXTINT_7;
-	config.path      = EVENTS_PATH_ASYNCHRONOUS;
-	config.edge_detect = EVENTS_EDGE_DETECT_BOTH;
+	config.generator 	= EVSYS_ID_GEN_EIC_EXTINT_7;
+	config.path      	= EVENTS_PATH_ASYNCHRONOUS;
+	config.edge_detect 	= EVENTS_EDGE_DETECT_BOTH;
 	events_allocate(&event_resources, &config);
 	events_attach_user(&event_resources, EVSYS_ID_USER_TCC0_EV_1);
-	
-}
-
-
+	}
 #endif
 
 // Function to configure TCC, this will configure TCC for other than Capture, Counter and Fault mode related operations.
@@ -218,62 +208,55 @@ void configure_tcc(void)
 	/* Structure used to store the TCC configuration parameters */
 	struct tcc_config config_tcc;
      
-	/* Fill the Structure with the default values */
+	 /* Fill the Structure with the default values */
 	tcc_get_config_defaults(&config_tcc, CONF_PWM_MODULE);
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] 	= CONF_DEFAULT_MATCH_COMPARE;
+	config_tcc.counter.period 								= CONF_DEFAULT_PERIOD;
 	
-	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] = CONF_DEFAULT_MATCH_COMPARE;
-	config_tcc.counter.period = CONF_DEFAULT_PERIOD;
-	
-	#ifdef TCC_MODE_DUAL_SLOPE
+#ifdef TCC_MODE_DUAL_SLOPE
 		config_tcc.compare.wave_generation = TCC_WAVE_GENERATION_DOUBLE_SLOPE_TOP;
 	#elif defined (TCC_MODE_COUNTER)
 	    /* Configure different channels with different compare match values */
-		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] =  TCC_MODE_COUNTER_MATCH_0;
-		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_1] =  TCC_MODE_COUNTER_MATCH_1;
-		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_2] = TCC_MODE_COUNTER_MATCH_2;
-		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_3] = TCC_MODE_COUNTER_MATCH_3;
+		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] 	=  TCC_MODE_COUNTER_MATCH_0;
+		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_1] 	=  TCC_MODE_COUNTER_MATCH_1;
+		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_2] 	= TCC_MODE_COUNTER_MATCH_2;
+		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_3] 	= TCC_MODE_COUNTER_MATCH_3;
 			 /* Configure the value for TOP value */
-		config_tcc.counter.period = TCC_PERIOD_VALUE;
+		config_tcc.counter.period 								= TCC_PERIOD_VALUE;
 	#else
 		/* Configure the single slope PWM waveform generation for waveform output */
 		config_tcc.compare.wave_generation = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
 	#endif
-
 	/* Configure the TCC clock source and its divider value */
-	config_tcc.counter.clock_source = GLCK_SOURCE;
-	config_tcc.counter.clock_prescaler = TCC_CLOCK_DIVIDER;
+	config_tcc.counter.clock_source 	= GLCK_SOURCE;
+	config_tcc.counter.clock_prescaler 	= TCC_CLOCK_DIVIDER;
 
-#if defined (TCC_MODE_CIRCULAR_BUFFER)	|| defined (TCC_MODE_DUAL_SLOPE) || defined (TCC_MODE_DITHERING) || defined (TCC_MODE_FAULT) 
+#if	defined	(TCC_MODE_CIRCULAR_BUFFER) ||	defined	(TCC_MODE_DUAL_SLOPE) ||	defined (TCC_MODE_DITHERING) ||	defined	(TCC_MODE_FAULT) 
 	/* Configure the TCC Waveform Output pins for waveform generation output */
-	config_tcc.pins.enable_wave_out_pin[TCC_MATCH_CAPTURE_CHANNEL_0] = true;
-
-	config_tcc.pins.wave_out_pin[TCC_MATCH_CAPTURE_CHANNEL_0] = PIN_PB18F_TCC0_WO0;
-
+	config_tcc.pins.enable_wave_out_pin[TCC_MATCH_CAPTURE_CHANNEL_0]	= true;
+	config_tcc.pins.wave_out_pin[TCC_MATCH_CAPTURE_CHANNEL_0] 			= PIN_PB18F_TCC0_WO0;
 	/* Configure the Alternate function of GPIO pins for TCC functionality */ 
-	config_tcc.pins.wave_out_pin_mux[TCC_MATCH_CAPTURE_CHANNEL_0] = MUX_PB18F_TCC0_WO0;
+	config_tcc.pins.wave_out_pin_mux[TCC_MATCH_CAPTURE_CHANNEL_0] 		= MUX_PB18F_TCC0_WO0;
 	
 #endif
 
 #ifdef TCC_MODE_ONESHOT
 
 	/* Configure the TCC Waveform Output pins for waveform generation output */
-	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_3] = true;
-	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_3] = PIN_PC27F_TCC0_WO3;
-
+	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_3] 	= true;
+	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_3] 		= PIN_PC27F_TCC0_WO3;
 	/* Configure the alternate function of GPIO pins for TCC functionality */
-	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_3] = MUX_PC27F_TCC0_WO3;
+	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_3] 	= MUX_PC27F_TCC0_WO3;
 	
 	/* Configure the Match value for the compare channel 2 for LED0 ON time*/
-	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_2] = 31250;
-	config_tcc.counter.period = TCC_PERIOD_VALUE;
-	config_tcc.counter.clock_source = GLCK_SOURCE;
-	config_tcc.counter.clock_prescaler = TCC_CLOCK_DIVIDER;
-	
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_2] 	= 31250;
+	config_tcc.counter.period								= TCC_PERIOD_VALUE;
+	config_tcc.counter.clock_source 						= GLCK_SOURCE;
+	config_tcc.counter.clock_prescaler 						= TCC_CLOCK_DIVIDER;
 	/* Invert the Waveform output[6] channel to drive LED0 */
-	config_tcc.wave_ext.invert[TCC_CHANNEL_NUM_3] = true;
-	
+	config_tcc.wave_ext.invert[TCC_CHANNEL_NUM_3] 			= true;
 	/* Enable the One shot Feature */
-	config_tcc.counter.oneshot = true;
+	config_tcc.counter.oneshot 								= true;
 	
 #endif
 
@@ -330,26 +313,25 @@ void configure_tcc(void)
 
 #ifdef TCC_MODE_PATTERN_GENERATION
 
-    config_tcc.counter.period = TCC_PERIOD_VALUE;
+    config_tcc.counter.period 								= TCC_PERIOD_VALUE;
 
 	/* Configure the TCC Waveform Output pins for waveform generation output */
-	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_0] = true;
-	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_1] = true;
-	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_2] = true;
-	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_3] = true;
+	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_0] 	= true;
+	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_1] 	= true;
+	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_2] 	= true;
+	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_3] 	= true;
 
-	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_0] = PIN_PB18F_TCC0_WO0;
-	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_1] = PIN_PA09E_TCC0_WO1;
-	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_2] = PIN_PA18F_TCC0_WO2;
-	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_3] = PIN_PB21F_TCC0_WO3;
+	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_0] 		= PIN_PB18F_TCC0_WO0;
+	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_1] 		= PIN_PA09E_TCC0_WO1;
+	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_2] 		= PIN_PA18F_TCC0_WO2;
+	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_3] 		= PIN_PB21F_TCC0_WO3;
 
 	/* Configure the Alternate function of GPIO pins for TCC functionality */
-	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_0] = MUX_PB18F_TCC0_WO0;
-	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_1] = MUX_PA09E_TCC0_WO1;
-	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_2] = MUX_PA18F_TCC0_WO2;
-	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_3] = MUX_PB21F_TCC0_WO3;
-
-	config_tcc.double_buffering_enabled = true;
+	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_0] 	= MUX_PB18F_TCC0_WO0;
+	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_1] 	= MUX_PA09E_TCC0_WO1;
+	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_2] 	= MUX_PA18F_TCC0_WO2;
+	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_3] 	= MUX_PB21F_TCC0_WO3;
+	config_tcc.double_buffering_enabled 					= true;
 
 	/* Configure the compare channel values for the duty cycle control */
 	/* Load the 0x7FFF value for 50% duty cycle */
@@ -360,51 +342,46 @@ void configure_tcc(void)
 
 #ifdef TCC_MODE_RAMP2
 
-	/* Configure the TCC Waveform Output pins for waveform generation output */		
-	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_0] = true;
-	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_1] = true;
-	
-	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_0] = PIN_PB18F_TCC0_WO0;
-	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_1] = PIN_PA09E_TCC0_WO1;
+	/* Configure the TCC Waveform Output pins for waveform generation output */
+	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_0] 	= true;
+	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_1] 	= true;
+	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_0] 		= PIN_PB18F_TCC0_WO0;
+	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_1] 		= PIN_PA09E_TCC0_WO1;
 
 	/* Configure the Alternate function of GPIO pins for TCC functionality */
-	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_0] = MUX_PB18F_TCC0_WO0;
-	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_1] = MUX_PA09E_TCC0_WO1;
+	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_0] 	= MUX_PB18F_TCC0_WO0;
+	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_1] 	= MUX_PA09E_TCC0_WO1;
 	
 	/* Configure the RAMP mode operation as RAMP2 mode */
 	config_tcc.compare.wave_ramp = TCC_RAMP_RAMP2;
 	
 	/* Configure the compare channel values for the duty cycle control */
 	/* Load the 0xB333 value for 70% duty cycle */
-	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] = TCC_RAMP2_MATCH_CHANNEL_0;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] 	= TCC_RAMP2_MATCH_CHANNEL_0;
 	/* Load the 0x4CCC value for 30% duty cycle */
-	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_1] = TCC_RAMP2_MATCH_CHANNEL_1;
-	
-	config_tcc.counter.period = TCC_PERIOD_VALUE;
-	
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_1] 	= TCC_RAMP2_MATCH_CHANNEL_1;
+	config_tcc.counter.period 								= TCC_PERIOD_VALUE;
 #endif
 
 #ifdef TCC_MODE_RAMP2A
 
 	/* Configure the TCC Waveform Output pins for waveform generation output */
-	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_0] = true;
-	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_1] = true;
-
-	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_0] = PIN_PB18F_TCC0_WO0;
-	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_1] = PIN_PA09E_TCC0_WO1;
+	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_0] 	= true;
+	config_tcc.pins.enable_wave_out_pin[TCC_CHANNEL_NUM_1] 	= true;
+	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_0] 		= PIN_PB18F_TCC0_WO0;
+	config_tcc.pins.wave_out_pin[TCC_CHANNEL_NUM_1] 		= PIN_PA09E_TCC0_WO1;
 
 	/* Configure the Alternate function of GPIO pins for TCC functionality */
-	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_0] = MUX_PB18F_TCC0_WO0;
-	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_1] = MUX_PA09E_TCC0_WO1;
+	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_0] 	= MUX_PB18F_TCC0_WO0;
+	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_1] 	= MUX_PA09E_TCC0_WO1;
 	
 	/* Configure the RAMP mode operation as RAMP2A mode */
-	config_tcc.compare.wave_ramp = TCC_RAMP_RAMP2A;
+	config_tcc.compare.wave_ramp 							= TCC_RAMP_RAMP2A;
 
 	/* Configure the compare channel values for the duty cycle control */
 	/* Load the 0xB333 value for 70% duty cycle */
-	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] = TCC_RAMP2_MATCH_CHANNEL_0;
-	
-	config_tcc.counter.period = TCC_PERIOD_VALUE;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] 	= TCC_RAMP2_MATCH_CHANNEL_0;
+	config_tcc.counter.period 								= TCC_PERIOD_VALUE;
 	
 #endif
 
@@ -420,8 +397,7 @@ void configure_tcc(void)
 #endif
 
 	/* Initialize the TCC0 channel and define the its registers with configuration defined in the config_tcc */
-	stat = tcc_init(&tcc_instance, CONF_PWM_MODULE, &config_tcc);	
-
+	stat = tcc_init(&tcc_instance, CONF_PWM_MODULE, &config_tcc);
 
 	// The main configuration for Circular Buffering
 #ifdef TCC_MODE_CIRCULAR_BUFFER	
@@ -548,8 +524,7 @@ static void tcc_callback_to_toggle_led(struct tcc_module *const module_inst)
 
 #ifdef TCC_MODE_COUNTER
 /*	This function will configure (register and enable) the callback to be triggered on different TCC channels for overflow,
-this is used to show case the TCC toggling the LED at different speed, because of variable time required for overflow on 
-each TCC channel. */
+this is used to show case the TCC toggling the LED at different speed, because of variable time required for overflow on each TCC channel. */
 void configure_tcc_callback(void)
 {
 
@@ -570,7 +545,7 @@ void configure_tcc_callback(void)
 	//! [setup_change_events_faults]
 }
 //! [setup]
-#endif	
+#endif
 
 #ifdef TCC_MODE_FAULT
 //! [callback_eic]
@@ -595,10 +570,10 @@ static void configure_eic(void)
     struct extint_events events;
 
 	extint_chan_get_config_defaults(&config);
-	config.filter_input_signal = true;
-	config.detection_criteria  = EXTINT_DETECT_BOTH;
-	config.gpio_pin     = CONF_FAULT_EIC_PIN;
-	config.gpio_pin_mux = CONF_FAULT_EIC_PIN_MUX;
+	config.filter_input_signal 	= true;
+	config.detection_criteria  	= EXTINT_DETECT_BOTH;
+	config.gpio_pin     		= CONF_FAULT_EIC_PIN;
+	config.gpio_pin_mux 		= CONF_FAULT_EIC_PIN_MUX;
 	extint_chan_set_config(CONF_FAULT_EIC_LINE, &config);
 
 	memset(&events, 0, sizeof(struct extint_events));
@@ -609,9 +584,7 @@ static void configure_eic(void)
 }
 #endif
 
-
-
-#if defined (TCC_MODE_FAULT)
+#ifdef TCC_MODE_FAULT
 /*	This function is used to configure an event for fault mode.
 In  fault mode overflow of TCC is driven by external interrupt*/
 static void configure_event(void)
@@ -635,7 +608,7 @@ int main (void)
 	unsigned long temp = TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0);
 #endif
 
-#if defined(TCC_MODE_FAULT) 
+#ifdef TCC_MODE_FAULT
 	struct port_config config_pin;
 #endif
 
@@ -643,7 +616,7 @@ int main (void)
  	system_init();
 	system_interrupt_enable_global();
 	
-#if defined(TCC_MODE_FAULT) 
+#ifdef TCC_MODE_FAULT
 	port_get_config_defaults(&config_pin);
 	config_pin.direction = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(CONF_TEST_PIN_OUT, &config_pin);
@@ -679,7 +652,7 @@ configure_tcc();
 		swap_operation();
 #endif
 
-#if defined(TCC_MODE_FAULT) 
+#ifdef TCC_MODE_FAULT 
 		if (!port_pin_get_input_level(SW0_PIN)) 
 		{
 		#ifdef TCC_MODE_FAULT
@@ -709,9 +682,9 @@ configu_eic();
 configure_evsys();
 while (1) {
 	while(!(TCC0->INTFLAG.bit.MC1));
-	TCC0->INTFLAG.bit.MC1 = 1;
-	period = tcc_get_capture_value(&tcc_instances, 1);
-	pulse_width = tcc_get_capture_value(&tcc_instances, 0);
+	TCC0->INTFLAG.bit.MC1 	= 1;
+	period 					= tcc_get_capture_value(&tcc_instances, 1);
+	pulse_width 			= tcc_get_capture_value(&tcc_instances, 0);
 	printf("period=%ld , pulse width =%ld \r\n", period , pulse_width);
 	}
 		
