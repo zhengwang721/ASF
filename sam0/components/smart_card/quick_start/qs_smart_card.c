@@ -126,9 +126,6 @@ static struct usart_module cdc_uart_module, usart_instance;
 #define STRING_HEADER   "--Smart Card(ISO7816) Quick Start Example --\r\n" \
 "-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-/* Maximum ATR uc_size in bytes. */
-#define MAX_ATR_SIZE            55
-
 /* Maximum uc_size in bytes of the smart card answer to a uc_command. */
 #define MAX_ANSWER_SIZE         10
 
