@@ -85,13 +85,13 @@
 // The enumeration constant to indicate, which TCC channel is being used by the system.
 enum eTCC_Channel
 {
-TCC_CHANNEL_NUM_0 =0,
+TCC_CHANNEL_NUM_0 = 0,
 TCC_CHANNEL_NUM_1,
 TCC_CHANNEL_NUM_2,
 TCC_CHANNEL_NUM_3,
 TCC_CHANNEL_NUM_4,
 TCC_CHANNEL_NUM_5,
-TCC_CHANNEL_NUM_6	
+TCC_CHANNEL_NUM_6
 };
 ///////////////////////// END of enumeration constants /////////////////////////////////////////////////
 
@@ -140,8 +140,8 @@ TCC_CHANNEL_NUM_6
 #define GLCK_SOURCE    GCLK_GENERATOR_3
 #define TCC_PERIOD_VALUE 0xFF
 #define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
-#define CC0_Value			0x80
-#define CCB0_Value			0xC0
+#define CC0_Value           0x80
+#define CCB0_Value          0xC0
 #endif
 
 // Symbolic constants used in One Shot feature (TCC_MODE_ONESHOT)
