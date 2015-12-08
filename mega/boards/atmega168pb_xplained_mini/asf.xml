@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<board id="board.atmega168pb_x_plained_mini" vendor="Atmel" caption="ATmega168PB Xplained MINI">
+		<build type="define" name="BOARD" value="ATMEGA168PB_XPLAINED_MINI"/>
+		<build type="header-file" value="atmega168pb_xplained_mini.h"/>
+		<build type="header-file" value="led.h"/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<build type="c-source" value="init.c"/>
+		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+		<build type="module-config" subtype="path" value="board_config"/>
+		<require idref="common.services.basic.gpio"/>
+		<require idref="common.boards"/>
+		<device-support value="atmega168pb"/>
+	</board>
+</asf>

@@ -3,7 +3,6 @@
 		<info type="description" value="summary">
 		Driver for the AT45DBX series SPI DataFlash memories. It provides functions for initialization and read/write operations at byte or sector level.
 		</info>
-		<info type="gui-flag" value="hidden"/>
 		<build type="c-source" value="at45dbx.c"/>
 		<build type="header-file" value="at45dbx.h"/>
 		<build type="header-file" value="at45dbx_hal_spi.h"/>
@@ -13,6 +12,7 @@
 		<build type="doxygen-entry-point" value="at45dbx_group"/>
 		<require idref="sam0.drivers.sercom.spi"/>
 		<device-support value="samd20"/>
+		<device-support value="atsamr21g18a"/>
 		<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

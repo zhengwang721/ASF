@@ -18,10 +18,10 @@
 		<require idref="thirdparty.prime.sscs_4_32"/>
 		<require idref="sam.services.plc.usi"/>
 		<require idref="thirdparty.os.freertos.version"/>
-		<device-support value="atsam4cp16b_0"/>
-		<device-support value="atsam4cmp16c_0"/>
-		<device-support value="atsam4cms16c_0"/>
-		<device-support value="atsam4c16c_0"/>
+		<device-support value="atsam4cp16b:0"/>
+		<device-support value="atsam4cmp16c:0"/>
+		<device-support value="atsam4cms16c:0"/>
+		<device-support value="atsam4c16c:0"/>
 		<device-support value="atsam4sd32c"/>
 		<build type="doxygen-entry-point" value="oss_prime_group"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>

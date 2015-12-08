@@ -18,7 +18,7 @@
 			<build type="module-config" subtype="path" value="./module_config"/>
 			<build type="include-path" value="."/>
 			<require idref="sam.services.flash"/>
-			<device-support value="atsam4cp16b_0"/>
+			<device-support value="atsam4cp16b:0"/>
 		</module>
 		<module type ="application" caption="Bootloader for SAM4CMP-DB" id="thirdparty.prime.mac_1_3.addons.bootloader#2">
 			<info type="description" value="summary">
@@ -31,7 +31,7 @@
 			<build type="include-path" value="."/>
 			<require idref="sam.services.flash"/>
 			<build type="doxygen-entry-point" value="prime_group"/>
-			<device-support value="atsam4cmp16c_0"/>
+			<device-support value="atsam4cmp16c:0"/>
 		</module>
 		<module type ="application" caption="Bootloader for SAM4CMS-DB" id="thirdparty.prime.mac_1_3.addons.bootloader#3">
 			<info type="description" value="summary">
@@ -44,7 +44,7 @@
 			<build type="include-path" value="."/>
 			<require idref="sam.services.flash"/>
 			<build type="doxygen-entry-point" value="prime_group"/>
-			<device-support value="atsam4cms16c_0"/>
+			<device-support value="atsam4cms16c:0"/>
 		</module>
 		<module type ="application" caption="Bootloader for SAM4C-EK" id="thirdparty.prime.mac_1_3.addons.bootloader#4">
 			<info type="description" value="summary">
@@ -57,7 +57,7 @@
 			<build type="include-path" value="."/>
 			<require idref="sam.services.flash"/>
 			<build type="doxygen-entry-point" value="prime_group"/>
-			<device-support value="atsam4c16c_0"/>
+			<device-support value="atsam4c16c:0"/>
 		</module>
 	</select-by-device>
 </asf>
