@@ -103,15 +103,18 @@ static void csc_prf_report_ntf_cb(csc_report_ntf_t *report_info)
 static void uart_rx_callback(void)
 {
 	if(buff == '\r') {
-		send_plf_int_msg_ind(UART_RX_COMPLETE, UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK, send_data, send_length);
-		
-		memset(send_data, 0, APP_TX_BUF_SIZE);
-		send_length = 0;
-		DBG_LOG(" ");
+		if(send_length) {
+			send_plf_int_msg_ind(UART_RX_COMPLETE, UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK, send_data, send_length);
+			DBG_LOG("");
+		}
 	}
 	else {
 		send_data[send_length++] = buff;
 		DBG_LOG_CONT("%c", buff);
+		
+		if(send_length >= APP_TX_BUF_SIZE) {
+			send_plf_int_msg_ind(UART_RX_COMPLETE, UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK, send_data, send_length);
+		}
 	}
 	
 	getchar_aysnc((uart_callback_t)uart_rx_callback, &buff);
@@ -125,7 +128,9 @@ static void user_event_callback(struct uart_module *const module) {
 	platform_event_get(&plf_event_type, plf_event_data, &plf_event_data_len);
 	
 	if(plf_event_type == ((UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK << 8) | UART_RX_COMPLETE)) {
-		csc_prf_send_data(plf_event_data, plf_event_data_len);
+		csc_prf_send_data(send_data, send_length);
+		memset(send_data, 0, APP_TX_BUF_SIZE);
+		send_length = 0;
 	}
 }
 
