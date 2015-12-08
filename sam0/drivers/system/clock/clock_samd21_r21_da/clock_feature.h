@@ -388,7 +388,7 @@ enum system_osc8m_div {
 /**
  * \brief Frequency range for the internal 8MHz RC oscillator.
  *
- * Internal 8MHz RC oscillator frequency range setting
+ * Internal 8MHz RC oscillator frequency range setting.
  */
 enum system_osc8m_frequency_range {
 	/** Frequency range 4MHz to 6MHz */
@@ -1410,7 +1410,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>
- *			\li Updated dfll configuration function to implement workaround for
+ *			\li Updated DFLL configuration function to implement workaround for
  *			    errata 9905 in the DFLL module
  *			\li Updated \c system_clock_init() to reset interrupt flags before
  *			    they are used
