@@ -499,10 +499,10 @@ void system_clock_source_dpll_set_config(
 	while(OSCCTRL->DPLLSYNCBUSY.reg & OSCCTRL_DPLLSYNCBUSY_DPLLPRESC){
 		}
 	/*
-	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16)
+	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16) / (2^PRESC)
 	 */
 	_system_clock_inst.dpll.frequency =
-			(refclk * (((tmpldr + 1) << 4) + tmpldrfrac)) >> (4 + OSCCTRL->DPLLPRESC.bit.PRESC);
+			(refclk * (((tmpldr + 1) << 4) + tmpldrfrac)) >> (4 + config->prescaler);
 }
 
 /**
