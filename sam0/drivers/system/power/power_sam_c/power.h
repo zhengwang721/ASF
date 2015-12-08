@@ -359,7 +359,7 @@ static inline void system_standby_get_config_defaults(
 	Assert(config);
 
 	config->vreg_switch_mode    = SYSTEM_VREG_SWITCH_AUTO;
-	config->hmcramchs_back_bias = true;
+	config->hmcramchs_back_bias = false;
 }
 
 /**

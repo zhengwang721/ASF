@@ -17,6 +17,5 @@
 		<build type="module-config" subtype="required-header-file" value="conf_bno055.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
 		<device-support value="same70"/>
-		<generator value="doxygen-module" default-mcu="unspecified-same70"/>
 	</module>
 </asf>
