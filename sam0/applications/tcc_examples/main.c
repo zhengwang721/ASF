@@ -96,19 +96,19 @@ void configure_evsys (void);
   
 /* Configure the TCC module as per the application requirement */
 
-/* Example - 1. Circular Buffer
-			2. Oneshot Operation 
-			3. Pattern Generation
-			4. PWM with OTMX(Output Matrix) and DTI(Dead Time Insertion) 
-			5. RAMP2 Operation
-			6. SWAP Operation
-			---- Added for Revision 2 of TCC App Note!!!.
-			 7. RAMP2A Operation
-			 8. Dual Slope Operation
-			 9. DITHERING
-			 10. FAULT Operation
-			 11. CAPTURE Operation
-			 12. COUNTER Operation
+/* Example -1.  Circular Buffer
+			2.  Oneshot Operation 
+			3.  Pattern Generation
+			4.  PWM with OTMX(Output Matrix) and DTI(Dead Time Insertion) 
+			5.  RAMP2 Operation
+			6.  SWAP Operation
+			----Added for Revision 2 of TCC App Note!!!.
+			7.  RAMP2A Operation
+			8.  Dual Slope Operation
+			9.  DITHERING
+			10. FAULT Operation
+			11. CAPTURE Operation
+			12. COUNTER Operation
 */
 
 /*	PWM Waveforms are generated for most of the features based on the feature selected by user. The
