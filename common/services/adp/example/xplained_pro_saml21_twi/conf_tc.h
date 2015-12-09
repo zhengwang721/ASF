@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM L21 SPI configuration
+ * \brief SAM D21 TC configuration
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,14 +40,15 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
+#ifndef CONF_TC_H_INCLUDED
+#define CONF_TC_H_INCLUDED
 
-#ifndef CONF_SPI_H_INCLUDED
-#  define CONF_SPI_H_INCLUDED
+//[definition_tc]
+#define CONF_TC_MODULE TC3
+//[definition_tc]
 
-#  define CONF_SPI_MASTER_ENABLE     true
-#  define CONF_SPI_SLAVE_ENABLE     flase
-#  define CONF_SPI_TIMEOUT           10000
-
-#endif /* CONF_SPI_H_INCLUDED */
-
+#endif /* CONF_EXAMPLE_H_INCLUDED */

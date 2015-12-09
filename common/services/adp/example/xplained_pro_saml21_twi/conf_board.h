@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 SPI configuration
+ * \brief SAM L21 Xplained PRO board configuration
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,14 +40,16 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_SPI_H_INCLUDED
-#  define CONF_SPI_H_INCLUDED
+#define USER_LED_PIN         LED_0_PIN
+#define USER_LED_ACTIVE      LED_0_ACTIVE
+#define USER_LED_INACTIVE    LED_0_INACTIVE
+#define USER_LED_GPIO        LED0_GPIO
 
-#  define CONF_SPI_MASTER_ENABLE     true
-#  define CONF_SPI_SLAVE_ENABLE     flase
-#  define CONF_SPI_TIMEOUT           10000
-
-#endif /* CONF_SPI_H_INCLUDED */
-
+#endif /* CONF_BOARD_H_INCLUDED */
