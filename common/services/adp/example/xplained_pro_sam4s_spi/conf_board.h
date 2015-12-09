@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained PRO board configuration
+ * \brief SAM 4S Xplained PRO board configuration
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *

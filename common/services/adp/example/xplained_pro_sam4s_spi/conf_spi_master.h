@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 SPI configuration
+ * \brief SAM 4S SPI configuration
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
