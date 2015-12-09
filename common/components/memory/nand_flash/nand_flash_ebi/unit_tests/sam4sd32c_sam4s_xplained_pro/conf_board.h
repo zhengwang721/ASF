@@ -49,7 +49,7 @@
 /* Configure UART pins */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Usart Hw ID used by the console (UART0). */
+/** Usart Hw ID used by the console (UART1). */
 #define CONSOLE_UART_ID          ID_UART1
 
 /** Support NAND */
