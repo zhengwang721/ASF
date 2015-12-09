@@ -40,7 +40,6 @@
  * \asf_license_stop
  *
  */
-
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -50,7 +49,11 @@
 #include <board.h>
 
 #define AT30TSE_I2C_MODULE  I2C0
-#define AT30TSE_PINMUX_PAD0 PINMUX_LP_GPIO_8_MUX2_I2C0_SDA
-#define AT30TSE_PINMUX_PAD1 PINMUX_LP_GPIO_9_MUX2_I2C0_SCK
+
+#define AT30TSE_PIN_PAD0 PIN_LP_GPIO_8_MUX2_I2C0_SDA
+#define AT30TSE_PIN_PAD1 PIN_LP_GPIO_9_MUX2_I2C0_SCL
+
+#define AT30TSE_MUX_PAD0 MUX_LP_GPIO_8_MUX2_I2C0_SDA
+#define AT30TSE_MUX_PAD1 MUX_LP_GPIO_9_MUX2_I2C0_SCL
 
 #endif /* CONF_AT30TSE75X_H_INCLUDED */
