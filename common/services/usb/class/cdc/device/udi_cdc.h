@@ -636,7 +636,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 \endcode
  *
  * \subsection udi_cdc_basic_use_case_setup_flow Workflow
- * -# Ensure that conf_usb.h is available and contains the following configuration
+ * -# Ensure that conf_usb.h is available and contains the following configuration,
  * which is the USB device CDC configuration:
  *   - \code #define USB_DEVICE_SERIAL_NAME  "12...EF" // Disk SN for CDC \endcode
  *     \note The USB serial number is mandatory when a CDC interface is used.
