@@ -92,17 +92,17 @@ void configure_evsys (void);
 //////////////////// END OF FUNCTION DECLARATION //////////////////////////////////////////////////////////
 
 /*Description: This example project helps you to configure the TCC Module 
-	for different Features/Modes available in TCC module of SAML22 */
-	
+  for different Features/Modes available in TCC module of SAML22 */
+  
 /* Configure the TCC module as per the application requirement */
 
 /* Example - 1. Circular Buffer
-             2.	Oneshot Operation 
-             3. Pattern Generation
-             4. PWM with OTMX(Output Matrix) and DTI(Dead Time Insertion) 
-             5. RAMP2 Operation
-             6. SWAP Operation
-			  ---- Added for Revision 2 of TCC App Note!!!.
+			2. Oneshot Operation 
+			3. Pattern Generation
+			4. PWM with OTMX(Output Matrix) and DTI(Dead Time Insertion) 
+			5. RAMP2 Operation
+			6. SWAP Operation
+			---- Added for Revision 2 of TCC App Note!!!.
 			 7. RAMP2A Operation
 			 8. Dual Slope Operation
 			 9. DITHERING
@@ -111,18 +111,18 @@ void configure_evsys (void);
 			 12. COUNTER Operation
 */
 
-/* PWM Waveforms are generated for most of the features based on the feature selected by user. The
-   waveform output will match the expected waveform desired for the feature chosen by the user.
-   Below are some special features which needs special mention in which the feature is demonstrated
-   based on other characteristics like LED state/ USART output. 
-   
+/*	PWM Waveforms are generated for most of the features based on the feature selected by user. The
+	waveform output will match the expected waveform desired for the feature chosen by the user.
+	Below are some special features which needs special mention in which the feature is demonstrated
+	based on other characteristics like LED state/ USART output. 
+
 1. FAULT Operation - On a button press toggle the Fault Line is toggled to trigger/clear fault. 
    The LED state indicates the Fault is available or cleared.
 2. COUNTER Operation -> The LED toggles at different speed to indicate different triggered events
    based on different counter values. For counter, there won't be any waveform generation.
 3. CAPTURE Operation -> This captures a fixed waveform and displays the captured waveform results
     to indicate the different period captured is one of the period values of the PWM waveform. The
-	captured period values are displayed using USART of 96008N1 serial configuration */
+    captured period values are displayed using USART of 96008N1 serial configuration */
 
 #ifdef TCC_MODE_CAPTURE
 // Function to configure usart, eic,tcc and event system. configures the usart with CONF_BAUD_RATE baud rate.
@@ -135,7 +135,6 @@ uint32_t period, pulse_width;
 void configure_usart(void)
 {
 struct usart_config config_usart;
-
 usart_get_config_defaults(&config_usart);
 config_usart.baudrate        = 115200;
 	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
@@ -154,10 +153,10 @@ void configu_eic(void)
 	config_extint_chan.gpio_pin           = PIN_PA07A_EIC_EXTINT7;
 	config_extint_chan.gpio_pin_mux       = MUX_PA07A_EIC_EXTINT7;
 	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_NONE;
-	config_extint_chan.detection_criteria = EXTINT_DETECT_HIGH;//EXTINT_DETECT_LOW ;//EXTINT_DETECT_BOTH;
+	config_extint_chan.detection_criteria = EXTINT_DETECT_HIGH;
 	extint_chan_set_config(7, &config_extint_chan);
 	struct extint_events config_events = {
-	.generate_event_on_detect[7] = true
+		.generate_event_on_detect[7] = true
 	};
 	extint_enable_events(&config_events);
 }
@@ -195,7 +194,7 @@ void configure_evsys(void)
 	config.edge_detect  = EVENTS_EDGE_DETECT_BOTH;
 	events_allocate(&event_resources, &config);
 	events_attach_user(&event_resources, EVSYS_ID_USER_TCC0_EV_1);
-	}
+}
 #endif
 
 // Function to configure TCC, this will configure TCC for other than Capture, Counter and Fault mode related operations.
@@ -203,15 +202,15 @@ void configure_tcc(void)
 {
 	/* Structure used to store the TCC configuration parameters */
 	struct tcc_config config_tcc;
-     
+
 	 /* Fill the Structure with the default values */
 	tcc_get_config_defaults(&config_tcc, CONF_PWM_MODULE);
 	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]  = CONF_DEFAULT_MATCH_COMPARE;
 	config_tcc.counter.period                              = CONF_DEFAULT_PERIOD;
-	
+
 #ifdef TCC_MODE_DUAL_SLOPE
 	config_tcc.compare.wave_generation = TCC_WAVE_GENERATION_DOUBLE_SLOPE_TOP;
-	#elif defined (TCC_MODE_COUNTER)
+#elif defined (TCC_MODE_COUNTER)
 	/* Configure different channels with different compare match values */
 		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   =  TCC_MODE_COUNTER_MATCH_0;
 		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_1]   =  TCC_MODE_COUNTER_MATCH_1;
@@ -219,7 +218,7 @@ void configure_tcc(void)
 		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_3]   = TCC_MODE_COUNTER_MATCH_3;
 	/* Configure the value for TOP value */
 		config_tcc.counter.period                               = TCC_PERIOD_VALUE;
-	#else
+#else
 	/* Configure the single slope PWM waveform generation for waveform output */
 	config_tcc.compare.wave_generation                          = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
 #endif
@@ -366,7 +365,7 @@ void configure_tcc(void)
 	// The main configuration for Circular Buffering
 #ifdef TCC_MODE_CIRCULAR_BUFFER	
 	/* Load the CC0 and CCB0 values respectively for the circular buffer operation */
-    stat = tcc_set_double_buffer_compare_values(&tcc_instance, TCC_MATCH_CAPTURE_CHANNEL_0, CC0_Value, CCB0_Value);
+	stat = tcc_set_double_buffer_compare_values(&tcc_instance, TCC_MATCH_CAPTURE_CHANNEL_0, CC0_Value, CCB0_Value);
 	/* Enable the Circular Buffer feature for the Compare Channel 0 */
 	stat = tcc_enable_circular_buffer_compare(&tcc_instance, TCC_MATCH_CAPTURE_CHANNEL_0);
 #endif
@@ -384,7 +383,7 @@ void configure_tcc(void)
 	/* Configure the Output Matrix Channel for Pattern Generation of Stepper Motor */
 	CONF_PWM_MODULE->WEXCTRL.reg |= TCC_WEXCTRL_OTMX(2);
 	/* Enable the Pattern Generator Output for 4 Waveform Outputs and 
-	   Load the PATT and PATTB register values respectively for Stepper Motor Pattern Generation */
+	Load the PATT and PATTB register values respectively for Stepper Motor Pattern Generation */
 	CONF_PWM_MODULE->PATT.reg = TCC_PATT_PGE(TCC_PATTERN_PAGE_VAL) | TCC_PATT_PGV(sm_pattern[iIndex++]);
 	while (CONF_PWM_MODULE->SYNCBUSY.bit.PATT);
 	CONF_PWM_MODULE->PATTBUF.reg = TCC_PATTBUF_PGEB(TCC_PATTERN_PAGE_VAL) | TCC_PATTBUF_PGVB(sm_pattern[iIndex++]);
@@ -399,7 +398,7 @@ void configure_tcc(void)
 	CONF_PWM_MODULE->WEXCTRL.reg |= TCC_WEXCTRL_DTLS(TCC_SWAP_DT_LS) | TCC_WEXCTRL_DTHS(TCC_SWAP_DT_HS);
 #endif
 
-    // The main configuration for DITHERING
+	// The main configuration for DITHERING
 #ifdef TCC_MODE_DITHERING
 	CONF_PWM_MODULE->CTRLA.bit.RESOLUTION = DITH_CYCLES;
 	while (CONF_PWM_MODULE->SYNCBUSY.reg & TCC_SYNCBUSY_CTRLB) {
@@ -472,7 +471,7 @@ void swap_operation(void)
 
 
 #ifdef TCC_MODE_COUNTER
-/*	This function will toggle the LED, when triggered */
+/*This function will toggle the LED, when triggered */
 static void tcc_callback_to_toggle_led(struct tcc_module *const module_inst)
 {
 	port_pin_toggle_output_level(LED0_PIN);
@@ -480,7 +479,7 @@ static void tcc_callback_to_toggle_led(struct tcc_module *const module_inst)
 #endif
 
 #ifdef TCC_MODE_COUNTER
-/*	This function will configure (register and enable) the callback to be triggered on different TCC channels for overflow,
+/*This function will configure (register and enable) the callback to be triggered on different TCC channels for overflow,
 this is used to show case the TCC toggling the LED at different speed, because of variable time required for overflow on each TCC channel. */
 void configure_tcc_callback(void)
 {
@@ -504,7 +503,7 @@ void configure_tcc_callback(void)
 
 #ifdef TCC_MODE_FAULT
 //! [callback_eic]
-/*	This function will be triggered, when fault/ gpio pin state is changed, based on which 
+/*This function will be triggered, when fault/ gpio pin state is changed, based on which 
 the test pin is driven high, this is used to detect that fault is cleared. */
 
 static void eic_callback_to_fault_detect(void)
@@ -513,13 +512,13 @@ static void eic_callback_to_fault_detect(void)
 }
 //! [callback_eic]
 
-/* This function is used to configure the gpio pin to act as a fault line and to trigger when the gpio pin state changes
-    to identify fault is cleared. */
+/*This function is used to configure the gpio pin to act as a fault line and to trigger when the gpio pin state changes
+to identify fault is cleared. */
 
 static void configure_eic(void)
 {
 	struct extint_chan_conf config;
-    struct extint_events events;
+	struct extint_events events;
 	extint_chan_get_config_defaults(&config);
 	config.filter_input_signal  = true;
 	config.detection_criteria   = EXTINT_DETECT_BOTH;
@@ -535,8 +534,8 @@ static void configure_eic(void)
 #endif
 
 #ifdef TCC_MODE_FAULT
-/*	This function is used to configure an event for fault mode.
-In  fault mode overflow of TCC is driven by external interrupt*/
+/*This function is used to configure an event for fault mode.
+In fault mode overflow of TCC is driven by external interrupt*/
 static void configure_event(void)
 {
 	struct events_config config;
@@ -555,27 +554,21 @@ int main (void)
 #ifdef TCC_MODE_FAULT
 	uint32_t tcStatus = 0;
 	unsigned long temp = TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0);
-#endif
-
-#ifdef TCC_MODE_FAULT
 	struct port_config config_pin;
-#endif
-
-   // system initialization - includes, clock and board initialization.
- 	system_init();
-	system_interrupt_enable_global();
-
-#ifdef TCC_MODE_FAULT
 	port_get_config_defaults(&config_pin);
 	config_pin.direction = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(CONF_TEST_PIN_OUT, &config_pin);
 	port_pin_set_output_level(CONF_TEST_PIN_OUT, true); 
 #endif
 
+	// system initialization - includes, clock and board initialization.
+	system_init();
+	system_interrupt_enable_global();
+
 #ifdef TCC_MODE_CAPTURE
-configu_tcc();
+	configu_tcc();
 #else
-configure_tcc();
+	configure_tcc();
 #endif
 
 #ifdef TCC_MODE_COUNTER
@@ -585,45 +578,37 @@ configure_tcc();
 	configure_event();
 	tcc_clear_status(&tcc_instance,TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0));
 #endif
-	
-	while (1)
-	{
 
+	while (1){
 #ifdef TCC_MODE_ONESHOT
-		oneshot_operation();
-#endif	
+	oneshot_operation();
+#endif
 
 #ifdef TCC_MODE_PATTERN_GENERATION
-		pattern_generation();
+	pattern_generation();
 #endif
 
 #ifdef TCC_MODE_SWAP
-		swap_operation();
+	swap_operation();
 #endif
 
 #ifdef TCC_MODE_FAULT 
-		if (!port_pin_get_input_level(SW0_PIN)) 
-		{
-		#ifdef TCC_MODE_FAULT
-						/* Set fault */
-			while(!port_pin_get_input_level(SW0_PIN));
-			port_pin_set_output_level(CONF_TEST_PIN_OUT, false);
-			tcStatus = tcc_get_status(&tcc_instance);
-			if(!port_pin_get_output_level(LED_0_PIN))
-			{
-				// Turn off LED and clearm alarm status..
-				tcc_clear_status(&tcc_instance,	TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0));
-				LED_Off(LED_0_PIN);
-			}
-			else if( (tcStatus & temp) == temp)
-			{
-				// If alarm set, drive LED.
-				LED_On(LED_0_PIN);
-				port_pin_set_output_level(CONF_TEST_PIN_OUT, true);
-			}
-		#endif
-		} // end of common fault and capture condition
-	#endif
+	if (!port_pin_get_input_level(SW0_PIN)){
+		/* Set fault */
+		while (!port_pin_get_input_level(SW0_PIN));
+		port_pin_set_output_level(CONF_TEST_PIN_OUT, false);
+		tcStatus = tcc_get_status(&tcc_instance);
+		if (!port_pin_get_output_level(LED_0_PIN)){
+			// Turn off LED and clearm alarm status..
+			tcc_clear_status(&tcc_instance,	TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0));
+			LED_Off(LED_0_PIN);
+		}else if ((tcStatus & temp) == temp){
+			// If alarm set, drive LED.
+			LED_On(LED_0_PIN);
+			port_pin_set_output_level(CONF_TEST_PIN_OUT, true);
+		}
+	} // end of common fault and capture condition
+#endif
 
 #ifdef TCC_MODE_CAPTURE
 configure_usart();
@@ -636,7 +621,7 @@ while (1) {
 	pulse_width             = tcc_get_capture_value(&tcc_instances, 0);
 	printf("period=%ld , pulse width =%ld \r\n", period , pulse_width);
 	}
-	#endif // end of while (1)
+#endif // end of while (1)
 }
 }
 
