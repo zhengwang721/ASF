@@ -83,8 +83,7 @@
 
 ///////////////////////// START of enumeration constants ///////////////////////////////////////////////
 // The enumeration constant to indicate, which TCC channel is being used by the system.
-enum eTCC_Channel
-{
+enum eTCC_Channel {
 TCC_CHANNEL_NUM_0 = 0,
 TCC_CHANNEL_NUM_1,
 TCC_CHANNEL_NUM_2,
@@ -101,15 +100,15 @@ TCC_CHANNEL_NUM_6
 // baud rate, TCC module used.
 
 // Configurable TCC Instance
-#define CONF_PWM_MODULE      TCC0
+#define CONF_PWM_MODULE             TCC0
 
 // Configurable PWM Channels
-#define CONF_PWM_CHANNEL     1
-#define CONF_PWM_OUTPUT      0
+#define CONF_PWM_CHANNEL            1
+#define CONF_PWM_OUTPUT             0
 
 // Configurable Default PWM PIN and MUX configuration
-#define CONF_PWM_OUT_PIN     PIN_PA04E_TCC0_WO0
-#define CONF_PWM_OUT_MUX     MUX_PA04E_TCC0_WO0
+#define CONF_PWM_OUT_PIN            PIN_PA04E_TCC0_WO0
+#define CONF_PWM_OUT_MUX            MUX_PA04E_TCC0_WO0
 
 // Configurable default period and match compare values.
 #define CONF_DEFAULT_PERIOD         0x3FF
@@ -121,120 +120,120 @@ TCC_CHANNEL_NUM_6
 #define CONF_FAULT_EIC_LINE         2
 
 // Configurable options for Capture Mode
-#define CONF_TEST_PIN_OUT         PIN_PA07
-#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_2
-#define CONF_EVENT_CAPTURE        EVSYS_ID_GEN_TCC0_MCX_0
+#define CONF_TEST_PIN_OUT           PIN_PA07
+#define CONF_EVENT_GENERATOR_ID     EVSYS_ID_GEN_EIC_EXTINT_2
+#define CONF_EVENT_CAPTURE          EVSYS_ID_GEN_TCC0_MCX_0
 
 // Configurable Fault events used by FAULT Feature and CAPTURE Features.
-#define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC0_MC_0
-#define CONF_CAPTURE_EVENT_USER    EVSYS_ID_USER_TCC0_MC_1
+#define CONF_FAULT_EVENT_USER       EVSYS_ID_USER_TCC0_MC_0
+#define CONF_CAPTURE_EVENT_USER     EVSYS_ID_USER_TCC0_MC_1
 
 // Baud Rate configuration
-#define CONF_BAUD_RATE             9600
+#define CONF_BAUD_RATE              9600
 ///////////////////////// END of CONFIGURABLE symbolic constants //////////////////////////////////////////////
 
 
 //////////// START OF symbolic constants FEATURE SPECIFIC /////////////////////////////////////////////////////
 // Symbolic constants used in Circular Buffer Feature (TCC_MODE_CIRCULAR_BUFFER)
 #ifdef TCC_MODE_CIRCULAR_BUFFER
-#define GLCK_SOURCE    GCLK_GENERATOR_3
-#define TCC_PERIOD_VALUE 0xFF
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
-#define CC0_Value           0x80
-#define CCB0_Value          0xC0
+#define GLCK_SOURCE                 GCLK_GENERATOR_3
+#define TCC_PERIOD_VALUE            0xFF
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
+#define CC0_Value                   0x80
+#define CCB0_Value                  0xC0
 #endif
 
 // Symbolic constants used in One Shot feature (TCC_MODE_ONESHOT)
 #ifdef TCC_MODE_ONESHOT
-#define TCC_PERIOD_VALUE 31250
-#define GLCK_SOURCE GCLK_GENERATOR_3
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV256
+#define TCC_PERIOD_VALUE            31250
+#define GLCK_SOURCE                 GCLK_GENERATOR_3
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV256
 #endif
 
 // Symbolic constants used in DTI Feature (TCC_MODE_OTMX_DTI)
 #ifdef TCC_MODE_OTMX_DTI
-#define GLCK_SOURCE GCLK_GENERATOR_3
-#define TCC_PERIOD_VALUE 0XFF
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
-#define TCC_MATCH_CHANNEL_DTI_SWAP 0x80
-#define DTI_HIGH_TIME  0x10
-#define DTI_LOW_TIME   0x40
+#define GLCK_SOURCE                 GCLK_GENERATOR_3
+#define TCC_PERIOD_VALUE            0XFF
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
+#define TCC_MATCH_CHANNEL_DTI_SWAP  0x80
+#define DTI_HIGH_TIME               0x10
+#define DTI_LOW_TIME                0x40
 #endif
 
 // Symbolic constants used in Swap Feature (TCC_MODE_SWAP)
 #ifdef TCC_MODE_SWAP
-#define GLCK_SOURCE GCLK_GENERATOR_3
-#define TCC_PERIOD_VALUE 0xFF
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
-#define TCC_MATCH_CHANNEL_CCBUF 0x80
-#define TCC_SWAP_DT_LS  0x20
-#define TCC_SWAP_DT_HS  0x60
+#define GLCK_SOURCE                 GCLK_GENERATOR_3
+#define TCC_PERIOD_VALUE            0xFF
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
+#define TCC_MATCH_CHANNEL_CCBUF     0x80
+#define TCC_SWAP_DT_LS              0x20
+#define TCC_SWAP_DT_HS              0x60
 #endif
 
 // Symbolic constants used in Pattern Generation Feature (TCC_MODE_PATTERN_GENERATION)
 #ifdef TCC_MODE_PATTERN_GENERATION
-#define GLCK_SOURCE GCLK_GENERATOR_0
-#define TCC_PERIOD_VALUE 0x7FFF
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
+#define GLCK_SOURCE                 GCLK_GENERATOR_0
+#define TCC_PERIOD_VALUE            0x7FFF
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
 #define TCC_MATCH_VALUE_PATTERN_GEN 0x7F
-#define TCC_PATTERN_PAGE_VAL   0x0F
-#define PATTERN_SIZE  4
+#define TCC_PATTERN_PAGE_VAL        0x0F
+#define PATTERN_SIZE                4
 #endif
 
 // Symbolic constants used in RAMP2 feature (TCC_MODE_RAMP2)
 #ifdef TCC_MODE_RAMP2
-#define GLCK_SOURCE GCLK_GENERATOR_0
-#define TCC_PERIOD_VALUE 0xFFFF
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
-#define TCC_RAMP2_MATCH_CHANNEL_0 0xB333
-#define TCC_RAMP2_MATCH_CHANNEL_1 0x4CCC
+#define GLCK_SOURCE                 GCLK_GENERATOR_0
+#define TCC_PERIOD_VALUE            0xFFFF
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
+#define TCC_RAMP2_MATCH_CHANNEL_0   0xB333
+#define TCC_RAMP2_MATCH_CHANNEL_1   0x4CCC
 #endif
 
 // Symbolic constants used in RAMP2A feature (TCC_MODE_RAMP2A)
 #ifdef TCC_MODE_RAMP2A
-#define GLCK_SOURCE GCLK_GENERATOR_0
-#define TCC_PERIOD_VALUE 0xFFFF
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
-#define TCC_RAMP2_MATCH_CHANNEL_0 0xB333
+#define GLCK_SOURCE                 GCLK_GENERATOR_0
+#define TCC_PERIOD_VALUE            0xFFFF
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
+#define TCC_RAMP2_MATCH_CHANNEL_0   0xB333
 #endif
 
 // Symbolic constants used in Dual Slope feature (TCC_MODE_DUAL_SLOPE)
 #ifdef TCC_MODE_DUAL_SLOPE
-#define TCC_PERIOD_VALUE 0x3FF
-#define GLCK_SOURCE GCLK_GENERATOR_0
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
+#define TCC_PERIOD_VALUE            0x3FF
+#define GLCK_SOURCE                 GCLK_GENERATOR_0
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
 #endif
 
 // Symbolic constants used in Counter feature (TCC_MODE_COUNTER)
 #ifdef TCC_MODE_COUNTER
-#define GLCK_SOURCE GCLK_GENERATOR_0
-#define TCC_PERIOD_VALUE 2000
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1024
-#define TCC_MODE_COUNTER_MATCH_0  900
-#define TCC_MODE_COUNTER_MATCH_1  930
-#define TCC_MODE_COUNTER_MATCH_2  1100
-#define TCC_MODE_COUNTER_MATCH_3  1250
+#define GLCK_SOURCE                 GCLK_GENERATOR_0
+#define TCC_PERIOD_VALUE            2000
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1024
+#define TCC_MODE_COUNTER_MATCH_0    900
+#define TCC_MODE_COUNTER_MATCH_1    930
+#define TCC_MODE_COUNTER_MATCH_2    1100
+#define TCC_MODE_COUNTER_MATCH_3    1250
 #endif
 
 // Symbolic constants used in Fault feature (TCC_MODE_FAULT)
 #ifdef TCC_MODE_FAULT
-#define GLCK_SOURCE GCLK_GENERATOR_0
-#define TCC_PERIOD_VALUE 0x3FF
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
+#define GLCK_SOURCE                 GCLK_GENERATOR_0
+#define TCC_PERIOD_VALUE            0x3FF
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
 #endif
 
 // Symbolic constants used in Dithering feature (TCC_MODE_DITHERING)
 #ifdef TCC_MODE_DITHERING
-#define GLCK_SOURCE GCLK_GENERATOR_0
-#define TCC_PERIOD_VALUE 0xFFFF
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
-#define DITH_CYCLES          2 // 32 frames
+#define GLCK_SOURCE                 GCLK_GENERATOR_0
+#define TCC_PERIOD_VALUE            0xFFFF
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
+#define DITH_CYCLES                 2 // 32 frames
 #endif
 
 // Symbolic constants used in Capture feature (TCC_MODE_CAPTURE)
 #ifdef TCC_MODE_CAPTURE
-#define GLCK_SOURCE GCLK_GENERATOR_3
-#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
+#define GLCK_SOURCE                 GCLK_GENERATOR_3
+#define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
 #endif
 //////////// END OF symbolic constants FEATURE SPECIFIC /////////////////////////////////////////////////////
 

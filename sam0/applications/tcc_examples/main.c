@@ -134,9 +134,9 @@ uint32_t period, pulse_width;
 
 void configure_usart(void)
 {
-struct usart_config config_usart;
-usart_get_config_defaults(&config_usart);
-config_usart.baudrate        = 115200;
+	struct usart_config config_usart;
+	usart_get_config_defaults(&config_usart);
+	config_usart.baudrate        = 115200;
 	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
 	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
@@ -203,28 +203,28 @@ void configure_tcc(void)
 	/* Structure used to store the TCC configuration parameters */
 	struct tcc_config config_tcc;
 
-	 /* Fill the Structure with the default values */
+	/* Fill the Structure with the default values */
 	tcc_get_config_defaults(&config_tcc, CONF_PWM_MODULE);
-	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]  = CONF_DEFAULT_MATCH_COMPARE;
-	config_tcc.counter.period                              = CONF_DEFAULT_PERIOD;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   = CONF_DEFAULT_MATCH_COMPARE;
+	config_tcc.counter.period                               = CONF_DEFAULT_PERIOD;
 
 #ifdef TCC_MODE_DUAL_SLOPE
 	config_tcc.compare.wave_generation = TCC_WAVE_GENERATION_DOUBLE_SLOPE_TOP;
 #elif defined (TCC_MODE_COUNTER)
 	/* Configure different channels with different compare match values */
-		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   =  TCC_MODE_COUNTER_MATCH_0;
-		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_1]   =  TCC_MODE_COUNTER_MATCH_1;
-		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_2]   = TCC_MODE_COUNTER_MATCH_2;
-		config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_3]   = TCC_MODE_COUNTER_MATCH_3;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   =  TCC_MODE_COUNTER_MATCH_0;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_1]   =  TCC_MODE_COUNTER_MATCH_1;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_2]   = TCC_MODE_COUNTER_MATCH_2;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_3]   = TCC_MODE_COUNTER_MATCH_3;
 	/* Configure the value for TOP value */
-		config_tcc.counter.period                               = TCC_PERIOD_VALUE;
+	config_tcc.counter.period                               = TCC_PERIOD_VALUE;
 #else
 	/* Configure the single slope PWM waveform generation for waveform output */
-	config_tcc.compare.wave_generation                          = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
+	config_tcc.compare.wave_generation                      = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
 #endif
 	/* Configure the TCC clock source and its divider value */
-	config_tcc.counter.clock_source                             = GLCK_SOURCE;
-	config_tcc.counter.clock_prescaler                          = TCC_CLOCK_DIVIDER;
+	config_tcc.counter.clock_source                         = GLCK_SOURCE;
+	config_tcc.counter.clock_prescaler                      = TCC_CLOCK_DIVIDER;
 
 #if defined (TCC_MODE_CIRCULAR_BUFFER) || defined (TCC_MODE_DUAL_SLOPE) || defined (TCC_MODE_DITHERING) || defined (TCC_MODE_FAULT) 
 	/* Configure the TCC Waveform Output pins for waveform generation output */
@@ -309,7 +309,7 @@ void configure_tcc(void)
 	config_tcc.double_buffering_enabled                     = true;
 	/* Configure the compare channel values for the duty cycle control */
 	/* Load the 0x7FFF value for 50% duty cycle */
-	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] = TCC_MATCH_VALUE_PATTERN_GEN;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   = TCC_MATCH_VALUE_PATTERN_GEN;
 #endif
 
 #ifdef TCC_MODE_RAMP2
@@ -355,8 +355,8 @@ void configure_tcc(void)
 
 #ifdef TCC_MODE_CIRCULAR_BUFFER	
 	/* Configure the value for TOP value */
-	config_tcc.counter.period = TCC_PERIOD_VALUE;
-	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] = TCC_PERIOD_VALUE;
+	config_tcc.counter.period                               = TCC_PERIOD_VALUE;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   = TCC_PERIOD_VALUE;
 #endif
 
 	/* Initialize the TCC0 channel and define the its registers with configuration defined in the config_tcc */
@@ -508,7 +508,7 @@ the test pin is driven high, this is used to detect that fault is cleared. */
 
 static void eic_callback_to_fault_detect(void)
 {
-	 port_pin_set_output_level(CONF_TEST_PIN_OUT, true);
+	port_pin_set_output_level(CONF_TEST_PIN_OUT, true);
 }
 //! [callback_eic]
 
@@ -600,7 +600,7 @@ int main (void)
 		tcStatus = tcc_get_status(&tcc_instance);
 		if (!port_pin_get_output_level(LED_0_PIN)){
 			// Turn off LED and clearm alarm status..
-			tcc_clear_status(&tcc_instance,	TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0));
+			tcc_clear_status(&tcc_instance,TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0));
 			LED_Off(LED_0_PIN);
 		}else if ((tcStatus & temp) == temp){
 			// If alarm set, drive LED.
@@ -611,9 +611,9 @@ int main (void)
 #endif
 
 #ifdef TCC_MODE_CAPTURE
-configure_usart();
-configu_eic();
-configure_evsys();
+	configure_usart();
+	configu_eic();
+	configure_evsys();
 while (1) {
 	while(!(TCC0->INTFLAG.bit.MC1));
 	TCC0->INTFLAG.bit.MC1   = 1;
