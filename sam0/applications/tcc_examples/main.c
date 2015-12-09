@@ -68,7 +68,7 @@ struct events_resource event_resource;
 #endif
 
 #ifdef TCC_MODE_COUNTER
-// counter callback to toggle LED.
+//counter callback to toggle LED.
 static void tcc_callback_to_toggle_led(struct tcc_module *const module_inst);
 #endif
 
@@ -111,21 +111,26 @@ void configure_evsys (void);
 			12. COUNTER Operation
 */
 
-/*	PWM Waveforms are generated for most of the features based on the feature selected by user. The
-	waveform output will match the expected waveform desired for the feature chosen by the user.
-	Below are some special features which needs special mention in which the feature is demonstrated
-	based on other characteristics like LED state/ USART output. 
+/*	PWM Waveforms are generated for most of the features based on the feature
+	selected by user.The waveform output will match the expected waveform 
+	desired for the feature chosen by the user.Below are some special features
+	which needs special mention in which the feature is demonstrated based on
+	other characteristics like LED state/ USART output. 
 
-1. FAULT Operation - On a button press toggle the Fault Line is toggled to trigger/clear fault. 
-   The LED state indicates the Fault is available or cleared.
-2. COUNTER Operation -> The LED toggles at different speed to indicate different triggered events
-   based on different counter values. For counter, there won't be any waveform generation.
-3. CAPTURE Operation -> This captures a fixed waveform and displays the captured waveform results
-    to indicate the different period captured is one of the period values of the PWM waveform. The
-    captured period values are displayed using USART of 96008N1 serial configuration */
+1. FAULT Operation - On a button press toggle the Fault Line is toggled to 
+   trigger/clear fault.The LED state indicates the Fault is available or 
+   cleared.
+2. COUNTER Operation -> The LED toggles at different speed to indicate 
+   different triggered events based on different counter values. For counter
+   there won't be any waveform generation.
+3. CAPTURE Operation -> This captures a fixed waveform and displays the 
+   captured waveform results to indicate the different period captured is 
+   one of the period values of the PWM waveform. The captured period values are
+   displayed using USART of 96008N1 serial configuration */
 
 #ifdef TCC_MODE_CAPTURE
-// Function to configure usart, eic,tcc and event system. configures the usart with CONF_BAUD_RATE baud rate.
+/* Function to configure usart, eic,tcc and event system. 
+configures the usart with CONF_BAUD_RATE baud rate.*/
 struct usart_module usart_instances;
 struct tcc_module tcc_instances;
 struct events_resource event_resources;
@@ -197,7 +202,8 @@ void configure_evsys(void)
 }
 #endif
 
-// Function to configure TCC, this will configure TCC for other than Capture, Counter and Fault mode related operations.
+/*	Function to configure TCC, this will configure TCC for other than Capture,
+	Counter and Fault mode related operations.*/
 void configure_tcc(void)
 {
 	/* Structure used to store the TCC configuration parameters */
@@ -219,7 +225,7 @@ void configure_tcc(void)
 	/* Configure the value for TOP value */
 	config_tcc.counter.period                               = TCC_PERIOD_VALUE;
 #else
-	/* Configure the single slope PWM waveform generation for waveform output */
+	/* Configure the single slope PWM waveform generation for waveform output*/
 	config_tcc.compare.wave_generation                      = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
 #endif
 	/* Configure the TCC clock source and its divider value */
@@ -287,7 +293,7 @@ void configure_tcc(void)
 	config_tcc.pins.wave_out_pin_mux[TCC_CHANNEL_NUM_4]     = MUX_PA22F_TCC0_WO4;
 	/* Configure the compare channel values for the duty cycle control */
 	/* Load the 0x80 value for 50% duty cycle */
-	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   = 0X80;//TCC_PERIOD_VALUE;
+	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   = 0X80;
 #endif
 
 #ifdef TCC_MODE_PATTERN_GENERATION
@@ -359,12 +365,14 @@ void configure_tcc(void)
 	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   = TCC_PERIOD_VALUE;
 #endif
 
-	/* Initialize the TCC0 channel and define the its registers with configuration defined in the config_tcc */
+/* Initialize the TCC0 channel and define the its registers with 
+   configuration defined in the config_tcc */
 	stat = tcc_init(&tcc_instance, CONF_PWM_MODULE, &config_tcc);
 
 	// The main configuration for Circular Buffering
 #ifdef TCC_MODE_CIRCULAR_BUFFER	
-	/* Load the CC0 and CCB0 values respectively for the circular buffer operation */
+	/* Load the CC0 and CCB0 values respectively for the 
+	circular buffer operation */
 	stat = tcc_set_double_buffer_compare_values(&tcc_instance, TCC_MATCH_CAPTURE_CHANNEL_0, CC0_Value, CCB0_Value);
 	/* Enable the Circular Buffer feature for the Compare Channel 0 */
 	stat = tcc_enable_circular_buffer_compare(&tcc_instance, TCC_MATCH_CAPTURE_CHANNEL_0);
@@ -380,10 +388,12 @@ void configure_tcc(void)
 
 	// The main configuration for PATTERN GENERATION
 #ifdef TCC_MODE_PATTERN_GENERATION
-	/* Configure the Output Matrix Channel for Pattern Generation of Stepper Motor */
+	/* Configure the Output Matrix Channel for Pattern Generation of 
+	Stepper Motor */
 	CONF_PWM_MODULE->WEXCTRL.reg |= TCC_WEXCTRL_OTMX(2);
 	/* Enable the Pattern Generator Output for 4 Waveform Outputs and 
-	Load the PATT and PATTB register values respectively for Stepper Motor Pattern Generation */
+	Load the PATT and PATTB register values respectively for Stepper Motor 
+	Pattern Generation */
 	CONF_PWM_MODULE->PATT.reg = TCC_PATT_PGE(TCC_PATTERN_PAGE_VAL) | TCC_PATT_PGV(sm_pattern[iIndex++]);
 	while (CONF_PWM_MODULE->SYNCBUSY.bit.PATT);
 	CONF_PWM_MODULE->PATTBUF.reg = TCC_PATTBUF_PGEB(TCC_PATTERN_PAGE_VAL) | TCC_PATTBUF_PGVB(sm_pattern[iIndex++]);
@@ -439,7 +449,8 @@ void pattern_generation(void)
 #endif
 
 /*	This function Waits for the user input(Button Press) BUTTON_0_PIN 
-	then clears the counter value and restart the counter for the Oneshot Operation */
+	then clears the counter value and restart the counter for the 
+	Oneshot Operation */
 
 #ifdef TCC_MODE_ONESHOT
 void oneshot_operation(void)
@@ -479,8 +490,10 @@ static void tcc_callback_to_toggle_led(struct tcc_module *const module_inst)
 #endif
 
 #ifdef TCC_MODE_COUNTER
-/*This function will configure (register and enable) the callback to be triggered on different TCC channels for overflow,
-this is used to show case the TCC toggling the LED at different speed, because of variable time required for overflow on each TCC channel. */
+/*This function will configure (register and enable)
+ the callback to be triggered on different TCC channels for overflow,
+ this is used to show case the TCC toggling the LED at different speed, 
+ because of variable time required for overflow on each TCC channel. */
 void configure_tcc_callback(void)
 {
 
@@ -503,8 +516,9 @@ void configure_tcc_callback(void)
 
 #ifdef TCC_MODE_FAULT
 //! [callback_eic]
-/*This function will be triggered, when fault/ gpio pin state is changed, based on which 
-the test pin is driven high, this is used to detect that fault is cleared. */
+/*This function will be triggered, when fault/ gpio pin state is changed, 
+ based on which the test pin is driven high, this is used to detect that 
+ fault is cleared. */
 
 static void eic_callback_to_fault_detect(void)
 {
@@ -512,8 +526,9 @@ static void eic_callback_to_fault_detect(void)
 }
 //! [callback_eic]
 
-/*This function is used to configure the gpio pin to act as a fault line and to trigger when the gpio pin state changes
-to identify fault is cleared. */
+/*This function is used to configure the gpio pin to act as a fault line and
+ to trigger when the gpio pin state changes
+ to identify fault is cleared. */
 
 static void configure_eic(void)
 {
@@ -581,47 +596,47 @@ int main (void)
 
 	while (1){
 #ifdef TCC_MODE_ONESHOT
-	oneshot_operation();
+		oneshot_operation();
 #endif
 
 #ifdef TCC_MODE_PATTERN_GENERATION
-	pattern_generation();
+		pattern_generation();
 #endif
 
 #ifdef TCC_MODE_SWAP
-	swap_operation();
+		swap_operation();
 #endif
 
 #ifdef TCC_MODE_FAULT 
-	if (!port_pin_get_input_level(SW0_PIN)){
-		/* Set fault */
-		while (!port_pin_get_input_level(SW0_PIN));
-		port_pin_set_output_level(CONF_TEST_PIN_OUT, false);
-		tcStatus = tcc_get_status(&tcc_instance);
-		if (!port_pin_get_output_level(LED_0_PIN)){
-			// Turn off LED and clearm alarm status..
-			tcc_clear_status(&tcc_instance,TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0));
-			LED_Off(LED_0_PIN);
-		}else if ((tcStatus & temp) == temp){
-			// If alarm set, drive LED.
-			LED_On(LED_0_PIN);
-			port_pin_set_output_level(CONF_TEST_PIN_OUT, true);
-		}
-	} // end of common fault and capture condition
+		if (!port_pin_get_input_level(SW0_PIN)){
+			/* Set fault */
+			while (!port_pin_get_input_level(SW0_PIN));
+			port_pin_set_output_level(CONF_TEST_PIN_OUT, false);
+			tcStatus = tcc_get_status(&tcc_instance);
+			if (!port_pin_get_output_level(LED_0_PIN)){
+				// Turn off LED and clearm alarm status..
+				tcc_clear_status(&tcc_instance,TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0));
+				LED_Off(LED_0_PIN);
+			}else if ((tcStatus & temp) == temp){
+				// If alarm set, drive LED.
+				LED_On(LED_0_PIN);
+				port_pin_set_output_level(CONF_TEST_PIN_OUT, true);
+			}
+		} // end of common fault and capture condition
 #endif
 
 #ifdef TCC_MODE_CAPTURE
-	configure_usart();
-	configu_eic();
-	configure_evsys();
-while (1) {
-	while(!(TCC0->INTFLAG.bit.MC1));
-	TCC0->INTFLAG.bit.MC1   = 1;
-	period                  = tcc_get_capture_value(&tcc_instances, 1);
-	pulse_width             = tcc_get_capture_value(&tcc_instances, 0);
-	printf("period=%ld , pulse width =%ld \r\n", period , pulse_width);
-	}
+		configure_usart();
+		configu_eic();
+		configure_evsys();
+		while (1) {
+			while(!(TCC0->INTFLAG.bit.MC1));
+			TCC0->INTFLAG.bit.MC1   = 1;
+			period                  = tcc_get_capture_value(&tcc_instances, 1);
+			pulse_width             = tcc_get_capture_value(&tcc_instances, 0);
+			printf("period=%ld , pulse width =%ld \r\n", period , pulse_width);
+		}
 #endif // end of while (1)
-}
+	}
 }
 
