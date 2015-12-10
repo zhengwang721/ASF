@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam0.applications.dmac_cpu_usage_demo" caption="DMAC CPU Usage Demo ">
 		<info type="description" value="summary">
-		This application shows how DMAC on D11 devices helps in reducing the CPU load for various type of DMA transfers. 
+		This application shows how DMAC helps in reducing the CPU load for various type of DMA transfers. 
 		</info>
 
 		<info type="keyword" value="technology">
@@ -25,6 +25,6 @@
 		<require idref="sam0.drivers.dma"/>
 		<require idref="sam0.drivers.sercom.usart"/>
 
-		<device-support value="samd11"/>
+		<device-support value="saml22"/>
 	</module>
 </asf>
