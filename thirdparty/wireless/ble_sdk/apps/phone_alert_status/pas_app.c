@@ -227,7 +227,7 @@ bool appp_exec = true;
 int main(void)
 {	
 	at_ble_status_t status;
-	#if PTS
+	#if NENABLE_PTS
 	uint8_t function_selector;
 	#endif
 	#if SAMG55
@@ -283,7 +283,7 @@ int main(void)
 			/* button debounce delay */
 			delay_ms(350);
 			flag = false;
-			#if PTS
+			#if NENABLE_PTS
 			DBG_LOG("To choose the functionality enter the index of the functionality displayed");
 			DBG_LOG("\t 1.Set Device to Silent");
 			DBG_LOG("\t 2.Set Device to Mute Once");

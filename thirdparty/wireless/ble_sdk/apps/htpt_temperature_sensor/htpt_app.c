@@ -57,13 +57,25 @@
 #include "at_ble_api.h"
 #include "htpt_app.h"
 #include "console_serial.h"
+#include "device_info.h"
 #include "timer_hw.h"
 #include "conf_extint.h"
 #include "conf_serialdrv.h"
 #include "at_ble_trace.h"
+#include "ble_utils.h"
 
+
+#ifndef BLE_DEVICE_NAME
 /* BLE Device Name definitions */
 #define BLE_DEVICE_NAME				"ATMEL-HTP"
+#endif
+
+#define BLE_ATT_DB_MEMORY_SIZE				(1250) 
+
+uint32_t att_db_data[BLE_ATT_DB_MEMORY_SIZE/4];
+
+/** @brief device information service handler **/
+dis_gatt_service_handler_t dis_service_handler;
 
 /* Initialize the BLE */
 static void ble_init(void);
@@ -128,8 +140,9 @@ static void ble_init(void)
 	platform_config busConfig;
 	
 	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = 0;
-	pf_cfg.memPool.memStartAdd = NULL;
+	pf_cfg.memPool.memSize = BLE_ATT_DB_MEMORY_SIZE;
+	pf_cfg.memPool.memStartAdd = (uint8_t *)att_db_data;
+	
 	/*Bus configuration*/
 	busConfig.bus_type = AT_BLE_UART;
 	pf_cfg.plf_config = &busConfig;
@@ -144,6 +157,7 @@ static void ble_init(void)
 		DBG_LOG("Please check the power and connection / hardware connector");
 		while(1);
 	}
+	
 }
 
 /* Initializing the default values for temperature and htp parameters*/
@@ -217,6 +231,7 @@ static void htp_temperature_send(htp_app_t *htp_temp)
 /* Creating database and advertisement data set and advertisement start */
 static void htp_init(void)
 {
+	at_ble_status_t status;	
 	/* Initialize the htp_data to default value */
 	htp_init_defaults(&htp_data);
 	
@@ -234,6 +249,15 @@ static void htp_init(void)
 		DBG_LOG("HTP Data Base creation failed");
 		while(1);
 	}
+	
+	/* Initializing the DIS service in the host */
+	dis_init_service(&dis_service_handler);
+	
+	if ((status = dis_primary_service_define(&dis_service_handler)) !=
+	AT_BLE_SUCCESS) {
+		DBG_LOG("Dis Service definition failed,reason: %x", status);
+	} 
+		
 	htpt_set_advertisement_data();
 }
 
@@ -420,6 +444,8 @@ int main (void)
 	
 	DBG_LOG("HTP Initialization completed. Waiting for Event");
 	
+	DBG_LOG_DEV("The Temperature type is %d",htp_data.temperature_type);
+	
 	
 	while(at_ble_event_get(&event, params, 0xFFFFFFFF) == AT_BLE_SUCCESS)
 	{
@@ -465,7 +491,7 @@ int main (void)
 				
 				/* BLE device disconnected, indicate to user */
 				ble_device_disconnected_ind();
-				
+				temp_send_notification = false;
 				DBG_LOG("Device disconnected Reason:0x%02x Handle=0x%x", disconnect.reason, disconnect.handle);
 				
 				if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 

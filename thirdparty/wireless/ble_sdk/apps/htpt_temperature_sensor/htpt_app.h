@@ -111,23 +111,23 @@ typedef enum
 	STABLE_TEMPERATURE_VAL=1
 }stable_temp_reading;
 
-#define IEEE11073_EXPONENT				(0xFF000000)
-
-#define IEEE754_MANTISA(val)			((uint32_t)(val * 10))
-
-#define IEEE754_TO_IEEE11073_FLOAT(f_val)	(IEEE11073_EXPONENT | IEEE754_MANTISA(f_val))
-
-/* Converting floating point IEEE754 format to floating point IEEE11073 format
- * 
- * @Param[0] f_val floating point IEEE754 format
- * @return floating point IEEE11073
- *
- */
-static inline uint32_t convert_ieee754_ieee11073_float(float f_val)
-{
-	uint32_t ieee11073_float;
-	ieee11073_float = IEEE754_TO_IEEE11073_FLOAT(f_val);
-	return (ieee11073_float);
-}
+//#define IEEE11073_EXPONENT				(0xFF000000)
+//
+//#define IEEE754_MANTISA(val)			((uint32_t)(val * 10))
+//
+//#define IEEE754_TO_IEEE11073_FLOAT(f_val)	(IEEE11073_EXPONENT | IEEE754_MANTISA(f_val))
+//
+///* Converting floating point IEEE754 format to floating point IEEE11073 format
+ //* 
+ //* @Param[0] f_val floating point IEEE754 format
+ //* @return floating point IEEE11073
+ //*
+ //*/
+//static inline uint32_t convert_ieee754_ieee11073_float(float f_val)
+//{
+	//uint32_t ieee11073_float;
+	//ieee11073_float = IEEE754_TO_IEEE11073_FLOAT(f_val);
+	//return (ieee11073_float);
+//}
 
 #endif /* __HTPT_APP_H__ */
