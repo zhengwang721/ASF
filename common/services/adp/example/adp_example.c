@@ -249,6 +249,7 @@ static void transceive_data(void)
 int main (void)
 {
 	/* Initialize system */
+	sysclk_init();
 	board_init();
 	adp_example_init();
 

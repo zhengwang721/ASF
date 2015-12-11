@@ -45,13 +45,26 @@
  */
 
 #include <compiler.h>
-#include <system.h>
+//#include <system.h>
 
 #include <asf.h>
 #include "adp_interface.h"
 
-struct spi_module edbg_spi;
-struct spi_slave_inst slave;
+/* Chip select. */
+#define SPI_CHIP_SEL 1
+#define SPI_CHIP_PCS spi_get_pcs(SPI_CHIP_SEL)
+
+/* Clock phase. */
+#define SPI_CLK_PHASE 0
+
+/* SPI clock setting (Hz). */
+static uint32_t gs_ul_spi_clock = 1000000;
+
+/* Delay before SPCK. */
+#define SPI_DLYBS 0x40
+
+/* Delay between consecutive transfers. */
+#define SPI_DLYBCT 0x10
 
 /**
 * \brief Send SPI start condition
@@ -59,7 +72,7 @@ struct spi_slave_inst slave;
 */
 static void adp_interface_send_start(void)
 {
-	spi_select_slave(&edbg_spi, &slave, true);
+	spi_set_peripheral_chip_select_value(EDBG_SPI_MODULE, SPI_CHIP_PCS);
 }
 
 /**
@@ -68,7 +81,7 @@ static void adp_interface_send_start(void)
 */
 static void adp_interface_send_stop(void)
 {
-	spi_select_slave(&edbg_spi, &slave, false);
+	spi_set_peripheral_chip_select_value(EDBG_SPI_MODULE, 0xf);
 }
 
 /**
@@ -80,7 +93,23 @@ static void adp_interface_send_stop(void)
 */
 static void adp_interface_transceive(uint8_t *tx_data, uint8_t *rx_data, uint16_t length)
 {
-	spi_transceive_buffer_wait(&edbg_spi, tx_data, rx_data, length);
+	uint32_t i;
+	bool status;
+	uint8_t spi_pcs;
+	static uint16_t data;	
+		
+	uint8_t *p_buffer;
+
+	p_buffer = rx_data;
+	
+	for(i =  0; i < length; i++){
+		spi_write(EDBG_SPI_MODULE, tx_data[i], 0, 0);	
+		/* Wait transfer done. */
+	//	while ((spi_read_status(EDBG_SPI_MODULE) & SPI_SR_RDRF) == 0);
+	//	status = spi_read(EDBG_SPI_MODULE, &data, &spi_pcs);
+	//	p_buffer[i] = data;
+	}
+	
 }
 
 /**
@@ -90,8 +119,8 @@ static void adp_interface_transceive(uint8_t *tx_data, uint8_t *rx_data, uint16_
 bool adp_interface_init(void)
 {
 	enum status_code return_value;
-
-	system_init();
+	
+	/*system_init();
 
 	struct spi_slave_inst_config slave_dev_config;
 
@@ -111,7 +140,27 @@ bool adp_interface_init(void)
 
 	return_value = spi_init(&edbg_spi, EDBG_SPI_MODULE, &config);
 
-	spi_enable(&edbg_spi);
+	spi_enable(&edbg_spi);*/
+
+
+	
+	/* Configure an SPI peripheral. */
+	spi_enable_clock(EDBG_SPI_MODULE);
+	spi_disable(EDBG_SPI_MODULE);
+	spi_reset(EDBG_SPI_MODULE);
+	spi_set_lastxfer(EDBG_SPI_MODULE);
+	spi_set_master_mode(EDBG_SPI_MODULE);
+	spi_disable_mode_fault_detect(EDBG_SPI_MODULE);
+	spi_set_peripheral_chip_select_value(EDBG_SPI_MODULE, SPI_CHIP_PCS);
+//	spi_set_clock_polarity(EDBG_SPI_MODULE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
+	spi_set_clock_phase(EDBG_SPI_MODULE, SPI_CHIP_SEL, SPI_CLK_PHASE);
+	spi_set_bits_per_transfer(EDBG_SPI_MODULE, SPI_CHIP_SEL,
+	SPI_CSR_BITS_8_BIT);
+	spi_set_baudrate_div(EDBG_SPI_MODULE, SPI_CHIP_SEL,
+	(sysclk_get_cpu_hz() / gs_ul_spi_clock));
+	spi_set_transfer_delay(EDBG_SPI_MODULE, SPI_CHIP_SEL, SPI_DLYBS,
+	SPI_DLYBCT);
+	spi_enable(EDBG_SPI_MODULE);
 
 	return return_value;
 }
@@ -144,13 +193,26 @@ void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t
 */
 bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 {
+	uint32_t i;
 	bool status;
+	uint8_t spi_pcs;
+	static uint16_t data;
+	uint16_t dummy = 0xFF;
+	uint8_t *p_buffer;
 
+	p_buffer = rx_buf;
+	
 	/* Send SPI start condition */
 	adp_interface_send_start();	
-	status = spi_read_buffer_wait(&edbg_spi, rx_buf, length, 0xFF);
+	
+	for(i = 0; i < length; i++){
+		//spi_write(EDBG_SPI_MODULE, dummy, 0, 0);
+		/* Wait transfer done. */
+		//while ((spi_read_status(EDBG_SPI_MODULE) & SPI_SR_RDRF) == 0);
+		status = spi_read(EDBG_SPI_MODULE, &data, &spi_pcs);
+		p_buffer[i] = data;
+	}
 	/* Send SPI end condition */
 	adp_interface_send_stop();
-
 	return status;
 }

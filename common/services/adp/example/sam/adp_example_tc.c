@@ -49,40 +49,60 @@
 #include "adp_example_tc.h"
 #include "conf_tc.h"
 
-struct tc_module tc_instance;
 volatile bool time_out = true;
 
-static void adp_example_tc_callback(struct tc_module *const module_inst)
-{
-	time_out = true;
-}
+#define TC_CHANNEL_CAPTURE  2
+
+//! [tc_capture_selection]
+#define TC_CAPTURE_TIMER_SELECTION TC_CMR_TCCLKS_TIMER_CLOCK3
+//! [tc_capture_selection]
 
 static void adp_example_tc_configure(void)
 {
-	struct tc_config config_tc;
+	//struct tc_config config_tc;
 	
-	tc_get_config_defaults(&config_tc);
-	config_tc.clock_source = GCLK_GENERATOR_1;
-	config_tc.counter_size = TC_COUNTER_SIZE_8BIT;
-	config_tc.clock_prescaler = TC_CLOCK_PRESCALER_DIV16;
+	//tc_get_config_defaults(&config_tc);
+	//config_tc.clock_source = GCLK_GENERATOR_1;
+	//config_tc.counter_size = TC_COUNTER_SIZE_8BIT;
+	//config_tc.clock_prescaler = TC_CLOCK_PRESCALER_DIV16;
 	/* Timer = 16*(2^8 - 55 - 1)/32000 = 100ms */
-	config_tc.counter_8_bit.value = 0;
-	config_tc.counter_8_bit.period = 55;
+	//config_tc.counter_8_bit.value = 0;
+	//config_tc.counter_8_bit.period = 55;
 	
-	tc_init(&tc_instance, CONF_TC_MODULE, &config_tc);
-	tc_enable(&tc_instance);
-}
-
-static void adp_example_tc_configure_callback(void)
-{
-	tc_register_callback(&tc_instance, adp_example_tc_callback, \
-						TC_CALLBACK_OVERFLOW);
-	tc_enable_callback(&tc_instance, TC_CALLBACK_OVERFLOW);
+	//tc_init(&tc_instance, CONF_TC_MODULE, &config_tc);
+	//tc_enable(&tc_instance);
+		
+	/* Init TC to capture mode. */
+	tc_init(TC0, TC_CHANNEL_CAPTURE,
+	TC_CAPTURE_TIMER_SELECTION /* Clock Selection */
+	| TC_CMR_LDRA_RISING /* RA Loading: rising edge of TIOA */
+	| TC_CMR_LDRB_FALLING /* RB Loading: falling edge of TIOA */
+	| TC_CMR_ABETRG /* External Trigger: TIOA */
+	| TC_CMR_ETRGEDG_FALLING /* External Trigger Edge: Falling edge */
+	);
+	
+	tc_start(TC0, TC_CHANNEL_CAPTURE);
+	
+	//! [tc_capture_init_irq]
+	/** Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
+	NVIC_DisableIRQ(TC_IRQn);
+	NVIC_ClearPendingIRQ(TC_IRQn);
+	NVIC_SetPriority(TC_IRQn, 0);
+	NVIC_EnableIRQ(TC_IRQn);
+	//! [tc_capture_init_irq]
 }
 
 void adp_example_tc_init(void)
 {
  	adp_example_tc_configure();
-	adp_example_tc_configure_callback();
 }
 
+/**
+ * \brief Interrupt handler for the TC TC_CHANNEL_CAPTURE
+ */
+//! [tc_capture_irq_handler_start]
+void TC_Handler(void)
+{
+	time_out = true;
+}
+//! [tc_capture_irq_handler_end]

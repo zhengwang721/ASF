@@ -48,23 +48,36 @@
 #include <asf.h>
 #include "adp_example_adc.h"
 
-struct adc_module adc_instance;
+/* Start Up Time */
+#define STARTUP_TIME               7
+/* Tracking Time*/
+#define TRACKING_TIME         1
+/* Transfer Period */
+#define TRANSFER_PERIOD       1
 
 void adp_example_adc_init(void)
 {
- 	struct adc_config config_adc;
-	adc_get_config_defaults(&config_adc);
-	config_adc.positive_input = ADC_POSITIVE_INPUT_PIN8;
-	config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV64;
-	config_adc.reference = ADC_REFERENCE_INTVCC0;
-	adc_init(&adc_instance, EXT1_ADC_MODULE, &config_adc);
-	adc_enable(&adc_instance);
+ 	//struct adc_config config_adc;
+	//adc_get_config_defaults(&config_adc);
+	//config_adc.positive_input = ADC_POSITIVE_INPUT_PIN8;
+	//config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV64;
+	//config_adc.reference = ADC_REFERENCE_INTVCC0;
+	//adc_init(&adc_instance, EXT1_ADC_MODULE, &config_adc);
+	//adc_enable(&adc_instance);
+	adc_init(ADC, sysclk_get_cpu_hz(), 3200000, STARTUP_TIME);
+	adc_configure_timing(ADC, TRACKING_TIME, ADC_SETTLING_TIME_3, TRANSFER_PERIOD);
+	/* gain = 1 */
+	adc_set_channel_input_gain(ADC, ADC_CHANNEL_0, ADC_GAINVALUE_0);
+	adc_configure_trigger(ADC, ADC_TRIG_SW, 1);
+	adc_enable_channel(ADC, ADC_CHANNEL_0);
+	adc_start(ADC);
 }
 
 uint16_t adp_example_adc_get_value(void)
 {
 	uint16_t result;
-	adc_start_conversion(&adc_instance);
-	while (adc_read(&adc_instance, &result) == STATUS_BUSY);
+	//adc_start_conversion(&adc_instance);
+	//while (adc_read(&adc_instance, &result) == STATUS_BUSY);
+	result = adc_get_channel_value(ADC, ADC_CHANNEL_0);
 	return result;
 }
