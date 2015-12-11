@@ -128,7 +128,7 @@ extern "C" {
 /// Maximal MTU value
 #define AT_MTU_VAL_MAX                  (512)      //(0x200)
 /// Recommended MTU value
-#define AT_MTU_VAL_RECOMMENDED          (158)       //(0x200)
+#define AT_MTU_VAL_RECOMMENDED          (512)       //(0x200)
 /// Minimal Renew duration value (150 seconds); resolution of 10 mSeconds (N*10ms)
 #define AT_RENEW_DUR_VAL_MIN            (0x3A98)    //(15000)
 /// ATT MAximum Attribute Length
@@ -235,16 +235,10 @@ typedef enum
     AT_BLE_ADV_CHNL_37_EN                = 0x01,
     ///Byte value for advertising channel map for channel 38 enable
     AT_BLE_ADV_CHNL_38_EN,
-	///Byte value for advertising channel map for channel 37 and 38 enable
-	AT_BLE_ADV_CHNL_37_38_EN,
     ///Byte value for advertising channel map for channel 39 enable
-    AT_BLE_ADV_CHNL_39_EN,
-	///Byte value for advertising channel map for channel 37 and 39 enable
-	AT_BLE_ADV_CHNL_37_39_EN,
-	///Byte value for advertising channel map for channel 38 and 39 enable
-	AT_BLE_ADV_CHNL_38_39_EN,
+    AT_BLE_ADV_CHNL_39_EN                = 0x04,
     ///Byte value for advertising channel map for channel 37, 38 and 39 enable
-    AT_BLE_ADV_ALL_CHNLS_EN,
+    AT_BLE_ADV_ALL_CHNLS_EN              = 0x07,
     ///Enumeration end value for advertising channels enable value check
     AT_BLE_ADV_CHNL_END
 } at_ble_adv_channel_map_t;
@@ -421,7 +415,7 @@ typedef enum
       */
     AT_BLE_SERVICE_CHANGED_INDICATION_SENT,
     /** The peer asks for a write Authorization. \n
-      * Refer to @ref at_ble_write_authorize_request_t
+      * Refer to @ref at_ble_characteristic_write_request_t
       */
     AT_BLE_WRITE_AUTHORIZE_REQUEST,
     /**  peer sends an indication of the new MTU. \n
@@ -3707,6 +3701,10 @@ at_ble_status_t at_ble_dtm_stop_test(void);
 /* utility functions, might be removed later*/
 uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type);
 at_ble_uuid_type_t at_ble_uuid_len2type(uint8_t len);
+
+at_ble_status_t at_ble_calib_config(int calib_enable, uint32_t no_samples, uint32_t cal_freq);
+at_ble_status_t at_ble_calib_get_voltage(float* voltage);
+at_ble_status_t at_ble_calib_get_temp(int* temp);
 
 #ifdef __cplusplus
 }

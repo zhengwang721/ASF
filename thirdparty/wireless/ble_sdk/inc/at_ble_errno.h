@@ -51,7 +51,6 @@ typedef enum
     ///Success
     AT_BLE_SUCCESS  = 0x00,
 
-
     ///ATT Error Codes
     ///Handle is invalid
     AT_BLE_ATT_INVALID_HANDLE  = 0x01,
