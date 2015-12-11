@@ -68,7 +68,6 @@ bool adp_interface_init(void)
 
 	struct i2c_master_config config_i2c_master;
 	i2c_master_get_config_defaults(&config_i2c_master);
-	config_i2c_master.baud_rate      = I2C_MASTER_BAUD_RATE_400KHZ;
 	config_i2c_master.buffer_timeout = 10000;
 	return_value = i2c_master_init(&i2c_master_instance, EDBG_TWI, &config_i2c_master);
 	i2c_master_enable(&i2c_master_instance);
