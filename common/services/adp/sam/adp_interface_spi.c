@@ -51,7 +51,7 @@
 #include "adp_interface.h"
 
 /* Chip select. */
-#define SPI_CHIP_SEL 1
+#define SPI_CHIP_SEL 0
 #define SPI_CHIP_PCS spi_get_pcs(SPI_CHIP_SEL)
 
 /* Clock phase. */
@@ -65,6 +65,9 @@ static uint32_t gs_ul_spi_clock = 1000000;
 
 /* Delay between consecutive transfers. */
 #define SPI_DLYBCT 0x10
+
+/* Clock polarity. */
+#define SPI_CLK_POLARITY 0
 
 /**
 * \brief Send SPI start condition
@@ -103,11 +106,12 @@ static void adp_interface_transceive(uint8_t *tx_data, uint8_t *rx_data, uint16_
 	p_buffer = rx_data;
 	
 	for(i =  0; i < length; i++){
-		spi_write(EDBG_SPI_MODULE, tx_data[i], 0, 0);	
+		spi_write(EDBG_SPI_MODULE, tx_data[i], SPI_CHIP_PCS, 0);	
 		/* Wait transfer done. */
-	//	while ((spi_read_status(EDBG_SPI_MODULE) & SPI_SR_RDRF) == 0);
-	//	status = spi_read(EDBG_SPI_MODULE, &data, &spi_pcs);
-	//	p_buffer[i] = data;
+		while ((spi_read_status(EDBG_SPI_MODULE) & SPI_SR_RDRF) == 0);
+		status = spi_read(EDBG_SPI_MODULE, &data, &spi_pcs);
+		p_buffer[i] = data;
+		while(status != 0);
 	}
 	
 }
@@ -118,7 +122,7 @@ static void adp_interface_transceive(uint8_t *tx_data, uint8_t *rx_data, uint16_
 */
 bool adp_interface_init(void)
 {
-	enum status_code return_value;
+	//enum status_code return_value;
 	
 	/*system_init();
 
@@ -143,7 +147,7 @@ bool adp_interface_init(void)
 	spi_enable(&edbg_spi);*/
 
 
-	
+	sysclk_init();
 	/* Configure an SPI peripheral. */
 	spi_enable_clock(EDBG_SPI_MODULE);
 	spi_disable(EDBG_SPI_MODULE);
@@ -152,7 +156,7 @@ bool adp_interface_init(void)
 	spi_set_master_mode(EDBG_SPI_MODULE);
 	spi_disable_mode_fault_detect(EDBG_SPI_MODULE);
 	spi_set_peripheral_chip_select_value(EDBG_SPI_MODULE, SPI_CHIP_PCS);
-//	spi_set_clock_polarity(EDBG_SPI_MODULE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
+	spi_set_clock_polarity(EDBG_SPI_MODULE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
 	spi_set_clock_phase(EDBG_SPI_MODULE, SPI_CHIP_SEL, SPI_CLK_PHASE);
 	spi_set_bits_per_transfer(EDBG_SPI_MODULE, SPI_CHIP_SEL,
 	SPI_CSR_BITS_8_BIT);
@@ -162,7 +166,7 @@ bool adp_interface_init(void)
 	SPI_DLYBCT);
 	spi_enable(EDBG_SPI_MODULE);
 
-	return return_value;
+	return 0;
 }
 
 /**
@@ -206,9 +210,9 @@ bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 	adp_interface_send_start();	
 	
 	for(i = 0; i < length; i++){
-		//spi_write(EDBG_SPI_MODULE, dummy, 0, 0);
+		spi_write(EDBG_SPI_MODULE, dummy, SPI_CHIP_PCS, 0);
 		/* Wait transfer done. */
-		//while ((spi_read_status(EDBG_SPI_MODULE) & SPI_SR_RDRF) == 0);
+		while ((spi_read_status(EDBG_SPI_MODULE) & SPI_SR_RDRF) == 0);
 		status = spi_read(EDBG_SPI_MODULE, &data, &spi_pcs);
 		p_buffer[i] = data;
 	}
