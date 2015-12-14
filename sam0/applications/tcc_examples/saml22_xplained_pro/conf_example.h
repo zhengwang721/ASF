@@ -47,11 +47,13 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
-/* The following are the list of features, supported by this example.
- The user can enable only one feature at a time, to avoid unnecessary 
- coding complexity, it is left to the user to ensure that only one 
- feature is enabled at a time.To enable a feature, the user just enables
- the feature at the start of feature definitions.*/
+/*
+ * The following are the list of features, supported by this example.
+ * The user can enable only one feature at a time, to avoid unnecessary 
+ * coding complexity, it is left to the user to ensure that only one 
+ * feature is enabled at a time.To enable a feature, the user just enables
+ * the feature at the start of feature definitions.
+ */
  
 // List of Feature definitions, that can be used by this application note.
 
@@ -68,22 +70,26 @@
 #undef TCC_MODE_DITHERING
 #undef TCC_MODE_CAPTURE
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
-/*Start of feature definitions used by this project Specify which feature
- needs to be tested here For example, if you want to test feature 
- TCC_MODE_CAPTURE, only TCC_MODE_CAPTURE needs to be definied below as
- #define TCC_MODE_CAPTURE There should be no other definitions to be 
- done by user.
-#define  TCC_MODE_CIRCULAR_BUFFER
-// End of feature definitions. */
+/*
+ * Start of feature definitions used by this project Specify which feature
+ * needs to be tested here For example, if you want to test feature 
+ * TCC_MODE_CAPTURE, only TCC_MODE_CAPTURE needs to be definied below as
+ * #define TCC_MODE_CAPTURE There should be no other definitions to be 
+ * done by user.
+ * #define  TCC_MODE_CIRCULAR_BUFFER
+ * End of feature definitions. 
+ */
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////// START of enumeration constants ///////////////////////////////////////////////
-/* The enumeration constant to indicate, which TCC channel is being used by 
-the system.*/
+///////////////////////// START of enumeration constants ////////////////////
+/* 
+ * The enumeration constant to indicate, which TCC channel is being used by 
+ * the system.
+ */
 enum eTCC_Channel {
 TCC_CHANNEL_NUM_0 = 0,
 TCC_CHANNEL_NUM_1,
@@ -97,8 +103,10 @@ TCC_CHANNEL_NUM_6
 
 
 ///////////////////////// START of CONFIGURABLE symbolic constants /////////////////////////////////////
-/* The below are configurable features, which may be changed based on 
-board/device specific, like baud rate, TCC module used.*/
+/* 
+ * The below are configurable features, which may be changed based on 
+ * board/device specific, like baud rate, TCC module used.
+ */
 
 // Configurable TCC Instance
 #define CONF_PWM_MODULE             TCC0
@@ -131,11 +139,14 @@ board/device specific, like baud rate, TCC module used.*/
 
 // Baud Rate configuration
 #define CONF_BAUD_RATE              9600
-///////////////////////// END of CONFIGURABLE symbolic constants //////////////////////////////////////////////
+///////////////////////// END of CONFIGURABLE symbolic constants ////////////
 
 
-//////////// START OF symbolic constants FEATURE SPECIFIC /////////////////////////////////////////////////////
-// Symbolic constants used in Circular Buffer Feature (TCC_MODE_CIRCULAR_BUFFER)
+//////////// START OF symbolic constants FEATURE SPECIFIC ////////////////////
+/* 
+ * Symbolic constants used in Circular Buffer Feature 
+ *(TCC_MODE_CIRCULAR_BUFFER)
+ */
 #ifdef TCC_MODE_CIRCULAR_BUFFER
 #define GLCK_SOURCE                 GCLK_GENERATOR_3
 #define TCC_PERIOD_VALUE            0xFF
@@ -237,15 +248,14 @@ board/device specific, like baud rate, TCC module used.*/
 #define GLCK_SOURCE                 GCLK_GENERATOR_3
 #define TCC_CLOCK_DIVIDER           TCC_CLOCK_PRESCALER_DIV1
 #endif
-//////////// END OF symbolic constants FEATURE SPECIFIC /////////////////////////////////////////////////////
+//////////// END OF symbolic constants FEATURE SPECIFIC /////////////////////
 
-
-//////////// START OF Function Prototypes //////////////////////////////////////////////////////////////////
+//////////// START OF Function Prototypes ///////////////////////////////////
 void configure_tcc(void);
 void swap_operation(void);
 void pattern_generation(void);
 void oneshot_operation(void);
 void configure_tcc_callback(void);
-//////////// END OF Function Prototypes //////////////////////////////////////////////////////////////////
+//////////// END OF Function Prototypes /////////////////////////////////////
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */
