@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Smart Card Standard ISO7816 driver.
+ * \brief SAM L21 Xplained Pro Application Configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,33 +40,50 @@
  * \asf_license_stop
  *
  */
-/*
+ /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_APP_H_INCLUDED
+#define CONF_APP_H_INCLUDED
 
-#ifndef ISO7816_H_INCLUDED
-#define ISO7816_H_INCLUDED
+#define CONF_EXT_WAKEUP_PIN   PIN_PC01A_EIC_EXTINT9
+#define CONF_EXT_WAKEUP_PINMUX MUX_PC01A_EIC_EXTINT9
 
-#include <compiler.h>
-#include "port.h"
-#include "usart.h"
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-#define ISO7816_PIN_POWER_ON    true
-#define ISO7816_PIN_POWER_OFF   false
+#define CONF_STDIO_PAD0_PIN PIN_PC24D_SERCOM4_PAD2
+#define CONF_STDIO_PAD1_PIN PIN_PC25D_SERCOM4_PAD3
 
-/** Flip flop for send and receive char. */
-#define ISO7816_USART_SEND      0
-#define ISO7816_USART_RCV       1
+#define ACTIVE_MODE_PL0		'a'
+#define ACTIVE_MODE_PL2		'b'
+#define IDLE_MODE			'c'
+#define STANDBY_MODE		'd'
+#define BACKUP_MODE			'e'
+#define OFF_MODE			'f'
 
-void iso7816_init(struct usart_module *const module, uint32_t pin_rst, \
-				uint32_t clock_get_hz);
-uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu, uint8_t *p_message,
-				uint16_t us_length);
-void iso7816_data_block_atr(uint8_t *p_atr, uint8_t *p_length);
-bool iso7816_get_reset_statuts(void);
-void iso7816_cold_reset(void);
-void iso7816_warm_reset(void);
-void iso7816_decode_atr(uint8_t *p_atr);
+#define UNUSED_GPIO_POWER_SAVE
 
-#endif /* ISO7816_H_INCLUDED */
+//milli seconds
+#define CONF_RTC_WAKEUP 5000
 
+//comment the following DEBUG_ENABLE constant if we want to test the sleep mode individually without user menu on EDBG virtual COM port
+#define DEBUG_ENABLE
+
+//The 'TEST_X_MODE' constant is used only when DEBUG_ENABLE is not used (i.e when 'DEBUG_ENABLE' constant is commented)
+
+//uncomment (only) one of the below sleep mode which we want to test 
+
+//#define TEST_ACTIVE_PL0_MODE	'a'
+//#define TEST_ACTIVE_PL2_MODE	'b'
+//#define TEST_IDLE_MODE		'c'
+//#define TEST_STANDBY_MODE		'd'
+//#define TEST_BACKUP_MODE		'e'
+//#define TEST_OFF_MODE			'f'
+   
+#endif

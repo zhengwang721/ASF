@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Smart Card Standard ISO7816 driver.
+ * \brief SAM RTC Driver Configuration Header
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,29 +44,12 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef ISO7816_H_INCLUDED
-#define ISO7816_H_INCLUDED
+#ifndef CONF_RTC_H_INCLUDED
+#define CONF_RTC_H_INCLUDED
 
-#include <compiler.h>
-#include "port.h"
-#include "usart.h"
+/** Select RTC clock. Use 1.024kHz from 32kHz internal ULP oscillator(OSCULP32K)
+ *  for RTC clock.
+ */
+#  define RTC_CLOCK_SOURCE    RTC_CLOCK_SELECTION_ULP1K
 
-#define ISO7816_PIN_POWER_ON    true
-#define ISO7816_PIN_POWER_OFF   false
-
-/** Flip flop for send and receive char. */
-#define ISO7816_USART_SEND      0
-#define ISO7816_USART_RCV       1
-
-void iso7816_init(struct usart_module *const module, uint32_t pin_rst, \
-				uint32_t clock_get_hz);
-uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu, uint8_t *p_message,
-				uint16_t us_length);
-void iso7816_data_block_atr(uint8_t *p_atr, uint8_t *p_length);
-bool iso7816_get_reset_statuts(void);
-void iso7816_cold_reset(void);
-void iso7816_warm_reset(void);
-void iso7816_decode_atr(uint8_t *p_atr);
-
-#endif /* ISO7816_H_INCLUDED */
-
+#endif
