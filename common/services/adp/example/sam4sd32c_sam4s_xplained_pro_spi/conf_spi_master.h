@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM 4S Xplained PRO board configuration
+ * \brief Spi Master configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,12 +44,24 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#define USER_LED_PIN         LED_0_PIN
-#define USER_LED_ACTIVE      LED_0_ACTIVE
-#define USER_LED_INACTIVE    LED_0_INACTIVE
-#define USER_LED_GPIO        LED0_GPIO
+/* Possibility to change low-level configurations here. */
 
-#endif /* CONF_BOARD_H_INCLUDED */
+/** Default Configuration of SPI Master Delay BCS */
+#define CONFIG_SPI_MASTER_DELAY_BCS            0
+
+/** Default Configuration of SPI Master Bits per Transfer Definition */
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
+
+/** Default Configuration of SPI Master Delay BCT */
+#define CONFIG_SPI_MASTER_DELAY_BCT            0
+
+/** Default Configuration of SPI Master Delay BS */
+#define CONFIG_SPI_MASTER_DELAY_BS             0
+
+/** Default Configuration of SPI Master Dummy Field */
+#define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 TC configuration
+ * \brief Board configuration.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,11 +44,20 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_TC_H_INCLUDED
-#define CONF_TC_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//[definition_tc]
-#define CONF_TC_MODULE TC3
-//[definition_tc]
+#define USER_LED_PIN         LED_0_PIN
+#define USER_LED_ACTIVE      LED_0_ACTIVE
+#define USER_LED_INACTIVE    LED_0_INACTIVE
+#define USER_LED_GPIO        LED0_GPIO
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+/** SPI MACRO definition */
+#define CONF_BOARD_SPI
+
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS3
+#define CONF_BOARD_SPI_NPCS3_GPIO  SPI_NPCS3_PA5_GPIO
+#define CONF_BOARD_SPI_NPCS3_FLAGS SPI_NPCS3_PA5_FLAGS
+
+#endif /* CONF_BOARD_H_INCLUDED */

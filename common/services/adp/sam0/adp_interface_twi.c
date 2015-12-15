@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP service implementation
+ * \brief ADP I2C interface implementation
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -50,7 +50,6 @@
 #include <asf.h>
 #include <adp_interface.h>
 
-#define EDBG_TWI EDBG_I2C_MODULE
 #define TWI_EDBG_SLAVE_ADDR 0x28
 #define TIMEOUT 1000
 
@@ -60,7 +59,7 @@ struct i2c_master_module i2c_master_instance;
 * \brief Initialize EDBG I2C communication for SAM0
 *
 */
-bool adp_interface_init(void)
+enum status_code adp_interface_init(void)
 {
 	enum status_code return_value;
 
@@ -69,7 +68,7 @@ bool adp_interface_init(void)
 	struct i2c_master_config config_i2c_master;
 	i2c_master_get_config_defaults(&config_i2c_master);
 	config_i2c_master.buffer_timeout = 10000;
-	return_value = i2c_master_init(&i2c_master_instance, EDBG_TWI, &config_i2c_master);
+	return_value = i2c_master_init(&i2c_master_instance, EDBG_I2C_MODULE, &config_i2c_master);
 	i2c_master_enable(&i2c_master_instance);
 	return return_value;
 }
@@ -97,10 +96,10 @@ static enum status_code adp_interface_send(uint8_t* tx_buf, uint16_t length)
 * \param[in]  length  The length of the read data
 * \param[out] rx_buf  Pointer to store the received SPI character
 */
-bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
+enum status_code adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 {
-	enum status_code status;
-	uint8_t data_len = 0;
+	enum status_code status = STATUS_OK;
+	uint8_t data_len;
 
 	struct i2c_master_packet packet = {
 		.address = TWI_EDBG_SLAVE_ADDR,

@@ -141,7 +141,7 @@ static void adp_example_init(void)
 */
 static void executive_command(uint8_t* receive_buf)
 {
-	struct adp_msg_packet_data *receive_buf_s = receive_buf;
+	struct adp_msg_packet_data *receive_buf_s = (struct adp_msg_packet_data *)receive_buf;
 	
 	switch(receive_buf_s->stream_id) {
 		case STREAM_ID_LED_TOGGLE:
