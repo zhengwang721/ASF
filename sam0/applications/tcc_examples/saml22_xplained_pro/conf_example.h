@@ -73,14 +73,15 @@
 /////////////////////////////////////////////////////////////////////////////
 
 /*
- * Start of feature definitions used by this project Specify which feature
- * needs to be tested here For example, if you want to test feature 
+ * Feature definitions used by this project specify which feature
+ * needs to be tested .For example, if you want to test the feature 
  * TCC_MODE_CAPTURE, only TCC_MODE_CAPTURE needs to be definied below as
- * #define TCC_MODE_CAPTURE There should be no other definitions to be 
- * done by user.
- * #define  TCC_MODE_CIRCULAR_BUFFER
- * End of feature definitions. 
+ * #define TCC_MODE_CAPTURE. No other definitions should be done by user.
  */
+
+#define  TCC_MODE_CIRCULAR_BUFFER
+ // End of feature definitions. 
+ 
 
 /////////////////////////////////////////////////////////////////////////////
 

@@ -1,31 +1,31 @@
 /**
  * \file
- *
+ * 
  * \brief SAM L22 TCC Features Example Application
  *        Refer following application note for details.
  *        AT10842-Using the Timer Counter for Control Applications in SAML22.
- *
+ * 
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \license
  * \asf_license_start
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- *
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- *
+ * 
  * 4. This software may only be redistributed and used in connection with an
  *    Atmel microcontroller product.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -147,12 +147,12 @@ void configure_usart(void)
 {
 	struct usart_config config_usart;
 	usart_get_config_defaults(&config_usart);
-	config_usart.baudrate        = 115200;
-	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	config_usart.baudrate                 = 115200;
+	config_usart.mux_setting              = EDBG_CDC_SERCOM_MUX_SETTING;
+	config_usart.pinmux_pad0              = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	config_usart.pinmux_pad1              = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	config_usart.pinmux_pad2              = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	config_usart.pinmux_pad3              = EDBG_CDC_SERCOM_PINMUX_PAD3;
 	stdio_serial_init(&usart_instances,EDBG_CDC_MODULE, &config_usart);
 	usart_enable(&usart_instances);
 }
@@ -377,7 +377,7 @@ void configure_tcc(void)
 	config_tcc.wave_ext.recoverable_fault[TCC_CHANNEL_NUM_0].halt_action = TCC_FAULT_HALT_ACTION_SW_HALT;
 #endif
 
-#ifdef TCC_MODE_CIRCULAR_BUFFER	
+#ifdef TCC_MODE_CIRCULAR_BUFFER
 // Configure the value for TOP value
 	config_tcc.counter.period                               = TCC_PERIOD_VALUE;
 	config_tcc.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0]   = TCC_PERIOD_VALUE;
@@ -654,7 +654,7 @@ int main (void)
 			port_pin_set_output_level(CONF_TEST_PIN_OUT, false);
 			tcStatus = tcc_get_status(&tcc_instance);
 			if (!port_pin_get_output_level(LED_0_PIN)){
-				// Turn off LED and clearm alarm status..
+				// Turn off LED and clear alarm status..
 				tcc_clear_status(&tcc_instance,TCC_STATUS_RECOVERABLE_FAULT_OCCUR(0));
 				LED_Off(LED_0_PIN);
 			}else if ((tcStatus & temp) == temp){
