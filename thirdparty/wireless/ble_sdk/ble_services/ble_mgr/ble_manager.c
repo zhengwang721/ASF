@@ -787,6 +787,7 @@ at_ble_status_t ble_connected_state_handler(void *params)
 		
         if((ble_dev_info[idx].dev_role == AT_BLE_ROLE_PERIPHERAL) && (peripheral_device_added))
         {
+			//DBG_LOG("****Started slave security request in BLE Manager*********");
 	 		ble_send_slave_sec_request(conn_params->handle);
         }
 #endif
@@ -1100,6 +1101,7 @@ at_ble_status_t ble_pair_request_handler(void *params)
 		if((ble_dev_info[idx].conn_info.handle == pair_req->handle) && (ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED))
 		{
 			ble_dev_info[idx].conn_state = BLE_DEVICE_PAIRING;
+			DBG_LOG("Device state pairing");
 			break;
 		}
 	}
@@ -1375,6 +1377,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 		DBG_LOG_DEV("host device ediv %x",ble_dev_info[idx].host_ltk.ediv);
 		DBG_LOG_DEV("peer device ediv %x",ble_dev_info[idx].bond_info.peer_ltk.ediv);
 		DBG_LOG_DEV("enc_req ediv %x", enc_req->ediv);
+		DBG_LOG_DEV("The index is %d",idx);
 		if((ble_dev_info[idx].host_ltk.ediv == enc_req->ediv)
 		&& !memcmp(&enc_req->nb[0],&ble_dev_info[idx].host_ltk.nb[0],8))
 		{
