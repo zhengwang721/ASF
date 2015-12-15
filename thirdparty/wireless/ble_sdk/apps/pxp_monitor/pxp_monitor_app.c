@@ -100,6 +100,7 @@ void button_cb(void)
 *
 * @param[in] conn_handle Connection handle of a connected device
 */
+#ifndef ENABLE_PTS
 static void rssi_update(at_ble_handle_t conn_handle)
 {
 	int8_t rssi_power = 0;
@@ -151,6 +152,7 @@ static void rssi_update(at_ble_handle_t conn_handle)
 		DBG_LOG_CONT("---No Alert");
 	}
 }
+#endif
 
 /**@brief Proximity Application initialization
 * start the device scanning process
@@ -273,6 +275,7 @@ int main(void)
 					at_ble_disconnected_t pxp_connect_request_fail;
 					pxp_connect_request_fail.reason
 						= AT_BLE_TERMINATED_BY_USER;
+					pxp_connect_request_fail.handle = ble_dev_info[0].conn_info.handle;
 					pxp_connect_request_flag = PXP_DEV_UNCONNECTED;
 					if (at_ble_connect_cancel() == AT_BLE_SUCCESS) {
 						DBG_LOG("Connection Timeout");
