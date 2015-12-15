@@ -46,7 +46,11 @@
 #ifndef ADP_EXAMPLE_TC_H_INCLUDED
 #  define ADP_EXAMPLE_TC_H_INCLUDED
 
-extern volatile bool time_out;
+volatile extern bool time_out;
+
+/** Use TC2_Handler for TC capture interrupt**/
+#define TC_Handler  TC2_Handler
+#define TC_IRQn     TC2_IRQn
 
 void adp_example_tc_init(void);
 

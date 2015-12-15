@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP interface header file
+ * \brief ADP service implementation
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -48,8 +48,8 @@
 #define ADP_INTERFACE_H_INCLUDED
 
 /* Prototypes of communication functions used to setup, send and receive data */
-enum status_code adp_interface_init(void);
+bool adp_interface_init(void);
 void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t* rx_buf);
-enum status_code adp_interface_read_response(uint8_t* rx_buf, uint16_t length);
+bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length);
 
 #endif

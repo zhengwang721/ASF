@@ -28,10 +28,8 @@
 			<info type="description" value="summary">
 				ADP example application
 			</info>
-			<build type="c-source" value="sam/adp_example_adc.c"/>
+			<build type="c-source" value="sam/adp_example_adc_sam4s.c"/>
 			<build type="c-source" value="sam/adp_example_tc.c"/>
-			<require idref="sam.drivers.adc"/>
-			<require idref="sam.drivers.tc"/>
 			<require idref="common.services.adp.example.common"/>
 			<device-support value="sam"/>
 		</module>

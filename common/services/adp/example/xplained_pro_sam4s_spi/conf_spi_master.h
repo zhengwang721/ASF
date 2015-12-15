@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Sleep manager configuration
+ * \brief SAM 4S SPI configuration
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,12 +40,17 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#ifndef CONF_SLEEPMGR_H
-#define CONF_SLEEPMGR_H
 
-#define CONFIG_SLEEPMGR_ENABLE
 
-#endif /* CONF_SLEEPMGR_H */
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
+
+/** SPI MACRO definition */
+#  define CONF_BOARD_SPI
+#  define CONF_BOARD_SPI_NPCS3 
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE     false
+#  define CONF_SPI_TIMEOUT           10000
+
+#endif /* CONF_SPI_H_INCLUDED */
+

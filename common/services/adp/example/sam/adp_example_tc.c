@@ -47,44 +47,62 @@
 #include <compiler.h>
 #include <asf.h>
 #include "adp_example_tc.h"
+#include "conf_tc.h"
 
 volatile bool time_out = true;
 
-void TC0_Handler(void)
+#define TC_CHANNEL_CAPTURE  2
+
+//! [tc_capture_selection]
+#define TC_CAPTURE_TIMER_SELECTION TC_CMR_TCCLKS_TIMER_CLOCK3
+//! [tc_capture_selection]
+
+static void adp_example_tc_configure(void)
 {
-	volatile uint32_t ul_dummy;
-
-	/* Clear status bit to acknowledge interrupt */
-	ul_dummy = tc_get_status(TC0, 0);
-
-	time_out = true;
+	//struct tc_config config_tc;
+	
+	//tc_get_config_defaults(&config_tc);
+	//config_tc.clock_source = GCLK_GENERATOR_1;
+	//config_tc.counter_size = TC_COUNTER_SIZE_8BIT;
+	//config_tc.clock_prescaler = TC_CLOCK_PRESCALER_DIV16;
+	/* Timer = 16*(2^8 - 55 - 1)/32000 = 100ms */
+	//config_tc.counter_8_bit.value = 0;
+	//config_tc.counter_8_bit.period = 55;
+	
+	//tc_init(&tc_instance, CONF_TC_MODULE, &config_tc);
+	//tc_enable(&tc_instance);
+		
+	/* Init TC to capture mode. */
+	tc_init(TC0, TC_CHANNEL_CAPTURE,
+	TC_CAPTURE_TIMER_SELECTION /* Clock Selection */
+	| TC_CMR_LDRA_RISING /* RA Loading: rising edge of TIOA */
+	| TC_CMR_LDRB_FALLING /* RB Loading: falling edge of TIOA */
+	| TC_CMR_ABETRG /* External Trigger: TIOA */
+	| TC_CMR_ETRGEDG_FALLING /* External Trigger Edge: Falling edge */
+	);
+	
+	tc_start(TC0, TC_CHANNEL_CAPTURE);
+	
+	//! [tc_capture_init_irq]
+	/** Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
+	NVIC_DisableIRQ(TC_IRQn);
+	NVIC_ClearPendingIRQ(TC_IRQn);
+	NVIC_SetPriority(TC_IRQn, 0);
+	NVIC_EnableIRQ(TC_IRQn);
+	//! [tc_capture_init_irq]
 }
-
 
 void adp_example_tc_init(void)
 {
-	uint32_t ul_div;
-	uint32_t ul_tcclks;
-	uint32_t ul_sysclk = sysclk_get_cpu_hz();
-
-	/* Configure PMC */
-	pmc_enable_periph_clk(ID_TC0);
-#if SAMG55
-	/* Enable PCK output */
-	pmc_disable_pck(PMC_PCK_3);
-	pmc_switch_pck_to_sclk(PMC_PCK_3, PMC_PCK_PRES_CLK_1);
-	pmc_enable_pck(PMC_PCK_3);
-#endif
-
-	/** Configure TC for a 10Hz frequency and trigger on RC compare. */
-	tc_find_mck_divisor(10, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
-	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
-	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / 10);
-
-	/* Configure and enable interrupt on RC compare */
-	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
-	tc_enable_interrupt(TC0, 0, TC_IER_CPCS);
-
-	tc_start(TC0, 0);
+ 	adp_example_tc_configure();
 }
 
+/**
+ * \brief Interrupt handler for the TC TC_CHANNEL_CAPTURE
+ */
+//! [tc_capture_irq_handler_start]
+void TC_Handler(void)
+{
+	time_out = true;
+}
+//! [tc_capture_irq_handler_end]

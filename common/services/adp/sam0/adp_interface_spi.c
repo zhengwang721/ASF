@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP SPI interface implementation
+ * \brief ADP service implementation
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -87,19 +87,18 @@ static void adp_interface_transceive(uint8_t *tx_data, uint8_t *rx_data, uint16_
 * \brief Initialize EDBG SPI communication for SAM0
 *
 */
-enum status_code adp_interface_init(void)
+bool adp_interface_init(void)
 {
 	enum status_code return_value;
 
 	system_init();
-	ioport_init();
 
 	struct spi_slave_inst_config slave_dev_config;
 
 	struct spi_config config;
 
 	spi_slave_inst_get_config_defaults(&slave_dev_config);
-	slave_dev_config.ss_pin = EDBG_SPI_SS_PIN;
+	slave_dev_config.ss_pin = (EDBG_SPI_SERCOM_PINMUX_PAD1 >> 16) & 0xFF;
 	spi_attach_slave(&slave, &slave_dev_config);
 
 	spi_get_config_defaults(&config);
@@ -143,9 +142,9 @@ void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t
 * \param[in]  length  The length of the read data
 * \param[out] rx_buf  Pointer to store the received SPI character
 */
-enum status_code adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
+bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 {
-	enum status_code status;
+	bool status;
 
 	/* Send SPI start condition */
 	adp_interface_send_start();	
