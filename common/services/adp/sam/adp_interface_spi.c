@@ -75,7 +75,7 @@ static uint32_t gs_ul_spi_clock = 1000000;
 */
 static void adp_interface_send_start(void)
 {
-	spi_set_peripheral_chip_select_value(EDBG_SPI_MODULE, SPI_CHIP_PCS);
+	ioport_set_pin_level(SPI_NPCS3_PA5_GPIO, USER_LED_ACTIVE);	
 }
 
 /**
@@ -84,7 +84,7 @@ static void adp_interface_send_start(void)
 */
 static void adp_interface_send_stop(void)
 {
-	spi_set_peripheral_chip_select_value(EDBG_SPI_MODULE, 0xf);
+	ioport_set_pin_level(SPI_NPCS3_PA5_GPIO, USER_LED_INACTIVE);
 }
 
 /**
@@ -148,6 +148,10 @@ bool adp_interface_init(void)
 
 
 	sysclk_init();
+		
+	ioport_set_pin_dir(SPI_NPCS3_PA5_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(SPI_NPCS3_PA5_GPIO, USER_LED_INACTIVE);
+	
 	/* Configure an SPI peripheral. */
 	spi_enable_clock(EDBG_SPI_MODULE);
 	spi_disable(EDBG_SPI_MODULE);
@@ -155,6 +159,7 @@ bool adp_interface_init(void)
 	spi_set_lastxfer(EDBG_SPI_MODULE);
 	spi_set_master_mode(EDBG_SPI_MODULE);
 	spi_disable_mode_fault_detect(EDBG_SPI_MODULE);
+	spi_set_fixed_peripheral_select(EDBG_SPI_MODULE);
 	spi_set_peripheral_chip_select_value(EDBG_SPI_MODULE, SPI_CHIP_PCS);
 	spi_set_clock_polarity(EDBG_SPI_MODULE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
 	spi_set_clock_phase(EDBG_SPI_MODULE, SPI_CHIP_SEL, SPI_CLK_PHASE);
@@ -202,9 +207,9 @@ bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 	uint8_t spi_pcs;
 	static uint16_t data;
 	uint16_t dummy = 0xFF;
-	uint8_t *p_buffer;
+	//uint8_t *p_buffer;
 
-	p_buffer = rx_buf;
+	//p_buffer = rx_buf;
 	
 	/* Send SPI start condition */
 	adp_interface_send_start();	
@@ -214,7 +219,7 @@ bool adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 		/* Wait transfer done. */
 		while ((spi_read_status(EDBG_SPI_MODULE) & SPI_SR_RDRF) == 0);
 		status = spi_read(EDBG_SPI_MODULE, &data, &spi_pcs);
-		p_buffer[i] = data;
+		rx_buf[i] = data;
 	}
 	/* Send SPI end condition */
 	adp_interface_send_stop();
