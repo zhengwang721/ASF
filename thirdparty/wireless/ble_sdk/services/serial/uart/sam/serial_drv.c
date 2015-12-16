@@ -231,17 +231,7 @@ uint8_t configure_serial_drv(void)
 
 void configure_usart_after_patch(void)
 {
-	/* Usart async mode 8 bits transfer test */
-	sam_usart_opt_t usart_settings = {
-		.baudrate     = CONF_UART_BAUDRATE,
-		.char_length  = US_MR_CHRL_8_BIT,
-		.parity_type  = US_MR_PAR_NO,
-		.stop_bits    = US_MR_NBSTOP_1_BIT,
-		.channel_mode = US_MR_CHMODE_NORMAL,
-		/* This field is only used in IrDA mode. */
-		.irda_filter  = 0
-	};
-	
+
 #if UART_FLOWCONTROL_6WIRE_MODE == true
 	configure_primary_uart();
 #endif
