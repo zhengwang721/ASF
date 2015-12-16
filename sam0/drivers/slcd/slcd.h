@@ -935,12 +935,13 @@ static inline bool slcd_get_vlcd_ready_status(void)
  *
  * <table>
  *	<tr>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  *	<tr>
  *      <td>42605A</td>
- *		<td>10/2015</td>
+ *		<td>12/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

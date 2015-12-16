@@ -207,6 +207,15 @@ void ble_device_init(at_ble_addr_t *addr)
 	/*Bus configuration*/
 	busConfig.bus_type = AT_BLE_UART;
 	busConfig.bus_info = 0; /* Bus Info Not used */
+
+#if UART_FLOWCONTROL_6WIRE_MODE == true
+	/* Enable Hardware Flow-control on BTLC1000 */
+   busConfig.bus_flow_control_enabled = true; // enable flow control
+#else
+	/* Disable Hardware Flow-control on BTLC1000 */
+   busConfig.bus_flow_control_enabled = false; // Disable flow control
+#endif
+
 	pf_cfg.plf_config = &busConfig;	
 	
 	ble_init(&pf_cfg);

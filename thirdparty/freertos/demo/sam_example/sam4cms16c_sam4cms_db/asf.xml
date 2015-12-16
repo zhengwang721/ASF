@@ -5,16 +5,18 @@
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="FreeRTOSConfig.h"/>
 		<require idref="common.services.freertos.sam_example"/>
 		<require idref="board.sam4cms_db"/>
 		<config name="config.board.sam4cms_db.led" value="yes"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
+		<config name="config.thirdparty.os.freertos.version" value="7.0.0" /> 
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.heap_size" value="0x1000"/>
 		<config name="config.compiler.armgcc.optimization" value="high"/>
 		<generator value="doxygen"/>
-		<device-support value="atsam4cms16c_0"/>
+		<device-support value="atsam4cms16c:0"/>
 	</project>
 </asf>

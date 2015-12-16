@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam.applications.same70_xplained_demo" caption="SAME70 Xplained Demonstration">
+		<info type="description" value="summary">
+		This demonstration program retrieve and display temperature and weather of several cities from openweathermap.org server by WINC1500 WIFI module.
+		</info>
+		<build type="c-source" value="main.c"/>
+		<build type="c-source" value="main_image.c"/>
+		<build type="header-file" value="image.h"/>
+		<build type="header-file" value="main_wifi.h"/>
+		<build type="include-path" value="."/>
+		<device-support value="same70"/>
+		<require idref="common.components.wifi.winc1500"/>
+		<require idref="sam.components.display.ili9488"/>
+		<require idref="sam.drivers.rtt"/>
+		<require idref="sam.services.flash"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
