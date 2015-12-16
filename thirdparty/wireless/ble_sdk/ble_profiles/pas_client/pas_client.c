@@ -254,17 +254,13 @@ at_ble_status_t pas_client_discovery_complete_handler(void *params)
 					pas_service_data.ringer_control_point_char.discovery = 0;
 				}
 			} else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR) {
-				#if BLE_PAIR_ENABLE
-				DBG_LOG_DEV("Sending slave request");
-				if(ble_send_slave_sec_request(pas_service_data.conn_handle) != AT_BLE_SUCCESS) {
-					DBG_LOG_DEV("Pairing disabled");
-				}
-				#else
-				pas_client_write_notifications(NULL);
+				DBG_LOG_DEV("Descriptor discovery successfull");
+				#if !BLE_PAIR_ENABLE
+					pas_client_write_notifications(NULL);
 				#endif
 			}	
 		} else {
-			DBG_LOG("discovery operation not successfull");
+			DBG_LOG("discovery operation not successfully");
 		}
 			return AT_BLE_SUCCESS;
 }

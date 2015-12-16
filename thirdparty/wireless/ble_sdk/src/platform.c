@@ -72,14 +72,6 @@ volatile uint8_t data_received = 0;			//	RX data received flag
 
 volatile int init_done = 0;
 
-#if UART_FLOWCONTROL_6WIRE_MODE == true
-/* Enable Hardware Flow-control on BTLC1000 */
-enum hw_flow_control ble_hardware_fc = ENABLE_HW_FC_PATCH;
-#else
-/* Disable Hardware Flow-control on BTLC1000 */
-enum hw_flow_control ble_hardware_fc = DISABLE_HW_FC_PATCH;
-#endif
-
 #if ((UART_FLOWCONTROL_4WIRE_MODE == true) && (UART_FLOWCONTROL_6WIRE_MODE == true))
 #error "Invalid UART Flow Control mode Configuration. Choose only one mode"
 #endif

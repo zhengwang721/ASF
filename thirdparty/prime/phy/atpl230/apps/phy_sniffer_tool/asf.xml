@@ -9,7 +9,7 @@
 			</info>
 			<build type="include-path" value="."/>
 			<build type="c-source" value="phy_sniffer_tool.c"/>
-			<device-support value="atsam4cp16b_0"/>
+			<device-support value="atsam4cp16b:0"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.drivers.supc"/>
 			<require idref="sam.components.display.c42364a"/>
@@ -40,7 +40,7 @@
 			</info>
 			<build type="include-path" value="."/>
 			<build type="c-source" value="phy_sniffer_tool.c"/>
-			<device-support value="atsam4cmp16c_0"/>
+			<device-support value="atsam4cmp16c:0"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.drivers.supc"/>
 			<require idref="thirdparty.prime.phy.atpl230.addons.sniffer_if"/>
@@ -55,7 +55,7 @@
 			</info>
 			<build type="include-path" value="."/>
 			<build type="c-source" value="phy_sniffer_tool.c"/>
-			<device-support value="atsam4cms16c_0"/>
+			<device-support value="atsam4cms16c:0"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.drivers.supc"/>	
 			<require idref="thirdparty.prime.phy.atpl230.addons.sniffer_if"/>
@@ -70,7 +70,7 @@
 			</info>
 			<build type="include-path" value="."/>
 			<build type="c-source" value="phy_sniffer_tool.c"/>
-			<device-support value="atsam4c16c_0"/>
+			<device-support value="atsam4c16c:0"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.drivers.supc"/>
 			<require idref="thirdparty.prime.phy.atpl230.addons.sniffer_if"/>

@@ -224,11 +224,6 @@ at_ble_status_t csc_prf_discovery_complete_handler(void *params)
 			}
 			else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR){
 				app_csc_info.devicedb = true;
-				DBG_LOG_DEV("Send Slave Security Request");
-				
-				if (ble_send_slave_sec_request(app_csc_info.conn_params.handle) != AT_BLE_SUCCESS) {
-					DBG_LOG_DEV("Fail to start security procedure");
-				}
 			}
 		}
 		return AT_BLE_SUCCESS;

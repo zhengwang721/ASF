@@ -85,26 +85,22 @@ enum interface_type {
 	AT_BLE_SPI
 };
 
-typedef enum hw_flow_control
-{
-	ENABLE_HW_FC_PATCH = 1,
-	DISABLE_HW_FC_PATCH
-}hw_flow_control_t;
 
-
-/**@struct	platform_config
+/**@struct  platform_config
  * @ingroup platform_group_datatypes
- * @brief	This platform structure used to define bus type and 
- *			info required to initialize bus interface
- * @var		platform_config::bus_type
- * @var		platform_config::bus_info
+ * @brief   This platform structure used to define bus type and
+ *          info required to initialize bus interface
+ * @var     platform_config::bus_type
+ * @var     platform_config::bus_info
  */
-typedef struct {
-	/// One of @ref interface_type; either @ref UART or @ref SPI
-	uint8_t bus_type;
-	/// In case of using @ref UART as interface this is used to save COM port value [1 - 255]
-	uint8_t bus_info;
-}platform_config;
+typedef struct
+{
+    /// One of @ref interface_type; either @ref AT_BLE_UART or @ref AT_BLE_SPI
+    uint8_t bus_type;
+    /// In case of using @ref AT_BLE_UART as interface this is used to save COM port value [1 - 255]
+    uint8_t bus_info;
+    uint8_t bus_flow_control_enabled;
+} platform_config;
 
 typedef struct{
 	uint8_t (*wr_api32) (uint32_t memAddr,uint32_t* data,uint8_t size);
@@ -192,7 +188,7 @@ int platform_interface_recv(uint8_t if_type, uint8_t* data, uint32_t len);
 void platform_interface_callback(uint8_t* data, uint32_t len);
 
 void fw_patch_download_cb(uint8_t *pu8data, uint8_t length);
-at_ble_status_t patch_init(void);
+at_ble_status_t patch_init(platform_config *platform_cfg);
 
  /**@ingroup platform_group_functions
   * @brief fires the comand-complete signal

@@ -207,6 +207,15 @@ void ble_device_init(at_ble_addr_t *addr)
 	/*Bus configuration*/
 	busConfig.bus_type = AT_BLE_UART;
 	busConfig.bus_info = 0; /* Bus Info Not used */
+
+#if UART_FLOWCONTROL_6WIRE_MODE == true
+	/* Enable Hardware Flow-control on BTLC1000 */
+   busConfig.bus_flow_control_enabled = true; // enable flow control
+#else
+	/* Disable Hardware Flow-control on BTLC1000 */
+   busConfig.bus_flow_control_enabled = false; // Disable flow control
+#endif
+
 	pf_cfg.plf_config = &busConfig;	
 	
 	ble_init(&pf_cfg);
@@ -1100,6 +1109,7 @@ at_ble_status_t ble_pair_request_handler(void *params)
 		if((ble_dev_info[idx].conn_info.handle == pair_req->handle) && (ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED))
 		{
 			ble_dev_info[idx].conn_state = BLE_DEVICE_PAIRING;
+			DBG_LOG("Device state pairing");
 			break;
 		}
 	}
@@ -1375,6 +1385,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 		DBG_LOG_DEV("host device ediv %x",ble_dev_info[idx].host_ltk.ediv);
 		DBG_LOG_DEV("peer device ediv %x",ble_dev_info[idx].bond_info.peer_ltk.ediv);
 		DBG_LOG_DEV("enc_req ediv %x", enc_req->ediv);
+		DBG_LOG_DEV("The index is %d",idx);
 		if((ble_dev_info[idx].host_ltk.ediv == enc_req->ediv)
 		&& !memcmp(&enc_req->nb[0],&ble_dev_info[idx].host_ltk.nb[0],8))
 		{

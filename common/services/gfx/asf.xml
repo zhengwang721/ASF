@@ -14,6 +14,8 @@
 		<device-support value="uc3"/>
 		<device-support value="sam3"/>
 		<device-support value="sam4s"/>
+		<device-support value="samv71"/>
+		<device-support value="same70"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		<require idref="common.services.gfx.display"/>
 	</module>
@@ -33,6 +35,8 @@
 		<device-support value="uc3"/>
 		<device-support value="sam3"/>
 		<device-support value="sam4s"/>
+		<device-support value="samv71"/>
+		<device-support value="same70"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>
 
@@ -61,6 +65,8 @@
 		<device-support value="uc3"/>
 		<device-support value="sam3"/>
 		<device-support value="sam4s"/>
+		<device-support value="samv71"/>
+		<device-support value="same70"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>
 
@@ -99,6 +105,8 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
+			<device-support value="samv71"/>
+			<device-support value="same70"/>
 			<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 		</module>
 		<module type="service" id="common.services.gfx.display#hx8347a_et024006dhu_ebi" caption="GFX - ET024006DHU LCD panel (EBI)">
@@ -151,6 +159,21 @@
 			<require idref="common.services.gfx.generic"/>
 			<device-support value="sam"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
-		</module>		
+		</module>
+		<module type="service" id="common.services.gfx.display#ili9488" caption="GFX - ILI9488 LCD panel">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Graphic library configured for the LCD panel using the ILI9488 display controller. Used on the SAMV71-XPRO and SAME70-Xplained.
+			</info>
+			<build type="define" name="CONF_GFX_ILI9488" value="1"/>
+			<build type="header-file" value="gfx_ili9488_90_00028_a0.h"/>
+			<build type="include-path" value="."/>
+			<build type="c-source" value="gfx_ili9488_90_00028_a0.c"/>
+			<build type="doxygen-entry-point" value="gfx_ili9488"/>
+			<require idref="sam.components.display.ili9488"/>
+			<require idref="common.services.gfx.generic"/>
+			<device-support value="sam"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
+		</module>
 	</select-by-config>
 </asf>
