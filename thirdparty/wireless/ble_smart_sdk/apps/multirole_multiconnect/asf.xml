@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="BLE Multirole Multiconnect Application" id="thirdparty.wireless.ble_smart_sdk.apps.multirole_multiconnect">
+		<info type="description" value="summary">
+		BLE Multirole Multiconnect application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="multirole_multiconnect.h"/>
+		<build type="c-source" value="multirole_multiconnect.c"/>
+		<!--build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_ALL"/-->
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_CENTRAL"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.pxp_monitor"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.battery"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
