@@ -72,7 +72,7 @@
 
 #define BLE_ATT_DB_MEMORY_SIZE				(1250) 
 
-uint32_t att_db_data[BLE_ATT_DB_MEMORY_SIZE/4];
+uint32_t att_db_mem[BLE_ATT_DB_MEMORY_SIZE/4];
 
 /** @brief device information service handler **/
 dis_gatt_service_handler_t dis_service_handler;
@@ -141,7 +141,7 @@ static void ble_init(void)
 	
 	/*Memory allocation required by GATT Server DB*/
 	pf_cfg.memPool.memSize = BLE_ATT_DB_MEMORY_SIZE;
-	pf_cfg.memPool.memStartAdd = (uint8_t *)att_db_data;
+	pf_cfg.memPool.memStartAdd = (uint8_t *)att_db_mem;
 	
 	/*Bus configuration*/
 	busConfig.bus_type = AT_BLE_UART;
