@@ -92,18 +92,18 @@
  * the system.
  */
 enum eTCC_Channel {
-TCC_CHANNEL_NUM_0 = 0,
-TCC_CHANNEL_NUM_1,
-TCC_CHANNEL_NUM_2,
-TCC_CHANNEL_NUM_3,
-TCC_CHANNEL_NUM_4,
-TCC_CHANNEL_NUM_5,
-TCC_CHANNEL_NUM_6
+	TCC_CHANNEL_NUM_0 = 0,
+	TCC_CHANNEL_NUM_1,
+	TCC_CHANNEL_NUM_2,
+	TCC_CHANNEL_NUM_3,
+	TCC_CHANNEL_NUM_4,
+	TCC_CHANNEL_NUM_5,
+	TCC_CHANNEL_NUM_6
 };
-///////////////////////// END of enumeration constants /////////////////////////////////////////////////
+///////////////////////// END of enumeration constants ///////////////////
 
 
-///////////////////////// START of CONFIGURABLE symbolic constants /////////////////////////////////////
+///////////////////////// START of CONFIGURABLE symbolic constants ///////
 /* 
  * The below are configurable features, which may be changed based on 
  * board/device specific, like baud rate, TCC module used.
