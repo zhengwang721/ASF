@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP service example TC functions for SAM0
+ * \brief ADP service example TC functions for SAM
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
