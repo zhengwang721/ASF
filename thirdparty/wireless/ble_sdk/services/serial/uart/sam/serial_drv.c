@@ -124,7 +124,7 @@ static inline uint8_t configure_primary_uart(void)
   	ioport_set_pin_peripheral_mode(USART0_RXD_GPIO, USART0_RXD_FLAGS);
   	ioport_set_pin_peripheral_mode(USART0_TXD_GPIO, USART0_TXD_FLAGS);
 
-#if  UART_FLOWCONTROL_4WIRE_MODE == true
+#if  (UART_FLOWCONTROL_4WIRE_MODE == true) || (UART_FLOWCONTROL_6WIRE_MODE == true)
 	/* Configure the UART RTS and CTS Pin Modes */
 	ioport_set_pin_peripheral_mode(USART0_CTS_GPIO, USART0_CTS_FLAGS);
 	ioport_set_pin_peripheral_mode(USART0_RTS_GPIO, USART0_RTS_FLAGS);
@@ -137,7 +137,7 @@ static inline uint8_t configure_primary_uart(void)
   	flexcom_enable(BLE_USART_FLEXCOM);
   	flexcom_set_opmode(BLE_USART_FLEXCOM, FLEXCOM_USART);
 
-#if  UART_FLOWCONTROL_4WIRE_MODE == true
+#if  (UART_FLOWCONTROL_4WIRE_MODE == true) || (UART_FLOWCONTROL_6WIRE_MODE == true)
 	/* Configure USART with Flow Control */
 	usart_init_hw_handshaking(BLE_UART, &usart_settings,
 	sysclk_get_peripheral_hz());
@@ -193,10 +193,8 @@ static inline uint8_t configure_patch_usart(void)
 		 .irda_filter  = 0
 	 };
 	 
-	 ioport_set_pin_peripheral_mode(EXT1_PIN_15, IOPORT_MODE_MUX_B);
-	 ioport_set_pin_peripheral_mode(EXT1_PIN_16, IOPORT_MODE_MUX_B);
-	 ioport_set_pin_peripheral_mode(EXT1_PIN_17, IOPORT_MODE_MUX_B);
-	 ioport_set_pin_peripheral_mode(EXT1_PIN_18, IOPORT_MODE_MUX_B);
+	 ioport_set_pin_peripheral_mode(EXT1_PIN_16, IOPORT_MODE_MUX_A);
+	 ioport_set_pin_peripheral_mode(EXT1_PIN_17, IOPORT_MODE_MUX_A);
 
 	 /* Enable the peripheral and set USART mode. */
 	 flexcom_enable(BLE_PATCH_USART_FLEXCOM);
@@ -233,28 +231,11 @@ uint8_t configure_serial_drv(void)
 
 void configure_usart_after_patch(void)
 {
-	/* Usart async mode 8 bits transfer test */
-	sam_usart_opt_t usart_settings = {
-		.baudrate     = CONF_UART_BAUDRATE,
-		.char_length  = US_MR_CHRL_8_BIT,
-		.parity_type  = US_MR_PAR_NO,
-		.stop_bits    = US_MR_NBSTOP_1_BIT,
-		.channel_mode = US_MR_CHMODE_NORMAL,
-		/* This field is only used in IrDA mode. */
-		.irda_filter  = 0
-	};
-	
+
 #if UART_FLOWCONTROL_6WIRE_MODE == true
 	configure_primary_uart();
 #endif
-	
-	/* Configure the UART RTS and CTS Pin Modes */
-	ioport_set_pin_peripheral_mode(USART0_CTS_GPIO, USART0_CTS_FLAGS);
-  	ioport_set_pin_peripheral_mode(USART0_RTS_GPIO, USART0_RTS_FLAGS);
-	  
-	/* Configure USART with Flow Control */
-	usart_init_hw_handshaking(BLE_UART, &usart_settings,
-	sysclk_get_peripheral_hz());
+
 }
 
 static inline void pdc_update_rx_transfer(void)
@@ -416,7 +397,7 @@ static inline void ble_patch_serial_drv_send(uint8_t *data, uint16_t len)
 		  SERIAL_DRV_TX_CB();
 		  #endif
 	  }
-  }  
+  }
 }
 
 uint16_t serial_drv_send(uint8_t* data, uint16_t len)

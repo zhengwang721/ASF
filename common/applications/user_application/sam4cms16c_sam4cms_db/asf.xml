@@ -8,6 +8,6 @@
 		<require idref="board.sam4cms_db"/>
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
-		<device-support value="atsam4cms16c_0"/>
+		<device-support value="atsam4cms16c:0"/>
 	</project>
 </asf>

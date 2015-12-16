@@ -1,0 +1,15 @@
+<asf xmlversion="1.0">
+	<project caption="LED Toggle Application" id="sam0.applications.led_toggle.samr21zll_ek">
+		<info type="gui-flag" value="move-to-root"/>
+		<require idref="board.samr21zll_ek"/>
+		<require idref="sam0.applications.led_toggle"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen-v2"/>
+		<device-support value="atsamr21g18a"/>
+	</project>
+</asf>

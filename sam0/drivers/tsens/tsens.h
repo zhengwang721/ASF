@@ -603,13 +603,13 @@ enum status_code tsens_read(int32_t *result);
  *
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  *	<tr>
  *		<td>42542A</td>
- *		<td>11/2015</td>
+ *		<td>12/2015</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
