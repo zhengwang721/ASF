@@ -787,7 +787,6 @@ at_ble_status_t ble_connected_state_handler(void *params)
 		
         if((ble_dev_info[idx].dev_role == AT_BLE_ROLE_PERIPHERAL) && (peripheral_device_added))
         {
-			//DBG_LOG("****Started slave security request in BLE Manager*********");
 	 		ble_send_slave_sec_request(conn_params->handle);
         }
 #endif
