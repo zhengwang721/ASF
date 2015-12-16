@@ -291,15 +291,8 @@ at_ble_status_t anp_client_discovery_complete_handler(void *params)
 			
 			if (discover_char_flag) {
 				DBG_LOG("GATT characteristic discovery completed");
-				#if BLE_PAIR_ENABLE
-				if(ble_send_slave_sec_request(ble_dev_info[0].conn_info.handle) == AT_BLE_SUCCESS) {
-					DBG_LOG_DEV("Sending slave security request");
-				}
-				else {
-					DBG_LOG_DEV("Security Procedure not successful");
-				}
-				#else
-					anp_client_security_done_handler(NULL);
+				#if !BLE_PAIR_ENABLE
+						anp_client_security_done_handler(NULL);
 				#endif
 			}
 		}
