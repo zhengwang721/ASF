@@ -362,7 +362,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * Common prerequisites for all USB hosts.
  *
  * This module is based on USB host stack full interrupt driven and supporting
- * \ref sleepmgr_group "sleepmgr". For AVR&reg; and Atmel&reg; | SMART ARM&reg;-based microcontrollers 
+ * \ref sleepmgr_group "sleepmgr". For AVR&reg; and Atmel&reg; | SMART ARM&reg;-based
  * SAM3/4 devices the \ref clk_group "clock services" is supported. For SAM D21 devices the
  * \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *
