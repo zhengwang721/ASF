@@ -86,7 +86,7 @@
 #define ALL_UNUSED_IMPL(nargs) ALL_UNUSED_IMPL_(nargs)
 #define ALL_UNUSED(...) ALL_UNUSED_IMPL( VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__ )
 
-#if NENABLE_PTS
+#ifdef ENABLE_PTS
 #define DBG_LOG_DEV			DBG_LOG
 #else
 #define DBG_LOG_DEV			ALL_UNUSED
