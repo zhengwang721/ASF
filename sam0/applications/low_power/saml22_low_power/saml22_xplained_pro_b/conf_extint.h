@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Smart Card Standard ISO7816 driver.
+ * \brief SAM External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,30 +43,23 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#ifndef ISO7816_H_INCLUDED
-#define ISO7816_H_INCLUDED
+/** 
+ * Define which clock type is used to clock EIC peripheral:
+ *     - EXTINT_CLK_GCLK
+ *     - EXTINT_CLK_ULP32K
+ *
+ * EXTINT_CLK_ULP32K is available for SAM L21/L22/C21.
+ */
+#define EXTINT_CLOCK_SELECTION   EXTINT_CLK_ULP32K
+ 
+/**
+ * Define which GCLK source is used when selecting EXTINT_CLK_GCLK type.
+ */
+#if (EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+#endif
 
-#include <compiler.h>
-#include "port.h"
-#include "usart.h"
-
-#define ISO7816_PIN_POWER_ON    true
-#define ISO7816_PIN_POWER_OFF   false
-
-/** Flip flop for send and receive char. */
-#define ISO7816_USART_SEND      0
-#define ISO7816_USART_RCV       1
-
-void iso7816_init(struct usart_module *const module, uint32_t pin_rst, \
-				uint32_t clock_get_hz);
-uint16_t iso7816_xfr_block_tpdu_t0(const uint8_t *p_apdu, uint8_t *p_message,
-				uint16_t us_length);
-void iso7816_data_block_atr(uint8_t *p_atr, uint8_t *p_length);
-bool iso7816_get_reset_statuts(void);
-void iso7816_cold_reset(void);
-void iso7816_warm_reset(void);
-void iso7816_decode_atr(uint8_t *p_atr);
-
-#endif /* ISO7816_H_INCLUDED */
-
+#endif
