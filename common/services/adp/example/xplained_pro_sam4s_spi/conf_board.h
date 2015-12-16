@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM 4S Xplained PRO board configuration
+ * \brief Board configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,5 +51,13 @@
 #define USER_LED_ACTIVE      LED_0_ACTIVE
 #define USER_LED_INACTIVE    LED_0_INACTIVE
 #define USER_LED_GPIO        LED0_GPIO
+
+/** SPI MACRO definition */
+#define CONF_BOARD_SPI
+
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS3
+#define CONF_BOARD_SPI_NPCS3_GPIO  SPI_NPCS3_PA5_GPIO
+#define CONF_BOARD_SPI_NPCS3_FLAGS SPI_NPCS3_PA5_FLAGS
 
 #endif /* CONF_BOARD_H_INCLUDED */

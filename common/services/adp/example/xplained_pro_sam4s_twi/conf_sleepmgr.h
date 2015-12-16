@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ADP service example TC functions
+ * \brief Sleep manager configuration
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,11 +43,9 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef ADP_EXAMPLE_TC_H_INCLUDED
-#  define ADP_EXAMPLE_TC_H_INCLUDED
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-extern volatile bool time_out;
+#define CONFIG_SLEEPMGR_ENABLE
 
-void adp_example_tc_init(void);
-
-#endif
+#endif /* CONF_SLEEPMGR_H */
