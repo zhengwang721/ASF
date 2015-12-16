@@ -58,7 +58,7 @@
  * - \ref conf_tc.h
  *
  * \section asfdoc_common_adp_example_deviceinfo Device Info
- * All SAM0 devices can be used.
+ * All SAM devices can be used.
  * This example has been tested with the following setup:
  * - SAM D21 Xplained Pro
  * - SAM L21 Xplained Pro
