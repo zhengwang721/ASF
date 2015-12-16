@@ -216,8 +216,7 @@ void hr_init_service(hr_gatt_service_handler_t *heart_rate_serv)
 	
 	#if BLE_PAIR_ENABLE
 		heart_rate_serv->serv_chars[2].value_permissions
-							= (AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
-	
+							= (AT_BLE_ATTR_WRITABLE_REQ_AUTHN_REQ_AUTHR);
 	#else
 		heart_rate_serv->serv_chars[2].value_permissions
 							= (AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);

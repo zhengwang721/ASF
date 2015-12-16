@@ -11,6 +11,7 @@
 		<require idref="thirdparty.wireless.ble_sdk.services.serial_bridge"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<build type="define" name="DTM_MODE" value=""/>
+		<build type="define" name="NENABLE_PTS" value="false"/>
 		<build type="distribute" subtype="user-file" value="Atmel-42522-ATBTLC1000-BluSDK-Direct-Test-Mode-Getting-Started-Guide_USERGUIDE.pdf"/>
 		<build type="distribute" subtype="user-file" value="Atmel-42536-ATBTLC1000-Wireless-Composer_UserGuide.pdf"/>
 		<device-support-alias value="ble_stack_lib_support"/>

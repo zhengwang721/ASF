@@ -120,6 +120,8 @@
  */
 #define HR_APP_DISCONNECT_STATE							(0)
 
+#define HR_CONTROL_POINT_RESET_VAL						(1)
+
 #define FLAG_ENERGY_EXP									(0x1 << 3)
 /* @brief call back handler type  */
 typedef void (*hr_notification_callback_t)(uint8_t);
@@ -221,6 +223,11 @@ at_ble_status_t hr_sensor_connected_state_handler(
 void register_hr_notification_handler(
 		hr_notification_callback_t hr_notificaton_handler);
 
+/** @brief hr_sensor_char_write_request handles the write request for heart rate 
+ *  control point characteristic.
+ *  @param[in]	at_ble_characteristic_write_request_t parameters containing the value written
+ */
+at_ble_status_t hr_sensor_char_write_request(void * params);
 #endif /*__HR_SENSOR_H__ */
 // </h>
 

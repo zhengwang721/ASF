@@ -111,7 +111,7 @@ static const ble_event_callback_t hr_sensor_gatt_server_handle[] = {
 	hr_sensor_char_changed_handler,
 	NULL,
 	NULL,
-	NULL,
+	hr_sensor_char_write_request,
 	NULL,
 	NULL,
 	NULL,
@@ -122,7 +122,6 @@ static const ble_event_callback_t hr_sensor_gatt_server_handle[] = {
 *							        Implementations
 *                                       *
 ****************************************************************************************/
-
 /** @brief register_hr_notification_handler registers the notification handler
  *	passed by the application
  *  param[in] hr_notification_callback_t address of the notification handler
@@ -141,6 +140,34 @@ void register_hr_notification_handler(
 void register_hr_reset_handler(hr_reset_callback_t hr_reset_handler)
 {
 	reset_cb = hr_reset_handler;
+}
+
+/** @brief hr_sensor_char_write_request handles the write request for heart rate 
+ *  control point characteristic.
+ *  @param[in]	at_ble_characteristic_write_request_t parameters containing the value written
+ */
+at_ble_status_t hr_sensor_char_write_request(void * params)
+{
+	at_ble_characteristic_write_request_t request;
+	at_ble_status_t status;
+	
+	memcpy(&request,params,sizeof(at_ble_characteristic_write_request_t));
+	if (request.char_handle == hr_service_handler.serv_chars[2].char_val_handle) {
+			if (request.value[0] == HR_CONTROL_POINT_RESET_VAL) {
+				status = at_ble_write_authorize_reply(&request,AT_BLE_SUCCESS);
+				if (status != AT_BLE_SUCCESS) {
+					DBG_LOG("at_ble_write_authorize_reply failed");
+					} else  {
+					reset_cb();
+				}
+				
+			} else {
+				DBG_LOG_DEV("Sending an error code");
+				at_ble_write_authorize_reply(&request,AT_BLE_ATT_APP_ERROR);
+			}
+	}
+
+	return AT_BLE_SUCCESS;
 }
 
 /** @brief hr_notification_confirmation_handler called on notification confirmation
