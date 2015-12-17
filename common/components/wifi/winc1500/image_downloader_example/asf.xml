@@ -1,0 +1,48 @@
+<asf xmlversion="1.0">
+	<select-by-device id="common.components.wifi.winc1500.image_downloader_example">
+		<module type="application" id="common.components.wifi.winc1500.image_downloader_example#1" caption="WINC1500 Image Downloader Example">
+			<!-- Summary Description -->
+			<info type="description" value="summary">
+				This example demonstrates how to program the WINC1500 internal flash in order to update the firmware and root certificates.
+			</info>
+
+			<!-- Source -->
+			<build type="include-path" value="."/>
+			<build type="c-source" value="main.c"/>
+			<build type="c-source" value="root_cert/root_setup.c"/>
+			<build type="header-file" value="root_cert/root_setup.h"/>
+			<build type="c-source" value="root_cert/x509/asn1.c"/>
+			<build type="header-file" value="root_cert/x509/asn1.h"/>
+			<build type="header-file" value="root_cert/x509/common.h"/>
+			<build type="c-source" value="root_cert/x509/hash.c"/>
+			<build type="header-file" value="root_cert/x509/hash.h"/>
+			<build type="c-source" value="root_cert/x509/x509_cert.c"/>
+			<build type="header-file" value="root_cert/x509/x509_cert.h"/>
+			<build type="header-file" value="programmer/programmer.h"/>
+			<build type="header-file" value="programmer/programmer_apis.h"/>
+			<build type="header-file" value="spi_flash_mapping/spi_flash_map.h"/>
+			
+			<build type="header-file" value="binaries/DigiCert_Root.h"/>
+			<build type="header-file" value="binaries/DigiCertSHA2_Root.h"/>
+			<build type="header-file" value="binaries/GeoTrustGlobalCA_Root.h"/>
+			<build type="header-file" value="binaries/Radius_Root.h"/>
+			<build type="header-file" value="binaries/VeriSign_Root.h"/>
+			<build type="header-file" value="binaries/m2m_aio_2b0.h"/>
+			<build type="header-file" value="binaries/m2m_aio_3a0.h"/>
+			<build type="distribute" subtype="file" value="binaries/bin2h.exe"/>
+			<build type="distribute" subtype="file" value="binaries/bin2h_update.bat"/>
+
+			<!-- Device support -->
+			<device-support value="sam4s"/>
+			<device-support value="samg53"/>
+			<device-support value="samg55"/>
+
+			<!-- Required modules -->
+			<require idref="common.components.wifi.winc1500"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="common.utils.stdio.stdio_serial"/>
+
+			<info type="gui-flag" value="move-to-root"/>
+		</module>
+	</select-by-device>
+</asf>

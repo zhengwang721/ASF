@@ -48,10 +48,11 @@
 #define DIVAS_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_divas_group SAM0 Divide and Square Root Accelerator (DIVAS) Driver
+ * \defgroup asfdoc_sam0_divas_group SAM Divide and Square Root Accelerator (DIVAS) Driver
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
- * and management of the device's Divide and Square Root Accelerator functionality.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an
+ * interface for the configuration and management of the device's Divide and
+ * Square Root Accelerator functionality.
  *
  * The following peripherals are used by this module:
  *  - DIVAS (Divide and Square Root Accelerator)
@@ -188,9 +189,9 @@ extern "C" {
  *  DIVAS signed division operator output data structure.
  */
 typedef struct {
-	/** Signed division operator result: quotient. */
+	/** Signed division operator result: quotient */
 	int32_t quotient; 
-	/** Signed division operator result: remainder. */
+	/** Signed division operator result: remainder */
 	int32_t remainder;
 } idiv_return;
 
@@ -200,9 +201,9 @@ typedef struct {
  *  DIVAS unsigned division operator output data structure.
  */
 typedef struct {
-	/** Unsigned division operator result: quotient. */
+	/** Unsigned division operator result: quotient */
 	uint32_t quotient; 
-	/** Unsigned division operator result: remainder. */
+	/** Unsigned division operator result: remainder */
 	uint32_t remainder;
 } uidiv_return; 
 
@@ -333,7 +334,7 @@ __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denom
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_divas_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_divas_basic_use_case
@@ -348,8 +349,8 @@ __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denom
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
- *		<td>03/2015</td>
+ *		<td>42644A</td>
+ *		<td>12/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
