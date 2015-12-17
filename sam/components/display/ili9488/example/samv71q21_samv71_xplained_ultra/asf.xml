@@ -7,9 +7,10 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_ili9488.h"/>
-		<build type="header-file" value="conf_uart_serial.h"/>	
+		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="sam.components.display.ili9488.example"/>
 		<require idref="board.samv71_xplained_ultra"/>
+		<config name="config.sam.components.display.ili9488" value="ebi"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>

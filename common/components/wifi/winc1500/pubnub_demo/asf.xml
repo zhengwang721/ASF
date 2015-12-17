@@ -23,6 +23,7 @@
 
 			<!-- Required modules -->
 			<require idref="common.components.wifi.winc1500"/>
+			<require idref="sam0.drivers.adc"/>
 			<require idref="sam0.drivers.tcc"/>
 			<require idref="sam0.drivers.rtc"/>
 			<require idref="sam0.components.sensor.at30tse75x"/>
