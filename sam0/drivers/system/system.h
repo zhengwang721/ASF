@@ -68,13 +68,13 @@ extern "C" {
  * The following peripherals are used by this module:
  * \if DEVICE_SAML21_SYSTEM_SUPPORT
  *  - PM (Power Manager)
- *  - RSTC(Reset Controller)
- *  - SUPC(Supply Controller)
+ *  - RSTC (Reset Controller)
+ *  - SUPC (Supply Controller)
  * \endif
  * \if DEVICE_SAMC21_SYSTEM_SUPPORT
  *  - PM (Power Manager)
- *  - RSTC(Reset Controller)
- *  - SUPC(Supply Controller)
+ *  - RSTC (Reset Controller)
+ *  - SUPC (Supply Controller)
  * \endif
  * \if DEVICE_SAMD21_SYSTEM_SUPPORT
  *  - SYSCTRL (System Control)
@@ -694,7 +694,7 @@ void system_init(void);
  *  <tr>
  *      <td>42120E</td>
  *      <td>12/2015</td>
- *      <td>Added support for SAM DA1</td>
+ *      <td>Added support for SAM DA1 and SAM D09</td>
  * </tr>
  *  <tr>
  *      <td>42120D</td>

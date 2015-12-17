@@ -68,7 +68,7 @@ extern "C" {
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
  *  - Atmel | SMART SAM DA1
  *
  * The outline of this documentation is as follows:
@@ -388,7 +388,7 @@ enum system_osc8m_div {
 /**
  * \brief Frequency range for the internal 8MHz RC oscillator.
  *
- * Internal 8MHz RC oscillator frequency range setting
+ * Internal 8MHz RC oscillator frequency range setting.
  */
 enum system_osc8m_frequency_range {
 	/** Frequency range 4MHz to 6MHz */
@@ -1410,7 +1410,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>
- *			\li Updated dfll configuration function to implement workaround for
+ *			\li Updated DFLL configuration function to implement workaround for
  *			    errata 9905 in the DFLL module
  *			\li Updated \c system_clock_init() to reset interrupt flags before
  *			    they are used
@@ -1459,7 +1459,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	<tr>
  *		<td>42119E</td>
  *		<td>12/2015</td>
- *		<td>Added support for SAM DA1</td>
+ *		<td>Added support for SAM DA1 and SAM D09</td>
  *	</tr>
  *	<tr>
  *		<td>42119D</td>

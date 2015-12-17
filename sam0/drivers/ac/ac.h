@@ -1394,8 +1394,13 @@ static inline void ac_win_clear_status(
  *      <th>Comments</th>
  *    </tr>
  *    <tr>
- *      <td>42106E</td>
+ *      <td>42106F</td>
  *      <td>12/2015</td>
+ *      <td>Fixed typos and legal disclaimer</td>
+ *    </tr>
+ *    <tr>
+ *      <td>42106E</td>
+ *      <td>08/2015</td>
  *      <td>Added support for SAM L21, SAM C20/C21, and SAM DA1</td>
  *    </tr>
  *    <tr>

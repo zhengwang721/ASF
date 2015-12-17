@@ -473,7 +473,7 @@ void wdt_reset_count(void);
  *	<tr>
  *		<td>42124E</td>
  *		<td>12/2015</td>
- *		<td>Added support for SAM L21/L22, SAM DA1, and SAM C20/C21</td>
+ *		<td>Added support for SAM L21/L22, SAM DA1, SAM D09, and SAM C20/C21</td>
  *	</tr>
  *	<tr>
  *		<td>42124D</td>
