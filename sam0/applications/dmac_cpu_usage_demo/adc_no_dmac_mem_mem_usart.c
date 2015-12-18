@@ -116,7 +116,7 @@ struct usart_module usart_instance;
 struct adc_module adc_instance;
 
 /*! brief PORT base address */
-volatile PortGroup *const port_base = PORT;
+volatile PortGroup *const port_base = (PortGroup *const)PORT;
 
 /**
  * \brief Enable ADC interrupt 
@@ -301,7 +301,7 @@ void configure_usart(void)
 	struct usart_config config_usart;
 	
 	/* USART base address */
-	SercomUsart *const usart_hw	= EDBG_CDC_MODULE;
+	SercomUsart *const usart_hw	= (SercomUsart *const)EDBG_CDC_MODULE;
 	
 	/* Get USART default configuration */
 	usart_get_config_defaults(&config_usart);

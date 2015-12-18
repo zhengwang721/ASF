@@ -25,6 +25,7 @@
 		<require idref="sam0.drivers.dma"/>
 		<require idref="sam0.drivers.sercom.usart"/>
 
+		<device-support value="samd11"/>
 		<device-support value="saml22"/>
 	</module>
 </asf>
