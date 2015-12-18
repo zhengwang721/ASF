@@ -24,7 +24,7 @@
 			<require idref="sam.drivers.gpbr"/>
 			<require idref="sam.services.flash"/>
 			<require idref="sam.drivers.wdt"/>
-			<device-support value="atsam4cp16b_0"/>
+			<device-support value="atsam4cp16b:0"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 		</module>
 		<module type="service" id="sam.services.plc.hal.prime#1" caption="PRIME Hardware Abstraction Layer">			
@@ -48,7 +48,7 @@
 			<require idref="sam.drivers.gpbr"/>
 			<require idref="sam.services.flash"/>
 			<require idref="sam.drivers.wdt"/>
-			<device-support value="atsam4cmp16c_0"/>
+			<device-support value="atsam4cmp16c:0"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4cm"/>
 		</module>
 		<module type="service" id="sam.services.plc.hal.prime#2" caption="PRIME Hardware Abstraction Layer">			
@@ -72,7 +72,7 @@
 			<require idref="sam.drivers.gpbr"/>
 			<require idref="sam.services.flash"/>
 			<require idref="sam.drivers.wdt"/>
-			<device-support value="atsam4cms16c_0"/>
+			<device-support value="atsam4cms16c:0"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4cm"/>
 		</module>
 		<module type="service" id="sam.services.plc.hal.prime#3" caption="PRIME Hardware Abstraction Layer">			
@@ -96,7 +96,7 @@
 			<require idref="sam.drivers.gpbr"/>
 			<require idref="sam.services.flash"/>
 			<require idref="sam.drivers.wdt"/>
-			<device-support value="atsam4c16c_0"/>
+			<device-support value="atsam4c16c:0"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4c"/>
 		</module>
 	</select-by-device>

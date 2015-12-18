@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<project caption="Basic FreeRTOS Example for SAME70-Xplained" id="common.services.freertos.sam_example.same70_xplained">
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="FreeRTOSConfig.h"/>
+		<require idref="common.services.freertos.sam_example"/>
+		<require idref="board.same70_xplained"/>
+		<config name="config.thirdparty.os.freertos.version" value="8.2.3"/>
+		<config name="config.board.same70_xplained.led" value="yes"/>
+		<config name="config.thirdparty.os.freertos-8_2_3.memory_manager" value="3_use_libc_malloc_free" />
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.iarewarm.heap_size" value="0x1800"/>
+		<config name="config.compiler.armgcc.optimization" value="high"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70q21"/>
+	</project>
+</asf>

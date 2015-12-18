@@ -75,6 +75,12 @@
 		<device-support value="samd10dm"/>
 	</board>
 
+	<board id="board.user_board.samd10du" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samd10du"/>
+	</board>
+
 	<board id="board.user_board.samd11c" caption="User Board template">
 		<require idref="common2.boards.user_board.common"/>
 		<require idref="sam0.utils.linker_scripts"/>
@@ -91,6 +97,12 @@
 		<require idref="common2.boards.user_board.common"/>
 		<require idref="sam0.utils.linker_scripts"/>
 		<device-support value="samd11dm"/>
+	</board>
+
+	<board id="board.user_board.samd11du" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samd11du"/>
 	</board>
 
 	<board id="board.user_board.saml21" caption="User Board template">
@@ -181,5 +193,11 @@
 		<require idref="common2.boards.user_board.common"/>
 		<require idref="sam0.utils.linker_scripts"/>
 		<device-support value="samd09d"/>
+	</board>
+
+	<board id="board.user_board.samb11g" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="samb.utils.linker_scripts"/>
+		<device-support value="samb11g"/>
 	</board>
 </asf>

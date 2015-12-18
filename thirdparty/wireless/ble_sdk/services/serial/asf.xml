@@ -31,6 +31,7 @@
 				<require idref="sam.drivers.usart"/>
 				<require idref="sam.drivers.pio"/>
 				<require idref="common.services.delay"/>
+				<require idref="sam.drivers.pdc"/>
 
 				<build type="module-config" subtype="required-header-file" value="conf_serialdrv.h"/>
 				<build type="module-config" subtype="path" value="uart/sam/module_config"/>

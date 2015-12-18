@@ -1389,33 +1389,38 @@ static inline void ac_win_clear_status(
  *
  * <table>
  *    <tr>
- *      <th>Doc. Rev.</td>
- *      <th>Date</td>
- *      <th>Comments</td>
+ *      <th>Doc. Rev.</th>
+ *      <th>Date</th>
+ *      <th>Comments</th>
  *    </tr>
  *    <tr>
- *      <td>E</td>
+ *      <td>42106F</td>
+ *      <td>12/2015</td>
+ *      <td>Fixed typos and legal disclaimer</td>
+ *    </tr>
+ *    <tr>
+ *      <td>42106E</td>
  *      <td>08/2015</td>
- *      <td>Added support for SAM L21, SAM C20/C21, and SAM DAx.</td>
+ *      <td>Added support for SAM L21, SAM C20/C21, and SAM DA1</td>
  *    </tr>
  *    <tr>
- *      <td>D</td>
+ *      <td>42106D</td>
  *      <td>12/2014</td>
- *      <td>Added support for SAM R21 and SAM D10/D11.</td>
+ *      <td>Added support for SAM R21 and SAM D10/D11</td>
  *    </tr>
  *    <tr>
- *      <td>C</td>
+ *      <td>42106C</td>
  *      <td>01/2014</td>
- *      <td>Added support for SAM D21.</td>
+ *      <td>Added support for SAM D21</td>
  *    </tr>
  *    <tr>
- *      <td>B</td>
+ *      <td>42106B</td>
  *      <td>06/2013</td>
  *      <td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *    </tr>
  *    <tr>
- *      <td>A</td>
+ *      <td>42106A</td>
  *      <td>06/2013</td>
  *      <td>Initial release</td>
  *    </tr>
