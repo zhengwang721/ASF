@@ -55,6 +55,9 @@
  * status after user presses the push button and it causes that the counter
  * will not be restarted until a fault occurs (the watchdog reset).
  *
+ * You can select to test watchdog normal mode or watchdog interrupt by not 
+ * defining (or defining) WDT_INTERRUPT in conf_example.h.
+ *
  * \section files Main Files
  * - wdt_sam4l.c: Watchdog driver for SAM4L;
  * - wdt_sam4l.h: Watchdog driver header file for SAM4L;
@@ -150,6 +153,53 @@ static void set_toggle_flag(void)
 	}
 }
 
+#if defined(WDT_INTERRUPT)
+
+/**
+ *  \brief Enable WDT interrupt.
+ */
+static void enable_wdt_interrupt(Wdt *wdt)
+{
+	wdt->WDT_IER = WDT_IER_WINT;
+}
+
+/**
+ *  \brief Disable WDT interrupt.
+ */
+static void disable_wdt_interrupt(Wdt *wdt)
+{
+	wdt->WDT_IDR = WDT_IDR_WINT;
+}
+
+/**
+ *  \brief Clear WDT interrupt status.
+ */
+static void clear_wdt_interrupt_status(Wdt *wdt)
+{
+	wdt->WDT_ICR = WDT_ICR_WINT;
+}
+
+/**
+ *  \brief Handler for WDT interrupt.
+ */
+void WDT_Handler(void)
+{
+	/* Disable WDT interrupt. */
+	disable_wdt_interrupt(WDT);
+	
+	puts("\n\rEnter watchdog interrupt.\r");
+
+	/* Clear the WDT interrupt status. */
+	clear_wdt_interrupt_status(WDT);
+	
+	puts("The watchdog timer was restarted.\r");
+	
+	/* Enable WDT interrupt. */
+	enable_wdt_interrupt(WDT);
+}
+
+#endif
+
 /**
  *  Configure serial console.
  */
@@ -215,8 +265,22 @@ int main(void)
 	 */
 	wdt_get_config_defaults(&g_wdt_cfg);
 	g_wdt_cfg.timeout_period = WDT_PERIOD_524288_CLK;
+#if defined(WDT_INTERRUPT)
+	g_wdt_cfg.wdt_int_mode = WDT_INT_MODE_EN;
+#endif
 	wdt_init(&g_wdt_inst, WDT, &g_wdt_cfg);
 	wdt_enable(&g_wdt_inst);
+
+#if defined(WDT_INTERRUPT)
+	/* Enable WDT interrupt. */
+	enable_wdt_interrupt(WDT);
+
+	/* Configure and enable WDT interrupt. */
+	NVIC_DisableIRQ(WDT_IRQn);
+	NVIC_ClearPendingIRQ(WDT_IRQn);
+	NVIC_SetPriority(WDT_IRQn, 0);
+	NVIC_EnableIRQ(WDT_IRQn);
+#endif
 
 	printf("\r\nPlease press %s to simulate a deadlock.\r\n",
 			EXAMPLE_BUTTON_NAME);
@@ -238,8 +302,13 @@ int main(void)
 
 		/* Simulate deadlock when button is pressed. */
 		if (g_b_button_event == true) {
+#if defined(WDT_INTERRUPT)
+			puts("The program enters an infinite loop, the WDT interrupt will " \
+					"be triggered in about 5s.\r");
+#else
 			puts("The program enters an infinite loop, the WDT reset will " \
 					"be triggered in about 5s.\r");
+#endif
 			wdt_clear(&g_wdt_inst);
 			while (1) {
 				if (g_b_systick_event == true) {

@@ -54,4 +54,8 @@
 #define EXAMPLE_BUTTON_EIC_IRQN    EIC_5_IRQn
 #define EXAMPLE_BUTTON_NAME        PUSH_BUTTON_0_NAME
 
+/* WDT interrupt, if the macro is defined the example is used to test the WDT interrupt, 
+ * if not, will test the WDT normal mode. */
+#define WDT_INTERRUPT
+
 #endif /* CONF_EXAMPLE_H_INCLUDED */

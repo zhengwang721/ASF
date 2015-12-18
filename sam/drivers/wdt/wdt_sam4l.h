@@ -129,6 +129,13 @@ struct wdt_config {
 /** Window mode  */
 #define WDT_MODE_WINDOW   WDT_CTRL_MODE
 
+	/** WDT interrupt mode */
+	uint32_t wdt_int_mode;
+/** WDT Interrupt Mode is disabled.  */
+#define WDT_INT_MODE_DIS    0
+/** WDT Interrupt Mode is enabled.  */
+#define WDT_INT_MODE_EN    WDT_CTRL_IM
+
 	/** Number of CLK_CNT until the WDT expires. */
 	enum wdt_period timeout_period;
 	/** Number of CLK_CNT until the reset window opens. */
