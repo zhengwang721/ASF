@@ -365,7 +365,7 @@ static inline void tcm_disable(void)
 
 	__DSB();
 	__ISB();
-	SCB->ITCMCR &= ~(uint32_t)SCB_DTCMCR_EN_Msk;
+	SCB->ITCMCR &= ~(uint32_t)(1UL);
 	SCB->DTCMCR &= ~(uint32_t)SCB_DTCMCR_EN_Msk;
 	__DSB();
 	__ISB();

@@ -428,6 +428,10 @@ void wifi_connect(void)
 			return 0;
 		}
 		ul_rc = flash_write(page_addr, page_buffer, IFLASH_PAGE_SIZE, 0);
+		if (ul_rc != FLASH_RC_OK) {
+			printf("-F- Flash programming error %lu\n\r", ul_rc);
+		return 0;
+	}
 	}else {
 		ssid_length = page_buffer[75];
 		pwd_length = page_buffer[76];
