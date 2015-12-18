@@ -60,7 +60,7 @@
 /*  <id> lls_server */
 #define LLS_SERVER 0
 
- #if defined LLS_GATT_SERVER
+ #ifdef LLS_GATT_SERVER
 
 /** @brief count of included service in Linkloss service
  *
@@ -131,7 +131,7 @@ uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 /*  <id> lls_client */
 #define LLS_CLIENT 0
 
-#if defined LLS_GATT_CLIENT
+#ifdef LLS_GATT_CLIENT
 
 #define MAX_LLS_CHAR_SIZE                       (1)
 
@@ -170,9 +170,9 @@ uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt
 #define LLS_ALERT_LEVEL                         LLS_HIGH_ALERT
 
 typedef enum {
-	LLS_NO_ALERT,
-	LLS_LOW_ALERT,
-	LLS_HIGH_ALERT
+  LLS_NO_ALERT,
+  LLS_MILD_ALERT,
+  LLS_HIGH_ALERT
 } link_loss_alert_level_t;
 
 typedef struct gatt_lls_char_handler {

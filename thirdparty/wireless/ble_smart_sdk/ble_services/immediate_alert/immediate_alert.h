@@ -85,7 +85,7 @@ typedef enum immediate_alert_level {
 /*  <id> ias_client */
 #define IAS_CLIENT 0
 
-#if defined IAS_GATT_CLIENT
+#ifdef IAS_GATT_CLIENT
 
 /* Maximum character data size to support */
 #define MAX_IAS_CHAR_SIZE                       (1)
@@ -133,7 +133,7 @@ at_ble_status_t ias_alert_level_write(at_ble_handle_t conn_handle,
 /*  <id> ias_server */
 #define IAS_SERVER 0
 
-#if defined IAS_GATT_SERVER
+#ifdef IAS_GATT_SERVER
 
 /** @brief Initialize the Immediate alert service with default values
  *

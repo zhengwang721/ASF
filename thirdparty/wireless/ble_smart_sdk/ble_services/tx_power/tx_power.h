@@ -58,7 +58,7 @@
 /*  <id> txps_server */
 #define TXPS_SERVER 0
 
- #if defined TXPS_GATT_SERVER
+ #ifdef TXPS_GATT_SERVER
 
 /****************************************************************************************
 *							        Macros	                                                *
@@ -120,7 +120,7 @@ at_ble_status_t txps_primary_service_define(gatt_service_handler_t *txps_primary
 /*  <id> txps_client */
 #define TXPS_CLIENT 0
 
-#if defined TXPS_GATT_CLIENT
+#ifdef TXPS_GATT_CLIENT
 /* Tx Power Maximum Character byte support */
 #define MAX_TX_POWER_CHAR_SIZE                  (1)
 

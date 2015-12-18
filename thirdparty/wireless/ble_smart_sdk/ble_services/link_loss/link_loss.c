@@ -237,9 +237,9 @@ int8_t lls_alert_read_response(at_ble_characteristic_read_response_t *read_resp,
 		}
 		break;
 
-		case LLS_LOW_ALERT:
+		case LLS_MILD_ALERT:
 		{
-			DBG_LOG_CONT(" LOW ALERT ");
+			DBG_LOG_CONT(" MILD ALERT ");
 		}
 		break;
 
