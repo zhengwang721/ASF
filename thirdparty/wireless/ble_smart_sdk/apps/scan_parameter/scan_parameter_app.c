@@ -194,6 +194,16 @@ static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	LED_Off(LED0);
 }
 
+/* Callback registered for AT_BLE_CONNECTED event from stack */
+static at_ble_status_t ble_connected_app_event(void *param)
+{
+	#if !BLE_PAIR_ENABLE
+		ble_paired_app_event(param);
+	#else
+		ALL_UNUSED(param);
+	#endif
+	return AT_BLE_SUCCESS;
+}
 /**
  * \Service Characteristic change handler function
  */
@@ -215,6 +225,41 @@ static void button_cb(void)
 {
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
+
+static const ble_event_callback_t ble_scan_param_app_gap_cb[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	ble_connected_app_event,
+	ble_disconnected_app_event,
+	NULL,
+	NULL,
+	ble_paired_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	ble_paired_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t ble_scan_param_app_gatt_server_cb[] = {
+	sps_notification_confirmed_cb,
+	NULL,
+	sps_char_changed_cb,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 
 /**
  * \Scan Parameter Application main function
@@ -253,17 +298,28 @@ int main(void)
 
 	sps_service_advertise();
 
+	/* Register callbacks for gap related events */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GAP_EVENT_TYPE,
+									ble_scan_param_app_gap_cb);
+	
+	/* Register callbacks for gatt server related events */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GATT_SERVER_EVENT_TYPE,
+									ble_scan_param_app_gatt_server_cb);
+
+
 	/* Register callback for paired event */
-	register_ble_paired_event_cb(ble_paired_app_event);
+	//register_ble_paired_event_cb(ble_paired_app_event);
 
 	/* Register callback for disconnected event */
-	register_ble_disconnected_event_cb(ble_disconnected_app_event);
+//register_ble_disconnected_event_cb(ble_disconnected_app_event);
 
 	/* Register callback for characteristic changed event */
-	register_ble_characteristic_changed_cb(sps_char_changed_cb);
+	//register_ble_characteristic_changed_cb(sps_char_changed_cb);
 
 	/* Register callback for notification confirmed event */
-	register_ble_notification_confirmed_cb(sps_notification_confirmed_cb);
+	//register_ble_notification_confirmed_cb(sps_notification_confirmed_cb);
 
 	/* Capturing the events  */
 	while (app_exec) {
