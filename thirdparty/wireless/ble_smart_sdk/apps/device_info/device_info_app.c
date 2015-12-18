@@ -144,12 +144,44 @@ static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
 	device_information_advertise();
 }
 
-static void button_cb(void)
+/* Callback registered for AT_BLE_CONNECTED event from stack */
+static at_ble_status_t ble_connected_app_event(void *param)
+{
+	#if !BLE_PAIR_ENABLE
+		ble_paired_app_event(param);
+	#else
+		ALL_UNUSED(param);
+	#endif
+	return AT_BLE_SUCCESS;
+}
+
+void button_cb(void)
 {
 	/* For user usage */
 	DBG_LOG("button_cb");
 }
 
+static const ble_event_callback_t device_info_app_gap_cb[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	ble_connected_app_event,
+	ble_disconnected_app_event,
+	NULL,
+	NULL,
+	ble_paired_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	ble_paired_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 /**
  * \Device Information Service Application main function
  */
@@ -193,13 +225,18 @@ int main(void)
 
 	device_information_advertise();
 
+	/* Register callbacks for gap related events */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GAP_EVENT_TYPE,
+									device_info_app_gap_cb);
+
 	/* Register callback for paired event */
-	register_ble_paired_event_cb(ble_paired_app_event);
+//	register_ble_paired_event_cb(ble_paired_app_event);
 
 	/* Register callback for disconnected event */
-	register_ble_disconnected_event_cb(ble_disconnected_app_event);
+//	register_ble_disconnected_event_cb(ble_disconnected_app_event);
 
-	register_ble_user_event_cb(ble_user_event);
+//	register_ble_user_event_cb(ble_user_event);
 
 	/* Capturing the events  */
 	while (app_exec) {

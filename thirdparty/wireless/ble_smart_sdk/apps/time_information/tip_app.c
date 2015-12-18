@@ -80,7 +80,7 @@ volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 extern gatt_cts_handler_t cts_handle;
 extern gatt_dst_handler_t dst_handle;
 extern gatt_rtu_handler_t rtu_handle;
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 volatile bool button_pressed = false;
 extern volatile bool current_time_char_found;
 extern volatile bool local_time_char_found;
@@ -88,7 +88,7 @@ extern volatile bool ref_time_char_found;
 extern volatile bool time_with_dst_char_found;
 extern volatile bool time_update_cp_char_found;
 extern volatile bool time_update_state_char_found;
-
+static bool completed_prev_read = true;
 /***********************************************************************************
  *									Implementations                               *
  **********************************************************************************/
@@ -117,42 +117,65 @@ void timer_callback_handler(void)
  * @return None
  *
  */
-static void app_read_response_cb(at_ble_characteristic_read_response_t *char_read_resp)
+static at_ble_status_t app_read_response_cb(void *param)
 {
+	at_ble_characteristic_read_response_t *char_read_resp;
+	char_read_resp = (at_ble_characteristic_read_response_t *)param;
 	if (char_read_resp->char_handle == cts_handle.curr_char_handle) {
 		if (local_time_char_found) {
-			if (tis_current_time_read( ble_connected_dev_info[0].handle,
-					cts_handle.lti_char_handle )
-					== AT_BLE_SUCCESS) {
+			if (tis_current_time_read( char_read_resp->conn_handle,
+			cts_handle.lti_char_handle )
+			== AT_BLE_SUCCESS) {
 				DBG_LOG_DEV("Local Time info request success");
 			}
+		}else {
+			completed_prev_read = true;
 		}
 	} else if (char_read_resp->char_handle == cts_handle.lti_char_handle) {
 		if (ref_time_char_found) {
-			if (tis_current_time_read( ble_connected_dev_info[0].handle,
-					cts_handle.rti_char_handle )
-					== AT_BLE_SUCCESS) {
+			if (tis_current_time_read( char_read_resp->conn_handle,
+			cts_handle.rti_char_handle )
+			== AT_BLE_SUCCESS) {
 				DBG_LOG_DEV("Reference Time info request success");
 			}
+		}else {
+			completed_prev_read = true;
 		}
 	} else if (char_read_resp->char_handle == cts_handle.rti_char_handle) {
 		if (time_with_dst_char_found) {
-			if (tis_dst_change_read( ble_connected_dev_info[0].handle,
-					dst_handle.dst_char_handle )
-					== AT_BLE_SUCCESS) {
+			if (tis_dst_change_read( char_read_resp->conn_handle,
+			dst_handle.dst_char_handle )
+			== AT_BLE_SUCCESS) {
 				DBG_LOG_DEV("Time with DST read request success");
 			}
+		}else {
+			completed_prev_read = true;
 		}
 	} else if (char_read_resp->char_handle == dst_handle.dst_char_handle) {
 		if (time_update_state_char_found) {
-			if (tis_rtu_update_read( ble_connected_dev_info[0].handle,
-					rtu_handle.tp_state_char_handle, 20 )
-					== AT_BLE_SUCCESS) {
+			if (tis_rtu_update_read( char_read_resp->conn_handle,
+			rtu_handle.tp_state_char_handle, 20 )
+			== AT_BLE_SUCCESS) {
 				DBG_LOG_DEV("Time update state request success");
 			}
 		}
+		completed_prev_read = true;
 	}
+	return AT_BLE_SUCCESS;
 }
+
+static const ble_event_callback_t tip_app_gatt_client_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	app_read_response_cb,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 
 /**
  * @brief Main Function for Time Information Callback
@@ -174,7 +197,7 @@ int main(void)
 
 	/*Registration of timer callback*/
 	hw_timer_register_callback(timer_callback_handler);
-	time_info_register_read_response_callback(app_read_response_cb);
+	//time_info_register_read_response_callback(app_read_response_cb);
 
 	DBG_LOG("Time Profile Application");
 
@@ -185,11 +208,17 @@ int main(void)
 	button_init(button_cb);
 	led_init();
 
+	time_info_init(NULL);
+
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GATT_CLIENT_EVENT_TYPE,
+									tip_app_gatt_client_handle);
 	while (1) {
 		ble_event_task();
 		if (button_pressed) {
 			if (current_time_char_found) {
-				if (tis_current_time_read( ble_connected_dev_info[0].handle,
+				if (tis_current_time_read( ble_dev_info[0].conn_info.handle,
 						cts_handle.curr_char_handle)
 						== AT_BLE_SUCCESS) {
 					LED_Toggle(LED0);

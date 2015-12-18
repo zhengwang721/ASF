@@ -109,7 +109,8 @@ gatt_rtu_handler_t rtu_handle = {0, 0, AT_BLE_INVALID_PARAM, 0, NULL, 0, NULL};
 #endif
 
 /**@breif Peer Connected device info*/
-extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
+//extern at_ble_connected_t ble_connected_dev_info[BLE_MAX_DEVICE_CONNECTED];
+extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED]; //connected devices information 
 
 volatile bool current_time_char_found = false;
 volatile bool local_time_char_found = false;
@@ -121,6 +122,41 @@ volatile bool Desc_found = false;
 
 read_response_callback_t read_response_callback = NULL;
 
+static const ble_event_callback_t time_info_gatt_client_handle[] = {
+	time_info_service_found_handler,
+	NULL,
+	time_info_characteristic_found_handler,
+	time_info_descriptor_found_handler,
+	time_info_discovery_complete_handler,
+	time_info_characteristic_read_response,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t ble_mgr_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	time_info_service_discover,
+	time_info_disconnected_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+static at_ble_handle_t time_info_conn_handle = 0;
 /***********************************************************************************
  *									Implementations	                               *
  **********************************************************************************/
@@ -193,6 +229,14 @@ void time_info_init(void *param)
 	#endif
 
 	time_info_adv();
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GAP_EVENT_TYPE,
+									ble_mgr_gap_handle);
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GATT_CLIENT_EVENT_TYPE,
+									time_info_gatt_client_handle);
 }
 
 /**
@@ -296,9 +340,9 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 		if ((cts_handle.char_discovery == AT_BLE_SUCCESS) &&
 				(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
-					ble_connected_dev_info[0].handle,
-					cts_handle.start_handle,
-					cts_handle.end_handle) == AT_BLE_SUCCESS) {
+			discover_status->conn_handle,
+			cts_handle.start_handle,
+			cts_handle.end_handle) == AT_BLE_SUCCESS) {
 				discover_char_flag = false;
 				DBG_LOG_DEV("CTS Characteristic Discovery Started");
 			} else {
@@ -314,9 +358,9 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 		if ((cts_handle.desc_discovery == AT_BLE_SUCCESS) &&
 				(discover_char_flag)) {
 			if (at_ble_descriptor_discover_all(
-					ble_connected_dev_info[0].handle,
-					cts_handle.start_handle,
-					cts_handle.end_handle) == AT_BLE_SUCCESS) {
+			discover_status->conn_handle,
+			cts_handle.start_handle,
+			cts_handle.end_handle) == AT_BLE_SUCCESS) {
 				discover_char_flag = false;
 				DBG_LOG_DEV("CTS Descriptors Discovery Started");
 			} else {
@@ -331,9 +375,9 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 		if ((dst_handle.char_discovery == AT_BLE_SUCCESS) &&
 				(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
-					ble_connected_dev_info[0].handle,
-					dst_handle.start_handle,
-					dst_handle.end_handle) == AT_BLE_SUCCESS) {
+			discover_status->conn_handle,
+			dst_handle.start_handle,
+			dst_handle.end_handle) == AT_BLE_SUCCESS) {
 				discover_char_flag = false;
 				DBG_LOG_DEV("DST Characteristic Discovery Started");
 			} else {
@@ -351,9 +395,9 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 		if ((rtu_handle.char_discovery == AT_BLE_SUCCESS) &&
 				(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
-					ble_connected_dev_info[0].handle,
-					rtu_handle.start_handle,
-					rtu_handle.end_handle) == AT_BLE_SUCCESS) {
+			discover_status->conn_handle,
+			rtu_handle.start_handle,
+			rtu_handle.end_handle) == AT_BLE_SUCCESS) {
 				discover_char_flag = false;
 				DBG_LOG_DEV("RTU Characteristic Discovery Started");
 			} else {
@@ -371,16 +415,16 @@ void time_info_discovery_complete_handler(at_ble_discovery_complete_t *discover_
 				(discover_char_flag)) {
 			DBG_LOG("TIME INFOMATION PROFILE NOT SUPPORTED");
 			discover_char_flag = false;
-			if (at_ble_disconnect(ble_connected_dev_info[0].handle,
-					AT_BLE_TERMINATED_BY_USER) != AT_BLE_SUCCESS) {
+			if(at_ble_disconnect(discover_status->conn_handle, 
+								AT_BLE_TERMINATED_BY_USER) != AT_BLE_SUCCESS) {
 				DBG_LOG("disconnection failed");
 			}
 		}
 
 		if (discover_char_flag) {
 			DBG_LOG("GATT characteristic discovery completed");
-			if (ble_send_slave_sec_request(ble_connected_dev_info[0].handle)
-					== AT_BLE_SUCCESS) {
+			if(ble_send_slave_sec_request(discover_status->conn_handle) 
+										  == AT_BLE_SUCCESS) {
 				DBG_LOG_DEV("Successfully send Slave Security Request");
 			} else {
 				DBG_LOG("Fail to send Slave Security Request");
@@ -543,7 +587,7 @@ void time_info_write_notification_handler(void *param)
 	/* To enable notification */
 	#if 0
 	if (Desc_found) {
-		if (!(tis_current_time_noti(ble_connected_dev_info[0].handle,
+		if (!(tis_current_time_noti(ble_dev_info[0].conn_info.handle,
 				cts_handle.curr_desc_handle, false) == AT_BLE_SUCCESS)) {
 			DBG_LOG("Fail to set Current Time descriptor 0");
 		}
