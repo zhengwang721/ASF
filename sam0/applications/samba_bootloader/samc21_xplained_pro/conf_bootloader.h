@@ -43,7 +43,7 @@
  /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
- 
+
 #ifndef CONF_BOOTLOADER_H_INCLUDED
 #define CONF_BOOTLOADER_H_INCLUDED
 
@@ -57,8 +57,8 @@
 #define BOOT_USART_MODULE          EDBG_CDC_MODULE
 #define BOOT_USART_BAUDRATE        115200
 #define BOOT_USART_MUX_SETTINGS    EDBG_CDC_SERCOM_MUX_SETTING
-#define BOOT_USART_PAD0            EDBG_CDC_SERCOM_PINMUX_PAD0
-#define BOOT_USART_PAD1            EDBG_CDC_SERCOM_PINMUX_PAD1
+#define BOOT_USART_PAD2            EDBG_CDC_SERCOM_PINMUX_PAD2
+#define BOOT_USART_PAD3            EDBG_CDC_SERCOM_PINMUX_PAD3
 #define BOOT_USART_GCLK_SOURCE     GCLK_GENERATOR_0
 
 #define APP_START_PAGE             (APP_START_ADDRESS / FLASH_PAGE_SIZE)

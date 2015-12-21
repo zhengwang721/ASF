@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Bootloader specific configuration.
+ * \brief SAM External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,30 +40,26 @@
  * \asf_license_stop
  *
  */
- /*
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
+
+/** 
+ * Define which clock type is used to clock EIC peripheral:
+ *     - EXTINT_CLK_GCLK
+ *     - EXTINT_CLK_ULP32K
+ *
+ * EXTINT_CLK_ULP32K is available for SAM L21/C21.
+ */
+#define EXTINT_CLOCK_SELECTION   EXTINT_CLK_GCLK
  
-#ifndef CONF_BOOTLOADER_H_INCLUDED
-#define CONF_BOOTLOADER_H_INCLUDED
+/**
+ * Define which GCLK source is used when selecting EXTINT_CLK_GCLK type.
+ */
+#if (EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_3
+#endif
 
-#include "conf_board.h"
-
-#define APP_START_ADDRESS          0x00002000
-#define BOOT_LED                   LED0_PIN
-#define BOOT_LOAD_PIN              SW0_PIN
-#define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
-
-#define BOOT_USART_MODULE          EDBG_CDC_MODULE
-#define BOOT_USART_BAUDRATE        115200
-#define BOOT_USART_MUX_SETTINGS    EDBG_CDC_SERCOM_MUX_SETTING
-#define BOOT_USART_PAD0            EDBG_CDC_SERCOM_PINMUX_PAD0
-#define BOOT_USART_PAD1            EDBG_CDC_SERCOM_PINMUX_PAD1
-#define BOOT_USART_GCLK_SOURCE     GCLK_GENERATOR_0
-
-#define APP_START_PAGE             (APP_START_ADDRESS / FLASH_PAGE_SIZE)
-
-/* DEBUG LED output enable/disable */
-#define DEBUG_ENABLE               false
-
-#endif /* CONF_BOOTLOADER_H_INCLUDED */
+#endif
