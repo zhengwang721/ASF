@@ -58,8 +58,67 @@
 #include "at_ble_errno.h"
 #include "at_ble_trace.h"
 
-int main(void)
+volatile unsigned char app_stack_patch[1024];
+
+static ble_event_callback_t app_gap_handle[GAP_HANDLE_FUNC_MAX];
+
+/**
+ * @brief app_connected_state blemanager notifies the application about state
+ * @param[in] at_ble_connected_t
+ */
+static at_ble_status_t app_connected_event_handler(void *params)
 {
+	ALL_UNUSED(params);
+	return AT_BLE_SUCCESS;
+}
+
+/**
+ * @brief app_connected_state ble manager notifies the application about state
+ * @param[in] connected
+ */
+static at_ble_status_t app_disconnected_event_handler(void *params)
+{
+	anp_client_adv();
+	return AT_BLE_SUCCESS;
+}
+
+void button_cb(void)
+{
+	/** For user  */
+}
+
+void app_init()
+{
+	ble_event_callback_t app_gap_handle_tmp[] = {
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		app_connected_event_handler,
+		app_disconnected_event_handler,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	};
+
+	memcpy(app_gap_handle, app_gap_handle_tmp, sizeof(ble_event_callback_t) * GAP_HANDLE_FUNC_MAX);
+}
+
+void main(void)
+{
+	at_ble_addr_t addr = {AT_BLE_ADDRESS_PUBLIC, {0x54, 0x05, 0x11, 0x6a, 0x7f, 0x7f}};
+
+	/*intialize system driver */
 	platform_driver_init();
 	acquire_sleep_lock();
 
@@ -69,11 +128,19 @@ int main(void)
 	/* Initialize serial console */
 	serial_console_init();
 
-	DBG_LOG("ANCS Application");
+	DBG_LOG("ANCS Profile Application");
 
-	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
+	/* initialize the BLE chip  and Set the device mac address */
+	ble_device_init(&addr);
 
+	/* Initializing the profile */
+	app_init();
+	anp_client_init(NULL);
+
+	/* Starting advertisement */
+	anp_client_adv();
+
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GAP_EVENT_TYPE, app_gap_handle);
 	/* Capturing the events  */
 	while (1) {
 		ble_event_task();

@@ -56,10 +56,6 @@
 extern volatile bool init_done;
 
 //alex.shin
-#define GAP_HANDLE_FUNC_MAX 19
-#define GATT_SERVER_HANDLER_FUNC_MAX 10
-
-//alex.shin
 #if BLE_DEVICE_ROLE == BLE_ROLE_ALL
 #ifndef ATT_DB_MEMORY
 #define ATT_DB_MEMORY

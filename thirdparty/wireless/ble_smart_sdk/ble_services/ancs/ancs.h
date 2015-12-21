@@ -44,8 +44,40 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+
+/* <<< Use Configuration Wizard in Context Menu >>> */
+/* <h> ANCS Service Configuration */
+/* ======================= */
 #ifndef __ANCS_H__
 #define __ANCS_H__
+
+typedef struct ancs_prf {
+	/*Instance for ANCS*/
+	at_ble_primary_service_found_t ancs_serv;
+
+	/*Instance for notification source characteristic*/
+	at_ble_characteristic_found_t notification_source_char;
+
+	/*Instance for control point characteristic*/
+	at_ble_characteristic_found_t control_point_char;
+
+	/*Instance for data source characteristic*/
+	at_ble_characteristic_found_t data_source_char;
+
+	/*Instance for notification source descriptor*/
+	at_ble_descriptor_found_t notification_source_desc;
+
+	/*Instance for notification source descriptor*/
+	at_ble_descriptor_found_t data_source_desc;
+} ancs_prf_t;
+
+/**@brief ANCS Service Solicitation Info*/
+#define ANCS_SERV_UUID   "\xD0\x00\x2D\x12\x1E\x4B\x0F\xA4\x99\x4E\xCE\xB5\x31\xF4\x05\x79"
+
+/**@brief UUID Type & Length*/
+#define UUID_16BIT_LEN                                                  (2)
+#define UUID_32BIT_LEN                                                  (4)
+#define UUID_128BIT_LEN                                                 (16)
 
 /**
  * @brief Initializing Ancs data
@@ -62,3 +94,6 @@ void ancs_init(ancs_prf_t *ancs_data);
 void ancs_enable(ancs_prf_t *anp_data, at_ble_handle_t handle);
 
 #endif /* __ANCS_H__ */
+/* </h> */
+
+/* <<< end of configuration section >>> */

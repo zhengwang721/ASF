@@ -107,9 +107,10 @@ bat_gatt_service_handler_t bas_service_handler;
 bool volatile timer_cb_done = false;
 bool volatile flag = true;
 bool volatile battery_flag = true;
+at_ble_handle_t bat_connection_handle;
 
-bool isCharChanged = false;
-at_ble_characteristic_changed_t bas_char_handle;
+static ble_event_callback_t battery_app_gap_cb[GAP_HANDLE_FUNC_MAX];
+static ble_event_callback_t battery_app_gatt_server_cb[GATT_SERVER_HANDLER_FUNC_MAX];
 
 /**
  * \Timer callback handler called on timer expiry
@@ -117,77 +118,131 @@ at_ble_characteristic_changed_t bas_char_handle;
 static void timer_callback_handler(void)
 {
 	timer_cb_done = true;
-	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
+	//send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
 
 /* Advertisement data set and Advertisement start */
 static at_ble_status_t battery_service_advertise(void)
 {
-	uint8_t idx = 0;
-	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
-	uint8_t adv_data [ BAS_ADV_DATA_NAME_LEN + BAS_ADV_DATA_UUID_LEN   + (2 * 2)];
+	at_ble_status_t status = AT_BLE_FAILURE;
 
-	adv_data[idx++] = BAS_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = BAS_ADV_DATA_UUID_TYPE;
-
-	/* Appending the UUID */
-	adv_data[idx++] = (uint8_t)BAT_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(BAT_SERVICE_UUID >> 8);
-
-	/* Appending the complete name to the Ad packet */
-	adv_data[idx++] = BAS_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = BAS_ADV_DATA_NAME_TYPE;
-
-	memcpy(&adv_data[idx], BAS_ADV_DATA_NAME_DATA, BAS_ADV_DATA_NAME_LEN );
-	idx += BAS_ADV_DATA_NAME_LEN;
-
-	/* Adding the advertisement data and scan response data */
-	if (!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS)) {
-		DBG_LOG("Failed to set adv data");
+	if ((status = ble_advertisement_data_set()) != AT_BLE_SUCCESS) {
+		DBG_LOG("advertisement data set failed reason :%d", status);
+		return status;
 	}
 
 	/* Start of advertisement */
-	if (at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_BAS_FAST_ADV, APP_BAS_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS) {
+	if ((status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_BAS_FAST_ADV, APP_BAS_ADV_TIMEOUT, 0)) == AT_BLE_SUCCESS) {
 		DBG_LOG("BLE Started Adv");
 		return AT_BLE_SUCCESS;
 	} else {
-		DBG_LOG("BLE Adv start Failed");
+		DBG_LOG("BLE Adv start Failed reason :%d", status);
 	}
 
-	return AT_BLE_FAILURE;
+	return status;
 }
 
 /* Callback registered for AT_BLE_PAIR_DONE event from stack */
-static void ble_paired_app_event(at_ble_handle_t conn_handle)
+static at_ble_status_t ble_paired_app_event(void *param)
 {
+	timer_cb_done = false;
+	hw_timer_start(BATTERY_UPDATE_INTERVAL);
+	ALL_UNUSED(param);
+	return AT_BLE_SUCCESS;
 }
+
 
 /* Callback registered for AT_BLE_DISCONNECTED event from stack */
-static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
+static at_ble_status_t ble_disconnected_app_event(void *param)
 {
-	flag = false;
 	timer_cb_done = false;
+	flag = true;
 	hw_timer_stop();
 	battery_service_advertise();
+	ALL_UNUSED(param);
+	return AT_BLE_SUCCESS;
 }
 
-/* Callback registered for AT_BLE_NOTIFICATION_CONFIRMED event from stack */
-static void ble_notification_confirmed_app_event(at_ble_cmd_complete_event_t *notification_status)
+static at_ble_status_t ble_connected_app_event(void *param)
 {
-	if (!notification_status->status) {
-		flag = true;
-		DBG_LOG_DEV("sending notification to the peer success");
-	}
+	at_ble_connected_t *connected = (at_ble_connected_t *)param;
+	bat_connection_handle = connected->handle;
+	#if !BLE_PAIR_ENABLE
+		ble_paired_app_event(param);
+	#else
+		ALL_UNUSED(param);
+	#endif
+	return AT_BLE_SUCCESS;
 }
+/* Callback registered for AT_BLE_NOTIFICATION_CONFIRMED event from stack */
+static at_ble_status_t ble_notification_confirmed_app_event(void *param)
+{
+	at_ble_cmd_complete_event_t *notification_status = (at_ble_cmd_complete_event_t *)param;
+	if(!notification_status->status)
+	{
+		flag = true;
+		DBG_LOG_DEV("sending notification to the peer success");				
+	}
+	return AT_BLE_SUCCESS;
+}
+
 
 /* Callback registered for AT_BLE_CHARACTERISTIC_CHANGED event from stack */
-static at_ble_status_t ble_char_changed_app_event(at_ble_characteristic_changed_t *char_handle)
+static at_ble_status_t ble_char_changed_app_event(void *param)
 {
-	isCharChanged = true;
-	memcpy(&bas_char_handle, char_handle, sizeof(at_ble_characteristic_changed_t));
-	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
+	at_ble_characteristic_changed_t *char_handle = (at_ble_characteristic_changed_t *)param;
+	bat_char_changed_event(char_handle->conn_handle,&bas_service_handler, char_handle, &flag);
+
+	//send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 	
 	return AT_BLE_SUCCESS;
+}
+
+void app_var_init()
+{
+	ble_event_callback_t battery_app_gap_cb_tmp[] = {
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		ble_connected_app_event,
+		ble_disconnected_app_event,
+		NULL,
+		NULL,
+		ble_paired_app_event,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		ble_paired_app_event,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	};
+
+	ble_event_callback_t battery_app_gatt_server_cb_tmp[] = {
+		ble_notification_confirmed_app_event,
+		NULL,
+		ble_char_changed_app_event,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	};
+	memcpy(battery_app_gap_cb, battery_app_gap_cb_tmp, sizeof(ble_event_callback_t) * GAP_HANDLE_FUNC_MAX);
+	memcpy(battery_app_gatt_server_cb, battery_app_gatt_server_cb_tmp, sizeof(ble_event_callback_t) * GATT_SERVER_HANDLER_FUNC_MAX);
+
+	timer_cb_done = false;
+	flag = true;
+	battery_flag = true;
+
+	memset(db_mem, 0, sizeof(uint8_t) * 1024);
+	memset(&bas_service_handler, 0, sizeof(bat_gatt_service_handler_t));
 }
 
 /**
@@ -201,12 +256,14 @@ int main(void)
 
 	memset(db_mem, 0, sizeof(uint8_t) * 1024);
 	memset(&bas_service_handler, 0, sizeof(bat_gatt_service_handler_t));
-	memset(&bas_char_handle, 0, sizeof(at_ble_characteristic_changed_t));
+	//memset(&bas_char_handle, 0, sizeof(at_ble_characteristic_changed_t));
 
 	flag = false;
 	battery_flag = true;
 	timer_cb_done = false;
-	isCharChanged = false;
+	//isCharChanged = false;
+	
+	app_var_init();
 
 	platform_driver_init();
 	acquire_sleep_lock();
@@ -229,7 +286,6 @@ int main(void)
 	ble_device_init(NULL);
 
 	/* Initialize the battery service */
-	bat_init_var();
 	bat_init_service(&bas_service_handler, &battery_level);
 
 	/* Define the primary service in the GATT server database */
@@ -239,18 +295,17 @@ int main(void)
 
 	battery_service_advertise();
 
-	/* Register callback for paired event */
-	register_ble_paired_event_cb(ble_paired_app_event);
-
-	/* Register callback for disconnected event */
-	register_ble_disconnected_event_cb(ble_disconnected_app_event);
-
-	/* Register callback for notification confirmed event */
-	register_ble_notification_confirmed_cb(ble_notification_confirmed_app_event);
-
-	/* Register callback for characteristic changed event */
-	register_ble_characteristic_changed_cb(ble_char_changed_app_event);
-
+	
+	/* Register callbacks for gap related events */ 
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GAP_EVENT_TYPE,
+									battery_app_gap_cb);
+									
+	/* Register callbacks for gatt server related events */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GATT_SERVER_EVENT_TYPE,
+									battery_app_gatt_server_cb);
+	
 	/* Capturing the events  */
 	while (1) {
 		/* BLE Event Task */
@@ -259,9 +314,11 @@ int main(void)
 		if (timer_cb_done) {
 			/* send the notification and Update the battery level  */
 			if (flag) {
-				if (bat_update_char_value(&bas_service_handler, battery_level, &flag) == AT_BLE_SUCCESS) {
+				if(bat_update_char_value(bat_connection_handle,&bas_service_handler, battery_level, &flag) == AT_BLE_SUCCESS)
+				{
 					DBG_LOG("Battery Level:%d%%", battery_level);
 				}
+
 
 				if (battery_level == BATTERY_MAX_LEVEL) {
 					battery_flag = false;
@@ -278,18 +335,6 @@ int main(void)
 				/* hw_timer_start(BATTERY_UPDATE_INTERVAL); */
 				timer_cb_done = false;
 			}
-		}
-
-		if (isCharChanged == true) {
-			bat_char_changed_event(&bas_service_handler, &bas_char_handle, &flag);
-
-			if (flag) {
-				hw_timer_start(BATTERY_UPDATE_INTERVAL);
-			} else {
-				hw_timer_stop();
-			}
-
-			isCharChanged = false;
 		}
 	}
 }

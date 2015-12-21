@@ -173,6 +173,9 @@
 #define BLE_DEVICE_NAME                         "ATMEL-BLE"
 #endif
 
+#define GAP_HANDLE_FUNC_MAX 19
+#define GATT_CLIENT_HANDLER_FUNC_MAX 10
+#define GATT_SERVER_HANDLER_FUNC_MAX 10
 
 typedef enum {
 	BLE_GAP_EVENT_TYPE,
