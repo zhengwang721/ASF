@@ -1041,7 +1041,7 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 	
 	features.desired_auth =  BLE_AUTHENTICATION_LEVEL; 
 	features.bond = slave_sec_req->bond;
-	features.mitm_protection = slave_sec_req->mitm_protection;
+	features.mitm_protection = true;
 	/* Device capabilities is display only , key will be generated
 	and displayed */
 	features.io_cababilities = AT_BLE_IO_CAP_KB_DISPLAY;
