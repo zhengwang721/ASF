@@ -48,7 +48,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_clock_group SAM C20/C21 System Clock Management Driver (SYSTEM CLOCK)
+ * \defgroup asfdoc_sam0_system_clock_group SAM System Clock (SYSTEM CLOCK) Driver
  *
  * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
@@ -1053,8 +1053,8 @@ static inline enum status_code system_apb_clock_set_mask(
  *
  * \returns Status indicating the result of the clock mask change operation.
  *
- * \retval STATUS_ERR_INVALID_ARG  Invalid bus ID was given.
- * \retval STATUS_OK               The clock mask was changed successfully.
+ * \retval STATUS_ERR_INVALID_ARG  Invalid bus ID was given
+ * \retval STATUS_OK               The clock mask was changed successfully
  */
 static inline enum status_code system_apb_clock_clear_mask(
 		const enum system_clock_apb_bus bus,
@@ -1368,7 +1368,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_system_clock_group. QSGs are simple
  * examples with step-by-step instructions to configure and use this driver in
- * a selection of use cases. Note that QSGs can be compiled as a standalone
+ * a selection of use cases. Note that a QSG can be compiled as a standalone
  * application or be added to the user application.
  *
  *  - \subpage asfdoc_sam0_system_clock_basic_use_case
@@ -1383,8 +1383,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
- *		<td>06/2015</td>
+ *		<td>42647A</td>
+ *		<td>12/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
