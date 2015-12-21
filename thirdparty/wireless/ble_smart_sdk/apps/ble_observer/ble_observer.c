@@ -68,6 +68,13 @@
 static void ble_observer_init(void)
 {
 	at_ble_status_t scan_status;
+	
+	if(at_ble_scan_stop() != AT_BLE_SUCCESS)
+	{
+		/* If scan not started stop scan failed message will be displayed on terminal */
+		/* If the scan already started then stop scan will return AT_BLE_SUCCESS */
+		DBG_LOG_DEV("Stop scan failed");
+	}
 
 	/* Initialize the scanning procedure */
 	scan_status = gap_dev_scan();
@@ -428,9 +435,29 @@ at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_dat
 	return AT_BLE_SUCCESS;
 }
 
-/**
- * @brief Main Function for Observer
- */
+static const ble_event_callback_t observer_app_gap_cb[] = {
+	NULL,
+	ble_observer_scan_info_handler,
+	ble_observer_scan_data_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+
 int main(void )
 {
 	platform_driver_init();
@@ -444,7 +471,12 @@ int main(void )
 
 	/* observer init */
 	ble_observer_init();
-
+	
+	/* Register callbacks for gap related events */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+									BLE_GAP_EVENT_TYPE,
+									observer_app_gap_cb);
+	
 	/* Receiving events */
 	while (1) {
 		ble_event_task();
