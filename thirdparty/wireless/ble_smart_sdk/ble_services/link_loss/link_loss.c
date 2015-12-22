@@ -40,134 +40,144 @@
  * \asf_license_stop
  *
  */
-
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-/**
+ /**
  * \mainpage
  * \section preface Preface
  * This is the reference manual for the Device Information Service
  */
-
 /****************************************************************************************
-*							        Includes	                                        *
+*							        Includes	                                     	*
 ****************************************************************************************/
 
 #include "link_loss.h"
 
 #if defined LLS_GATT_SERVER
-
 /****************************************************************************************
-*							        Globals	                                                *
+*							        Globals	                                     		*
 ****************************************************************************************/
 
-uint8_t linkloss_initial_value;
+uint8_t linkloss_initial_value = 0;
+static const char* lls_gs_str[] = {"NO_ALERT", "MILD_ALERT", "HIGH_ALERT"};
 
 /****************************************************************************************
 *							        Implementations	                                    *
 ****************************************************************************************/
 
+
+
 /** @brief Linkloss service initialization
- *
- */
+  * 
+  */
 void init_linkloss_service(gatt_service_handler_t *linkloss_serv)
 {
-	linkloss_initial_value = 0;
-	linkloss_serv->serv_handle = 0;
-	linkloss_serv->serv_uuid.type = AT_BLE_UUID_16;
-
-	linkloss_serv->serv_uuid.uuid[0] = (uint8_t)LINK_LOSS_SERVICE_UUID;
-	linkloss_serv->serv_uuid.uuid[1] = (uint8_t)(LINK_LOSS_SERVICE_UUID >> 8);
-
-	/* Characteristic Info for Alert Value */
-
-	/* handle stored here */
-	linkloss_serv->serv_chars.char_val_handle = 0;
-
-	/*16bit UUID : Alert Level */
-	linkloss_serv->serv_chars.uuid.type = AT_BLE_UUID_16;
-
-	linkloss_serv->serv_chars.uuid.uuid[0] = (uint8_t)ALERT_LEVEL_CHAR_UUID;
-	linkloss_serv->serv_chars.uuid.uuid[1] = (uint8_t)(ALERT_LEVEL_CHAR_UUID >> 8);
-
-	/* Properties */
-	linkloss_serv->serv_chars.properties = AT_BLE_CHAR_READ | AT_BLE_CHAR_WRITE;
-
-	/* value */
-	linkloss_serv->serv_chars.init_value = &linkloss_initial_value;
-	linkloss_serv->serv_chars.value_init_len = sizeof(int8_t);
-	linkloss_serv->serv_chars.value_max_len = sizeof(int8_t);
-
-	/* permissions */
+	 
+	 linkloss_serv->serv_handle = 0;
+	 linkloss_serv->serv_uuid.type = AT_BLE_UUID_16;
+	
+	 linkloss_serv->serv_uuid.uuid[0] = (uint8_t) LINK_LOSS_SERVICE_UUID	; 
+	 linkloss_serv->serv_uuid.uuid[1] = (uint8_t) (LINK_LOSS_SERVICE_UUID >> 8);
+	 
+	 //Characteristic Info for Alert Value
+	 
+	 /* handle stored here */
+	 linkloss_serv->serv_chars.char_val_handle = 0;
+	           
+	 /*16bit UUID : Alert Level */
+	 linkloss_serv->serv_chars.uuid.type = AT_BLE_UUID_16;
+	
+	 linkloss_serv->serv_chars.uuid.uuid[0] = (uint8_t)  ALERT_LEVEL_CHAR_UUID;
+	 linkloss_serv->serv_chars.uuid.uuid[1] = (uint8_t) (ALERT_LEVEL_CHAR_UUID >> 8);
+	
+	 /* Properties */
+	 linkloss_serv->serv_chars.properties = AT_BLE_CHAR_READ | AT_BLE_CHAR_WRITE; 
+	
+	 /* value */
+	 linkloss_serv->serv_chars.init_value = &linkloss_initial_value ; 
+	 linkloss_serv->serv_chars.value_init_len = sizeof(int8_t);
+	 linkloss_serv->serv_chars.value_max_len = sizeof(int8_t);
+	
+	 /* permissions */
 	 #if BLE_PAIR_ENABLE
-	linkloss_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR
-			| AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);
+		linkloss_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR
+														 | AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   
 	 #else
-	linkloss_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR
-			| AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);
+		linkloss_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR
+														| AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);		
 	 #endif
-
-	/* user defined name */
-	linkloss_serv->serv_chars.user_desc = NULL;
-	linkloss_serv->serv_chars.user_desc_len = 0;
-	linkloss_serv->serv_chars.user_desc_max_len = 0;
-
-	/*user description permissions*/
-	linkloss_serv->serv_chars.user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;
-
-	/*client config permissions*/
-	linkloss_serv->serv_chars.client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;
-
-	/*server config permissions*/
-	linkloss_serv->serv_chars.server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;
-
-	/*user desc handles*/
-	linkloss_serv->serv_chars.user_desc_handle = 0;
-
-	/*client config handles*/
-	linkloss_serv->serv_chars.client_config_handle = 0;
-
-	/*server config handles*/
-	linkloss_serv->serv_chars.server_config_handle = 0;
-
-	/* presentation format */
-	linkloss_serv->serv_chars.presentation_format = NULL;
+	 
+	 /* user defined name */
+	 linkloss_serv->serv_chars.user_desc = NULL;           
+	 linkloss_serv->serv_chars.user_desc_len = 0;
+	 linkloss_serv->serv_chars.user_desc_max_len = 0;
+	
+	 /*user description permissions*/
+	 linkloss_serv->serv_chars.user_desc_permissions = AT_BLE_ATTR_NO_PERMISSIONS;             
+	
+	 /*client config permissions*/
+	 linkloss_serv->serv_chars.client_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;         
+	
+	  /*server config permissions*/
+	 linkloss_serv->serv_chars.server_config_permissions = AT_BLE_ATTR_NO_PERMISSIONS;        
+	
+	  /*user desc handles*/
+	 linkloss_serv->serv_chars.user_desc_handle = 0;            
+	
+	  /*client config handles*/
+	 linkloss_serv->serv_chars.client_config_handle = 0;        
+	
+	 /*server config handles*/
+	 linkloss_serv->serv_chars.server_config_handle = 0;         
+	
+	 /* presentation format */
+	 linkloss_serv->serv_chars.presentation_format = NULL;       
+	
 }
+ 
 
 /** @brief linkloss service definition
- *
- */
+  * 
+  */
 at_ble_status_t lls_primary_service_define(gatt_service_handler_t *lls_service)
 {
+	
 	return(at_ble_primary_service_define(&lls_service->serv_uuid,
-	       &lls_service->serv_handle,
-	       NULL, LLS_INCLUDED_SERVICE_COUNT,
-	       &lls_service->serv_chars, LLS_CHARACTERISTIC_COUNT));
+											&lls_service->serv_handle,
+											NULL, LLS_INCLUDED_SERVICE_COUNT,  
+											&lls_service->serv_chars, LLS_CHARACTERISTIC_COUNT));
 }
+
 
 /** @brief Setting the alert value of linkloss service
- *
- */
+  * 
+  */
 uint8_t lls_set_alert_value(at_ble_characteristic_changed_t *change_params, gatt_service_handler_t *lls_handler)
 {
+	uint8_t ret_value = INVALID_LLS_PARAM;
+	
 	if (change_params->char_handle == lls_handler->serv_chars.char_val_handle) {
-		DBG_LOG("The current alert level for linkloss is %x", change_params->char_new_value[0]);
-		return change_params->char_new_value[0];
-	}
-
-	return INVALID_LLS_PARAM;
+		if (change_params->char_new_value[0] <= LLS_HIGH_ALERT) {
+			DBG_LOG("The current alert level for linkloss is %s",
+					lls_gs_str[change_params->char_new_value[0]]);
+			ret_value = change_params->char_new_value[0];
+		} else {
+			DBG_LOG("These value are reserved for future, 0 - 2 is expected range but got %x",
+					change_params->char_new_value[0]);
+		}
+	} 
+	return ret_value;
 }
 
-#endif /* LLS_GATT_SERVER */
+#endif //LLS_GATT_SERVER
 
 #if defined LLS_GATT_CLIENT
-
 /**@brief write a characteristic  to Link Loss Characteristics
  *
  * if with_response is True, write completion will be reported via @ref
- * AT_BLE_CHARACTERISTIC_WRITE_RESPONSE event
+ *AT_BLE_CHARACTERISTIC_WRITE_RESPONSE event
  *
  * @param[in] conn_handle handle of the connection
  * @param[in] char_handle handle of the characteristic
@@ -192,7 +202,7 @@ at_ble_status_t lls_alert_level_write(at_ble_handle_t conn_handle,
 
 /**@brief Send the Read request to link loss handler
  * Read value will be reported via @ref AT_BLE_CHARACTERISTIC_READ_RESPONSE
- * event
+ *event
  *
  * @param[in] conn_handle handle of the connection
  * @param[in] char_handle handle of the characteristic
@@ -216,7 +226,7 @@ at_ble_status_t lls_alert_level_read(at_ble_handle_t conn_handle,
 /**@brief Read Link Loss Alert Value
  *
  * @param[in] read_value read response data available form
- * at_ble_characteristic_read_response_t
+ *at_ble_characteristic_read_response_t
  * @return Link Loss Alert level .
  * @return LLS_READ_RESP_INVALID if value are other than alert levels
  */
@@ -254,5 +264,4 @@ int8_t lls_alert_read_response(at_ble_characteristic_read_response_t *read_resp,
 
 	return(LLS_READ_RESP_INVALID);
 }
-
-#endif /* LLS_GATT_CLIENT */
+#endif //LLS_GATT_CLIENT
