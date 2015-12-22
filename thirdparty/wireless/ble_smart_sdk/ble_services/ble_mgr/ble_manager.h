@@ -1371,23 +1371,17 @@ typedef struct adv_element {
 } adv_element_t;
 
 /** @brief GATT services handles
- */
-#ifdef HID_SERVICE
-typedef struct gatt_service_handler {
-	at_ble_service_t serv;
-	at_ble_chr_t serv_chars[HID_CHARACTERISTIC_NUM];
-	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
-} gatt_service_handler_t;
-#else
-typedef struct gatt_service_handler {
-	/* / service uuid */
-	at_ble_uuid_t serv_uuid;
-	/* / service handle */
-	at_ble_handle_t serv_handle;
-	/* / service characteristic */
-	at_ble_characteristic_t serv_chars;
-} gatt_service_handler_t;
-#endif
+*/
+typedef struct gatt_service_handler
+{
+	/// service uuid
+	at_ble_uuid_t	serv_uuid;
+	/// service handle
+	at_ble_handle_t	serv_handle;
+	/// service characteristic
+	at_ble_characteristic_t	serv_chars;
+}gatt_service_handler_t;
+
 
 /****************************************************************************************
 *                                       Functions                                       *
