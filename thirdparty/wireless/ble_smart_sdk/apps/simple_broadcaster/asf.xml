@@ -6,7 +6,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="simple_broadcaster_app.h"/>
 		<build type="c-source" value="simple_broadcaster_app.c"/>
-		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_BROADCASTER"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_BROADCASTER"/>
 				
 		<require idref="thirdparty.wireless.ble_smart_sdk.services"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.ble_manager"/>
