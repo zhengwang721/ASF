@@ -444,7 +444,7 @@ int main (void)
 	
 	DBG_LOG("HTP Initialization completed. Waiting for Event");
 	
-	DBG_LOG_DEV("The Temperature type is %d",htp_data.temperature_type);
+	DBG_LOG_PTS("The Temperature type is %d",htp_data.temperature_type);
 	
 	
 	while(at_ble_event_get(&event, params, 0xFFFFFFFF) == AT_BLE_SUCCESS)
