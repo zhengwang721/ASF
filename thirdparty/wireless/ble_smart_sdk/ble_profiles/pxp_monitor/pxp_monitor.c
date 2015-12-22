@@ -1,62 +1,63 @@
 /**
- * \file
- *
- * \brief Proximity Monitor Profile
- *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel micro controller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
+* \file
+*
+* \brief Proximity Monitor Profile
+*
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
+*
+* \asf_license_start
+*
+* \page License
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* 3. The name of Atmel may not be used to endorse or promote products derived
+*    from this software without specific prior written permission.
+*
+* 4. This software may only be redistributed and used in connection with an
+*    Atmel micro controller product.
+*
+* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+* \asf_license_stop
+*
+*/
 
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
- */
+* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
+*Support</a>
+*/
 
 /**
- * \mainpage
- * \section preface Preface
- * This is the reference manual for the Proximity Monitor Profile
- */
+* \mainpage
+* \section preface Preface
+* This is the reference manual for the Proximity Monitor Profile
+*/
 /*- Includes ---------------------------------------------------------------*/
-
-#include "console_serial.h"
-#include "timer_hw.h"
+#include <asf.h>
+#include "platform.h"
 #include "pxp_monitor.h"
-#include <stdio.h>
+#include "console_serial.h"
+
+
 static const ble_event_callback_t pxp_gap_handle[] = {
 	NULL,
 	NULL,
@@ -110,8 +111,8 @@ at_ble_addr_t pxp_reporter_address;
 uint8_t pxp_supp_scan_index[MAX_SCAN_DEVICE];
 uint8_t scan_index = 0;
 
-//extern at_ble_connected_t ble_connected_dev_info[MAX_DEVICE_CONNECTED];
-extern uint8_t scan_response_count;
+
+extern volatile uint8_t scan_response_count;
 extern at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
 
 volatile uint8_t pxp_connect_request_flag = PXP_DEV_UNCONNECTED;
@@ -134,83 +135,54 @@ gatt_ias_char_handler_t ias_handle =
 uint8_t ias_char_data[MAX_IAS_CHAR_SIZE];
 #endif
 
+hw_timer_start_func_cb_t hw_timer_start_func_cb = NULL;
+hw_timer_stop_func_cb_t hw_timer_stop_func_cb = NULL;
 peripheral_state_cb_t peripheral_state_callback = NULL;
 
-static void init_global_vars(void)
-{
-	memset(&pxp_reporter_address, 0, sizeof(at_ble_addr_t));
-
-	memset(pxp_supp_scan_index, 0, sizeof(uint8_t) * MAX_SCAN_DEVICE);
-	scan_index = 0;
-
-	pxp_connect_request_flag = false;
-
-#if defined TX_POWER_SERVICE
-	memset(&txps_handle, 0, sizeof(gatt_txps_char_handler_t));
-	txps_handle.char_discovery = AT_BLE_INVALID_PARAM;
-
-	memset(tx_power_char_data, 0, sizeof(uint8_t) * MAX_TX_POWER_CHAR_SIZE);
-#endif
-
-#if defined LINK_LOSS_SERVICE
-	memset(&lls_handle, 0, sizeof(gatt_lls_char_handler_t));
-	lls_handle.char_discovery = AT_BLE_INVALID_PARAM;
-
-	memset(lls_char_data, 0, sizeof(uint8_t) * MAX_LLS_CHAR_SIZE);
-#endif
-
-#if defined IMMEDIATE_ALERT_SERVICE
-	memset(&ias_handle, 0, sizeof(gatt_ias_char_handler_t));
-	ias_handle.char_discovery = AT_BLE_INVALID_PARAM;
-
-	memset(ias_char_data, 0, sizeof(uint8_t) * MAX_IAS_CHAR_SIZE);
-#endif
-}
-
 /* *@brief Initializes Proximity profile
- * handler Pointer reference to respective variables
- *
- */
+* handler Pointer reference to respective variables
+*
+*/
 void pxp_monitor_init(void *param)
 {
-	init_global_vars();
-
+	UNUSED(param);
 	lls_handle.char_data = lls_char_data;
 	ias_handle.char_data = ias_char_data;
-	txps_handle.char_data = tx_power_char_data;
-	DBG_LOG("High Alert RSSI range: %ddBm and above", (PXP_HIGH_ALERT_RANGE - 1));
+	txps_handle.char_data = tx_power_char_data;	
+	DBG_LOG("High Alert RSSI range: %ddBm and above", (PXP_HIGH_ALERT_RANGE-1));
 	DBG_LOG("Mild Alert RSSI range: %ddBm to %ddBm", PXP_LOW_ALERT_RANGE, PXP_HIGH_ALERT_RANGE);
-	DBG_LOG("No Alert RSSI range:   %ddBm and below", (PXP_LOW_ALERT_RANGE + 1));
+	DBG_LOG("No Alert RSSI range:   %ddBm and below", (PXP_LOW_ALERT_RANGE+1));
+	
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GAP_EVENT_TYPE, pxp_gap_handle);
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GATT_CLIENT_EVENT_TYPE, pxp_gatt_client_handle);
 }
 
 /**@brief Connect to a peer device
- *
- * Connecting to a peer device, implicitly starting the necessary scan operation
- * then connecting if a device in the peers list is found.
- *
- * @param[in] scan_buffer a list of peers that the device will connect to one of
- * them
- * @param[in] index index of elements in peers, to initiate the connection
- *
- * @return @ref AT_BLE_SUCCESS operation programmed successfully
- * @return @ref AT_BLE_INVALID_PARAM incorrect parameter.
- * @return @ref AT_BLE_FAILURE Generic error.
- */
+*
+* Connecting to a peer device, implicitly starting the necessary scan operation
+* then connecting if a device in the peers list is found.
+*
+* @param[in] scan_buffer a list of peers that the device will connect to one of
+* them
+* @param[in] index index of elements in peers, to initiate the connection
+*
+* @return @ref AT_BLE_SUCCESS operation programmed successfully
+* @return @ref AT_BLE_INVALID_PARAM incorrect parameter.
+* @return @ref AT_BLE_FAILURE Generic error.
+*/
 at_ble_status_t pxp_monitor_connect_request(at_ble_scan_info_t *scan_buffer,
-		uint8_t index)
+uint8_t index)
 {
 	memcpy((uint8_t *)&pxp_reporter_address,
-			(uint8_t *)&scan_buffer[index].dev_addr,
-			sizeof(at_ble_addr_t));
+	(uint8_t *)&scan_buffer[index].dev_addr,
+	sizeof(at_ble_addr_t));
 
 	if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS) {
 		DBG_LOG("PXP Connect request sent");
 		pxp_connect_request_flag = PXP_DEV_CONNECTING;
-		hw_timer_start(PXP_CONNECT_REQ_INTERVAL);
+		hw_timer_start_func_cb(PXP_CONNECT_REQ_INTERVAL);
 		return AT_BLE_SUCCESS;
-	} else {
+		} else {
 		DBG_LOG("PXP Connect request send failed");
 	}
 
@@ -307,7 +279,6 @@ at_ble_status_t pxp_monitor_scan_data_handler(void *params)
 		do
 		{
 			DBG_LOG("Select [s] to scan again");
-			//GET_CHAR(&index);
 			index = getchar_b11();
 			DBG_LOG("%c", index);
 		} while (!(index == 's')); 
@@ -316,10 +287,45 @@ at_ble_status_t pxp_monitor_scan_data_handler(void *params)
 			return gap_dev_scan();
 		}
 	}		
-
+        ALL_UNUSED(params);
 	return AT_BLE_FAILURE;
 }
 
+at_ble_status_t pxp_monitor_start_scan(void)
+{
+	if (peripheral_state_callback != NULL)
+	{
+		if (peripheral_state_callback() == PERIPHERAL_ADVERTISING_STATE)
+		{
+			DBG_LOG("Peripheral is already Advertising. Scan not permitted");
+			return AT_BLE_FAILURE;
+		}
+	}
+	
+	char index_value;
+	hw_timer_stop_func_cb();
+	do
+	{
+		DBG_LOG("Select [r] to Reconnect or [s] Scan");
+		index_value = getchar_b11();
+		DBG_LOG("%c", index_value);
+	}	while (!((index_value == 'r') || (index_value == 's')));
+	
+	if(index_value == 'r') {
+		if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS) {
+			DBG_LOG("PXP Re-Connect request sent");
+			pxp_connect_request_flag = PXP_DEV_CONNECTING;
+			hw_timer_start_func_cb(PXP_CONNECT_REQ_INTERVAL);
+			return AT_BLE_SUCCESS;
+			} else {
+			DBG_LOG("PXP Re-Connect request send failed");
+		}
+	}
+	else if(index_value == 's') {
+		return gap_dev_scan();
+	}
+	return AT_BLE_FAILURE;
+}
 
 /**@brief peer device connection terminated
 *
@@ -355,9 +361,8 @@ at_ble_status_t pxp_disconnect_event_handler(void *params)
 		{
 			if (disconnect->reason == AT_BLE_LL_COMMAND_DISALLOWED) {
 				return AT_BLE_SUCCESS;
-			} else {
+			} else
 				pxp_monitor_start_scan();
-			}
 		}
 	}
 	else
@@ -447,7 +452,7 @@ at_ble_status_t pxp_monitor_connected_state_handler(void *params)
 		return AT_BLE_FAILURE;
 	}
 
-	hw_timer_stop();
+	hw_timer_stop_func_cb();
 	pxp_connect_request_flag = PXP_DEV_CONNECTED;
 		
 	return conn_params->conn_status;
@@ -489,46 +494,46 @@ at_ble_status_t pxp_monitor_service_found_handler(void *params)
 				= primary_service_params->start_handle;
 				lls_handle.end_handle
 				= primary_service_params->end_handle;
-			DBG_LOG("link loss service discovered");
-			DBG_LOG_DEV("%04X %04X",
-					primary_service_params->start_handle,
-					primary_service_params->end_handle);
-			lls_handle.char_discovery = (at_ble_status_t)DISCOVER_SUCCESS;
-		}
-		break;
+				DBG_LOG("link loss service discovered");
+				DBG_LOG_PTS("start_handle: %04X end_handle: %04X",
+				primary_service_params->start_handle,
+				primary_service_params->end_handle);				
+				lls_handle.char_discovery=(at_ble_status_t)DISCOVER_SUCCESS;
+			}
+			break;
 
-		/* for Immediate Alert service Handler */
-		case IMMEDIATE_ALERT_SERVICE_UUID:
-		{
-			ias_handle.start_handle
+			/* for Immediate Alert service Handler */
+			case IMMEDIATE_ALERT_SERVICE_UUID:
+			{
+				ias_handle.start_handle
 				= primary_service_params->start_handle;
-			ias_handle.end_handle
+				ias_handle.end_handle
 				= primary_service_params->end_handle;
-			DBG_LOG("Immediate Alert service discovered");
-			DBG_LOG_DEV(" %04X %04X ",
-					primary_service_params->start_handle,
-					primary_service_params->end_handle);
-			ias_handle.char_discovery = (at_ble_status_t)DISCOVER_SUCCESS;
-		}
-		break;
+				DBG_LOG("Immediate Alert service discovered");
+				DBG_LOG_PTS("start_handle: %04X end_handle: %04X ",
+				primary_service_params->start_handle,
+				primary_service_params->end_handle);				
+				ias_handle.char_discovery=(at_ble_status_t)DISCOVER_SUCCESS;
+			}
+			break;
 
-		/* for Tx Power service Handler */
-		case TX_POWER_SERVICE_UUID:
-		{
-			txps_handle.start_handle
+			/* for Tx Power service Handler */
+			case TX_POWER_SERVICE_UUID:
+			{
+				txps_handle.start_handle
 				= primary_service_params->start_handle;
-			txps_handle.end_handle
+				txps_handle.end_handle
 				= primary_service_params->end_handle;
-			DBG_LOG("Tx power service discovered");
-			DBG_LOG_DEV("%04X %04X",
-					primary_service_params->start_handle,
-					primary_service_params->end_handle);
-			txps_handle.char_discovery = (at_ble_status_t)DISCOVER_SUCCESS;
-		}
-		break;
+				DBG_LOG("Tx power service discovered");
+				DBG_LOG_PTS("start_handle: %04X end_handle: %04X",
+				primary_service_params->start_handle,
+				primary_service_params->end_handle);
+				txps_handle.char_discovery=(at_ble_status_t)DISCOVER_SUCCESS;
+			}
+			break;
 
-		default:
-		status = AT_BLE_INVALID_PARAM; 
+			default:
+			status = AT_BLE_INVALID_PARAM; 
 			break;
 		}
 	}
@@ -579,6 +584,7 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 			txps_handle.char_discovery = AT_BLE_INVALID_STATE;
 			discover_char_flag = false;
 		}
+
 		#endif
 
 		#if defined LINK_LOSS_SERVICE
@@ -591,51 +597,51 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 			AT_BLE_SUCCESS) 
 			{
 				DBG_LOG_DEV(
-						"Link Loss Characteristic Discovery Started");
+				"Link Loss Characteristic Discovery Started");
 			} else {
 				lls_handle.char_discovery = AT_BLE_FAILURE;
 				DBG_LOG(
-						"Link Loss Characteristic Discovery Failed");
+				"Link Loss Characteristic Discovery Failed");
 			}
-
 			lls_handle.char_discovery = AT_BLE_FAILURE;
 			discover_char_flag = false;
-		} else if (lls_handle.char_discovery == AT_BLE_INVALID_PARAM) {
+		} else if(lls_handle.char_discovery==AT_BLE_INVALID_PARAM) {
 			DBG_LOG("Link Loss Service not Available");
 			lls_handle.char_discovery = AT_BLE_INVALID_STATE;
 		}
+
 		#endif
 
 		#if defined IMMEDIATE_ALERT_SERVICE
 		if ((ias_handle.char_discovery == DISCOVER_SUCCESS) &&
-				(discover_char_flag)) {
+		(discover_char_flag)) {
 			if (at_ble_characteristic_discover_all(
 			discover_status->conn_handle,
 			ias_handle.start_handle,
 			ias_handle.end_handle) ==
 			AT_BLE_SUCCESS) {
 				DBG_LOG_DEV(
-						"Immediate Characteristic Discovery Started");
-			} else {
+				"Immediate Characteristic Discovery Started");
+				} else {
 				ias_handle.char_discovery = AT_BLE_FAILURE;
 				DBG_LOG(
-						"Immediate Characteristic Discovery Failed");
+				"Immediate Characteristic Discovery Failed");
 			}
-
 			ias_handle.char_discovery = AT_BLE_FAILURE;
 			discover_char_flag = false;
-		} else if (ias_handle.char_discovery == AT_BLE_INVALID_PARAM) {
+		} else if(ias_handle.char_discovery==AT_BLE_INVALID_PARAM) {
 			DBG_LOG("Immediate Alert Service not Available");
 			ias_handle.char_discovery = AT_BLE_INVALID_STATE;
 		}
-#endif
 
-		if (lls_handle.char_discovery == AT_BLE_INVALID_STATE) {
+#endif
+		
+		if(lls_handle.char_discovery == AT_BLE_INVALID_STATE) {
 			DBG_LOG("PROXIMITY PROFILE NOT SUPPORTED");
 			discover_char_flag = false;
 			at_ble_disconnect(discover_status->conn_handle, AT_BLE_TERMINATED_BY_USER);
 		}
-
+		
 		if (discover_char_flag) {
 			DBG_LOG_DEV("GATT characteristic discovery completed");
 			#if defined LINK_LOSS_SERVICE
@@ -644,6 +650,7 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 			LLS_ALERT_LEVEL) == AT_BLE_SUCCESS)) {
 				DBG_LOG("Link Loss write characteristics failed");
 			}
+
 			#endif
 
 			#if defined TX_POWER_SERVICE
@@ -652,6 +659,7 @@ at_ble_status_t pxp_monitor_discovery_complete_handler(void *params)
 			AT_BLE_SUCCESS)) {
 				DBG_LOG("Characteristic Read Request failed");
 			}
+
 			#endif
 		}
 	}
@@ -681,8 +689,8 @@ at_ble_status_t pxp_monitor_characteristic_read_response(void *params)
 	#if defined LINK_LOSS_SERVICE
 	lls_alert_read_response(char_read_resp, &lls_handle);
 	#endif
-	DBG_LOG("Starting timer");
-	hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
+	DBG_LOG_DEV("Starting timer");
+	hw_timer_start_func_cb(PXP_RSSI_UPDATE_INTERVAL);
 	return AT_BLE_SUCCESS;
 }
 
@@ -713,18 +721,19 @@ at_ble_status_t pxp_monitor_characteristic_found_handler(void *params)
 
 	if (charac_16_uuid == TX_POWER_LEVEL_CHAR_UUID) {
 		txps_handle.char_handle = characteristic_found->value_handle;
-		DBG_LOG_DEV("Tx power characteristics %04X",
-				txps_handle.char_handle);
+		DBG_LOG_PTS("Tx power characteristics: Attrib handle %x property %x handle: %x uuid : %x",
+					characteristic_found->char_handle, characteristic_found->properties,
+					txps_handle.char_handle, charac_16_uuid);
 	} else if ((charac_16_uuid == ALERT_LEVEL_CHAR_UUID)) {
 		if ((characteristic_found->char_handle > lls_handle.start_handle) &&
 				(characteristic_found->char_handle < lls_handle.end_handle)) {
 			lls_handle.char_handle = characteristic_found->value_handle;
-			DBG_LOG_DEV("link loss characteristics: Attrib handle %x property %x handle: %x uuid : %x",
+			DBG_LOG_PTS("link loss characteristics: Attrib handle %x property %x handle: %x uuid : %x",
 					characteristic_found->char_handle, characteristic_found->properties,
 					lls_handle.char_handle, charac_16_uuid);
 		} else {
 			ias_handle.char_handle = characteristic_found->value_handle;
-			DBG_LOG_DEV("Immediate alert characteristics: Attrib handle %x property %x handle: %x uuid : %x",
+			DBG_LOG_PTS("Immediate alert characteristics: Attrib handle %x property %x handle: %x uuid : %x",
 					characteristic_found->char_handle, characteristic_found->properties,
 					ias_handle.char_handle, charac_16_uuid);
 		}
@@ -732,41 +741,28 @@ at_ble_status_t pxp_monitor_characteristic_found_handler(void *params)
 	return AT_BLE_SUCCESS;
 }
 
-at_ble_status_t pxp_monitor_start_scan(void)
+/**@brief Registers callback for hardware timer start.
+*
+* @param[in] Callback for hardware timer start function.
+*
+* @return none.
+*/
+void register_hw_timer_start_func_cb(hw_timer_start_func_cb_t timer_start_fn)
 {
-	if (peripheral_state_callback != NULL)
-	{
-		if (peripheral_state_callback() == PERIPHERAL_ADVERTISING_STATE)
-		{
-			DBG_LOG("Peripheral is already Advertising. Scan not permitted");
-			return AT_BLE_FAILURE;
-		}
-	}
-	
-	uint8_t index_value;
-	hw_timer_stop();
-	do
-	{
-		DBG_LOG("Select [r] to Reconnect or [s] Scan");
-		index_value = getchar_b11();
-		DBG_LOG("%c", index_value);
-	}	while (!((index_value == 'r') || (index_value == 's')));
-	
-	if(index_value == 'r') {
-		if (gap_dev_connect(&pxp_reporter_address) == AT_BLE_SUCCESS) {
-			DBG_LOG("PXP Re-Connect request sent");
-			pxp_connect_request_flag = PXP_DEV_CONNECTING;
-			hw_timer_start(PXP_CONNECT_REQ_INTERVAL);
-			return AT_BLE_SUCCESS;
-			} else {
-			DBG_LOG("PXP Re-Connect request send failed");
-		}
-	}
-	else if(index_value == 's') {
-		return gap_dev_scan();
-	}
-	return AT_BLE_FAILURE;
+	hw_timer_start_func_cb = timer_start_fn;
 }
+
+/**@brief Registers callback for hardware timer stop.
+*
+* @param[in] Callback for hardware timer stop function.
+*
+* @return none.
+*/
+void register_hw_timer_stop_func_cb(hw_timer_stop_func_cb_t timer_stop_fn)
+{
+	hw_timer_stop_func_cb = timer_stop_fn;
+}
+
 void register_peripheral_state_cb(peripheral_state_cb_t peripheral_state_cb)
 {
 	peripheral_state_callback = peripheral_state_cb;

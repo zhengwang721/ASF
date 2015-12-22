@@ -43,12 +43,12 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
+ *Support</a>
  */
 
-/* <<< Use Configuration Wizard in Context Menu >>> */
-/* <h> Proximity Monitor Profile Configuration */
-/* ======================= */
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Proximity Monitor Profile Configuration
+// =======================
 #ifndef __PXP_MONITOR_H__
 #define __PXP_MONITOR_H__
 
@@ -66,28 +66,35 @@ typedef enum {
 	PXP_DEV_CONNECTED
 } PXP_DEV;
 
-/*   <o> Rssi Prameter Update Interval <1-10> */
-/*   <i> Defines inteval at which rssi value get updated. */
-/*   <i> Default: 1 */
+//   <o> Rssi Prameter Update Interval <1-10>
+//   <i> Defines inteval at which rssi value get updated.
+//   <i> Default: 1
 #define PXP_RSSI_UPDATE_INTERVAL        (0x01)
 
-/*   <o> Low Alert Range Value */
-/*   <i> Defines inteval at which Low Alert get triggers. */
-/*   <i> Default: -70 */
+
+//   <o> Low Alert Range Value 
+//   <i> Defines inteval at which Low Alert get triggers.
+//   <i> Default: -70
 #define PXP_LOW_ALERT_RANGE             (-70)
 
-/*   <o> High Alert Range Value */
-/*   <i> Defines inteval at which High Alert get triggers. */
-/*   <i> Default: -90 */
+//   <o> High Alert Range Value 
+//   <i> Defines inteval at which High Alert get triggers.
+//   <i> Default: -90
 #define PXP_HIGH_ALERT_RANGE            (-90)
 
 #define PXP_ASCII_TO_DECIMAL_VALUE      ('0')
 
 #define PXP_CONNECT_REQ_INTERVAL        (20)
 
-#define DISCOVER_SUCCESS                                (10)
+#define DISCOVER_SUCCESS				(10)
+#ifdef ENABLE_PTS
+#define DBG_LOG_PTS 					DBG_LOG
+#else
+#define DBG_LOG_PTS						ALL_UNUSED
+#endif
 
-
+typedef void (*hw_timer_start_func_cb_t)(uint32_t);
+typedef void (*hw_timer_stop_func_cb_t)(void);
 typedef ble_peripheral_state_t (*peripheral_state_cb_t)(void);
 
 /* *@brief Initializes Proximity profile
@@ -145,11 +152,11 @@ at_ble_status_t pxp_monitor_encryption_change_handler(void *params);
  * connected device
  *  and handles discovery complete
  * Search will go from start_handle to end_handle, whenever a characteristic is
- * found
+ *found
  * After search and discovery completes will initialize the alert level and read
- * the tx power value as defined
+ *the tx power value as defined
  * @ref AT_BLE_CHARACTERISTIC_FOUND event is sent and @ref
- * AT_BLE_DISCOVERY_COMPLETE is sent at end of discover operation.
+ *AT_BLE_DISCOVERY_COMPLETE is sent at end of discover operation.
  *
  * @param[in] discover_status discovery status on each
  * @param[in] start_handle start of the searched range
@@ -222,8 +229,10 @@ at_ble_status_t pxp_monitor_connect_request(at_ble_scan_info_t *scan_buffer,
 at_ble_status_t pxp_monitor_service_discover(at_ble_handle_t);
 
 at_ble_status_t pxp_monitor_start_scan(void);
+void register_hw_timer_start_func_cb(hw_timer_start_func_cb_t timer_start_fn);
+void register_hw_timer_stop_func_cb(hw_timer_stop_func_cb_t timer_stop_fn);
 void register_peripheral_state_cb(peripheral_state_cb_t peripheral_state_cb);
 #endif /*__PXP_MONITOR_H__*/
-/* </h> */
+// </h>
 
-/* <<< end of configuration section >>> */
+// <<< end of configuration section >>>
