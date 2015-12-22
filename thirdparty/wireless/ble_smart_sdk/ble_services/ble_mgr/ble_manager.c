@@ -52,6 +52,7 @@
 #include "ble_utils.h"
 #include "timer.h"
 #include "platform.h"
+#include "console_serial.h"
 
 extern volatile bool init_done;
 
