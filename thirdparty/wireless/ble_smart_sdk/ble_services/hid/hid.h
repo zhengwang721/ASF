@@ -52,6 +52,8 @@
 #ifndef __HID_H__
 #define __HID_H__
 
+#include "hid_device.h"
+
 /****************************************************************************************
 *							        Macros	                                                *
 ****************************************************************************************/
@@ -97,16 +99,6 @@ typedef enum {
 	/* / Enable report protocol mode */
 	HID_REPORT_PROTOCOL_MODE,
 } hid_proto_mode;
-
-/**@brief HID information flag value
- */
-typedef enum {
-	/* / Device is designed to be capable of providing wake-up signal to a HID host */
-	HID_REMOTE_WAKE_UP           = 0x01,
-
-	/* / Device is normally connectable */
-	HIDS_NORMALLY_CONNECTABLE    = 0x02,
-} hid_info_flag;
 
 /**@brief HID control point
  */

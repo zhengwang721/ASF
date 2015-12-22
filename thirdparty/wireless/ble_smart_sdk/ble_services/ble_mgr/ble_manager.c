@@ -84,8 +84,38 @@ const ble_event_callback_t *ble_mgr_htpt_event_cb[MAX_HTPT_EVENT_SUBSCRIBERS];
 const ble_event_callback_t *ble_mgr_dtm_event_cb[MAX_DTM_EVENT_SUBSCRIBERS];
 const ble_event_callback_t *ble_mgr_custom_event_cb[MAX_CUSTOM_EVENT_SUBSCRIBERS];
 
-static ble_event_callback_t ble_mgr_gap_handle[GAP_HANDLE_FUNC_MAX];
-static ble_event_callback_t ble_mgr_gatt_server_handle[GATT_SERVER_HANDLER_FUNC_MAX];
+static const ble_event_callback_t ble_mgr_gap_handle[GAP_HANDLE_FUNC_MAX] = {
+	ble_undefined_event_handler,
+	ble_scan_info_handler,
+	ble_scan_report_handler,
+	NULL,
+	NULL,
+	ble_connected_state_handler,
+	ble_disconnected_state_handler,
+	ble_conn_param_update,
+	ble_conn_param_update_req,
+	ble_pair_done_handler,
+	ble_pair_request_handler,
+	ble_slave_security_request_handler,
+	ble_pair_key_request_handler,
+	ble_encryption_request_handler,
+	ble_encryption_status_change_handler,
+	ble_resolv_rand_addr_handler,
+	NULL,
+	NULL,
+	NULL};
+
+static const ble_event_callback_t ble_mgr_gatt_server_handle[GATT_SERVER_HANDLER_FUNC_MAX] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	ble_mtu_changed_indication_handler,
+	ble_mtu_changed_cmd_complete_handler,
+	ble_characteristic_write_cmd_complete_handler,
+	NULL};
 
 volatile uint8_t scan_response_count = 0;
 at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
@@ -105,48 +135,9 @@ static void ble_set_address(at_ble_addr_t *addr);
 
 static void init_global_var(void)
 {
-	ble_event_callback_t gap_handle_dump[GAP_HANDLE_FUNC_MAX] = {
-	ble_undefined_event_handler,
-	ble_scan_info_handler,
-	ble_scan_report_handler,
-	NULL,
-	NULL,
-	ble_connected_state_handler,
-	ble_disconnected_state_handler,
-	ble_conn_param_update,
-	ble_conn_param_update_req,
-	ble_pair_done_handler,
-	ble_pair_request_handler,
-	ble_slave_security_request_handler,
-	ble_pair_key_request_handler,	
-	ble_encryption_request_handler,
-	ble_encryption_status_change_handler,
-	ble_resolv_rand_addr_handler,
-	NULL,
-	NULL,
-	NULL};
-
-	ble_event_callback_t gatt_server_handle_dump[GATT_SERVER_HANDLER_FUNC_MAX] = {
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	ble_mtu_changed_indication_handler,
-	ble_mtu_changed_cmd_complete_handler,
-	ble_characteristic_write_cmd_complete_handler,
-	NULL};	
-	
-//	memset(ble_connected_dev_info, 0, sizeof(ble_connected_dev_info));
-	memset(ble_mgr_gap_handle, 0, sizeof(ble_event_callback_t) * GAP_HANDLE_FUNC_MAX);
-	memset(ble_mgr_gatt_server_handle, 0, sizeof(ble_event_callback_t) * GATT_SERVER_HANDLER_FUNC_MAX);
 	memset(&ble_peripheral_dev_address, 0, sizeof(at_ble_addr_t));
 	memset(&connected_state_info, 0, sizeof(at_ble_connected_t));
-	
-	memcpy(ble_mgr_gap_handle,gap_handle_dump, sizeof(ble_event_callback_t) * GAP_HANDLE_FUNC_MAX);
-	memcpy(ble_mgr_gatt_server_handle,gatt_server_handle_dump, sizeof(ble_event_callback_t) * GATT_SERVER_HANDLER_FUNC_MAX);
-	
+		
 #if defined ATT_DB_MEMORY
 	memset(att_db_data, 0, sizeof(uint8_t) * ATT_DB_MAX);
 #endif
@@ -606,7 +597,7 @@ at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 	//BLE_ADDITIONAL_PAIR_DONE_HANDLER(NULL);
 	//if (ble_paired_cb != NULL) {
 		///ble_paired_cb(conn_handle);
-	}
+	//}
 	#endif
 	return AT_BLE_FAILURE;
 }

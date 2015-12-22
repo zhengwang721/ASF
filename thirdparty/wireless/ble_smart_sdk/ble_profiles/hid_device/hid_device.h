@@ -99,11 +99,11 @@
 #endif
 
 /** @brief APP_HID_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
-/*	<o> Fast Advertisement Interval <100-1000:50> */
-/*	<i> Defines inteval of Fast advertisement in ms. */
-/*	<i> Default: 100 */
-/*	<id> hid_fast_adv */
-#define APP_HID_FAST_ADV                                (100) /* 100 ms */
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines interval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> hid_fast_adv
+#define APP_HID_FAST_ADV				(1600) //1000 ms
 
 /** @brief APP_HID_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
 /*	<o> Advertisement Timeout <1000-10000:50> */
@@ -125,17 +125,16 @@
 /** @brief Advertisement appearance type  */
 #define ADV_DATA_APPEARANCE_TYPE                (0x19)
 
-/** @brief Advertisement data name type */
-#define ADV_DATA_NAME_TYPE                              (0x09)
-#if defined HID_MOUSE_DEVICE
-#define ADV_DATA_NAME_LEN                               (10)
-#define ADV_DATA_NAME_DATA                              "ATMEL-HIDM"
-#endif
+#define ADV_DATA_NAME_LEN				(9)
 
-#if defined HID_KEYBOARD_DEVICE
-#define ADV_DATA_NAME_LEN                               (10)
-#define ADV_DATA_NAME_DATA                              "ATMEL-HIDK"
-#endif
+/** @brief Advertisement data name type */
+#define ADV_DATA_NAME_TYPE				(0x09)
+
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> hid_sensor_adv_data_name_data
+#define ADV_DATA_NAME_DATA				("ATMEL-HID")
+
 /** @brief Advertisement data UUID length */
 #define ADV_DATA_UUID_LEN                               (2)
 
@@ -146,8 +145,14 @@
 #define ADV_DATA_UUID_TYPE                              (0x03)
 
 /****************************************************************************************
-*							        Enumerations	                                        *
+*							        Enumerations	                                   	*
 ****************************************************************************************/
+typedef struct hid_gatt_serv_handler
+{
+	at_ble_service_t		  serv;
+	at_ble_chr_t		      serv_chars[HID_CHARACTERISTIC_NUM];
+	at_ble_generic_att_desc_t serv_desc[HID_NUM_OF_REPORT];   /*Report descriptor*/
+}hid_gatt_serv_handler_t;
 
 /**@brief HID characteristic
  */
@@ -272,11 +277,11 @@ void hid_prf_var_init(void);
 void hid_prf_init(void *param);
 
 /** @brief HID device disconnected handler function
- *
- * @param[in] disconnect disconnect info
- * @return @ref AT_BLE_SUCCESS operation completed successfully
- */
-at_ble_status_t hid_prf_disconnect_event_handler(at_ble_disconnected_t *disconnect);
+  * 
+  * @param[in] disconnect disconnect info
+  * @return @ref AT_BLE_SUCCESS operation completed successfully
+  */
+at_ble_status_t hid_prf_disconnect_event_handler(void *params);
 
 /** @brief Report notification handler function
  */
@@ -300,34 +305,34 @@ void hid_prf_dev_adv(void);
 
 /** @brief Service characteristic change handler function
  */
-at_ble_status_t hid_prf_char_changed_handler(at_ble_characteristic_changed_t *char_handle);
+at_ble_status_t hid_prf_char_changed_handler(void *params);
 
-/** @brief Called by user to notify report to HID host
- *
- * @param[in] conn_handle	Connection handle
- * @param[in] serv_inst	Service instance
- * @param[in] reportid		Report ID corresponding to report
- * @param[in] report		Report info that need to send to host
- * @param[in] len			Report length
- */
+/** @brief Called by user to notify report to HID host 
+  * 
+  * @param[in] conn_handle	Connection handle
+  * @param[in] serv_inst	Service instance
+  * @param[in] reportid		Report ID corresponding to report
+  * @param[in] report		Report info that need to send to host
+  * @param[in] len			Report length 
+  */
 void hid_prf_report_update(uint16_t conn_handle, uint8_t serv_inst, uint8_t reportid, uint8_t *report, uint16_t len);
 
-/** @brief Called by user to notify boot report for mouse to HID host
- *
- * @param[in] conn_handle	Connection handle
- * @param[in] serv_inst	Service instance
- * @param[in] bootreport	Report info that need to send to host
- * @param[in] len			Report length
- */
+/** @brief Called by user to notify boot report for mouse to HID host 
+  * 
+  * @param[in] conn_handle	Connection handle
+  * @param[in] serv_inst	Service instance
+  * @param[in] bootreport	Report info that need to send to host
+  * @param[in] len			Report length 
+  */
 void hid_prf_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len);
 
-/** @brief Called by user to notify boot report for keyboard to HID host
- *
- * @param[in] conn_handle	Connection handle
- * @param[in] serv_inst	Service instance
- * @param[in] bootreport	Report info that need to send to host
- * @param[in] len			Report length
- */
+/** @brief Called by user to notify boot report for keyboard to HID host 
+  * 
+  * @param[in] conn_handle	Connection handle
+  * @param[in] serv_inst	Service instance
+  * @param[in] bootreport	Report info that need to send to host
+  * @param[in] len			Report length 
+  */
 void hid_prf_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len);
 
 #endif /*__HID_DEVICE_H__*/
