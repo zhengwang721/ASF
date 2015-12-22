@@ -336,8 +336,15 @@ enum status_code afec_init(Afec *const afec, struct afec_config *config)
 	afec_set_config(afec, config);
 
 	uint32_t i;
-	for (i = 0; i < _AFEC_NUM_OF_INTERRUPT_SOURCE; i++){
-		afec_callback_pointer[NUM_OF_AFEC - 1][i] = 0;
+	if(afec == AFEC0) {
+		for (i = 0; i < _AFEC_NUM_OF_INTERRUPT_SOURCE; i++){
+			afec_callback_pointer[0][i] = 0;
+		}
+	}
+	if(afec == AFEC1) {
+		for (i = 0; i < _AFEC_NUM_OF_INTERRUPT_SOURCE; i++){
+			afec_callback_pointer[1][i] = 0;
+		}
 	}
 
 	return STATUS_OK;
