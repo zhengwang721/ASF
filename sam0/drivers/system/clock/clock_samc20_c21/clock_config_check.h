@@ -92,20 +92,20 @@
 #  error CONF_CLOCK_XOSC_RUN_IN_STANDBY not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_XOSC_FAILURE_DETECTOT_PRE)
-#  error CONF_CLOCK_XOSC_FAILURE_DETECTOT_PRE not defined in conf_clock.h
+#if !defined(CONF_CLOCK_XOSC_FAILURE_DETECTOR_PRE)
+#  error CONF_CLOCK_XOSC_FAILURE_DETECTOR_PRE not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_XOSC_FAILURE_DETECTOT_EVENT_OUTPUT_EANBLE)
-#  error CONF_CLOCK_XOSC_FAILURE_DETECTOT_EVENT_OUTPUT_EANBLE not defined in conf_clock.h
+#if !defined(CONF_CLOCK_XOSC_FAILURE_DETECTOR_EVENT_OUTPUT_ENABLE)
+#  error CONF_CLOCK_XOSC_FAILURE_DETECTOR_EVENT_OUTPUT_ENABLE not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_XOSC_FAILURE_DETECTOT_EANBLE)
-#  error CONF_CLOCK_XOSC_FAILURE_DETECTOT_EANBLE not defined in conf_clock.h
+#if !defined(CONF_CLOCK_XOSC_FAILURE_DETECTOR_ENABLE)
+#  error CONF_CLOCK_XOSC_FAILURE_DETECTOR_ENABLE not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_XOSC_FAILURE_SWITCH_BACK_EANBLE)
-#  error CONF_CLOCK_XOSC_FAILURE_SWITCH_BACK_EANBLE not defined in conf_clock.h
+#if !defined(CONF_CLOCK_XOSC_FAILURE_SWITCH_BACK_ENABLE)
+#  error CONF_CLOCK_XOSC_FAILURE_SWITCH_BACK_ENABLE not defined in conf_clock.h
 #endif
 
 #if !defined(CONF_CLOCK_XOSC32K_ENABLE)

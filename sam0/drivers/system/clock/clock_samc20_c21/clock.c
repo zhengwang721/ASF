@@ -642,11 +642,11 @@ void system_clock_init(void)
 	xosc_conf.frequency         = CONF_CLOCK_XOSC_EXTERNAL_FREQUENCY;
 	xosc_conf.on_demand         = CONF_CLOCK_XOSC_ON_DEMAND;
 	xosc_conf.run_in_standby    = CONF_CLOCK_XOSC_RUN_IN_STANDBY;
-	xosc_conf.clock_failure_detector_prescaler = CONF_CLOCK_XOSC_FAILURE_DETECTOT_PRE;
-	xosc_conf.enable_clock_failure_detector    = CONF_CLOCK_XOSC_FAILURE_DETECTOT_EANBLE;
+	xosc_conf.clock_failure_detector_prescaler = CONF_CLOCK_XOSC_FAILURE_DETECTOR_PRE;
+	xosc_conf.enable_clock_failure_detector    = CONF_CLOCK_XOSC_FAILURE_DETECTOR_ENABLE;
 	xosc_conf.enable_clock_failure_detector_event_outut =
-											CONF_CLOCK_XOSC_FAILURE_DETECTOT_EVENT_OUTPUT_EANBLE;
-	xosc_conf.enable_clock_switch_back = CONF_CLOCK_XOSC_FAILURE_SWITCH_BACK_EANBLE;
+											CONF_CLOCK_XOSC_FAILURE_DETECTOR_EVENT_OUTPUT_ENABLE;
+	xosc_conf.enable_clock_switch_back = CONF_CLOCK_XOSC_FAILURE_SWITCH_BACK_ENABLE;
 
 	system_clock_source_xosc_set_config(&xosc_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC);
