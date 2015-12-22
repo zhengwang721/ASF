@@ -1,3 +1,4 @@
+
 /**
  * \file
  *
@@ -43,50 +44,51 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
+ *Support</a>
  */
 
-/* <<< Use Configuration Wizard in Context Menu >>> */
-/* <h> Custom Serial Chat Service Configuration */
-/* ======================= */
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Custom Serial Chat Service Configuration
+// =======================
 #ifndef __CSCS_H__
 #define __CSCS_H__
 
 /****************************************************************************************
-*							        Macros	                                                *
+*							        Macros	                                     		*
 ****************************************************************************************/
 /** @brief Custom serial chat UUID length */
-#define CSC_UUID_128_LEN                                (16)
+#define CSC_UUID_128_LEN				(16)
 
 /****************************************************************************************
-*							        Structures                                              *
+*							        Structures                                     		*
 ****************************************************************************************/
 /** @brief Custom serial chat service info */
-typedef struct csc_serv {
-	at_ble_uuid_t serv_uuid;
-	at_ble_handle_t serv_handle;
-	at_ble_characteristic_t endpoint_chars;
-} csc_serv_t;
+typedef struct csc_serv
+{
+	at_ble_uuid_t	serv_uuid; 
+	at_ble_handle_t	serv_handle; 
+	at_ble_characteristic_t	endpoint_chars;  
+}csc_serv_t;
 
 /****************************************************************************************
 *                                       Functions                                       *
 ****************************************************************************************/
-
 /** @brief Initialize the csc service initialization function
- *
- * @param[in] buf		Buffer pointer for data to be send
- * @param[in] len      size of buffer
- */
+  * 
+  * @param[in] buf		Buffer pointer for data to be send
+  * @param[in] len      size of buffer		
+  */
 at_ble_status_t csc_serv_init(uint8_t *buf, uint16_t len);
 
 /** @brief Function used for sending data to remote device
- *
+  * 
  * @param[in] buf		Buffer pointer for data to be send
  * @param[in] len       size of buffer
- */
+  */
 at_ble_status_t csc_serv_send_data(uint16_t connhandle, uint8_t *databuf, uint16_t datalen);
 
-#endif /*__CSCS_H__*/
-/* </h> */
 
-/* <<< end of configuration section >>> */
+#endif /*__CSCS_H__*/
+// </h>
+
+// <<< end of configuration section >>>

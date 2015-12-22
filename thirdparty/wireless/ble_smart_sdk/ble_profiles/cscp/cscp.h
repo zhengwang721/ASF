@@ -43,99 +43,102 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
+ *Support</a>
  */
 
-/* <<< Use Configuration Wizard in Context Menu >>> */
-/* <h> Custom Serial Chat Profile Configuration */
-/* ======================= */
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Custom Serial Chat Profile Configuration
+// =======================
 #ifndef __CSCP_H__
 #define __CSCP_H__
 #include "at_ble_api.h"
 
 /****************************************************************************************
-*							        Macros	                                                *
+*							        Macros	                                     		*
 ****************************************************************************************/
 
 /** @brief APP_SPOG_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
-/*	<o> Fast Advertisement Interval <100-1000:50> */
-/*	<i> Defines inteval of Fast advertisement in ms. */
-/*	<i> Default: 100 */
-/*	<id> csc_fast_adv */
-#define APP_CSC_FAST_ADV                                (100) /* 100 ms */
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> csc_fast_adv
+#define APP_CSC_FAST_ADV				(1600) //1000 ms
 
 /** @brief APP_SPOG_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
-/*	<o> Advertisement Timeout <1000-10000:50> */
-/*	<i> Defines inteval at which advertisement timout in ms. */
-/*	<i> Default: 1000 */
-/*	<id> csc_adv_timeout */
-#define APP_CSC_ADV_TIMEOUT                             (1000) /* 100 Secs */
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> csc_adv_timeout
+#define APP_CSC_ADV_TIMEOUT				(1000) // 100 Secs
 
 /** @brief scan_resp_len is the length of the scan response data */
-/*	<o> Scan Response Buffer <1-20> */
-/*	<i> Defines size of buffer for scan response. */
-/*	<i> Default: 10 */
-/*	<id> csc_scan_resp_len */
-#define SCAN_RESP_LEN                                   (10)
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> csc_scan_resp_len
+#define SCAN_RESP_LEN					(10)
 
 /** @brief Advertisement appearance type  */
-#define ADV_DATA_APPEARANCE_TYPE                (0x19)
+#define ADV_DATA_APPEARANCE_TYPE		(0x19)
 
 /** @brief Advertisement data name length  */
-#define ADV_DATA_NAME_LEN                               (6)
+#define ADV_DATA_NAME_LEN				(6)
 
 /** @brief Advertisement data type */
-#define ADV_DATA_NAME_TYPE                              (0x09)
+#define ADV_DATA_NAME_TYPE				(0x09)
 
 /** @brief Advertisement name */
-/*	<s.9>	Advertising String */
-/*	<i>	String Descriptor describing in advertising packet. */
-/*	<id> cscp_adv_data_name_data */
-#define ADV_DATA_NAME_DATA                              ("AT-CSC")
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> cscp_adv_data_name_data
+#define ADV_DATA_NAME_DATA				("AT-CSC")
 
 /** @brief Advertisement type length */
-#define ADV_TYPE_LEN                                    (0x01)
+#define ADV_TYPE_LEN					(0x01)
 
 /** @brief Advertisement 128bit UUID type */
-#define ADV_DATA_128_UUID_TYPE              (0x07)
+#define ADV_DATA_128_UUID_TYPE		    (0x07)
 
 /** @brief Custom serial chat UUID length */
-#define CSC_UUID_128_LEN                                (16)
+#define CSC_UUID_128_LEN				(16)
 
 /** @brief Discovery sucess status */
-#define AT_DISCOVER_SUCCESS                             (10)
+#define AT_DISCOVER_SUCCESS				(10)
 
 /**@brief start and end handle */
-#define START_HANDLE                                    (0x0001)
-#define END_HANDLE                                              (0xffff)
+#define START_HANDLE					(0x0001)
+#define END_HANDLE						(0xffff)
+
 
 /****************************************************************************************
-*							        Enumerations	                                        *
+*							        Enumerations	                                   	*
 ****************************************************************************************/
 /**@brief type of attribute discovery */
-typedef enum {
-	/* / Discovery Disable */
+typedef enum
+{
+	/// Discovery Disable
 	DISCOVER_IDLE = 0,
-
-	/* / Discover Service */
+	
+	/// Discover Service
 	DISCOVER_SERVICE,
-
-	/* / Discover Include Service */
+	
+	/// Discover Include Service
 	DISCOVER_INCLUDE_SERVICE,
-
-	/* / Discover Characteristic */
+	
+	/// Discover Characteristic
 	DISCOVER_CHARACTERISTIC,
-
-	/* / Discover Descriptor */
+	
+	/// Discover Descriptor
 	DISCOVER_DESCRIPTOR,
-} ble_discovery_role;
+	
+}ble_discovery_role;
 
 /****************************************************************************************
-*							        Structures                                              *
+*							        Structures                                     		*
 ****************************************************************************************/
 
 /* Typedef for csc profile */
-typedef struct app_csc_data {
+typedef struct app_csc_data{
 	/** To check the buffer pointer */
 	uint8_t *buff_ptr;
 	/** To check the buffer length */
@@ -152,17 +155,18 @@ typedef struct app_csc_data {
 	at_ble_characteristic_found_t csc_char;
 	/** Information of descriptor found */
 	at_ble_descriptor_found_t csc_desc;
-} app_csc_data_t;
+}app_csc_data_t;
 
 /**@brief SPOG report notification or indication, notify to user. */
-typedef struct csc_report_ntf {
+typedef struct csc_report_ntf
+{
 	/**< Received buffer pointer. */
-	uint8_t *recv_buff;
+	uint8_t *recv_buff;				
 	/**< Received buffer length. */
-	uint8_t recv_buff_len;
+	uint8_t recv_buff_len;			
 	/**< Connection Handle. */
-	at_ble_handle_t conn_handle;
-} csc_report_ntf_t;
+	at_ble_handle_t conn_handle;	
+}csc_report_ntf_t;
 
 /****************************************************************************************
 *							        Basic types                                         *
@@ -173,26 +177,27 @@ typedef void (*recv_ntf_callback_t)(csc_report_ntf_t *);
 /****************************************************************************************
 *                                       Functions                                       *
 ****************************************************************************************/
-
 /** @brief CSC profile buffer initialization
- * @param[in] databuf Initialization data pointer
- * @param[in] datalen Data length
+* @param[in] databuf Initialization data pointer
+* @param[in] datalen Data length
  */
 void csc_prf_buf_init(uint8_t *databuf, uint16_t datalen);
 
 /** @brief CSC profile send data function
- * @param[in] databuf Data buffer send to remote device
- * @param[in] datalen Data length
+* @param[in] databuf Data buffer send to remote device
+* @param[in] datalen Data length
  */
 void csc_prf_send_data(uint8_t *databuf, uint16_t datalen);
 
-/** @brief CSC profile initialization function
+/** @brief CSC profile initialization function 
  */
 void csc_prf_init(void *param);
 
-/** @brief CSC device disconnected handler function
- */
-at_ble_status_t csc_prf_disconnect_event_handler(at_ble_disconnected_t *disconnect);
+/**
+* \CSC device disconnected handler function
+*/
+
+at_ble_status_t csc_prf_disconnect_event_handler(void *params);
 
 /** @brief CSC profile advertisement function
  */
@@ -200,62 +205,62 @@ void csc_prf_dev_adv(void);
 
 /** @brief Service characteristic change handler function
  */
-at_ble_status_t csc_prf_char_changed_handler(at_ble_characteristic_changed_t *char_handle);
+at_ble_status_t csc_prf_char_changed_handler(void *params);
 
 /**
- * @brief Handler for connection event
+ * @brief Handler for connection event 
  * @param[in] connected event parameter containing details like handle
  * \note Called by the ble_manager after receiving connection event
  */
-void csc_prf_connected_state_handler(at_ble_connected_t *params);
+at_ble_status_t csc_prf_connected_state_handler(void *params);
 
 /**
- * @brief Handler for service found
+ * @brief Handler for service found 
  * @param[in] service found event parameter containing details about the service found
  * \note Called by the ble_manager after receiving the service
  */
-void csc_prf_service_found_handler(at_ble_primary_service_found_t *params);
+at_ble_status_t csc_prf_service_found_handler(void * params);
 
 /**
- * @brief Handler for characteristic found
+ * @brief Handler for characteristic found 
  * @param[in] characteristic found event parameter containing details about the characteristic found
  * \note Called by the ble_manager after receiving the characteristic
  */
-void csc_prf_characteristic_found_handler(at_ble_characteristic_found_t *params);
+at_ble_status_t csc_prf_characteristic_found_handler(void *params);
 
 /**
- * @brief Handler for descriptor found
+ * @brief Handler for descriptor found 
  * @param[in] characteristic found event parameter containing details about the descriptor found
  * \note Called by the ble_manager after receiving the descriptor
  */
-void csc_prf_descriptor_found_handler(at_ble_descriptor_found_t *params);
+at_ble_status_t csc_prf_descriptor_found_handler(void *params);
 
 /**
  * @brief Handler for discovery complete
  * @param[in] discovery complete event parameter containing details about the descriptor found
  * \note Called by the ble_manager after receiving the descriptor
  */
-void csc_prf_discovery_complete_handler(at_ble_discovery_complete_t *params);
+at_ble_status_t csc_prf_discovery_complete_handler(void *params);
 
 /**
- * @brief Handler for notification
+ * @brief invoked by ble manager on receiving notification
  */
-void csc_prf_notification_handler(at_ble_notification_recieved_t *params);
+at_ble_status_t csc_prf_notification_handler(void *params);
 
 /**
- * @brief Handler for configuing the notifcation for remote device
+ * @brief Handler for configuring the notification for remote device
  */
-void csc_prf_write_notification_handler(void *param);
+at_ble_status_t csc_prf_write_notification_handler(void *params);
 
 /** @brief Function call the user defined callback for sending the receive data
- */
+*/
 void notify_recv_ntf_handler(recv_ntf_callback_t recv_ntf_fn);
 
 /** @brief Notification confirmation handler
- */
-void csc_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);
+*/
+at_ble_status_t csc_notification_confirmation_handler(void *params);
 
 #endif /*__CSC_H__*/
-/* </h> */
+// </h>
 
-/* <<< end of configuration section >>> */
+// <<< end of configuration section >>>
