@@ -84,6 +84,8 @@ hid_prf_info_t hid_prf_data;
 /* Mouse report value */
 int8_t app_mouse_report[4] = {0x00, 0x00, 0x00, 0x00};
 
+/* Profile connection status */
+uint8_t conn_status = 0;
 /* Mouse status */
 uint8_t mouse_status = 0;
 
@@ -93,8 +95,6 @@ uint8_t y_move = 0;
 
 /*Counter*/
 uint8_t cnt = 0;
-
-uint8_t connect_flg = 0;
 
 /*Mouse Movement Position*/
 uint8_t mouse_pos = MOUSE_RIGHT_MOVEMENT;
@@ -131,66 +131,121 @@ static uint8_t hid_app_mouse_report_map[] = {
 	0xC0,   /* End Collection                      */
 };
 
+static at_ble_status_t hid_connect_cb(void *params);
+static at_ble_status_t hid_disconnect_cb(void *params);
+static at_ble_status_t hid_notification_confirmed_cb(void *params);
+
+static const ble_event_callback_t hid_app_gap_handle[] = {
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+hid_connect_cb,
+hid_disconnect_cb,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL
+};
+
+static const ble_event_callback_t hid_app_gatt_server_handle[] = {
+hid_notification_confirmed_cb,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL,
+NULL
+};
+
+/* Callback called during connection */
+static at_ble_status_t hid_connect_cb(void *params)
+{
+	mouse_pos = MOUSE_RIGHT_MOVEMENT;
+	conn_status = 1;
+	cnt = 0;
+	app_mouse_report[0] = 0;
+	app_mouse_report[1] = 0;
+	app_mouse_report[2] = 0;
+	app_mouse_report[3] = 0;
+	return AT_BLE_SUCCESS;
+}
+
+/* Callback called during disconnect */
+static at_ble_status_t hid_disconnect_cb(void *params)
+{
+	mouse_pos = MOUSE_RIGHT_MOVEMENT;
+	conn_status = 0;
+	cnt = 0;
+	app_mouse_report[0] = 0;
+	app_mouse_report[1] = 0;
+	app_mouse_report[2] = 0;
+	app_mouse_report[3] = 0;
+	ALL_UNUSED(&params);
+	return AT_BLE_SUCCESS;
+}
+
 /* Callback called when host change the control point value */
 static void hid_prf_control_point_ntf_cb(hid_control_mode_ntf_t *hid_control_point_value_t)
 {
-	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d",
-			hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
+	DBG_LOG_DEV("Control Point Notification Callback :: Service Instance %d Control Value %d", 
+					hid_control_point_value_t->serv_inst, hid_control_point_value_t->control_value);
 }
 
 /* Callback called when host change the protocol mode value */
 static void hid_prf_protocol_mode_ntf_cb(hid_proto_mode_ntf_t *protocol_mode)
 {
-	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d",
-			protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
+	DBG_LOG_DEV("Protocol Mode Notification Callback :: Service Instance %d  New Protocol Mode  %d  Connection Handle %d", 
+					protocol_mode->serv_inst, protocol_mode->mode, protocol_mode->conn_handle);
 }
 
 /* Callback called when host enable/disable the notification for boot report (Mouse/Keyboard)
- * Mouse Boot Value 4
- * Keyboard Boot Value 6
- */
+   Mouse Boot Value 4
+   Keyboard Boot Value 6
+*/
 static void hid_prf_boot_ntf_cb(hid_boot_ntf_t *boot_ntf_info_t)
 {
-	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d",
-			boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
+	DBG_LOG_DEV("Boot Notification Callback :: Service Instance %d  Boot Value  %d  Notification(Enable/Disable) %d", 
+					boot_ntf_info_t->serv_inst, boot_ntf_info_t->boot_value, boot_ntf_info_t->ntf_conf);
 }
 
 /* Callback called when host enable/disable the notification for report (Mouse/Keyboard) */
 static void hid_prf_report_ntf_cb(hid_report_ntf_t *report_info)
 {
-	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d",
-			report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
-
-	report_ntf_info.serv_inst = report_info->serv_inst;
+	DBG_LOG_DEV("Report Notification Callback Service Instance %d  Report ID  %d  Notification(Enable/Disable) %d Connection Handle %d", 
+					report_info->serv_inst, report_info->report_ID, report_info->ntf_conf, report_info->conn_handle);
+					
+    report_ntf_info.serv_inst = report_info->serv_inst;
 	report_ntf_info.report_ID = report_info->report_ID;
 	report_ntf_info.ntf_conf = report_info->ntf_conf;
 	report_ntf_info.conn_handle = report_info->conn_handle;
 }
 
 /* Callback called when report send over the air */
-static void hid_notification_confirmed_cb(at_ble_cmd_complete_event_t *notification_status)
+static at_ble_status_t hid_notification_confirmed_cb(void *params)
 {
+	at_ble_cmd_complete_event_t *notification_status;
+	notification_status = (at_ble_cmd_complete_event_t *)params;
 	DBG_LOG_DEV("Mouse report send to host status %d", notification_status->status);
-}
-
-/* Callback called when host connected*/
-static void hid_connect_cb(at_ble_handle_t handle)
-{
-	connect_flg = 1;
-}
-
-/* Callback called when host disconnected*/
-static void hid_disconnect_cb(at_ble_handle_t handle)
-{
-	connect_flg = 0;
-	mouse_status = 0;
-	mouse_pos = MOUSE_RIGHT_MOVEMENT;
+	return AT_BLE_SUCCESS;
 }
 
 /* Callback called when user press the button for writing new characteristic value */
-static void button_cb(void)
+void button_cb(void)
 {
-	if (connect_flg) {
+	if( conn_status )  {			
 		mouse_status = 1;
 		send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 	}
@@ -199,23 +254,41 @@ static void button_cb(void)
 /* Initialize the application information for HID profile*/
 static void hid_mouse_app_init(void)
 {
+#ifdef ENABLE_PTS
+	uint16_t i=0;
+#endif
+	hid_prf_var_init();
+	
 	hid_prf_data.hid_serv_instance = 1;
-	hid_prf_data.hid_device = HID_MOUSE_MODE;
-	hid_prf_data.protocol_mode = HID_REPORT_PROTOCOL_MODE;
+	hid_prf_data.hid_device = HID_MOUSE_MODE; 
+	hid_prf_data.protocol_mode = HID_REPORT_PROTOCOL_MODE; 
 	hid_prf_data.num_of_report = HID_NUM_OF_REPORT;
 	/*Update the report information based on report id, User can allocate maximum HID_MAX_REPORT_NUM number of report*/
-	hid_prf_data.report_id[0] = 1;
-	hid_prf_data.report_type[0] = INPUT_REPORT;
-	hid_prf_data.report_val[0] = (uint8_t *)&app_mouse_report[0];
+	hid_prf_data.report_id[0] = 1;  
+	hid_prf_data.report_type[0] = INPUT_REPORT;  
+	hid_prf_data.report_val[0] = (uint8_t *)&app_mouse_report[0];	
 	hid_prf_data.report_len[0] = sizeof(app_mouse_report);
 	hid_prf_data.report_map_info.report_map = hid_app_mouse_report_map;
 	hid_prf_data.report_map_info.report_map_len = sizeof(hid_app_mouse_report_map);
-	hid_prf_data.hid_device_info.bcd_hid = 0x0111;
+	hid_prf_data.hid_device_info.bcd_hid = 0x0111;        
 	hid_prf_data.hid_device_info.bcountry_code = 0x00;
-	hid_prf_data.hid_device_info.flags = 0x02;
-	if (hid_prf_conf(&hid_prf_data) == HID_PRF_SUCESS) {
+	hid_prf_data.hid_device_info.flags = 0x02; 
+	
+#ifdef ENABLE_PTS
+	DBG_LOG("Report Map Characteristic Value");
+	printf("\r\n");
+	for (i=0; i<sizeof(hid_app_mouse_report_map); i++)
+	{
+		printf(" 0x%02X ", hid_app_mouse_report_map[i]);
+	}
+	printf("\r\n");
+	DBG_LOG("HID Information Characteristic Value");
+	DBG_LOG("bcdHID 0x%02X, bCountryCode 0x%02X Flags 0x%02X", hid_prf_data.hid_device_info.bcd_hid, hid_prf_data.hid_device_info.bcountry_code, hid_prf_data.hid_device_info.flags);
+#endif // _DEBUG
+	
+	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS){
 		DBG_LOG("HID Profile Configured");
-	} else {
+	}else{
 		DBG_LOG("HID Profile Configuration Failed");
 	}
 }
@@ -224,13 +297,12 @@ static void hid_mouse_app_init(void)
 static bool hid_mouse_move(int8_t pos, uint8_t index_report)
 {
 	int16_t s16_newpos;
-	s16_newpos = (int8_t)app_mouse_report[index_report];
+	s16_newpos = (int8_t) app_mouse_report[index_report];
 	s16_newpos += pos;
 	if ((-127 > s16_newpos) || (127 < s16_newpos)) {
 		return false;
 	}
-
-	app_mouse_report[index_report] = (uint8_t)s16_newpos;
+	app_mouse_report[index_report] = (uint8_t) s16_newpos;
 	return true;
 }
 
@@ -238,15 +310,14 @@ static bool hid_mouse_move(int8_t pos, uint8_t index_report)
 bool app_exec = true;
 int main(void )
 {
-	connect_flg = 0;
-
+	/*intialize system driver */
 	platform_driver_init();
 	acquire_sleep_lock();
 
 	/* Initialize serial console */
 	serial_console_init();
 
-	DBG_LOG("Initializing HID Mouse Application");
+	DBG_LOG("Initializing HID Mouse Application1111");
 
 	/* Initialize the profile based on user input */
 	hid_mouse_app_init();
@@ -257,81 +328,89 @@ int main(void )
 	/* Initialize button*/
 	button_init(button_cb);
 
+	hid_prf_init(NULL);
 	/* Register the notification handler */
-	register_ble_notification_confirmed_cb(hid_notification_confirmed_cb);
-	register_ble_connected_event_cb(hid_connect_cb);
-	register_ble_disconnected_event_cb(hid_disconnect_cb);
 	notify_report_ntf_handler(hid_prf_report_ntf_cb);
 	notify_boot_ntf_handler(hid_prf_boot_ntf_cb);
 	notify_protocol_mode_handler(hid_prf_protocol_mode_ntf_cb);
 	notify_control_point_handler(hid_prf_control_point_ntf_cb);
+	/* Callback registering for BLE-GAP Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GAP_EVENT_TYPE, hid_app_gap_handle);
+	
+	/* Callback registering for BLE-GATT-Server Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GATT_SERVER_EVENT_TYPE, hid_app_gatt_server_handle);
 
 	/* Capturing the events  */
-	while (app_exec) {
+	while(app_exec){
 		ble_event_task();
 		/* Check for key status */
-		if (mouse_status) {
-			/* delay_ms(KEY_PAD_DEBOUNCE_TIME); */
-			switch (mouse_pos) {
-			case MOUSE_RIGHT_MOVEMENT:
-			{
-				if (hid_mouse_move(MOUSE_MOVEMENT_POS, 1)) {
-					++cnt;
-					app_mouse_report[2] = 0;
-					DBG_LOG("Mouse Right Movement");
-					if (cnt == MOUSE_CHANGE_DIRECTION) {
-						mouse_pos = MOUSE_DOWN_MOVEMENT;
-						cnt = 0;
-					}
-				}
-			}
-			break;
+		if(mouse_status && conn_status){ 
 
-			case MOUSE_LEFT_MOVEMENT:
+			switch(mouse_pos)
 			{
-				if (hid_mouse_move(-MOUSE_MOVEMENT_POS, 1)) {
-					++cnt;
-					app_mouse_report[2] = 0;
-					DBG_LOG("Mouse Left  Movement");
-					if (cnt == MOUSE_CHANGE_DIRECTION) {
-						mouse_pos = MOUSE_UP_MOVEMENT;
-						cnt = 0;
+				case MOUSE_RIGHT_MOVEMENT:
+				{
+					if(hid_mouse_move(MOUSE_MOVEMENT_POS, 1)){
+						++cnt;
+						app_mouse_report[2] = 0;
+						DBG_LOG("Mouse Right Movement");
+						if(cnt == MOUSE_CHANGE_DIRECTION){
+							mouse_pos = MOUSE_DOWN_MOVEMENT;
+							cnt = 0;
+						}	
 					}
 				}
-			}
-			break;
-
-			case MOUSE_UP_MOVEMENT:
-			{
-				if (hid_mouse_move(-MOUSE_MOVEMENT_POS, 2)) {
-					++cnt;
-					app_mouse_report[1] = 0;
-					DBG_LOG("Mouse UP    Movement");
-					if (cnt == MOUSE_CHANGE_DIRECTION) {
-						mouse_pos = MOUSE_RIGHT_MOVEMENT;
-						cnt = 0;
+				break;
+				
+				case MOUSE_LEFT_MOVEMENT:
+				{
+					if(hid_mouse_move(-MOUSE_MOVEMENT_POS, 1)){
+						++cnt;
+						app_mouse_report[2] = 0;
+						DBG_LOG("Mouse Left  Movement");
+						if(cnt == MOUSE_CHANGE_DIRECTION){
+							mouse_pos = MOUSE_UP_MOVEMENT;
+							cnt = 0;
+						}
 					}
 				}
-			}
-			break;
-
-			case MOUSE_DOWN_MOVEMENT:
-			{
-				if (hid_mouse_move(MOUSE_MOVEMENT_POS, 2)) {
-					++cnt;
-					app_mouse_report[1] = 0;
-					DBG_LOG("Mouse Down  Movement");
-					if (cnt == MOUSE_CHANGE_DIRECTION) {
-						mouse_pos = MOUSE_LEFT_MOVEMENT;
-						cnt = 0;
+				break;
+				
+				case MOUSE_UP_MOVEMENT:
+				{
+					if(hid_mouse_move(-MOUSE_MOVEMENT_POS, 2)){
+						++cnt;
+						app_mouse_report[1] = 0;
+						DBG_LOG("Mouse UP    Movement");
+						if(cnt == MOUSE_CHANGE_DIRECTION)
+						{
+							mouse_pos = MOUSE_RIGHT_MOVEMENT;
+							cnt = 0;
+						}
 					}
 				}
-			}
-			break;
+				break;
+				
+				case MOUSE_DOWN_MOVEMENT:
+				{
+					if(hid_mouse_move(MOUSE_MOVEMENT_POS, 2)){
+						++cnt;
+						app_mouse_report[1] = 0;
+						DBG_LOG("Mouse Down  Movement");
+						if(cnt == MOUSE_CHANGE_DIRECTION){
+							mouse_pos = MOUSE_LEFT_MOVEMENT;
+							cnt = 0;
+						}
+					}
+				}
+				break;
 			}
 			hid_prf_report_update(report_ntf_info.conn_handle, report_ntf_info.serv_inst, 1, (uint8_t *)app_mouse_report, sizeof(app_mouse_report));
-			mouse_status = 0;
+			mouse_status = 0;			
 		}
 	}
 	return 0;
 }
+
+
+
