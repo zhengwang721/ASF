@@ -85,6 +85,8 @@ const ble_event_callback_t *ble_mgr_htpt_event_cb[MAX_HTPT_EVENT_SUBSCRIBERS];
 const ble_event_callback_t *ble_mgr_dtm_event_cb[MAX_DTM_EVENT_SUBSCRIBERS];
 const ble_event_callback_t *ble_mgr_custom_event_cb[MAX_CUSTOM_EVENT_SUBSCRIBERS];
 
+ble_user_event_callback_t ble_user_event_cb = NULL;
+
 static const ble_event_callback_t ble_mgr_gap_handle[GAP_HANDLE_FUNC_MAX] = {
 	ble_undefined_event_handler,
 	ble_scan_info_handler,
@@ -136,6 +138,8 @@ static void ble_set_address(at_ble_addr_t *addr);
 
 static void init_global_var(void)
 {
+	ble_user_event_cb = 0;
+	
 	memset(&ble_peripheral_dev_address, 0, sizeof(at_ble_addr_t));
 	memset(&connected_state_info, 0, sizeof(at_ble_connected_t));
 		
@@ -1600,7 +1604,15 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 		}
 	}
 	break;
-	
+
+	case AT_PLATFORM_EVENT:
+	{
+		if (ble_user_event_cb) {
+			ble_user_event_cb();
+		}
+	}
+	break;
+
 	default:
 	{
 		DBG_LOG_DEV("BLE-Manager:Unknown Event=0x%X", events);
@@ -2336,5 +2348,9 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 }
 
-
+/** @brief function to register callback to be called when AT_BLE_PLATFORM_EVENT event triggered from stack */
+void register_ble_user_event_cb(ble_user_event_callback_t cb_fn)
+{
+	ble_user_event_cb = cb_fn;
+}
 
