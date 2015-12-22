@@ -43,20 +43,21 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
+ *Support</a>
  */
 #ifndef __FIND_ME_APP_H__
 #define __FIND_ME_APP_H__
 
+
 /****************************************************************************************
-*							        Macros	                                                *
+*							        Macros	                                     		*
 ****************************************************************************************/
 
-/* Initial timer value */
-#define INIT_TIMER_INTERVAL                     (2)
+// Initial timer value
+#define INIT_TIMER_INTERVAL			(2)
 
-/* Interval of LED blinking(in ms) for various alert levels of path loss service */
-#define LED_MILD_INTERVAL                       (2)
-#define LED_FAST_INTERVAL                       (1)
+// Interval of LED blinking(in ms) for various alert levels of path loss service
+#define LED_MILD_INTERVAL			(2)
+#define LED_FAST_INTERVAL			(1)
 
 #endif /* __FIND_ME_APP_H__ */

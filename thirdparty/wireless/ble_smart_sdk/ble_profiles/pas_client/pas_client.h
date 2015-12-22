@@ -42,15 +42,17 @@
  */
 
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+*/
 
 /**
- *
- * \section preface Preface
- * This is the reference manual for the Time Information Profile
- */
-
+* 
+* \section preface Preface
+* This is the reference manual for the Time Information Profile
+*/
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Phone Alert Status Profile Configuration
+// =======================
 #ifndef __PAS_CLIENT_H__
 #define __PAS_CLIENT_H__
 
@@ -58,59 +60,77 @@
  *									Macros			                               *
  **********************************************************************************/
 /**@brief Advertisement Interval*/
-#define APP_PAS_FAST_ADV                                                (100) /* 100 ms */
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> pas_fast_adv
+#define APP_PAS_FAST_ADV						(100) //1000 ms
 
 /**@brief Advertisement Timeout*/
-#define APP_PAS_ADV_TIMEOUT                                             (1000) /* 100 Secs */
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> pas_adv_timeout
+#define APP_PAS_ADV_TIMEOUT						(1000) // 100 Secs
 
 /**@brief Scan Response length*/
-#define SCAN_RESP_LEN                                                   (10)
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> pas_scan_resp_len
+#define SCAN_RESP_LEN							(10)
 
 /**@brief ADV type UUID Type & Length*/
-#define AD_TYPE_16BIT_UUID_LEN                                  (2)
-#define AD_TYPE_32BIT_UUID_LEN                                  (4)
-#define AD_TYPE_128BIT_UUID_LEN                                 (16)
+#define AD_TYPE_16BIT_UUID_LEN					(2)
+#define AD_TYPE_32BIT_UUID_LEN					(4)
+#define AD_TYPE_128BIT_UUID_LEN					(16)
 
-#define ADV_TYPE_LEN                                                    (0x01)
+#define ADV_TYPE_LEN							(0x01)
 
-#define PAS_SERVICE_UUID                                                (0x180E)
-#define PAS_ADV_DATA_UUID_TYPE                                  (0x3)
+#define PAS_SERVICE_UUID						(0x180E)
+#define PAS_ADV_DATA_UUID_TYPE					(0x3)
 
 /**@brief TIP Service Solicitation Info*/
-#define TP_ADV_DATA_SERVSOLICITATION_16UUID_TYPE        (0x14)
-#define TP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE       (0x15)
+#define TP_ADV_DATA_SERVSOLICITATION_16UUID_TYPE	(0x14)
+#define TP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE	(0x15)
 
 /**@brief Advertisement Name Type Length & data */
-#define PAS_ADV_DATA_NAME_LEN                                   (9)
-#define PAS_ADV_DATA_NAME_TYPE                                  (0x09)
-#define PAS_ADV_DATA_NAME_DATA                                  ("ATMEL-PAS")
+#define PAS_ADV_DATA_NAME_LEN					(9)
+#define PAS_ADV_DATA_NAME_TYPE					(0x09)
+
+
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> pas_adv_data_name_data
+#define PAS_ADV_DATA_NAME_DATA					("ATMEL-PAS")
 
 /**@brief The length of 16bit uuid */
-#define PAS_ADV_DATA_UUID_LEN                                   (2)
+#define	PAS_ADV_DATA_UUID_LEN					(2)
 
 /**@brief UUID Type & Length*/
-#define UUID_16BIT_LEN                                                  (2)
-#define UUID_32BIT_LEN                                                  (4)
-#define UUID_128BIT_LEN                                                 (16)
+#define UUID_16BIT_LEN							(2)
+#define UUID_32BIT_LEN							(4)
+#define UUID_128BIT_LEN							(16)
 
 /**@brief No of Characteristics and No of descriptors */
-#define PAS_MAX_CHARACTERISTIC                                  (3)
-#define ANP_MAX_DESCRIPTOR                                              (2)
+#define PAS_MAX_CHARACTERISTIC					(3)
+#define ANP_MAX_DESCRIPTOR						(2)
 
 /**@brief True False*/
-#define FALSE                                                                   (0)
-#define TRUE                                                                    (1)
+#define FALSE									(0)
+#define TRUE									(1)
 
 /**@brief start and end handle */
-#define START_HANDLE                                                    (0x0001)
-#define END_HANDLE                                                              (0xffff)
+#define START_HANDLE							(0x0001)
+#define END_HANDLE								(0xffff)
 
 /**@brief characteristic uuids*/
-#define ALERT_STATUS_UUID                                               (0x2a3f)
-#define RINGER_SETTING_UUID                                             (0x2a41)
-#define RINGER_CONTROL_POINT_UUID                               (0x2a40)
+#define ALERT_STATUS_UUID						(0x2a3f)
+#define RINGER_SETTING_UUID						(0x2a41)
+#define RINGER_CONTROL_POINT_UUID				(0x2a40)
 
-#define CLIENT_CONF_CHAR_DESCRIPTOR_UUID                (0x2902)
+#define CLIENT_CONF_CHAR_DESCRIPTOR_UUID		(0x2902)
+
 
 /***********************************************************************************
  *									types			                               *
@@ -155,13 +175,13 @@ typedef struct pas_service_handler {
 	char_info_t ringer_control_point_char;
 } pas_service_handler_t;
 
-typedef void (*read_callback_t)(uint8_t *, uint8_t);
-typedef void (*notification_callback_t)(uint8_t *, uint8_t);
-typedef void (*connected_callback_t)(bool);
+typedef void (*read_callback_t) (uint8_t *,uint8_t);
+typedef void (*notification_callback_t) (uint8_t *,uint8_t);
 
 /***********************************************************************************
  *									Function Prototype                             *
  **********************************************************************************/
+
 
 /**
  * @brief invoked by ble manager for initializing the profile
@@ -190,49 +210,49 @@ void pas_client_adv(void);
  * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
  * @pre Called after connection by the ble manager
  */
-at_ble_status_t pas_client_service_discovery(at_ble_connected_t *conn_params);
+at_ble_status_t pas_client_service_discovery(void *params);
 
 /**
  * @brief Discovery Complete handler invoked by ble manager
- * @param[in] at_ble_discovery_complete_t disconnected handler
+ * @param[in] at_ble_discovery_complete_t disconnected handler 
  */
-void pas_client_discovery_complete_handler(at_ble_discovery_complete_t *params);
+at_ble_status_t pas_client_discovery_complete_handler(void *params);
 
 /**
  * @brief Service found handler invoked by ble manager
  * @param[in] at_ble_primary_service_found_t invoked when a primary service is found in peer device
  */
-void pas_client_service_found_handler(at_ble_primary_service_found_t *primary_service_params);
+ at_ble_status_t pas_client_service_found_handler(void * params);
 
 /**
  * @brief characteristic found handler invoked by ble manager
  * @param[in] at_ble_characteristic_found_t when a characteristic is found in peer device
  */
-void pas_client_characteristic_found_handler(at_ble_characteristic_found_t *characteristic_found);
+at_ble_status_t pas_client_characteristic_found_handler(void *params);
 
 /**
  * @brief client descriptor found handler invoked by ble manager
  * @param[in] at_ble_descriptor_found_t invoked when a descriptor is found in peer device
  */
-void pas_client_descriptor_found_handler(at_ble_descriptor_found_t *params);
+at_ble_status_t pas_client_descriptor_found_handler(void *param);
 
 /**
  * @brief disconnected event handler invoked by ble manager
  * @param[in] at_ble_disconnected_t contains the disconnection info
  */
-void pas_client_disconnected_event_handler(at_ble_disconnected_t *params);
+at_ble_status_t pas_client_disconnected_event_handler(void *params);
 
 /**
  * @brief invoked by ble manager on receiving notification
  * @param[in] at_ble_notification_recieved_t notification information containing handle data
  */
-void pas_client_notification_handler(at_ble_notification_recieved_t *params);
+at_ble_status_t pas_client_notification_handler(void *params);
 
 /**
- * @brief invoked by ble manager for setting the write response handler
+ * @brief invoked by ble manager for setting the write response handler 
  * @param[in] at_ble_characteristic_write_response_t response data contains status and handle
  */
-void pas_client_char_write_response_handler(at_ble_characteristic_write_response_t *params);
+at_ble_status_t pas_client_char_write_response_handler(void *event_params);
 
 /**
  * @brief invoked by ble manager to read the alert status characteristic
@@ -258,28 +278,54 @@ at_ble_status_t pas_client_write_ringer_control_point(uint8_t ringer);
  * @param[in] enable weather notifications has to enabled or disabled.1 for enable 0 for disable
  * @return	 AT_BLE_SUCCESS if success or AT_BLE_FAILURE
  */
-at_ble_status_t pas_client_enable_char_notification(bool char_id, bool enable);
+at_ble_status_t pas_client_enable_char_notification(bool char_id,bool enable);
 
 /**
- * @brief invoked by ble manager for setting the notification
+ * @brief invoked by ble manager for setting the notification 
  */
-void pas_client_write_notifications(void *param);
-
-void register_alert_status_read_callback(read_callback_t app_read_cb);
-
-void register_ringer_setting_read_callback(read_callback_t app_read_cb);
-
-void register_alert_status_notification_callback(notification_callback_t app_notify_cb);
-
-void register_ringer_setting_notification_callback(notification_callback_t app_notify_cb);
-
-void pas_client_char_read_response_handler(at_ble_characteristic_read_response_t *params);
+at_ble_status_t pas_client_write_notifications(void *params);
 
 /**
- * @brief register the call back for application state
- * @param[in]
+ * @brief register the call back for reading alert status
+ * @param[in] read_callback_t type application callback
  * @return none
  */
-void register_connected_callback(connected_callback_t app_connected_cb);
+void register_alert_status_read_callback(read_callback_t app_read_cb);
 
+/**
+ * @brief register the call back for reading ringer setting 
+ * @param[in] read_callback_t type application callback
+ * @return none
+ */
+void register_ringer_setting_read_callback(read_callback_t app_read_cb);
+
+/**
+ * @brief register the call back for notification of alert status  
+ * @param[in] notification_callback_t type application callback
+ * @return none
+ */
+void register_alert_status_notification_callback(notification_callback_t app_notify_cb);
+
+/**
+ * @brief register the call back for notification of ringer setting
+ * @param[in] notification_callback_t type application callback
+ * @return none
+ */
+void register_ringer_setting_notification_callback(notification_callback_t app_notify_cb);
+
+/**
+ * @brief called by the ble manager after receiving the read response event 
+ * @param[in] characteristic read response parameters
+ * @return none
+ */
+at_ble_status_t pas_client_char_read_response_handler(void *event_params);
+
+/**
+ * @brief starts the service discovery
+ * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
+ */
+at_ble_status_t pas_client_start_service_discovery(void );
 #endif /* __PAS_CLIENT_H__*/
+// </h>
+
+// <<< end of configuration section >>>

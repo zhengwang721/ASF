@@ -43,12 +43,13 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
+ *Support</a>
  */
 
-/* <<< Use Configuration Wizard in Context Menu >>> */
-/* <h> Heart Rate Sensor Configuration */
-/* ======================= */
+
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Heart Rate Sensor Configuration
+// =======================
 #ifndef __HR_SENSOR_H__
 #define __HR_SENSOR_H__
 
@@ -56,75 +57,75 @@
 *							        Macro                                               *
 ****************************************************************************************/
 
+
 /** @brief APP_HR_SENSOR_FAST_ADV between 0x0020 and 0x4000 in 0.625 ms units (20ms to 10.24s). */
-/*	<o> Fast Advertisement Interval <100-1000:50> */
-/*	<i> Defines inteval of Fast advertisement in ms. */
-/*	<i> Default: 100 */
-/*	<id> hr_sensor_fast_adv */
-#define HR_SENSOR_FAST_ADV                                                              (100) /* 100 ms */
+//	<o> Fast Advertisement Interval <100-1000:50>
+//	<i> Defines inteval of Fast advertisement in ms.
+//	<i> Default: 100
+//	<id> hr_sensor_fast_adv
+#define HR_SENSOR_FAST_ADV								(1600) //1000 ms
 
 /** @brief APP_HR_SENSOR_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
-/*	<o> Advertisement Timeout <1000-10000:50> */
-/*	<i> Defines inteval at which advertisement timout in ms. */
-/*	<i> Default: 1000 */
-/*	<id> hr_sensor_adv_timeout */
-#define HR_SENSOR_ADV_TIMEOUT                                                   (1000) /* 100 Secs */
+//	<o> Advertisement Timeout <1000-10000:50>
+//	<i> Defines inteval at which advertisement timout in ms.
+//	<i> Default: 1000
+//	<id> hr_sensor_adv_timeout
+#define HR_SENSOR_ADV_TIMEOUT							(1000) // 100 Secs
 
 /** @brief scan_resp_len is the length of the scan response data */
-/*	<o> Scan Response Buffer <1-20> */
-/*	<i> Defines size of buffer for scan response. */
-/*	<i> Default: 10 */
-/*	<id> hr_sensor_scan_resp_len */
-#define SCAN_RESP_LEN                                                                   (10)
-
+//	<o> Scan Response Buffer <1-20>
+//	<i> Defines size of buffer for scan response.
+//	<i> Default: 10
+//	<id> hr_sensor_scan_resp_len
+#define SCAN_RESP_LEN									(10)
+	
 /** @brief ADV_DATA_LEN */
-#define ADV_DATA_LEN                                                                    (18)
+#define ADV_DATA_LEN									(18)
 
 /** @brief ADV_TYPE_LEN */
-#define ADV_TYPE_LEN                                                                    (0x01)
+#define ADV_TYPE_LEN									(0x01)
 
-#define UUID_16_BIT_LEN                                                                 (0x02)
+#define UUID_16_BIT_LEN									(0x02)
+
 
 /** @brief HR_SENSOR_ADV_DATA_UUID_TYPE is complete 16 bit uuid type*/
-#define HR_SENSOR_ADV_DATA_COMP_16_UUID_TYPE                    (0x03)
+#define HR_SENSOR_ADV_DATA_COMP_16_UUID_TYPE			(0x03)
 
 /** @brief HR_SENSOR_ADV_DATA_UUID_LEN the total length for hr uuid and dis uuid */
-#define HR_SENSOR_ADV_DATA_UUID_LEN                                             (4)
+#define HR_SENSOR_ADV_DATA_UUID_LEN						(4)
 
 /** @brief DEVICE_INFORMATION_SERVICE_UUID **/
-#define DEVICE_INFORMATION_SERVICE_UUID                                 (0x180A)
+#define DEVICE_INFORMATION_SERVICE_UUID					(0x180A)
 
 /** @brief HR_SENSOR_ADV_DATA_NAME_TYPE the gap ad data type */
-#define HR_SENSOR_ADV_DATA_NAME_TYPE                                    (0x09)
+#define HR_SENSOR_ADV_DATA_NAME_TYPE					(0x09)
 
 /** @brief HR_SENSOR_ADV_DATA_NAME_LEN the  length of the device name */
-#define HR_SENSOR_ADV_DATA_NAME_LEN                                             (9)
+#define HR_SENSOR_ADV_DATA_NAME_LEN						(9)
 
 /* @brief HR_SENSOR_ADV_DATA_NAME_DATA the actual name of device */
-/*	<s.9>	Advertising String */
-/*	<i>	String Descriptor describing in advertising packet. */
-/*	<id> hr_sensor_adv_data_name_data */
-#define HR_SENSOR_ADV_DATA_NAME_DATA                                    ("ATMEL-HRP")
+//	<s.9>	Advertising String
+//	<i>	String Descriptor describing in advertising packet.
+//	<id> hr_sensor_adv_data_name_data
+#define HR_SENSOR_ADV_DATA_NAME_DATA					("ATMEL-HRP")
+
 
 /**
  * @brief APP_CONNECTION_STATE indicates application is in connected state
  */
-#define HR_APP_CONNECTION_STATE                                                 (1)
+#define HR_APP_CONNECTION_STATE							(1)
 
 /**
  * @brief APP_DISCONNECT_STATE indicates application is in disconnected state
  */
-#define HR_APP_DISCONNECT_STATE                                                 (0)
+#define HR_APP_DISCONNECT_STATE							(0)
 
-#define FLAG_ENERGY_EXP                                                                 (0x1 << 3)
+#define FLAG_ENERGY_EXP									(0x1 << 3)
 /* @brief call back handler type  */
 typedef void (*hr_notification_callback_t)(uint8_t);
 
 /* @brief call back handler type  */
 typedef void (*hr_reset_callback_t)(void);
-
-/* @brief call back handler type  */
-typedef void (*hr_state_callback_t)(bool);
 
 /****************************************************************************************
 *							        Function Prototypes	                                *                                                        *
@@ -167,33 +168,25 @@ void hr_sensor_disconnect(void);
  */
 bool hr_sensor_send_notification(uint8_t *hr_data, uint8_t length);
 
-/** @brief hr_notification_confirmation_handler called on notification confirmation
+/** @brief hr_sensor_notification_cfm_handler called on notification confirmation
  *  event by the ble manager
  *	@param[in] at_ble_status_t AT_BLE_SUCCESS on success AT_BLE_FAILURE on failure
- * called
+ *  called
  */
-void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t *params);
+at_ble_status_t hr_sensor_notification_cfm_handler(void * params);
 
 /** @brief register_hr_notification_handler registers the notification handler
  *  passed by the application
  *  @param[in] hr_notification_callback_t address of the notification handler
  *  function to be called
  */
-void register_hr_notification_handler(
-		hr_notification_callback_t hr_notificaton_handler);
+at_ble_status_t hr_notification_confirmation_handler(void * params);
 
 /** @brief register_hr_reset_handler registers the reset handler passed by the
  * application
  *  @param[in]	hr_reset_callback_t address of the handler function to be called
  */
 void register_hr_reset_handler(hr_reset_callback_t hr_reset_handler);
-
-/** @brief register_hr_state_handler registers the state handler passed by the
- *  application
- *	@param[in] hr_state_callback_t address of the handler function to be
- *  called
- */
-void register_hr_state_handler(hr_state_callback_t state_handler);
 
 /** @brief hr_sensor_char_changed_handler called by the ble manager after a
  *  change in the characteristic
@@ -202,7 +195,7 @@ void register_hr_state_handler(hr_state_callback_t state_handler);
  *  @return AT_BLE_SUCCESS on success and AT_BLE_FAILURE on failure
  */
 at_ble_status_t hr_sensor_char_changed_handler(
-		at_ble_characteristic_changed_t *char_handle);
+		void *char_params);
 
 /** @brief hr_sensor_disconnect_event_handler called by ble manager after
  *  disconnection event recieved
@@ -210,17 +203,25 @@ at_ble_status_t hr_sensor_char_changed_handler(
  *  reason for disconnection
  */
 at_ble_status_t hr_sensor_disconnect_event_handler(
-		at_ble_disconnected_t *disconnect);
+		void *disconnect);
 
 /** @brief hr_sensor_connected_state_handler called by ble manager after a
- *	change in characteristic
+ * change in characteristic
  *  @param[in] at_ble_connected_t which has connection handle and the peer
- *	device address
+ *device address
  */
 at_ble_status_t hr_sensor_connected_state_handler(
-		at_ble_connected_t *conn_params);
+							void *params);
+							
+							/** @brief register_hr_notification_handler registers the notification handler
+ *	passed by the application
+ *  param[in] hr_notification_callback_t address of the notification handler
+ *	function to be called
+ */
+void register_hr_notification_handler(
+		hr_notification_callback_t hr_notificaton_handler);
 
 #endif /*__HR_SENSOR_H__ */
-/* </h> */
+// </h>
 
-/* <<< end of configuration section >>> */
+// <<< end of configuration section >>>

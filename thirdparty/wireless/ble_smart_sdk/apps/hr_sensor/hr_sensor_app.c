@@ -64,36 +64,63 @@
 #include "timer.h"
 
 /****************************************************************************************
-*							        Globals
+*							        Globals		
 *                                       *
 ****************************************************************************************/
-
-#define APP_STACK_SIZE  (1024)
-volatile unsigned char app_stack_patch[APP_STACK_SIZE];
-
-volatile bool app_state = 0;  /*!< flag to represent the application state*/
+volatile bool app_state = 0 ; /*!< flag to represent the application state*/
 volatile bool start_advertisement = 0; /*!< flag to start advertisement*/
-volatile bool advertisement_flag = false; /*!< to check if the device is in advertisement*/
+volatile bool advertisement_flag = false;/*!< to check if the device is in advertisement*/
 volatile bool notification_flag = false; /*!< flag to start notification*/
-volatile bool disconnect_flag = false;  /*!< flag for disconnection*/
+volatile bool disconnect_flag = false;	/*!< flag for disconnection*/
 volatile bool hr_initializer_flag = 1; /*!< flag for initialization of hr for each category*/
-uint8_t second_counter = 0;     /*!< second_counter to count the time*/
+volatile bool notification_sent = true;
+uint8_t second_counter = 0;	/*!< second_counter to count the time*/
 uint16_t energy_expended_val = ENERGY_EXP_NORMAL; /*!< to count the energy expended*/
-uint16_t energy_incrementor;    /*!< energy incrementor for various heart rate values*/
+uint16_t energy_incrementor ;	/*!< energy incrementor for various heart rate values*/
 uint16_t heart_rate_value = HEART_RATE_MIN_NORM; /*!< to count the heart rate value*/
 uint16_t rr_interval_value = RR_VALUE_MIN; /*!< to count the rr interval value*/
 uint8_t activity = 0; /*!< activiy which will determine the */
-uint8_t prev_activity = DEFAULT_ACTIVITY; /*!< previous activity */
-int8_t inc_changer      = 1; /*!< increment operator to change heart rate */
-int8_t time_operator; /*!< operator to change the seconds */
-uint8_t hr_min_value; /*!<the minimum heart rate value*/
-uint8_t hr_max_value; /*!<the maximum heart rate value*/
+uint8_t prev_activity = DEFAULT_ACTIVITY;/*!< previous activity */
+int8_t inc_changer	= 1;/*!< increment operator to change heart rate */
+int8_t time_operator ;/*!< operator to change the seconds */
+uint8_t hr_min_value;/*!<the minimum heart rate value*/
+uint8_t hr_max_value;/*!<the maximum heart rate value*/
+uint8_t energy_inclusion = 0;/*!<To check for including the energy in hr measurement*/
 
-/* to make app executing continuously*/
-bool app_exec = true;
+static const ble_event_callback_t app_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	app_connected_event_handler,
+	app_disconnected_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 
-bool isButton = false;
-bool isTimer = false;
+static const ble_event_callback_t app_gatt_server_handle[] = {
+	app_notification_cfm_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 
 /****************************************************************************************
 *							        Functions											*
@@ -115,6 +142,24 @@ static void app_notification_handler(uint8_t notification_enable)
 	}
 }
 
+/** @brief hr_notification_confirmation_handler called by ble manager 
+ *	to give the status of notification sent
+ *  @param[in] at_ble_cmd_complete_event_t address of the cmd completion
+ */	
+at_ble_status_t app_notification_cfm_handler(void *params)
+{
+	at_ble_cmd_complete_event_t event_params;
+	memcpy(&event_params,params,sizeof(at_ble_cmd_complete_event_t));
+	if (event_params.status == AT_BLE_SUCCESS) {
+		DBG_LOG_DEV("App Notification Successfully sent over the air");
+		notification_sent = true;
+	} else {
+		DBG_LOG_DEV("Sending Notification over the air failed");
+		notification_sent = false;
+	}
+	return AT_BLE_SUCCESS;
+}
+
 /** @brief energy expended handler called by profile to reset the energy values
  *
  */
@@ -134,36 +179,36 @@ static void heart_rate_value_init(void)
 {
 	activity = second_counter / 40;
 
-	if (activity != prev_activity) {
-		switch (activity) {
+	if (activity != prev_activity) {		
+		switch(activity) {
 		case ACTIVITY_NORMAL:
 			hr_min_value = HEART_RATE_MIN_NORM;
 			hr_max_value = HEART_RATE_MAX_NORM;
 			heart_rate_value = hr_min_value;
 			energy_incrementor = ENERGY_EXP_NORMAL;
 			break;
-
+			
 		case ACTIVITY_WALKING:
 			hr_min_value = HEART_RATE_MIN_WALKING;
 			hr_max_value = HEART_RATE_MAX_WALKING;
 			heart_rate_value = hr_min_value;
 			energy_incrementor = ENERGY_EXP_WALKING;
 			break;
-
+			
 		case ACTIVITY_BRISK_WALKING:
 			hr_min_value = HEART_RATE_MIN_BRISK_WALK;
 			hr_max_value = HEART_RATE_MAX_BRISK_WALK;
 			heart_rate_value = hr_min_value;
 			energy_incrementor = ENERGY_EXP_BRISK_WALKING;
 			break;
-
+			
 		case ACTIVITY_RUNNING:
 			hr_min_value = HEART_RATE_MIN_RUNNING;
 			hr_max_value = HEART_RATE_MAX_RUNNING;
 			heart_rate_value = hr_min_value;
 			energy_incrementor = ENERGY_EXP_RUNNING;
 			break;
-
+			
 		case ACTIVITY_FAST_RUNNING:
 			hr_min_value = HEART_RATE_MIN_FAST_RUNNING;
 			hr_max_value = HEART_RATE_MAX_FAST_RUNNING;
@@ -173,7 +218,7 @@ static void heart_rate_value_init(void)
 		}
 		prev_activity = activity;
 	}
-
+	
 	if (heart_rate_value == hr_max_value) {
 		inc_changer = -1;
 	} else if (heart_rate_value == hr_min_value) {
@@ -181,47 +226,52 @@ static void heart_rate_value_init(void)
 	}
 }
 
-/** @brief app_state_handler which will tell the state of the application
+/** @brief connected state handler
  *  @param[in] status of the application
  */
-static void app_state_handler(bool state)
+static at_ble_status_t app_connected_event_handler(void *params)
 {
-	app_state = state;
+	app_state = true;
+	LED_On(LED0);
+	DBG_LOG("Enable the notification in app to listen "
+	"heart rate or press the button to disconnect");
+	advertisement_flag = false;
+	notification_sent = true;
+        ALL_UNUSED(params);
+	return AT_BLE_SUCCESS;
+}
 
-	if (app_state == false) {
-		hw_timer_stop();
-		notification_flag = false;
-		energy_expended_val = ENERGY_EXP_NORMAL;
-		second_counter = 0;
-		activity = ACTIVITY_NORMAL;
-		prev_activity = DEFAULT_ACTIVITY;
-		heart_rate_value_init();
-		LED_Off(LED0);
-		DBG_LOG("Press button to advertise");
-	} else if (app_state == true) {
-		LED_On(LED0);
-		DBG_LOG("Enable the notification in app to listen "
-				"heart rate or press the button to disconnect");
-		advertisement_flag = false;
-	}
+static at_ble_status_t app_disconnected_event_handler(void *params)
+{
+	app_state = false;
+	hw_timer_stop();
+	notification_flag = false;
+	energy_expended_val = ENERGY_EXP_NORMAL;
+	second_counter = 0;
+	activity = ACTIVITY_NORMAL;
+	prev_activity = DEFAULT_ACTIVITY;
+	energy_inclusion = 0;
+	heart_rate_value_init();
+	LED_Off(LED0);
+	DBG_LOG("Press button to advertise");
+	ALL_UNUSED(params);
+	return AT_BLE_SUCCESS;
 }
 
 /**
  * @brief Button Press Callback
  */
-static void button_cb(void)
+void button_cb(void)
 {
 	if (app_state) {
-		DBG_LOG_DEV("Going to disconnect ");
+		DBG_LOG("Going to disconnect ");
 		disconnect_flag = true;
 	} else if (app_state == false && advertisement_flag == false) {
 		/* To check if the device is in advertisement */
-		DBG_LOG_DEV("Going to advertisement");
+		DBG_LOG("Going to advertisement");
 		start_advertisement = true;
-		advertisement_flag = true;
+		advertisement_flag = true;	
 	}
-
-	isButton = true;
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
 
@@ -237,67 +287,70 @@ static void hr_measurment_send(void)
 {
 	uint8_t hr_data[HR_CHAR_VALUE_LEN];
 	uint8_t idx = 0;
-
-	if ((energy_expended_val == ENERGY_RESET) || (second_counter % 10 == 0)) {
+	
+	if ((energy_expended_val == ENERGY_RESET) || (second_counter % 10 == energy_inclusion)) {
 		hr_data[idx] = (RR_INTERVAL_VALUE_PRESENT | ENERGY_EXPENDED_FIELD_PRESENT);
+		
+		/* To send energy expended after 10 notifications after reset */
+		if (energy_expended_val == ENERGY_RESET) {
+			energy_inclusion = second_counter % 10 ;
+		}
 	} else {
-		hr_data[idx] = RR_INTERVAL_VALUE_PRESENT;
+		hr_data[idx] = RR_INTERVAL_VALUE_PRESENT ;
 	}
-
-	idx += 1;
+	idx += 1;			
 	DBG_LOG("Heart Rate: %d bpm", heart_rate_value);
 	heart_rate_value += (inc_changer);
 
 	/* Heart Rate Value 8bit*/
-	hr_data[idx++] = (uint8_t)heart_rate_value;
+	hr_data[idx++] = (uint8_t)heart_rate_value ;
 	if (hr_data[0] & ENERGY_EXPENDED_FIELD_PRESENT) {
 		memcpy(&hr_data[idx], &energy_expended_val, 2);
-		idx += 2;
+		idx += 2;	
 	}
-
-	/* Appending RR interval values*/
+	
+	/* Appending RR interval values*/	
 	if (rr_interval_value >= RR_VALUE_MAX) {
-		rr_interval_value = (uint8_t)RR_VALUE_MIN;
-	}
-
+		rr_interval_value = (uint8_t) RR_VALUE_MIN; 
+	}	
 	DBG_LOG_CONT("\tRR Values:(%d,%d)msec",
-			rr_interval_value, rr_interval_value + 200);
+				rr_interval_value, rr_interval_value + 200);
 	memcpy(&hr_data[idx], &rr_interval_value, 2);
 	idx += 2;
 	rr_interval_value += 200;
 	memcpy(&hr_data[idx], &rr_interval_value, 2);
 	idx += 2;
 	rr_interval_value += 200;
-
+	
 	/*printing the user activity,simulation*/
-	switch (activity) {
+	switch(activity) {
 	case ACTIVITY_NORMAL:
 		DBG_LOG_CONT(" User Status:Idle");
 		break;
-
+		
 	case ACTIVITY_WALKING:
 		DBG_LOG_CONT(" User Status:Walking");
 		break;
-
+		
 	case ACTIVITY_BRISK_WALKING:
 		DBG_LOG_CONT(" User status:Brisk walking");
 		break;
-
+		
 	case ACTIVITY_RUNNING:
 		DBG_LOG_CONT(" User status:Running");
 		break;
-
+		
 	case ACTIVITY_FAST_RUNNING:
 		DBG_LOG_CONT(" User Status:Fast Running");
-		break;
+		break;	
 	}
-
+	
 	/* Printing the energy*/
 	if ((hr_data[0] & ENERGY_EXPENDED_FIELD_PRESENT)) {
 		DBG_LOG("Energy Expended :%d KJ\n", energy_expended_val);
 		energy_expended_val += energy_incrementor;
 	}
-
+	
 	/* Sending the data for notifications*/
 	hr_sensor_send_notification(hr_data, idx);
 }
@@ -307,12 +360,20 @@ static void hr_measurment_send(void)
  */
 static void timer_callback_handler(void)
 {
-	hw_timer_stop();
-
-	isTimer = true;
+	if (second_counter == START_OF_FIRST_ACTIVITY) {
+		time_operator = 1;
+	} else if (second_counter == END_OF_LAST_ACTIVITY) {
+		time_operator = -1;
+	}
+	second_counter += (time_operator);
+	heart_rate_value_init();
+	notification_flag = true;
+	
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
 
+/* to make app executing continuously*/
+bool app_exec = true;
 /**
  * \brief Heart Rate Sensor Application main function
  */
@@ -338,9 +399,6 @@ int main(void)
 
 	app_exec = true;
 
-	isButton = false;
-	isTimer = false;
-
 	platform_driver_init();
 	acquire_sleep_lock();
 
@@ -362,63 +420,59 @@ int main(void)
 
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
+	
+	/* Initialize the profile */
+	hr_sensor_init(NULL);
+	
+	DBG_LOG("Press the button to start advertisement");
 
 	/* Registering the app_notification_handler with the profile */
 	register_hr_notification_handler(app_notification_handler);
 
 	/* Registering the app_reset_handler with the profile */
 	register_hr_reset_handler(app_reset_handler);
-
-	/* Registering the app_state_handler with the profile */
-	register_hr_state_handler(app_state_handler);
+	
+	/* Registering the call backs for events with the ble manager */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GAP_EVENT_TYPE,
+	app_gap_handle);
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GATT_SERVER_EVENT_TYPE,
+	app_gatt_server_handle);
 
 	/* Capturing the events  */
 	while (app_exec) {
 		ble_event_task();
 
-		if (isButton == true) {
-			isButton = false;
-
-			if (start_advertisement == true || disconnect_flag == true) {
-				/* button debounce delay*/
-				/* delay_ms(350); */
-			}
-
-			/* Flag to start advertisement */
-			if (start_advertisement) {
-				hr_sensor_adv();
-				start_advertisement = false;
-			}
-
-			/* Flag to disconnect with the peer device */
-			if (disconnect_flag) {
-				hr_sensor_disconnect();
-				app_state = false;
-				disconnect_flag = false;
-			}
+		if (start_advertisement == true || disconnect_flag == true) {
+			/* button debounce delay*/
+			/*delay_ms(350);*/
+		}
+		
+		/* Flag to start advertisement */
+		if (start_advertisement) {
+			hr_sensor_adv();
+			start_advertisement = false;
 		}
 
-		if (isTimer == true) {
-			isTimer = false;
-
-			if (second_counter == START_OF_FIRST_ACTIVITY) {
-				time_operator = 1;
-			} else if (second_counter == END_OF_LAST_ACTIVITY) {
-				time_operator = -1;
-			}
-
-			second_counter += (time_operator);
-			heart_rate_value_init();
-			notification_flag = true;
-
-			/* Flag to start notification */
-			if (notification_flag) {
-				LED_Toggle(LED0);
+		/* Flag to start notification */
+		if (notification_flag) {
+			LED_Toggle(LED0);
+			if (notification_sent) {
 				hr_measurment_send();
-				notification_flag = false;
+			} else {
+				DBG_LOG("Previous notification not sent");
 			}
+			
+			notification_flag = false;
+		}
 
-			hw_timer_start(NOTIFICATION_INTERVAL);
+		/* Flag to disconnect with the peer device */
+		if (disconnect_flag) {
+			hr_sensor_disconnect();
+			app_state = false;
+			disconnect_flag = false;
 		}
 	}
 	return 0;

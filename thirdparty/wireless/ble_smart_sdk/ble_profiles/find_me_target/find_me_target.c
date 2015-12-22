@@ -1,3 +1,4 @@
+
 /**
  * \file
  *
@@ -40,14 +41,13 @@
  * \asf_license_stop
  *
  */
-
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
  * Support</a>
  */
 
 /****************************************************************************************
-*							        Includes	                                        *
+*							        Includes	                                     	*
 ****************************************************************************************/
 
 #include "timer_hw.h"
@@ -55,9 +55,45 @@
 #include "find_me_target.h"
 #include "immediate_alert.h"
 
+
 /****************************************************************************************
-*							        Globals	                                                *
+*							        Globals	                                     		*
 ****************************************************************************************/
+
+static /*const*/ ble_event_callback_t fmp_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	fmp_target_connected_state_handler,
+	fmp_target_disconnect_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static /*const*/ ble_event_callback_t fmp_gatt_server_handle[] = {
+	NULL,
+	NULL,
+	fmp_target_char_changed_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 
 /* Immediate alert service declaration */
 #ifdef IMMEDIATE_ALERT_SERVICE
@@ -88,7 +124,7 @@ void register_find_me_handler(find_me_callback_t immediate_alert_fn)
 void fmp_target_service_init(void)
 {
 	/** Initializing the mandatory immediate alert service of find me
-	 * profile*/
+	 *profile*/
 	init_immediate_alert_service(&ias_handle);
 }
 
@@ -108,33 +144,10 @@ at_ble_status_t fmp_target_service_define(void)
  */
 void fmp_target_adv(void)
 {
-	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
-
-	uint8_t idx = 0;
-	uint8_t adv_data [ FMP_ADV_DATA_NAME_LEN + IAL_ADV_DATA_UUID_LEN   + (2 * 2)];
-
-	adv_data[idx++] = ADV_TYPE_LEN + IAL_ADV_DATA_UUID_LEN;
-	adv_data[idx++] = IAL_ADV_DATA_UUID_TYPE;
-
-	#ifdef IMMEDIATE_ALERT_SERVICE
-	/* Prepare ADV Data for IAS Service */
-	adv_data[idx++] = (uint8_t)IMMEDIATE_ALERT_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(IMMEDIATE_ALERT_SERVICE_UUID >> 8);
-	#endif
-
-	/* Appending the complete name to the Ad packet */
-	adv_data[idx++] = FMP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = FMP_ADV_DATA_NAME_TYPE;
-
-	memcpy(&adv_data[idx], FMP_ADV_DATA_NAME_DATA, FMP_ADV_DATA_NAME_LEN );
-	idx += FMP_ADV_DATA_NAME_LEN;
-
-	/* Adding the advertisement data and scan response data */
-	if (!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data,
-			SCAN_RESP_LEN) == AT_BLE_SUCCESS)) {
-		#ifdef DBG_LOG
-		DBG_LOG("Failed to set adv data");
-		#endif
+	/*  Set advertisement data from ble_manager*/
+	if(!(ble_advertisement_data_set() == AT_BLE_SUCCESS))
+	{
+		DBG_LOG("Fail to set Advertisement data");
 	}
 
 	/* Start of advertisement */
@@ -155,9 +168,12 @@ void fmp_target_adv(void)
 /**
  * \Immediate alert service characteristic change handler function
  */
-at_ble_status_t fmp_target_char_changed_handler(
-		at_ble_characteristic_changed_t *char_handle)
+at_ble_status_t fmp_target_char_changed_handler(void *params)
 {
+	
+	at_ble_characteristic_changed_t *char_handle;
+	char_handle = (at_ble_characteristic_changed_t *)params;
+	
 	at_ble_characteristic_changed_t change_params;
 	memcpy((uint8_t *)&change_params, char_handle,
 			sizeof(at_ble_characteristic_changed_t));
@@ -174,20 +190,17 @@ at_ble_status_t fmp_target_char_changed_handler(
 /**
  * \Find me profile connected state handler function
  */
-at_ble_status_t fmp_target_connected_state_handler(
-		at_ble_connected_t *conn_params)
+at_ble_status_t fmp_target_connected_state_handler(void * params)
 {
 	at_ble_status_t status;
 	uint16_t len;
 
 	/* / * Upon connection set default value to no alert* / */
 	/* immediate_alert_cb(IAS_NO_ALERT); */
-
-	if ((status
-				= at_ble_characteristic_value_get(ias_handle.
-					serv_chars.char_val_handle,
-					&immediate_alert_value,
-					&len))) {
+	status = at_ble_characteristic_value_get(ias_handle.serv_chars.char_val_handle,
+						&immediate_alert_value,
+						&len);
+	if (status != AT_BLE_SUCCESS) {
 		DBG_LOG(
 				"Read of alert value for Immediate alert service failed:reason %x",
 				status);
@@ -199,8 +212,7 @@ at_ble_status_t fmp_target_connected_state_handler(
 /**
  * \Find me profile disconnected state handler function
  */
-at_ble_status_t fmp_target_disconnect_event_handler(
-		at_ble_disconnected_t *disconnect)
+at_ble_status_t fmp_target_disconnect_event_handler(void * params)
 {
 	if (at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED,
 			AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
@@ -216,11 +228,43 @@ at_ble_status_t fmp_target_disconnect_event_handler(
 	return AT_BLE_SUCCESS;
 }
 
+
 /**
  * \Find me Profile service initialization, declarations and advertisement
  */
 void fmp_target_init(void *param)
 {
+	fmp_gap_handle[0] = NULL;
+	fmp_gap_handle[1] = NULL;
+	fmp_gap_handle[2] = NULL;
+	fmp_gap_handle[3] = NULL;
+	fmp_gap_handle[4] = NULL;
+	fmp_gap_handle[5] = fmp_target_connected_state_handler;
+	fmp_gap_handle[6] = fmp_target_disconnect_event_handler;
+	fmp_gap_handle[7] = NULL;
+	fmp_gap_handle[8] = NULL;
+	fmp_gap_handle[9] = NULL;
+	fmp_gap_handle[10] = NULL;
+	fmp_gap_handle[11] = NULL;
+	fmp_gap_handle[12] = NULL;
+	fmp_gap_handle[13] = NULL;
+	fmp_gap_handle[14] = NULL;
+	fmp_gap_handle[15] = NULL;
+	fmp_gap_handle[16] = NULL;
+	fmp_gap_handle[17] = NULL;
+	fmp_gap_handle[18] = NULL;
+
+	fmp_gatt_server_handle[0] = NULL;
+	fmp_gatt_server_handle[1] = NULL;
+	fmp_gatt_server_handle[2] = fmp_target_char_changed_handler;
+	fmp_gatt_server_handle[3] = NULL;
+	fmp_gatt_server_handle[4] = NULL;
+	fmp_gatt_server_handle[5] = NULL;
+	fmp_gatt_server_handle[6] = NULL;
+	fmp_gatt_server_handle[7] = NULL;
+	fmp_gatt_server_handle[8] = NULL;
+	fmp_gatt_server_handle[9] = NULL;
+
 	/* find me services initialization*/
 	fmp_target_service_init();
 
@@ -229,4 +273,10 @@ void fmp_target_init(void *param)
 
 	/* find me services advertisement */
 	fmp_target_adv();
+	
+	/* Callback registering for BLE-GAP Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GAP_EVENT_TYPE, fmp_gap_handle);
+	
+	/* Callback registering for BLE-GATT-Server Role */
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GATT_SERVER_EVENT_TYPE, fmp_gatt_server_handle);
 }

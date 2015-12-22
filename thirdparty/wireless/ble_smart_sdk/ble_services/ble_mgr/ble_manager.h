@@ -1387,6 +1387,17 @@ typedef struct gatt_service_handler
 *                                       Functions                                       *
 ****************************************************************************************/
 
+typedef void (*ble_user_event_callback_t)(void);
+
+/** @brief Register callback function, to be triggered when user event occur.
+ *
+ * @param[in]  function called when user event occur.
+ *
+ * @return none.
+ *
+ */
+void register_ble_user_event_cb(ble_user_event_callback_t cb_fn);
+
 /** @brief function to set the device name.
  *
  * @param[in] name name of the device.

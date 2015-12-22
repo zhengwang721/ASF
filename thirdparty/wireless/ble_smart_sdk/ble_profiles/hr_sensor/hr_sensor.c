@@ -63,6 +63,9 @@
 *							        Globals
 *                                       *
 ****************************************************************************************/
+/** @brief Scan response data*/
+uint8_t scan_rsp_data[SCAN_RESP_LEN]
+	= {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 /** @brief device information service handler **/
 dis_gatt_service_handler_t dis_service_handler;
@@ -71,14 +74,48 @@ dis_gatt_service_handler_t dis_service_handler;
 hr_gatt_service_handler_t hr_service_handler;
 
 /** @brief callback functions pointers contains the address of application
- * functions **/
+ *functions **/
 hr_notification_callback_t notification_cb;
 hr_reset_callback_t reset_cb;
-hr_state_callback_t state_cb;
 
 bool notification_confirm = true;
 /** @brief contains the connection handle functions **/
 at_ble_handle_t connection_handle;
+
+static const ble_event_callback_t hr_sensor_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	hr_sensor_connected_state_handler,
+	hr_sensor_disconnect_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t hr_sensor_gatt_server_handle[] = {
+	hr_sensor_notification_cfm_handler,
+	NULL,
+	hr_sensor_char_changed_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
 
 /****************************************************************************************
 *							        Implementations
@@ -105,28 +142,22 @@ void register_hr_reset_handler(hr_reset_callback_t hr_reset_handler)
 	reset_cb = hr_reset_handler;
 }
 
-/** @brief register_hr_state_handler registers the state handler passed by the
- *  application
- *	@param[in] hr_state_callback_t address of the handler function to be
- *  called
- */
-void register_hr_state_handler(hr_state_callback_t state_handler)
-{
-	state_cb = state_handler;
-}
-
 /** @brief hr_notification_confirmation_handler called on notification confirmation
  *  event by the ble manager
  *	@param[in] at_ble_status_t AT_BLE_SUCCESS on success AT_BLE_FAILURE on failure
  *  called
  */
-void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
+at_ble_status_t hr_sensor_notification_cfm_handler(void * params)
 {
-	if (params->status == AT_BLE_SUCCESS) {
+	at_ble_cmd_complete_event_t param;
+	
+	memcpy(&param,params,sizeof(at_ble_cmd_complete_event_t));
+	if ( param.status == AT_BLE_SUCCESS) {
 		DBG_LOG_DEV("Notification confirmation successful");
-	} else {
+	} else { 
 		DBG_LOG_DEV("Notification confirmation failure");
 	}
+	return AT_BLE_SUCCESS;
 }
 
 /** @brief hr_sensor_send_notification adds the new characteristic value and
@@ -137,39 +168,40 @@ void hr_notification_confirmation_handler(at_ble_cmd_complete_event_t *params)
 bool hr_sensor_send_notification(uint8_t *hr_data, uint8_t length)
 {
 	at_ble_status_t status;
-
+	
 	/** Updating the new characteristic value */
 	if ((status = at_ble_characteristic_value_set(
-					hr_service_handler.serv_chars[0].char_val_handle,
-					hr_data, length)) != AT_BLE_SUCCESS) {
+							hr_service_handler.serv_chars[0].char_val_handle,
+							hr_data, length)) != AT_BLE_SUCCESS) {
 		DBG_LOG("Write value for notification failed,reason %d",
 				status);
 		return false;
 	}
 
 	/** Sending the notification for the updated characteristic */
-	if ((status     = at_ble_notification_send(connection_handle,
-					hr_service_handler.serv_chars[0]
-					.char_val_handle))) {
+	if ((status	= at_ble_notification_send(connection_handle,
+										hr_service_handler.serv_chars[0]
+										.char_val_handle))) {
 		DBG_LOG("Send notification failed,reason %d", status);
-		return false;
+		return false;	
 	}
-
+	
 	return true;
 }
 
 /** @brief hr_sensor_char_changed_handler called by the ble manager after a
- * change in the characteristic
+ *  change in the characteristic
  *  @param[in] at_ble_characteristic_changed_t which contains handle of
- * characteristic and new value
+ *  characteristic and new value
+ *  @return AT_BLE_SUCCESS on success and AT_BLE_FAILURE on failure
  */
 at_ble_status_t hr_sensor_char_changed_handler(
-		at_ble_characteristic_changed_t *char_handle)
+		void *params)
 {
 	uint8_t action_event;
 
 	at_ble_characteristic_changed_t change_params;
-	memcpy((uint8_t *)&change_params, char_handle,
+	memcpy((uint8_t *)&change_params, params,
 			sizeof(at_ble_characteristic_changed_t));
 
 	action_event = hr_write_value_handler(&hr_service_handler,
@@ -191,25 +223,23 @@ at_ble_status_t hr_sensor_char_changed_handler(
  *  reason for disconnection
  */
 at_ble_status_t hr_sensor_disconnect_event_handler(
-		at_ble_disconnected_t *disconnect)
+		void *disconnect)
 {
-	/** Calling app state callback handler */
-	state_cb(HR_APP_DISCONNECT_STATE);
+	ALL_UNUSED(disconnect);   
 	return AT_BLE_SUCCESS;
 }
 
 /** @brief hr_sensor_connected_state_handler called by ble manager after a
  * change in characteristic
  *  @param[in] at_ble_connected_t which has connection handle and the peer
- * device address
+ *device address
  */
 at_ble_status_t hr_sensor_connected_state_handler(
-		at_ble_connected_t *conn_params)
+							void *params)
 {
-	connection_handle = (at_ble_handle_t)conn_params->handle;
-	/** calling app state call back handler */
-	state_cb(HR_APP_CONNECTION_STATE);
-
+	at_ble_connected_t conn_params;
+	memcpy(&conn_params,params,sizeof(at_ble_connected_t));
+	connection_handle = (at_ble_handle_t)conn_params.handle;
 	return AT_BLE_SUCCESS;
 }
 
@@ -238,38 +268,6 @@ void hr_sensor_disconnect(void)
 void hr_sensor_adv(void)
 {
 	at_ble_status_t status;
-	uint8_t idx = 0;
-	uint8_t adv_data [ HR_SENSOR_ADV_DATA_NAME_LEN + HR_SENSOR_ADV_DATA_UUID_LEN   + (4 * 2)];
-
-	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
-
-	adv_data[idx++] = HR_SENSOR_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = HR_SENSOR_ADV_DATA_COMP_16_UUID_TYPE;
-
-	/* Prepare ADV Data for Heart Rate Service */
-	adv_data[idx++] = (uint8_t)HEART_RATE_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(HEART_RATE_SERVICE_UUID >> 8);
-
-	/* Prepare ADV Data for Device Information Service */
-	adv_data[idx++] = (uint8_t)DEVICE_INFORMATION_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(DEVICE_INFORMATION_SERVICE_UUID >> 8);
-
-	/* Appending the complete name to the Ad packet */
-	adv_data[idx++] = HR_SENSOR_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = HR_SENSOR_ADV_DATA_NAME_TYPE;
-
-	memcpy(&adv_data[idx], HR_SENSOR_ADV_DATA_NAME_DATA,
-			HR_SENSOR_ADV_DATA_NAME_LEN );
-	idx += HR_SENSOR_ADV_DATA_NAME_LEN;
-
-	/* Adding the advertisement data and scan response data */
-	if (!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data,
-			SCAN_RESP_LEN) == AT_BLE_SUCCESS)) {
-		#ifdef DBG_LOG
-		DBG_LOG("Failed to set adv data");
-		#endif
-	}
-
 	/* Start of advertisement */
 	if ((status
 				= at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED,
@@ -299,8 +297,8 @@ void hr_sensor_service_define(void)
 				status);
 	} else {
 		DBG_LOG_DEV("hr service defined succesfully");
-	}
-
+	} 
+	
 	if ((status = dis_primary_service_define(&dis_service_handler)) !=
 			AT_BLE_SUCCESS) {
 		DBG_LOG("Dis Service definition failed,reason: %x", status);
@@ -326,15 +324,63 @@ void hr_sensor_service_init(void)
  */
 void hr_sensor_init(void *param)
 {
-	memset(&dis_service_handler, 0, sizeof(dis_gatt_service_handler_t));
-	memset(&hr_service_handler, 0, sizeof(hr_gatt_service_handler_t));
-	notification_cb = 0;
-	reset_cb = 0;
-	state_cb = 0;
-	notification_confirm = true;
-	connection_handle = 0;
+	at_ble_status_t status;
 
 	hr_sensor_service_init();
 	hr_sensor_service_define();
-	DBG_LOG("Press the button to start advertisement");
+	
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GAP_EVENT_TYPE,
+	hr_sensor_gap_handle);
+	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
+	BLE_GATT_SERVER_EVENT_TYPE,
+	hr_sensor_gatt_server_handle);
+
+	status = ble_advertisement_data_set();
+	if (status != AT_BLE_SUCCESS) {
+		DBG_LOG("Advertisement data set failed reason %d",status);
+	}	
+	
+	/* Handles received */
+	DBG_LOG_DEV("\n\nThe handle for heart rate service 0x%04x",
+							hr_service_handler.serv_handle);
+	DBG_LOG_DEV("The characteristic handle for heart rate mm is 0x%04x",
+							hr_service_handler.serv_chars[0].char_val_handle - 1);
+	DBG_LOG_DEV("The characteristic value handle for heart rate mm is 0x%04x",
+							hr_service_handler.serv_chars[0].char_val_handle);
+	DBG_LOG_DEV("The characteristic handle for body sensor location is 0x%04x",
+							hr_service_handler.serv_chars[1].char_val_handle - 1);
+	DBG_LOG_DEV("The characteristic value handle body sensor location is 0x%04x",
+							hr_service_handler.serv_chars[1].char_val_handle);
+	DBG_LOG_DEV("The characteristic handle for heart rate control point is 0x%04x",
+							hr_service_handler.serv_chars[2].char_val_handle - 1);
+	DBG_LOG_DEV("The characteristic value handle for heart rate control point is 0x%04x",
+							hr_service_handler.serv_chars[2].char_val_handle);
+	DBG_LOG_DEV("The descriptor handle for heart rate mm is 0x%04x",
+							hr_service_handler.serv_chars[0].client_config_handle);
+	
+	/* The handles received for Device information */
+	DBG_LOG_DEV("\r\nThe service handle for Device information service is 0x%04x",
+						dis_service_handler.serv_handle);
+	DBG_LOG_DEV("The Handles for the characteristics of DIS are given below\n");
+	DBG_LOG_DEV("Characteristic 1 - 0x%04x",
+						dis_service_handler.serv_chars[0].char_val_handle - 1);
+	DBG_LOG_DEV("Characteristic 2 - 0x%04x",
+						dis_service_handler.serv_chars[1].char_val_handle - 1);
+	DBG_LOG_DEV("Characteristic 3 - 0x%04x",
+						dis_service_handler.serv_chars[2].char_val_handle - 1);
+	DBG_LOG_DEV("Characteristic 4 - 0x%04x",
+						dis_service_handler.serv_chars[3].char_val_handle - 1);
+	DBG_LOG_DEV("Characteristic 5 - 0x%04x",
+						dis_service_handler.serv_chars[4].char_val_handle - 1);
+	DBG_LOG_DEV("Characteristic 6 - 0x%04x",
+						dis_service_handler.serv_chars[5].char_val_handle - 1);
+	DBG_LOG_DEV("Characteristic 7 - 0x%04x",
+						dis_service_handler.serv_chars[6].char_val_handle - 1);
+	DBG_LOG_DEV("Characteristic 8 - 0x%04x",
+						dis_service_handler.serv_chars[7].char_val_handle - 1);
+	DBG_LOG_DEV("Characteristic 9 - 0x%04x",
+						dis_service_handler.serv_chars[8].char_val_handle - 1);
+											
+    ALL_UNUSED(param);
 }
