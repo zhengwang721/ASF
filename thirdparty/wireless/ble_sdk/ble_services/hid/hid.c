@@ -227,7 +227,7 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 
 #ifdef ENABLE_PTS
 		uint8_t i=0;
-		DBG_LOG("Input Report Characteristic Value");
+		DBG_LOG_PTS("Input Report Characteristic Value");
 		for (i=0; i<hid_inst[servinst].serv_chars[id + 1].char_val.len; i++)
 		{
 			printf(" 0x%02X ", hid_inst[servinst].serv_chars[id + 1].char_val.init_value[i]);
@@ -313,7 +313,7 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 		
 #ifdef ENABLE_PTS
 	uint8_t i=0;
-	DBG_LOG("Boot Mouse Input Report Characteristic Value");
+	DBG_LOG_PTS("Boot Mouse Input Report Characteristic Value");
 		
 	for (i=0; i<sizeof(mouse_in_report); i++)
 	{
@@ -370,7 +370,7 @@ void hid_serv_init(uint8_t servinst, uint8_t device, uint8_t *mode, uint8_t repo
 
 #ifdef ENABLE_PTS
 	uint8_t i=0;
-	DBG_LOG("Boot Keyboard Input Report Characteristic Value");
+	DBG_LOG_PTS("Boot Keyboard Input Report Characteristic Value");
 
 	for (i=0; i<sizeof(keyb_in_report); i++)	
 	{
