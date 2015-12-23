@@ -130,11 +130,11 @@ struct wdt_config {
 #define WDT_MODE_WINDOW   WDT_CTRL_MODE
 
 	/** WDT interrupt mode */
-	uint32_t wdt_int_mode;
+	uint32_t wdt_int;
 /** WDT Interrupt Mode is disabled.  */
-#define WDT_INT_MODE_DIS    0
+#define WDT_INT_DIS    0
 /** WDT Interrupt Mode is enabled.  */
-#define WDT_INT_MODE_EN    WDT_CTRL_IM
+#define WDT_INT_EN    WDT_CTRL_IM
 
 	/** Number of CLK_CNT until the WDT expires. */
 	enum wdt_period timeout_period;
@@ -194,6 +194,36 @@ static inline uint32_t wdt_get_status(struct wdt_dev_inst *const dev_inst)
 }
 
 bool wdt_reset_mcu(void);
+
+void wdt_enable_interrupt(struct wdt_dev_inst *const dev_inst);
+
+void wdt_disable_interrupt(struct wdt_dev_inst *const dev_inst);
+
+void wdt_clear_interrupt(struct wdt_dev_inst *const dev_inst);
+
+/**
+ * \brief Get the watchdog interrupt mask.
+ *
+ * \return Bitmask of watchdog interrupt mask.
+ */
+static inline uint32_t wdt_get_interrupt_mask(struct wdt_dev_inst *const dev_inst)
+{
+	Wdt *wdt = dev_inst->hw_dev;
+
+	return wdt->WDT_IMR;
+}
+
+/**
+ * \brief Get the watchdog interrupt status.
+ *
+ * \return Bitmask of watchdog interrupt status.
+ */
+static inline uint32_t wdt_get_interrupt_status(struct wdt_dev_inst *const dev_inst)
+{
+	Wdt *wdt = dev_inst->hw_dev;
+
+	return wdt->WDT_ISR;
+}
 
 /**
  * @}
