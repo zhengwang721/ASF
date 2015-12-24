@@ -51,7 +51,7 @@
 			<build type="distribute" subtype="file" value="firmware/Tools/gain_builder/debug_uart/gain_builder.exe"/>
 
 			<build type="include-path" value="firmware/Tools/gain_builder/gain_sheets"/>
-			<build type="distribute" subtype="file" value="firmware/Tools/gain_builder/gain_sheets/default_gain_setting.csv"/>
+			<build type="distribute" subtype="file" value="firmware/Tools/gain_builder/gain_sheets/ATWINC1510-MR210PB.csv"/>
 			<build type="distribute" subtype="file" value="firmware/Tools/gain_builder/gain_sheets/samw25_gain_setting.csv"/>
 
 			<build type="include-path" value="firmware/Tools/image_builder"/>
