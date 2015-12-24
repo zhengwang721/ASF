@@ -97,8 +97,8 @@ uint8_t getchar_timeout(uint32_t timeout)
 {
 	uint32_t temp = NULL;
 
-	start_timer(timeout);
-	while((STATUS_OK != usart_read((Usart *)CONF_UART, &temp)) && (timer_done()>0));
+	//start_timer(timeout);
+	while((STATUS_OK != usart_read((Usart *)CONF_UART, &temp)) /*&& (timer_done()>0) */);
 
 	return ((uint8_t)(temp & 0xFF));
 }

@@ -48,11 +48,10 @@
 #include <asf.h>
 #include <string.h>
 #include "at_ble_api.h"
+#include "at_ble_trace.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
 #include "platform.h"
-
-extern volatile bool init_done;
 
 #if BLE_DEVICE_ROLE == BLE_ROLE_ALL
 #ifndef ATT_DB_MEMORY
@@ -61,7 +60,7 @@ extern volatile bool init_done;
 #endif
 
 #if defined ATT_DB_MEMORY
-uint32_t att_db_data[BLE_ATT_DB_MEMORY_SIZE/4];
+uint32_t att_db_data[BLE_ATT_DB_MEMORY_SIZE/4] = {0};
 #endif
 
 
@@ -127,7 +126,7 @@ uint8_t ble_event_params[BLE_EVENT_PARAM_MAX_SIZE];
 static void ble_init(at_ble_init_config_t * args);
 
 /** @brief Set BLE Address, If address is NULL then it will use BD public address */
-static void ble_set_address(at_ble_addr_t *addr);
+static void ble_set_dev_config(at_ble_addr_t *addr);
 
 /** @brief function to get event from stack */
 at_ble_status_t ble_event_task(void)
@@ -141,12 +140,12 @@ at_ble_status_t ble_event_task(void)
     return AT_BLE_FAILURE;
 }
 
+at_ble_init_config_t pf_cfg;
+
 /** @brief BLE device initialization */
 void ble_device_init(at_ble_addr_t *addr)
 {
-	uint8_t idx;
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
+	uint8_t idx;	
 	char *dev_name = NULL;
 
 	/* Initialize the BLE Event callbacks */
@@ -205,23 +204,35 @@ void ble_device_init(at_ble_addr_t *addr)
 	pf_cfg.memPool.memStartAdd = NULL;
 #endif
 	/*Bus configuration*/
-	busConfig.bus_type = AT_BLE_UART;
-	busConfig.bus_info = 0; /* Bus Info Not used */
+	pf_cfg.bus_info.bus_type = AT_BLE_UART;
 
 #if UART_FLOWCONTROL_6WIRE_MODE == true
 	/* Enable Hardware Flow-control on BTLC1000 */
-   busConfig.bus_flow_control_enabled = true; // enable flow control
+   pf_cfg.bus_info.bus_flow_control_enabled = true; // enable flow control
 #else
 	/* Disable Hardware Flow-control on BTLC1000 */
-   busConfig.bus_flow_control_enabled = false; // Disable flow control
+   pf_cfg.bus_info.bus_flow_control_enabled = false; // Disable flow control
 #endif
 
-	pf_cfg.plf_config = &busConfig;	
+	/* Register Platform callback API's */
+	pf_cfg.platform_api_list.at_ble_create_timer = platform_create_timer;
+	pf_cfg.platform_api_list.at_ble_delete_timer = platform_delete_timer;
+	pf_cfg.platform_api_list.at_ble_start_timer = platform_start_timer;
+	pf_cfg.platform_api_list.at_ble_stop_timer = platform_stop_timer;
+	pf_cfg.platform_api_list.at_ble_sleep = platform_sleep;
+	pf_cfg.platform_api_list.at_ble_gpio_set = platform_gpio_set;
+	pf_cfg.platform_api_list.at_ble_send_sync = platform_send_sync;
+	pf_cfg.platform_api_list.at_ble_recv_async = platform_recv_async;
+	pf_cfg.platform_api_list.at_ble_reconfigure_usart = platform_configure_hw_fc_uart;
+	
+	platform_init(pf_cfg.bus_info.bus_type, pf_cfg.bus_info.bus_flow_control_enabled);
+	
+	/*Trace Logs*/
+    trace_register_printFn((void *)&printf);
+    trace_set_level(TRACE_LVL_DISABLE);
 	
 	ble_init(&pf_cfg);
-	
-	init_done = true;
-	
+
 	/* Register it in first index of callback handler */
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, 
 									BLE_GAP_EVENT_TYPE, 
@@ -230,14 +241,13 @@ void ble_device_init(at_ble_addr_t *addr)
 									BLE_GATT_SERVER_EVENT_TYPE,
 									ble_mgr_gatt_server_handle);
 									
-	
-	ble_set_address(addr);
-	
 	dev_name = (char *)BLE_DEVICE_NAME;
 	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Device name set failed");
 	}
+	
+	ble_set_dev_config(addr);	
 }
 
 /** @brief set device name to BLE Device*/
@@ -266,8 +276,8 @@ static void ble_init(at_ble_init_config_t * args)
 }
 
 
-/* Set BLE Address, If address is NULL then it will use BD public address */
-static void ble_set_address(at_ble_addr_t *addr)
+/* Set BLE Address and device configuration, If address is NULL then it will use BD public address */
+static void ble_set_dev_config(at_ble_addr_t *addr)
 {
 	at_ble_dev_config_t stDevConfig;
 	at_ble_addr_t address = {AT_BLE_ADDRESS_PUBLIC, {0xAB, 0xCD, 0xEF, 0xAB, 0xCD, 0xEF}};
@@ -314,6 +324,11 @@ static void ble_set_address(at_ble_addr_t *addr)
 	if(at_ble_set_dev_config(&stDevConfig) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Set BLE Device configuration failed");
+	}
+	
+	if (at_ble_addr_set(addr) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Set BLE Device Address failed");
 	}
 }
 

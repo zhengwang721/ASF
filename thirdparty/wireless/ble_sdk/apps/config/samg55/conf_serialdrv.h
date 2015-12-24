@@ -100,13 +100,10 @@ Pin moved to EXT1 PIN 4 and BTLC1000 Chip Enable Pin moved to ETX1 PIN10"
 /** Stop bits setting */
 #define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-void serial_rx_callback(void);
-void serial_tx_callback(void);
-
-#define SERIAL_DRV_RX_CB serial_rx_callback
-#define SERIAL_DRV_TX_CB serial_tx_callback
-#define SERIAL_DRV_TX_CB_ENABLE  true
-#define SERIAL_DRV_RX_CB_ENABLE  true
+#define SERIAL_DRV_RX_CB NULL
+#define SERIAL_DRV_TX_CB NULL
+#define SERIAL_DRV_TX_CB_ENABLE  false
+#define SERIAL_DRV_RX_CB_ENABLE  false
 
 #define BLE_MAX_RX_PAYLOAD_SIZE 1024
 #define BLE_MAX_TX_PAYLOAD_SIZE 1024

@@ -60,7 +60,6 @@ static volatile uint8_t *ble_txbuf_ptr = NULL;
 uint16_t g_txdata;
 
 extern void platform_pdc_process_rxdata(uint8_t *buf, uint16_t len);
-extern void platform_process_rxdata(uint32_t t_rx_data);
 
 /* === TYPES =============================================================== */
 
@@ -327,7 +326,7 @@ void BLE_PATCH_UART_Handler(void)
 		uint32_t rx_data = 0;
 		if (usart_read(BLE_PATCH_UART, &rx_data) == 0)
 		{
-			platform_process_rxdata(rx_data);
+			platform_process_rxdata((uint8_t)rx_data);
 		}
 	}
 	
@@ -373,10 +372,8 @@ static inline void ble_pdc_serial_drv_send(uint8_t *data, uint16_t len)
 
 static inline void ble_patch_serial_drv_send(uint8_t *data, uint16_t len)
 {
-  platform_enter_critical_section();
   ble_txbuf_ptr = data;
   ble_txbyte_count = len;
-  platform_leave_critical_section();
   
   if(ble_txbyte_count)
   {
@@ -414,16 +411,23 @@ uint16_t serial_drv_send(uint8_t* data, uint16_t len)
 	return STATUS_OK;
 }
 
-uint32_t platform_set_serial_drv_tx_status(void)
-{
-	/* Set Tx Data write complete to false */
-	ble_usart_tx_cmpl = false;
-	return true;
-}
-
 uint32_t platform_serial_drv_tx_status(void)
 {
 	return((ble_usart_tx_cmpl == true) ? 0 : 1);
+}
+
+void platform_leave_critical_section(void)
+{
+	Enable_global_interrupt();
+}
+void platform_enter_critical_section(void)
+{
+	Disable_global_interrupt();
+}
+
+void platfrom_start_rx(void)
+{
+	
 }
 
 /* EOF */

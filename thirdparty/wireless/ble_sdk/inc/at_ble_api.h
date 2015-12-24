@@ -9,7 +9,7 @@
  * BLE Application Developers using Atmel BLE SDK
  *
  *
- *  Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *
@@ -150,17 +150,79 @@ extern "C" {
 /**
 * Initialization Configuration parameters
 */
+typedef enum
+{
+    AT_BLE_CHIP_ENABLE,
+    AT_BLE_EXTERNAL_WAKEUP
+} at_ble_gpio_pin_t;
+typedef enum
+{
+    AT_BLE_LOW,
+    AT_BLE_HIGH
+} at_ble_gpio_status_t;
+typedef at_ble_err_status_t at_ble_status_t;
 
+typedef struct platform_api_list_tag
+{
+    /* Pointer to function that should be used to register new callback function for new one-shout HW timer
+       It should receive callback function as parameter, this function should be registered to the HW timer
+       It should return handler for this timer to be used with start/stop/delete functions
+       This function MUST be implemented and assigned to the pointer, or at_ble_init will fail */
+    void *(*at_ble_create_timer)(void (*)(void *));
+    /* Pointer to function that should be used to release the timer allocated by at_ble_create_timer
+       It should receive timer handle as parameter
+       This function MUST be implemented and assigned to the pointer, or at_ble_init will fail */
+    void (*at_ble_delete_timer)(void *);
+    /* Pointer to function that should be used to start the timer asynchronously for n milliseconds given in the second parameter,
+       Once timeout, the registered callback should be fired
+       The first parameter is the timer handle,
+       The second parameter is time in milliseconds */
+    void (*at_ble_start_timer)(void *, uint32_t);
+    /* Pointer to function that should be used to stop the timer
+       It should receive timer handle as parameter */
+    void (*at_ble_stop_timer)(void *);
+    /* Pointer to function that should be used to block for n milliseconds given as parameter */
+    void (*at_ble_sleep)(uint32_t);
+    /* Pointer to function that provides GPIO set value
+       The function should receive at_ble_gpio_pin_t enum value to identify the GPIO pin
+       For AT_BLE_CHIP_ENABLE the function should set the value to chip enable pin (BTLC1000 pin 10)
+       For AT_BLE_EXTERNAL_WAKEUP it should set the value to external wakeup pin (BTLC1000 pin 6)
+       The function should receive at_ble_gpio_status_t to set the value */
+    void (*at_ble_gpio_set)(at_ble_gpio_pin_t, at_ble_gpio_status_t);
+    /* Pointer to function that provides synchronous send from the library to the BTLC1000,
+       The function should block until transmission done */
+    void (*at_ble_send_sync)(uint8_t *, uint32_t);
+    /* Pointer to function that provides asynchronous receive byte from the BTLC1000 to the library,
+       The function should return immediately.
+       The function should receive a callback function to be called on receiving new byte
+       Once a byte received from BTLC1000 callback function should be called with this byte as parameter.
+       This function should be called for each byte in order to receive it and propagate it to the library,
+       If at_ble_recv_async didn’t be called platform should not read from the HW
+	   And flow control mechanism should stop data transfer from BTLC1000 side */
+    void (*at_ble_recv_async)(void (*)(uint8_t));
+    /* Pointer to function that should be used to reconfigure the UART during FW patching
+       This function is temporary function,
+       For now we are using this function to switch the default UART to another UART to enable flow control,
+       It should be removed after HW fix */
+    void (*at_ble_reconfigure_usart)(void);
+} at_ble_platform_api_list_t;
 typedef struct
 {
     uint8_t *memStartAdd;   /**< Memory pool start address*/
     uint32_t memSize;       /**< Assigned memory size*/
 } at_ble_mempool_t;
-
 typedef struct
 {
-    at_ble_mempool_t memPool; /**< Memory pool that library can use for storing data base related data */
-    void *plf_config; /**< Platform Configuration*/
+    /// One of @ref interface_type; either @ref AT_BLE_UART or @ref AT_BLE_SPI
+    uint8_t bus_type;
+    /// In case of using @ref AT_BLE_UART as interface this is used to enable/disable flow control, true or false
+    uint8_t bus_flow_control_enabled;
+} at_ble_bus_info_t;
+typedef struct
+{
+    at_ble_mempool_t           memPool;          /**< Memory pool that library can use for storing data base related data */
+    at_ble_platform_api_list_t platform_api_list; /* platform APIs */
+    at_ble_bus_info_t          bus_info;         /**< Bus info */
 } at_ble_init_config_t;
 
 /**
@@ -172,9 +234,14 @@ typedef uint16_t at_ble_handle_t;
 *                                   Enumerations                                                                    *
 ****************************************************************************************/
 
-/// Enumeration for BLE Status
-typedef at_ble_err_status_t at_ble_status_t;
 
+enum at_ble_bus_type_tag
+{
+    /// UART Interface is used [Default]
+    AT_BLE_UART = 1,
+    /// SPI interface is used
+    AT_BLE_SPI
+};
 
 /// Enumeration for GAP Parameters
 typedef enum
@@ -234,9 +301,12 @@ typedef enum
     ///Byte value for advertising channel map for channel 37 enable
     AT_BLE_ADV_CHNL_37_EN                = 0x01,
     ///Byte value for advertising channel map for channel 38 enable
-    AT_BLE_ADV_CHNL_38_EN,
+    AT_BLE_ADV_CHNL_38_EN                = 0x02,
     ///Byte value for advertising channel map for channel 39 enable
     AT_BLE_ADV_CHNL_39_EN                = 0x04,
+    AT_BLE_ADV_CHNL_37_38_EN             = AT_BLE_ADV_CHNL_37_EN | AT_BLE_ADV_CHNL_38_EN,
+    AT_BLE_ADV_CHNL_37_39_EN             = AT_BLE_ADV_CHNL_37_EN | AT_BLE_ADV_CHNL_39_EN,
+    AT_BLE_ADV_CHNL_38_39_EN             = AT_BLE_ADV_CHNL_38_EN | AT_BLE_ADV_CHNL_39_EN,
     ///Byte value for advertising channel map for channel 37, 38 and 39 enable
     AT_BLE_ADV_ALL_CHNLS_EN              = 0x07,
     ///Enumeration end value for advertising channels enable value check
@@ -2845,7 +2915,7 @@ at_ble_status_t at_ble_random_address_resolve(uint8_t nb_key, at_ble_addr_t *ran
 /** @ingroup gap_misc_group
  *@brief Sets TX power value
  *
- * @param[in] power  TX power value @ref at_ble_tx_power_level_t
+ * @param[in] power  TX power value @ref at_ble_tx_power_level_t. Default is 0 dBm.
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
  */
@@ -2857,7 +2927,7 @@ at_ble_status_t at_ble_tx_power_set(at_ble_tx_power_level_t power);
 /** @ingroup gap_misc_group
  *@brief Gets TX power value
  *
- * @param[in] power TX power value @ref at_ble_tx_power_level_t
+ * @param[in] power TX power value @ref at_ble_tx_power_level_t. Default is 0 dBm.
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
  */
@@ -3702,10 +3772,52 @@ at_ble_status_t at_ble_dtm_stop_test(void);
 uint8_t at_ble_uuid_type2len(at_ble_uuid_type_t type);
 at_ble_uuid_type_t at_ble_uuid_len2type(uint8_t len);
 
-at_ble_status_t at_ble_calib_config(int calib_enable, uint32_t no_samples, uint32_t cal_freq);
-at_ble_status_t at_ble_calib_get_voltage(float* voltage);
-at_ble_status_t at_ble_calib_get_temp(int* temp);
+/**
+* @defgroup calib_group Calibration APIs
+* @brief This group includes all the Calibration related APIs.
+* @{
+*/
+/** @}*/
 
+/** @ingroup calib_group
+*  @brief       Configures periodic Vbat/Vtemp calibration: enable/disable, number of ADC samples needed for averaging, frequency of the calibration in seconds
+*  @param[in]   calib_enable enables calibration if set to 1 and disables it if set to 0. Calibration is enabled by default.
+*  @param[in]   no_samples number of ADC samples needed to calculate the average ADC output, recommended range from 1 to 16 sample. Default number of samples is 2.
+*  @param[in]   cal_freq frequency of the calibration in seconds, recommended range from 1 to 60 seconds. Default frequency is 2s.
+*
+* @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
+* Otherwise the function shall return @ref at_ble_status_t
+*/
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_calib_config(int calib_enable, uint32_t no_samples, uint32_t cal_freq);
+
+/** @ingroup calib_group
+*  @brief       Retrieves voltage value in volts
+*
+*  @param[in]   voltage variable passed to the function to store the retrieved voltage value
+*
+* @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
+* Otherwise the function shall return @ref at_ble_status_t
+*/
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_calib_get_voltage(float *voltage);
+
+/** @ingroup calib_group
+*  @brief       Retrieves temperature value in Celsius
+*
+*  @param[in]   temp variable passed to the function to store the retrieved temperature value
+*
+* @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS,
+* Otherwise the function shall return @ref at_ble_status_t
+*/
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+at_ble_status_t at_ble_calib_get_temp(int *temp);
 #ifdef __cplusplus
 }
 #endif  //__cplusplus

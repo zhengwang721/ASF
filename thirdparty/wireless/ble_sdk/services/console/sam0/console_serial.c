@@ -76,8 +76,8 @@ uint8_t getchar_timeout(uint32_t timeout)
 {
 	uint16_t temp = NULL;
 
-	start_timer(timeout);
-	while((STATUS_OK != usart_read_wait(&cdc_uart_module, &temp)) && (timer_done()>0));
+	//start_timer(timeout);
+	while((STATUS_OK != usart_read_wait(&cdc_uart_module, &temp)) /*&& (timer_done()>0)*/);
 
 	return ((uint8_t)temp);	
 }
