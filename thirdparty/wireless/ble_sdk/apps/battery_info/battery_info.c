@@ -146,7 +146,6 @@ static at_ble_status_t ble_notification_confirmed_app_event(void *param)
 	if(!notification_status->status)
 	{
 		flag = true;
-		timer_cb_done = true;
 		DBG_LOG_DEV("sending notification to the peer success");				
 	}
 	return AT_BLE_SUCCESS;
@@ -207,7 +206,7 @@ int main(void)
 	at_ble_status_t status;
 	uint8_t battery_level = BATTERY_MIN_LEVEL;	
 	
-	#if SAMG55
+	#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
