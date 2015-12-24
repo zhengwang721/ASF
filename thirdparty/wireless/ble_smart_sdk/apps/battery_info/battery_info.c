@@ -118,7 +118,7 @@ static ble_event_callback_t battery_app_gatt_server_cb[GATT_SERVER_HANDLER_FUNC_
 static void timer_callback_handler(void)
 {
 	timer_cb_done = true;
-	//send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
 
 /* Advertisement data set and Advertisement start */
