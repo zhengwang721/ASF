@@ -550,8 +550,8 @@ int main(void)
 	hw_timer_register_callback(timer_callback_handler);
 	
 	/* Register the callback */
-	//register_hw_timer_start_func_cb(hw_timer_start);
-	//register_hw_timer_stop_func_cb(hw_timer_stop);
+	register_hw_timer_start_func_cb(hw_timer_start);
+	register_hw_timer_stop_func_cb(hw_timer_stop);
 
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
