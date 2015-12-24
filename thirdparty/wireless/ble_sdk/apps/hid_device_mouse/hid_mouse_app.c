@@ -274,17 +274,17 @@ static void hid_mouse_app_init(void)
 	hid_prf_data.hid_device_info.bcountry_code = 0x00;
 	hid_prf_data.hid_device_info.flags = 0x02; 
 	
-#ifdef ENABLE_PTS
+#ifdef ENABLE_PTS	
 	DBG_LOG_PTS("Report Map Characteristic Value");
-	printf("\r\n");
+	DBG_LOG_PTS("\r\n");
 	for (i=0; i<sizeof(hid_app_mouse_report_map); i++)
 	{
-		printf(" 0x%02X ", hid_app_mouse_report_map[i]);
+		DBG_LOG_PTS(" 0x%02X ", hid_app_mouse_report_map[i]);
 	}
-	printf("\r\n");
+	DBG_LOG_PTS("\r\n");
 	DBG_LOG_PTS("HID Information Characteristic Value");
 	DBG_LOG_PTS("bcdHID 0x%02X, bCountryCode 0x%02X Flags 0x%02X", hid_prf_data.hid_device_info.bcd_hid, hid_prf_data.hid_device_info.bcountry_code, hid_prf_data.hid_device_info.flags);
-#endif // _DEBUG
+#endif
 	
 	if(hid_prf_conf(&hid_prf_data)==HID_PRF_SUCESS){
 		DBG_LOG("HID Profile Configured");
