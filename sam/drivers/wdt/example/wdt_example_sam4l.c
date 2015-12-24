@@ -55,9 +55,6 @@
  * status after user presses the push button and it causes that the counter
  * will not be restarted until a fault occurs (the watchdog reset).
  *
- * You can select to test watchdog normal mode or watchdog interrupt by not 
- * defining (or defining) WDT_INTERRUPT in conf_example.h.
- *
  * \section files Main Files
  * - wdt_sam4l.c: Watchdog driver for SAM4L;
  * - wdt_sam4l.h: Watchdog driver header file for SAM4L;
