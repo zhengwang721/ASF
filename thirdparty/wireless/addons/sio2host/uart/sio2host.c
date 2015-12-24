@@ -52,7 +52,7 @@
 /* === PROTOTYPES ========================================================== */
 
 /* === GLOBALS ========================================================== */
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 static struct usart_module host_uart_module;
 #else
 static usart_serial_options_t usart_serial_options = {
@@ -88,7 +88,7 @@ static uint8_t serial_rx_count;
 
 void sio2host_init(void)
 {
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	struct usart_config host_uart_config;
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&host_uart_config);
@@ -112,14 +112,14 @@ void sio2host_init(void)
 
 uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 {
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	status_code_genare_t status;
 #else
 	status_code_t status;
-#endif /* SAMD || SAMR21 */
+#endif /*SAMD || SAMR21 || SAML21 */
 
 	do {
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 		status
 			= usart_serial_write_packet(&host_uart_module,
 				(const uint8_t *)data, length);
@@ -135,6 +135,15 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
 {
 	uint8_t data_received = 0;
+	if(serial_rx_buf_tail >= serial_rx_buf_head)
+	{
+		serial_rx_count = serial_rx_buf_tail - serial_rx_buf_head;
+	}
+	else
+	{
+		serial_rx_count = serial_rx_buf_tail + (SERIAL_RX_BUF_SIZE_HOST - serial_rx_buf_head);
+	}
+	
 	if (0 == serial_rx_count) {
 		return 0;
 	}
@@ -182,12 +191,14 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length)
 	while (max_length > 0) {
 		/* Start to copy from head. */
 		*data = serial_rx_buf[serial_rx_buf_head];
-		serial_rx_buf_head++;
-		serial_rx_count--;
 		data++;
 		max_length--;
-		if ((SERIAL_RX_BUF_SIZE_HOST) == serial_rx_buf_head) {
+		if ((SERIAL_RX_BUF_SIZE_HOST - 1) == serial_rx_buf_head) {
 			serial_rx_buf_head = 0;
+		}
+		else
+		{
+			serial_rx_buf_head++;
 		}
 	}
 	return data_received;
@@ -217,14 +228,14 @@ int sio2host_getchar_nowait(void)
 	}
 }
 
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 void USART_HOST_ISR_VECT(uint8_t instance)
 #else
 USART_HOST_ISR_VECT()
 #endif
 {
 	uint8_t temp;
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	usart_serial_read_packet(&host_uart_module, &temp, 1);
 #else
 	usart_serial_read_packet(USART_HOST, &temp, 1);
@@ -235,7 +246,6 @@ USART_HOST_ISR_VECT()
 
 	/* The number of data in the receive buffer is incremented and the
 	 * buffer is updated. */
-	serial_rx_count++;
 
 	serial_rx_buf[serial_rx_buf_tail] = temp;
 

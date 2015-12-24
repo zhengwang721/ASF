@@ -710,6 +710,7 @@ typedef struct
  */
 #define Abs(a)              (((a) <  0 ) ? -(a) : (a))
 
+#ifndef __cplusplus
 /** \brief Takes the minimal value of \a a and \a b.
  *
  * \param[in] a Input value.
@@ -753,6 +754,7 @@ typedef struct
  * \note More optimized if only used with values unknown at compile time.
  */
 #define max(a, b)   Max(a, b)
+#endif
 
 /** @} */
 

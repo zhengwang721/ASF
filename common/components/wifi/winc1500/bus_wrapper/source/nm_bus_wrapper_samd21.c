@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -74,7 +71,7 @@ static sint8 nm_i2c_write(uint8 *b, uint16 sz)
 		.data_length = sz,
 		.data        = b,
 	};
-	
+
 	/* Write buffer to slave until success. */
 	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) != STATUS_OK) {
 		/* Increment timeout counter and check if timed out. */
@@ -155,7 +152,7 @@ static sint8 spi_rw(uint8* pu8Mosi, uint8* pu8Miso, uint16 u16Sz)
 		while (spi_read(&master, &rxd_data) != STATUS_OK)
 			;
 		*pu8Miso = rxd_data;
-			
+
 		u16Sz--;
 		if (!u8SkipMiso)
 			pu8Miso++;
@@ -194,7 +191,7 @@ sint8 nm_bus_init(void *pvinit)
 
 	i2c_master_enable(&i2c_master_instance);
 
-#elif CONF_WINC_USE_SPI
+#elif defined CONF_WINC_USE_SPI
 	/* Structure for SPI configuration. */
 	struct spi_config config;
 	struct spi_slave_inst_config slave_config;
@@ -213,7 +210,7 @@ sint8 nm_bus_init(void *pvinit)
 	config.pinmux_pad2 = CONF_WINC_SPI_PINMUX_PAD2;
 	config.pinmux_pad3 = CONF_WINC_SPI_PINMUX_PAD3;
 	config.master_slave_select_enable = false;
-	
+
 	config.mode_specific.master.baudrate = CONF_WINC_SPI_CLOCK;
 	if (spi_init(&master, CONF_WINC_SPI_MODULE, &config) != STATUS_OK) {
 		return M2M_ERR_BUS_FAIL;
@@ -259,7 +256,7 @@ sint8 nm_bus_ioctl(uint8 u8Cmd, void* pvParameter)
 			s8Ret = nm_i2c_write_special(pstrParam->pu8Buf1, pstrParam->u16Sz1, pstrParam->pu8Buf2, pstrParam->u16Sz2);
 		}
 		break;
-#elif CONF_WINC_USE_SPI
+#elif defined CONF_WINC_USE_SPI
 		case NM_BUS_IOCTL_RW: {
 			tstrNmSpiRw *pstrParam = (tstrNmSpiRw *)pvParameter;
 			s8Ret = spi_rw(pstrParam->pu8InBuf, pstrParam->pu8OutBuf, pstrParam->u16Sz);
@@ -281,5 +278,38 @@ sint8 nm_bus_ioctl(uint8 u8Cmd, void* pvParameter)
 */
 sint8 nm_bus_deinit(void)
 {
+	sint8 result = M2M_SUCCESS;
+	struct port_config pin_conf;
+		
+	port_get_config_defaults(&pin_conf);
+	/* Configure control pins as input no pull up. */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_NONE;
+
+#ifdef CONF_WINC_USE_I2C
+	i2c_master_disable(&i2c_master_instance);
+	port_pin_set_config(CONF_WINC_I2C_SCL, &pin_conf);
+	port_pin_set_config(CONF_WINC_I2C_SDA, &pin_conf);
+#endif /* CONF_WINC_USE_I2C */
+#ifdef CONF_WINC_USE_SPI
+	spi_disable(&master);	
+
+#endif /* CONF_WINC_USE_SPI */
+	return result;
+}
+
+/*
+*	@fn			nm_bus_reinit
+*	@brief		re-initialize the bus wrapper
+*	@param [in]	void *config
+*					re-init configuration data
+*	@return		M2M_SUCCESS in case of success and M2M_ERR_BUS_FAIL in case of failure
+*	@author		Dina El Sissy
+*	@date		19 Sept 2012
+*	@version	1.0
+*/
+sint8 nm_bus_reinit(void* config)
+{
 	return M2M_SUCCESS;
 }
+

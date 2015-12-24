@@ -11,5 +11,6 @@
 		<require idref="sam0.drivers.dma"/>
 		<require idref="sam0.drivers.events"/>
 		<device-support value="samd21"/>
+		<device-support value="samda1"/>
 	</module>
 </asf>

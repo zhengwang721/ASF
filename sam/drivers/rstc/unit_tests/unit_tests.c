@@ -191,7 +191,13 @@ int main(void)
 {
 	const usart_serial_options_t usart_serial_options = {
 		.baudrate = CONF_TEST_BAUDRATE,
-		.paritytype = CONF_TEST_PARITY
+#ifdef CONF_TEST_CHAR_LENGTH
+		.charlength = CONF_TEST_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_TEST_PARITY,
+#ifdef CONF_TEST_STOP_BITS
+		.stopbits = CONF_TEST_STOP_BITS,
+#endif
 	};
 	/* Clear DEMCR.VC_CORERESET bit in case of external tool set it.
 	   When RSTC unit test performs reset in the code with VC_CORERESET bit set,

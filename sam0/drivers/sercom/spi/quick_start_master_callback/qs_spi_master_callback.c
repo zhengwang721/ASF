@@ -179,6 +179,7 @@ int main(void)
 			while (!transrev_complete_spi_master) {
 				/////* Wait for write and read complete */
 			}
+			transrev_complete_spi_master = false;
 			//! [wait]
 			//! [deselect_slave]
 			spi_select_slave(&spi_master_instance, &slave, false);

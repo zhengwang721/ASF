@@ -40,15 +40,20 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Memory to Memory Data Transfer Using DMAC
  *
  * The supported board list:
- *    - SAMD21 Xplained Pro
- *    - SAMR21 Xplained Pro
- *    - SAMD11 Xplained Pro
- *    - SAML21 Xplained Pro
+ *    - SAM D21 Xplained Pro
+ *    - SAM R21 Xplained Pro
+ *    - SAM D11 Xplained Pro
+ *    - SAM L21 Xplained Pro
+ *    - SAM L22 Xplained Pro
+ *    - SAM DA1 Xplained Pro
  *
  * In this use case, the DMAC is configured for:
  *  \li Moving data from memory to memory
@@ -149,7 +154,4 @@
  *
  * -# Waiting for the setting of the transfer done flag.
  *    \snippet qs_dma_basic.c main_2
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

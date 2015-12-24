@@ -53,7 +53,7 @@
  * \section intro Application Introduction
  * Terminal Target Example Application will act as target for the RF4CE ZRC
  * button controller application. Terminal Target stack will respond for the
- *user
+ * user
  * input via serial interface.
  * The user options will be printed on the serial console. Where as the user
  * will choose the options like cold start, warm start, reset(NIB will be reset
@@ -85,7 +85,8 @@
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
  * Area
  *     Networks (WPANs).\n\n
- * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design Support</a>.\n
+ * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design
+ *Support</a>.\n
  *
  * \section contactinfo Contact Information
  * For further information,visit

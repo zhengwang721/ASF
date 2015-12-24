@@ -50,7 +50,7 @@
 #define AT86RFX_SPI_BAUDRATE             4000000UL
 
 /*Board Has an External PA Connected to the Radio ,Following are the constatnts
- *related to the Exxt PA */
+ * related to the Ext PA */
 
 #ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
 

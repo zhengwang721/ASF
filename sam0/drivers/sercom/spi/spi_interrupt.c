@@ -585,14 +585,8 @@ void _spi_interrupt_handler(
 
 				if (module->dir == SPI_DIRECTION_WRITE &&
 						!(module->receiver_enabled)) {
-					/* Buffer sent with receiver disabled */
-					module->dir = SPI_DIRECTION_IDLE;
-					module->status = STATUS_OK;
-					/* Run callback if registered and enabled */
-					if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED)){
-							(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])
-									(module);
-					}
+					/* Enable the Data Register transmit complete Interrupt */
+					spi_hw->INTENSET.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 				}
 			}
 		}
@@ -687,6 +681,22 @@ void _spi_interrupt_handler(
 
 		}
 #  endif
+#  if CONF_SPI_MASTER_ENABLE == true
+		if ((module->mode == SPI_MODE_MASTER) &&
+			(module->dir == SPI_DIRECTION_WRITE) && !(module->receiver_enabled)) {
+		  	/* Clear interrupt flag */
+		 	spi_hw->INTENCLR.reg
+					= SPI_INTERRUPT_FLAG_TX_COMPLETE;
+			/* Buffer sent with receiver disabled */
+			module->dir = SPI_DIRECTION_IDLE;
+			module->status = STATUS_OK;
+			/* Run callback if registered and enabled */
+			if (callback_mask & (1 << SPI_CALLBACK_BUFFER_TRANSMITTED)){
+				(module->callback[SPI_CALLBACK_BUFFER_TRANSMITTED])
+						(module);
+			}
+		}
+#endif
 	}
 
 #  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT

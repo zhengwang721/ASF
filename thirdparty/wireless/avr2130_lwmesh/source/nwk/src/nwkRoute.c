@@ -295,7 +295,6 @@ void nwkRoutePrepareTx(NwkFrame_t *frame)
 		if (NWK_ROUTE_UNKNOWN == header->macDstAddr) {
 			nwkRouteDiscoveryRequest(frame);
 		}
-
   #endif
 	}
 }

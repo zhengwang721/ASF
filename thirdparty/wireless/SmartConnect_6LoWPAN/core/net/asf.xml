@@ -1,0 +1,33 @@
+<asf xmlversion="1.0">
+
+		
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.core.net.src" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="linkaddr.c"/>
+			<build type="c-source"      value="nbr-table.c"/>
+			<build type="c-source"      value="netstack.c"/>
+			<build type="c-source"      value="packetbuf.c"/>
+			<build type="c-source"      value="packetqueue.c"/>
+			<build type="c-source"      value="queuebuf.c"/>
+			<build type="header-file"   value="linkaddr.h"/>
+			<build type="header-file"   value="nbr-table.h"/>
+			<build type="header-file"   value="netstack.h"/>
+			<build type="header-file"   value="packetbuf.h"/>
+			<build type="header-file"   value="packetqueue.h"/>
+			<build type="header-file"   value="queuebuf.h"/>
+			<!--  <require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ip"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.mac"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.rime"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.rpl"/> -->
+			<build type="include-path" value="."/>	
+            <device-support value="sam0"/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+</asf>

@@ -309,7 +309,7 @@ void dac_disable(
  * \brief Enables a DAC event input or output.
  *
  *  Enables one or more input or output events to or from the DAC module. See
- *  \ref dac_events "here" for a list of events this module supports.
+ *  \ref dac_events "Struct dac_events" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -368,7 +368,7 @@ void dac_enable_events(
  * \brief Disables a DAC event input or output.
  *
  *  Disables one or more input or output events to or from the DAC module. See
- *  \ref dac_events "here" for a list of events this module supports.
+ *  \ref dac_events "Struct dac_events" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -605,14 +605,13 @@ enum status_code dac_chan_write(
  *
  * \param[in] module_inst      Pointer to the DAC software device struct
  * \param[in] channel          DAC channel to write to
- * \param[in] buffer             Pointer to the digital data write buffer to be converted
- * \param[in] length             Length of the write buffer
+ * \param[in] buffer           Pointer to the digital data write buffer to be converted
+ * \param[in] length           Length of the write buffer
  *
  * \return Status of the operation.
  * \retval STATUS_OK           If the data was written or no data conversion required
- * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using
- *                                         event trigger
- * \retval STATUS_BUSY      The DAC is busy to convert
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using event trigger
+ * \retval STATUS_BUSY                 The DAC is busy and can not do the conversion
  */
 enum status_code dac_chan_write_buffer_wait(
 		struct dac_module *const module_inst,
@@ -677,7 +676,7 @@ enum status_code dac_chan_write_buffer_wait(
 /**
  * \brief Retrieves the status of DAC channel end of conversion.
  *
- * Checks the conversion is completed or not and returns boolean flag
+ * Checks if the conversion is completed or not and returns boolean flag
  * of status.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
@@ -715,9 +714,9 @@ bool dac_chan_is_end_of_conversion(
  *
  * \retval DAC_STATUS_CHANNEL_0_EMPTY    Data has been transferred from DATABUF
  *                                       to DATA by a start conversion event
- *                                       and DATABUF is ready for new data.
+ *                                       and DATABUF is ready for new data
  * \retval DAC_STATUS_CHANNEL_0_UNDERRUN A start conversion event has occurred
- *                                       when DATABUF is empty.
+ *                                       when DATABUF is empty
  *
  */
 uint32_t dac_get_status(

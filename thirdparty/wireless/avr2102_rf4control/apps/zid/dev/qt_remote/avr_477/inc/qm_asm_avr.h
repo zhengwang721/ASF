@@ -126,7 +126,7 @@
 
 /**
  * Set actual delay time in capacitive charge loop based on dwell time. The -1
- *is because
+ * is because
  * the following instruction in the charge transfer routine takes one cycle.
  */
 #define DELAY_DWELL_TIME        (DWELL_TIME_CYCLES - 1)

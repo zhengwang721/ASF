@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam0.applications.spi_master_bootloader" caption="SPI Master Bootloader">
 		<info type="description" value="summary">
-		SPI Master Bootloader for SAM D20. AT45DBX dataflash component is used as SPI slave.
+		SPI Master Bootloader for SAM D20. SD/MMC card is used as SPI slave.
 		</info>
 
 		<info type="keyword" value="technology">
@@ -10,11 +10,15 @@
 		</info>
 
 		<info type="gui-flag" value="move-to-root"/>
+		<build type="header-file" value="memories_initialization.h"/>
+		<build type="c-source" value="memories_initialization_sam0.c"/>
 		<build type="c-source" value="spi_master_bootloader.c"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.sercom.spi"/>
 		<require idref="sam0.drivers.nvm"/>
-		<require idref="common2.components.memory.data_flash.at45dbx"/>
+		<require idref="common2.components.memory.sd_mmc"/>
+		<require idref="common.services.fs.fatfs"/>
+		<require idref="sam0.utils.stdio"/>
 		<require idref="sam0.drivers.wdt"/>
 		<device-support value="samd20"/>
 	</module>

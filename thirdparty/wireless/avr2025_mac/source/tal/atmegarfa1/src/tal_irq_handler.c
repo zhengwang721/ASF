@@ -86,8 +86,9 @@ static irq_handler_t irq_hdl_trx_cca_ed;
 static irq_handler_t irq_hdl_trx_awake;
 
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined DOXYGEN)
+
 /** Function pointer to store callback for transceiver timestamp (RX_START)
- *interrupt. */
+ * interrupt. */
 static irq_handler_t irq_hdl_trx_tstamp;
 #endif
 
@@ -154,7 +155,7 @@ void pal_trx_irq_init_cca_ed(FUNC_PTR trx_irq_cb)
  *
  * This function sets the microcontroller specific registers
  * responsible for handling the transceiver timestamp interrupt (RX START
- *interrupt)
+ * interrupt)
  *
  * \param trx_irq_cb Callback function for the transceiver
  * timestamp interrupt (RX START interrupt)
@@ -165,7 +166,7 @@ void pal_trx_irq_init_tstamp(FUNC_PTR trx_irq_cb)
 }
 
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined
-         *DOXYGEN) */
+         * DOXYGEN) */
 
 /*
  * \brief Initializes the transceiver AWAKE interrupt

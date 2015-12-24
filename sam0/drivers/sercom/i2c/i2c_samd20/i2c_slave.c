@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 I2C Slave Driver
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -123,7 +123,7 @@ static enum status_code _i2c_slave_set_config(
 /**
  * \brief Initializes the requested I<SUP>2</SUP>C hardware module
  *
- * Initializes the SERCOM I<SUP>2</SUP>C Slave device requested and sets the provided
+ * Initializes the SERCOM I<SUP>2</SUP>C slave device requested and sets the provided
  * software module struct.  Run this function before any further use of
  * the driver.
  *
@@ -293,7 +293,7 @@ static enum status_code _i2c_slave_wait_for_bus(
  * \retval STATUS_ERR_IO            There was an error in the previous transfer
  * \retval STATUS_ERR_BAD_FORMAT    Master wants to write data
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) was provided
- * \retval STATUS_ERR_BUSY          The I<SUP>2</SUP>C module is busy with a job.
+ * \retval STATUS_ERR_BUSY          The I<SUP>2</SUP>C module is busy with a job
  * \retval STATUS_ERR_ERR_OVERFLOW  Master NACKed before entire packet was
  *                                  transferred
  * \retval STATUS_ERR_TIMEOUT       No response was given within the timeout
@@ -515,8 +515,10 @@ enum status_code i2c_slave_read_packet_wait(
 /**
  * \brief Waits for a start condition on the bus
  *
+ * \note This function is only available for 7-bit slave addressing.
+ *
  * Waits for the master to issue a start condition on the bus.
- * Note that this function does not check for errors in the last transfer,
+ * \note This function does not check for errors in the last transfer,
  * this will be discovered when reading or writing.
  *
  * \param[in]  module  Pointer to software module structure

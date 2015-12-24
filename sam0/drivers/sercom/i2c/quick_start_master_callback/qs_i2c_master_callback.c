@@ -105,7 +105,7 @@ void configure_i2c(void)
 
 	/* Initialize and enable device with config */
 	//! [init_module]
-	while(i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master)     \
+	while(i2c_master_init(&i2c_master_instance, CONF_I2C_MASTER_MODULE, &config_i2c_master)     \
 			!= STATUS_OK);
 	//! [init_module]
 
@@ -161,6 +161,9 @@ int main(void)
 	while (true) {
 		/* Infinite loop */
 		if (!port_pin_get_input_level(BUTTON_0_PIN)) {
+		  	while (!port_pin_get_input_level(BUTTON_0_PIN)) {
+		  		/* Waiting for button steady */	
+		  	}
 			/* Send every other packet with reversed data */
 			//! [revert_order]
 			if (wr_packet.data[0] == 0x00) {

@@ -46,39 +46,45 @@
 #define NMI_PERIPH_REG_BASE     0x1000
 #define NMI_CHIPID	            (NMI_PERIPH_REG_BASE)
 #define rNMI_GP_REG_0			(0x149c)
-
+#define rNMI_GP_REG_1			(0x14A0)
+#define rNMI_GP_REG_2			(0xc0008)
+#define rNMI_GLB_RESET			(0x1400)
+#define rNMI_BOOT_RESET_MUX		(0x1118)
 #define NMI_STATE_REG			(0x108c)
 #define BOOTROM_REG				(0xc000c)
-#define NMI_REV_REG  			(0x207ac)
+#define NMI_REV_REG  			(0x207ac)	/*Also, Used to load ATE firmware from SPI Flash and to ensure that it is running too*/
+#define NMI_REV_REG_ATE			(0x1048) 	/*Revision info register in case of ATE FW*/
 #define M2M_WAIT_FOR_HOST_REG 	(0x207bc)
 #define M2M_FINISH_INIT_STATE 	0x02532636UL
 #define M2M_FINISH_BOOT_ROM   	 0x10add09eUL
 #define M2M_START_FIRMWARE   	 0xef522f61UL
 #define M2M_START_PS_FIRMWARE    0x94992610UL
 
-#define REV_B0        (0x2B0)
+#define M2M_ATE_FW_START_VALUE	(0x3C1CD57D)	/*Also, Change this value in boot_firmware if it will be changed here*/
+#define M2M_ATE_FW_IS_UP_VALUE	(0xD75DC1C3)	/*Also, Change this value in ATE (Burst) firmware if it will be changed here*/
+
+#define REV_2B0        (0x2B0)
+#define REV_B0         (0x2B0)
+#define REV_3A0        (0x3A0)
 #define GET_CHIPID()	nmi_get_chipid()
 #define ISNMC1000(id)   (((id & 0xfffff000) == 0x100000) ? 1 : 0)
 #define ISNMC1500(id)   (((id & 0xfffff000) == 0x150000) ? 1 : 0)
 #define REV(id)         ( ((id) & 0x00000fff ) )
 #define EFUSED_MAC(value) (value & 0xffff0000)
 
-/**
-*  @struct		tstrM2mWifiGetRevision
-*  @brief		Structure holding firmware version parameters
-*  @sa			M2M_WIFI_AUTH_WEB, M2M_WIFI_AUTH_WPA, M2M_WIFI_AUTH_WPA2
-*/
-typedef struct {
-	uint8 u8FirmwareMajor; /* Version Major Number which represents the official release base */
-	uint8 u8FirmwareMinor; /* Version Minor Number which represents the engineering release base */
-	uint8 u8FirmwarePatch;	/* Version pathc Number which represents the pathces release base */
-	uint8 u8DriverMajor; /* Version Major Number which represents the official release base */
-	uint8 u8DriverMinor; /* Version Minor Number which represents the engineering release base */
-	uint8 u8DriverPatch; /* Version Patch Number which represents the pathces release base */
-	uint8 BuildDate[sizeof(__DATE__)];
-	uint8 BuildTime[sizeof(__TIME__)];
-	uint32 u32Chipid; /* HW revision which will be basically the chip ID */
-} tstrM2mRev;
+#define rHAVE_SDIO_IRQ_GPIO_BIT     (NBIT0)
+#define rHAVE_USE_PMU_BIT           (NBIT1)
+#define rHAVE_SLEEP_CLK_SRC_RTC_BIT (NBIT2)
+#define rHAVE_SLEEP_CLK_SRC_XO_BIT  (NBIT3)
+#define rHAVE_EXT_PA_INV_TX_RX      (NBIT4)
+#define rHAVE_LEGACY_RF_SETTINGS    (NBIT5)
+#define rHAVE_LOGS_DISABLED_BIT		(NBIT6)
+#define rHAVE_ETHERNET_MODE_BIT		(NBIT7)
+
+typedef struct{
+	uint32 u32Mac_efuse_mib;
+	uint32 u32Firmware_Ota_rev;
+}tstrGpRegs;
 
 #ifdef __cplusplus
      extern "C" {
@@ -113,9 +119,9 @@ void nmi_set_sys_clk_src_to_xo(void);
 
 sint8 chip_reset(void);
 
-sint8 wait_for_bootrom(void);
+sint8 wait_for_bootrom(uint8);
 
-sint8 wait_for_firmware_start(void);
+sint8 wait_for_firmware_start(uint8);
 
 sint8 chip_deinit(void);
 
@@ -132,6 +138,8 @@ sint8 pullup_ctrl(uint32 pinmask, uint8 enable);
 sint8 nmi_get_otp_mac_address(uint8 *pu8MacAddr, uint8 * pu8IsValid);
 
 sint8 nmi_get_mac_address(uint8 *pu8MacAddr);
+
+sint8 chip_apply_conf(uint32 u32conf);
 
 #ifdef __cplusplus
 	 }

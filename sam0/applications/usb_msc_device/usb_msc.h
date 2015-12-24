@@ -49,7 +49,7 @@
 #include <stdint.h>
 
 /* USB GCLK generator */
-#define USB_GCLK_GEN                    0
+#define USB_GCLK_GEN                    1
 /* USB SOF callback*/
 #define USB_CALLBACK_SOF                main_callback_sof
 

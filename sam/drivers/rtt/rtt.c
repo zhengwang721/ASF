@@ -69,7 +69,7 @@ extern "C" {
  * In follow series chip, the bit RTC1HZ and RTTDIS in RTT_MR are write only.
  * So we use a variable to record status of these bits.
  */
-#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM)
+#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
 static uint32_t g_wobits_in_rtt_mr = 0;
 #endif
 
@@ -87,7 +87,7 @@ static uint32_t g_wobits_in_rtt_mr = 0;
  */
 uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 {
-#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM)
+#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
 	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST | g_wobits_in_rtt_mr);
 #else
 	p_rtt->RTT_MR = (us_prescaler | RTT_MR_RTTRST);
@@ -95,7 +95,7 @@ uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler)
 	return 0;
 }
 
-#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM)
+#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Select RTT counter source.
  *
@@ -170,7 +170,7 @@ void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 
 	temp = p_rtt->RTT_MR;
 	temp |= ul_sources;
-#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM)
+#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
 	temp |= g_wobits_in_rtt_mr;
 #endif
 	p_rtt->RTT_MR = temp;
@@ -188,7 +188,7 @@ void rtt_disable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
 
 	temp = p_rtt->RTT_MR;
 	temp &= (~ul_sources);
-#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM)
+#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG51 || SAM4CP || SAM4CM || SAMV71 || SAMV70 || SAME70 || SAMS70)
 	temp |= g_wobits_in_rtt_mr;
 #endif
 	p_rtt->RTT_MR = temp;
@@ -220,27 +220,32 @@ uint32_t rtt_get_status(Rtt *p_rtt)
 
 /**
  * \brief Configure the RTT to generate an alarm at the given time.
+ * alarm happens when CRTV value equals ALMV+1, so RTT_AR should be alarmtime - 1.
+ * if you want to get alarm when rtt hit 0 , ALMV should be set to 0xFFFFFFFF.
  *
  * \param p_rtt Pointer to an RTT instance.
- * \param ul_alarm_time Alarm time.
+ * \param ul_alarm_time Alarm time,Alarm time = ALMV + 1.
  *
  * \retval 0 Configuration is done.
- * \retval 1 Parameter error.
  */
 uint32_t rtt_write_alarm_time(Rtt *p_rtt, uint32_t ul_alarm_time)
 {
 	uint32_t flag;
 
-	if (ul_alarm_time == 0) {
-		return 1;
-	}
-
 	flag = p_rtt->RTT_MR & RTT_MR_ALMIEN;
 
 	rtt_disable_interrupt(RTT, RTT_MR_ALMIEN);
 
-	/* Alarm time = ALMV + 1 */
-	p_rtt->RTT_AR = ul_alarm_time - 1;
+	/**
+	 * Alarm time = ALMV + 1,If the incoming parameter 
+	 * is 0, the ALMV is set to 0xFFFFFFFF.
+	*/
+	if(ul_alarm_time == 0) {
+		p_rtt->RTT_AR = 0xFFFFFFFF;
+	}
+	else {
+		p_rtt->RTT_AR = ul_alarm_time - 1;
+	}
 
 	if (flag) {
 		rtt_enable_interrupt(RTT, RTT_MR_ALMIEN);

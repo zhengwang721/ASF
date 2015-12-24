@@ -22,9 +22,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -57,11 +54,11 @@ void stream_writer_init(struct stream_writer * writer, char *buffer, size_t max_
 void stream_writer_send_8(struct stream_writer * writer, int8_t value)
 {
 	int remain = writer->max_size - writer->written;
-	
+
 	if (remain < 1) {
 		stream_writer_send_remain(writer);
 	}
-	
+
 	writer->buffer[writer->written++] = (char)value;
 }
 
@@ -75,7 +72,7 @@ void stream_writer_send_16LE(struct stream_writer * writer, int16_t value)
 {
 	stream_writer_send_8(writer, value & 0xFF);
 	stream_writer_send_8(writer, (value >> 8) & 0xFF);
-}	
+}
 
 void stream_writer_send_32BE(struct stream_writer * writer, int32_t value)
 {

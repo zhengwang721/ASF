@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+	<project caption="Getting Started for SAME70 Xplained" id="sam.applications.getting-started.same70_xplained">
+		<info type="description" value="summary">
+		This demonstration program makes one LED on the board blinking at a fixed rate.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="include-path" value="."/>
+		<require idref="sam.applications.getting-started"/>
+		<require idref="board.same70_xplained"/>
+		<require idref="sam.drivers.matrix"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen"/>
+		<device-support value="atsame70q21"/>
+	</project>
+</asf>

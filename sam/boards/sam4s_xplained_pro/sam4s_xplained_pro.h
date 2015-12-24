@@ -542,14 +542,14 @@
 
 //! \name SD Card
 //@{
-#define SD_MMC_0_CD_GPIO            (PIO_PC27_IDX)
+#define SD_MMC_0_CD_GPIO            (PIO_PC12_IDX)
 #define SD_MMC_0_CD_PIO_ID          ID_PIOC
 #define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
 
 #define SD_MMC_0_CD_DETECT_VALUE    0
 
-#define SD_MMC_0_CD    {PIO_PC27, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define SD_MMC_0_CD_MASK PIO_PC27
+#define SD_MMC_0_CD    {PIO_PC12, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define SD_MMC_0_CD_MASK PIO_PC12
 #define SD_MMC_0_CD_PIO PIOC
 #define SD_MMC_0_CD_ID ID_PIOC
 #define SD_MMC_0_CD_TYPE PIO_INPUT
@@ -579,7 +579,7 @@ void at86rfx_isr(void);
 									ioport_set_pin_sense_mode(AT86RFX_IRQ_PIN, IOPORT_SENSE_RISING);\
 									pmc_enable_periph_clk(ID_PIOA);\
 									pio_set_debounce_filter(PIOA, PIO_PA1, 10);\
-									pio_handler_set(PIOA, ID_PIOA, PIO_PA1, PIO_IT_HIGH_LEVEL, at86rfx_isr);\
+									pio_handler_set(PIOA, ID_PIOA, PIO_PA1, PIO_IT_RISE_EDGE, at86rfx_isr);\
 									NVIC_EnableIRQ((IRQn_Type) ID_PIOA);\
 									pio_enable_interrupt(PIOA, PIO_PA1);									
 

@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -49,11 +46,12 @@
  * - WINC1500 firmware update
  * - WINC1500 root certificate update
  *
- * It uses the following hardware:
- * - the SAMW25 Xplained Pro.
- * OR
+ * It can be used with the following hardware:
+ * - the SAMG53 Xplained Pro.
+ * - the SAMG55 Xplained Pro.
  * - the SAMD21 Xplained Pro.
- * - the WINC1500 on EXT1.
+ * - the SAMW25 Xplained Pro.
+ * - the WINC1500 must be connected to EXT1.
  *
  * For a more information about WINC1500 update please refer to the following document
  * available under the doc folder:

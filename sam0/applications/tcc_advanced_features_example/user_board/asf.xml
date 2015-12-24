@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<project caption="SAM D21 TCC Advanced Features Example" id="sam0.applications.tcc_advanced_features_example.user_board">
+		<require idref="board.dummy.atsamd21e16l"/>
+		<require idref="sam0.applications.samd21e16l_tcc_advanced_features_example"/>
+		<config name="config.sam0.drivers.tcc" value="polled"/>	
+		<config name="config.common2.services.delay" value="cycle"/>			
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_example.h"/>
+		<build type="header-file" value="conf_extint.h"/>
+		<build type="header-file" value="conf_dma.h"/>				
+		<build type="define" name="__SAMD21E16L__" value=""/>		
+	    <build type="define"   name="F_CPU"  value="8000000UL"/>		
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd21e16l"/>
+	</project>
+</asf>

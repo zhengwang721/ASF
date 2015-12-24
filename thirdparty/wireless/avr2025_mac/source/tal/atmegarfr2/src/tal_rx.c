@@ -127,6 +127,8 @@ void handle_received_frame_irq(void)
 		                                                       * Disable
 		                                                       * buffer
 		                                                       *
+		                                                       *
+		                                                       *
 		                                                       *protection
 		                                                       * mode
 		                                                       **/
@@ -134,6 +136,8 @@ void handle_received_frame_irq(void)
 		trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE); /*
 		                                                      * Enable
 		                                                      * buffer
+		                                                      *
+		                                                      *
 		                                                      *
 		                                                      *protection
 		                                                      * mode
@@ -240,6 +244,8 @@ void handle_received_frame_irq(void)
 		                                                       * Disable
 		                                                       * buffer
 		                                                       *
+		                                                       *
+		                                                       *
 		                                                       *protection
 		                                                       * mode
 		                                                       **/
@@ -247,6 +253,8 @@ void handle_received_frame_irq(void)
 		trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE); /*
 		                                                      * Enable
 		                                                      * buffer
+		                                                      *
+		                                                      *
 		                                                      *
 		                                                      *protection
 		                                                      * mode

@@ -1354,10 +1354,15 @@ static void udd_ep_finish_job(udd_ep_job_t * ptr_job, int status,
 
 static void udd_ep_ack_out_received(udd_ep_id_t ep)
 {
+	bool bank0_received, bank1_received;
 	udd_ep_job_t *ptr_job = &udd_ep_job[ep - 1];
-	if (Is_udd_all_banks_received(ep)) {
+
+	bank0_received = Is_udd_bank0_received(ep);
+	bank1_received = Is_udd_bank1_received(ep);
+
+	if (bank0_received && bank1_received) {
 		// The only way is to use ptr_job->bank
-	} else if (Is_udd_bank0_received(ep)) {
+	} else if (bank0_received) {
 		// Must be bank0
 		ptr_job->bank = 0;
 	} else {

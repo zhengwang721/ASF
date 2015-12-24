@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -116,7 +113,7 @@ static sint8 spi_rw(uint8 *pu8Mosi, uint8 *pu8Miso, uint16 u16Sz)
 		;
 	SPI_DEASSERT_CS();
 	g_p_pdc_spi->PERIPH_PTCR = PERIPH_PTCR_TXTDIS | PERIPH_PTCR_RXTDIS;
-		
+
 	return M2M_SUCCESS;
 }
 #endif
@@ -130,8 +127,6 @@ sint8 nm_bus_init(void *pvinit)
 {
 	sint8 result = M2M_SUCCESS;
 #ifdef CONF_WINC_USE_I2C
-	/* TODO: implement I2C. */
-	result = M2M_ERR;
 
 #elif CONF_WINC_USE_SPI
 	/* Configure SPI pins. */
@@ -215,7 +210,7 @@ sint8 nm_bus_ioctl(uint8 u8Cmd, void* pvParameter)
 #endif
 		default:
 			s8Ret = -1;
-			M2M_ERR("invalide ioclt cmd\n");
+			M2M_ERR("Invalid IOCTL command!\n");
 			break;
 	}
 

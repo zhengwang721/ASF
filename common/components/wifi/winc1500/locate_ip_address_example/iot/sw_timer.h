@@ -22,9 +22,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -54,7 +51,7 @@ extern "C" {
 
 struct sw_timer_module;
 
-/** 
+/**
  * Callback Function type of time out event in the timer.
  *
  * \param[in]  timer_id        ID of timer.
@@ -150,9 +147,9 @@ void sw_timer_disable(struct sw_timer_module *const module_inst);
  *
  * \return If negative value, registering timer was failed. Otherwise this value is ID of timer.
  */
-int sw_timer_register_callback(struct sw_timer_module *const module_inst, 
+int sw_timer_register_callback(struct sw_timer_module *const module_inst,
 	sw_timer_callback_t callback, void *context, uint32_t period);
-	
+
 /**
  * \brief Unregister callback.
  *

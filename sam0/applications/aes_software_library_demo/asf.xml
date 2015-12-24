@@ -1,0 +1,28 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.aes_software_library_demo" caption="AES Software Library Demo">
+		<info type="description" value="summary">
+		This application uses software AES library to demonstrate 5 different modes namely ECB, CBC, CFB, OFB and CTR. 
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="Cryptography"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+
+		<build type="c-source" value="aes.c"/>
+		<build type="header-file" value="aes.h"/>
+		<build type="c-source" value="crypt.c"/>
+		<build type="header-file" value="crypt.h"/>
+		<build type="c-source" value="aes_sw_lib_demo.c"/>
+		<build type="include-path" value="."/>
+
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.events"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
+
+		<device-support value="samd21"/>
+
+	</module>
+</asf>

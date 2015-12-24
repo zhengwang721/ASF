@@ -230,8 +230,8 @@ static void range_test_tx_timer_handler_cb(void *parameter)
 /**
  * \brief Send Range Measurement mode test frames to the peer device.
  *
- * This is a unicast with source address and destination addresses which were 
- *set during peer search process
+ * This is a unicast with source address and destination addresses which were
+ * set during peer search process
  */
 static int range_test_frame_tx(void)
 {

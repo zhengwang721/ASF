@@ -2,7 +2,7 @@
  * @file pal.c
  *
  * @brief Performs interface functionalities between the TAL layer and ASF
- *drivers
+ * drivers
  * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -47,7 +47,7 @@
 #include "pal.h"
 #include "delay.h"
 #include <string.h>
-#if (SAMD || SAMR21)
+#if (SAMD || SAMR21 || SAML21)
 #include "port.h"
 #else
 #include "ioport.h"

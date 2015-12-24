@@ -47,7 +47,7 @@
  * \section Purpose
  *
  * The FreeRTOS example will help users how to use FreeRTOS in SAM boards.
- * This basic application shows hwo to create task and get information of
+ * This basic application shows how to create task and get information of
  * created task.
  *
  * \section Requirements
@@ -101,7 +101,7 @@ extern void vApplicationStackOverflowHook(xTaskHandle *pxTask,
 		signed char *pcTaskName);
 extern void vApplicationIdleHook(void);
 extern void vApplicationTickHook(void);
-
+extern void vApplicationMallocFailedHook(void);
 extern void xPortSysTickHandler(void);
 
 /**
@@ -138,6 +138,18 @@ extern void vApplicationIdleHook(void)
  */
 extern void vApplicationTickHook(void)
 {
+}
+
+extern void vApplicationMallocFailedHook(void)
+{
+	/* Called if a call to pvPortMalloc() fails because there is insufficient
+	free memory available in the FreeRTOS heap.  pvPortMalloc() is called
+	internally by FreeRTOS API functions that create tasks, queues, software
+	timers, and semaphores.  The size of the FreeRTOS heap is set by the
+	configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
+
+	/* Force an assert. */
+	configASSERT( ( volatile void * ) NULL );
 }
 
 /**
@@ -220,6 +232,7 @@ int main(void)
 	printf("-- Freertos Example --\n\r");
 	printf("-- %s\n\r", BOARD_NAME);
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
+
 
 	/* Create task to monitor processor activity */
 	if (xTaskCreate(task_monitor, "Monitor", TASK_MONITOR_STACK_SIZE, NULL,

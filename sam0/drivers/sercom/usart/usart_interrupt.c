@@ -152,9 +152,9 @@ enum status_code _usart_read_buffer(
 /**
  * \brief Registers a callback
  *
- * Registers a callback function which is implemented by the user.
+ * Registers a callback function, which is implemented by the user.
  *
- * \note The callback must be enabled by \ref usart_enable_callback,
+ * \note The callback must be enabled by \ref usart_enable_callback
  *       in order for the interrupt handler to call it when the conditions for
  *       the callback type are met.
  *
@@ -182,7 +182,7 @@ void usart_register_callback(
 /**
  * \brief Unregisters a callback
  *
- * Unregisters a callback function which is implemented by the user.
+ * Unregisters a callback function, which is implemented by the user.
  *
  * \param[in,out]  module         Pointer to USART software instance struct
  * \param[in]      callback_type  Callback type given by an enum
@@ -271,7 +271,7 @@ enum status_code usart_read_job(
  * \param[in]  tx_data  Pointer do data buffer to transmit
  * \param[in]  length   Length of the data to transmit
  *
- * \note if using 9-bit data, the array that *tx_data point to should be defined 
+ * \note If using 9-bit data, the array that *tx_data point to should be defined 
  *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
  *       is an address pointer, the highest byte is not discarded. For example:
  *   \code
@@ -320,7 +320,7 @@ enum status_code usart_write_buffer_job(
  * \param[out] rx_data  Pointer to data buffer to receive
  * \param[in]  length   Data buffer length
  *
- * \note if using 9-bit data, the array that *rx_data point to should be defined
+ * \note If using 9-bit data, the array that *rx_data point to should be defined
  *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
  *       is an address pointer, the highest byte is not discarded. For example:
  *   \code
@@ -540,6 +540,12 @@ void _usart_interrupt_handler(
 			/* CTS status should not be considered as an error */
 			if(error_code & SERCOM_USART_STATUS_CTS) {
 				error_code &= ~SERCOM_USART_STATUS_CTS;
+			}
+#endif
+#ifdef FEATURE_USART_LIN_MASTER
+			/* TXE status should not be considered as an error */
+			if(error_code & SERCOM_USART_STATUS_TXE) {
+				error_code &= ~SERCOM_USART_STATUS_TXE;
 			}
 #endif
 			/* Check if an error has occurred during the receiving */

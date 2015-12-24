@@ -3,7 +3,7 @@
  *
  * \brief Linker script for running in internal FLASH on the SAML21J18A
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,6 @@ MEMORY
   rom      (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00040000
   ram      (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00008000
   lpram    (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00002000
-  picopram (rwx) : ORIGIN = 0x50000000, LENGTH = 0x00001000
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
@@ -131,7 +130,7 @@ SECTIONS
         _erelocate = .;
     } > ram
 
-    .lpram :
+    .lpram (NOLOAD):
     {
         . = ALIGN(8);
         _slpram = .;
@@ -139,15 +138,6 @@ SECTIONS
         . = ALIGN(8);
         _elpram = .;
     } > lpram
-
-    .picopram :
-    {
-        . = ALIGN(8);
-        _spicopram = .;
-        *(.picopram .picopram.*);
-        . = ALIGN(8);
-        _epicopram = .;
-    } > picopram
 
     /* .bss section which is used for uninitialized data */
     .bss (NOLOAD) :

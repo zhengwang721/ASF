@@ -73,7 +73,7 @@
  *
  *  The Application will use the ZRC Commands to send the key press events to
  * paired devices. The Application will demonstrates the repeat key pressed
- *event
+ * event
  * and control key pressed event.
  *
  * \section api_modules Application Dependent Modules
@@ -88,7 +88,8 @@
  *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
  * Area
  *     Networks (WPANs).\n\n
- * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design Support</a>.\n
+ * 2)  <a href="http://www.atmel.com/design-support/">Atmel Design
+ *Support</a>.\n
  *
  * \section contactinfo Contact Information
  * For further information,visit

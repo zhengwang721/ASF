@@ -45,10 +45,11 @@
  * \page asfdoc_sam0_sercom_spi_master_callback_use Quick Start Guide for SERCOM SPI Master - Callback
  *
  * In this use case, the SPI on extension header 1 of the Xplained Pro board
- * will configured with the following settings:
+ * will be configured with the following settings:
  * - Master Mode enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
+ * - SPI MUX Setting E (see \ref asfdoc_sam0_sercom_spi_mux_settings_master)
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - Baudrate 100000
@@ -90,7 +91,7 @@
  * \section asfdoc_sam0_sercom_spi_master_callback_use_workflow Workflow
  * -# Initialize system.
  *    \snippet qs_spi_master_callback.c system_init
- * -# Setup the SPI.
+ * -# Set-up the SPI.
  *    \snippet qs_spi_master_callback.c run_config
  *   -# Create configuration struct.
  *      \snippet qs_spi_master_callback.c config
@@ -106,11 +107,11 @@
  *      \snippet qs_spi_master_callback.c conf_defaults
  *   -# Set MUX setting E.
  *      \snippet qs_spi_master_callback.c mux_setting
- *   -# Set pinmux for pad 0 (data in (MISO)).
+ *   -# Set pinmux for pad 0 (data in MISO).
  *      \snippet qs_spi_master_callback.c di
  *   -# Set pinmux for pad 1 as unused, so the pin can be used for other purposes.
  *      \snippet qs_spi_master_callback.c ss
- *   -# Set pinmux for pad 2 (data out (MOSI)).
+ *   -# Set pinmux for pad 2 (data out MOSI).
  *      \snippet qs_spi_master_callback.c do
  *   -# Set pinmux for pad 3 (SCK).
  *      \snippet qs_spi_master_callback.c sck

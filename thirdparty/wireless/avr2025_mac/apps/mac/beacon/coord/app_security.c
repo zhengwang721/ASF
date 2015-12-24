@@ -187,15 +187,21 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		/* set type of frames will be encrypted and decrypted */
 		uint8_t mac_sec_level_table[4] = {  FRAME_TYPE_BEACON, /*
 				                                        *
+				                                        *
+				                                        *
 				                                        *FrameType:
 				                                        * Beacon
 				                                        **/
 						    CMD_FRAME_ID_NA,  /*
 				                                       *
+				                                       *
+				                                       *
 				                                       *CommandFrameIdentifier:
 				                                       * N/A */
 						    SECURITY_05_LEVEL,
 						    DEV_OVERRIDE_SEC_MIN /*
+				                                          *
+				                                          *
 				                                          *
 				                                          *DeviceOverrideSecurityMinimum:
 				                                          * True
@@ -217,10 +223,14 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 					                       * Beacon */
 				CMD_FRAME_ID_NA,              /*
 					                       *
+					                       *
+					                       *
 					                       *CommandFrameIdentifier:
 					                       * N/A */
 				SECURITY_05_LEVEL,
 				DEV_OVERRIDE_SEC_MIN          /*
+					                       *
+					                       *
 					                       *
 					                       *DeviceOverrideSecurityMinimum:
 					                       * True */
@@ -267,28 +277,34 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 				             * octets */
 			MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES, /*
 				                                 *
+				                                 *
+				                                 *
 				                                 *KeyIdLookupListEntries
 				                                 * = 1 */
 			/* KeyDeviceList[1] */
 			DEV_DESC_HANDLE_IDX_0,       /* DeviceDescriptorHandle
-				                      **/
+				                     **/
 			true,          /* UniqueDevice */
 			false,          /* Blacklisted */
 			DEV_DESC_HANDLE_IDX_0,       /* DeviceDescriptorHandle
-				                      **/
+				                     **/
 			true,          /* UniqueDevice */
 			false,          /* Blacklisted */
 			DEV_DESC_HANDLE_IDX_0,       /* DeviceDescriptorHandle
-				                      **/
+				                     **/
 			true,          /* UniqueDevice */
 			false,          /* Blacklisted */
 			DEV_DESC_HANDLE_IDX_0,                   /*
+				                                  *
+				                                  *
 				                                  *
 				                                  *DeviceDescriptorHandle
 				                                  **/
 			true,          /* UniqueDevice */
 			false,          /* Blacklisted */
 			MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES, /*
+				                           *
+				                           *
 				                           *
 				                           *KeyDeviceListEntries
 				                           **/
@@ -297,6 +313,8 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 			CMD_FRAME_ID_NA, /* CommandFrameIdentifier not used in
 				          * ZIP */
 			MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES, /*
+				                             *
+				                             *
 				                             *
 				                             *KeyUsageListEntries
 				                             **/
@@ -335,136 +353,210 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 				 * macDefaultKeySource || g_Sec_KeyIndex_1 */
 				default_key_source[0],                         /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[0]
 						                                **/
 				default_key_source[1],                         /*
+						                                *
+						                                *
 						                                *
 						                                *LookupData[1]
 						                                **/
 				default_key_source[2],                         /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[2]
 						                                **/
 				default_key_source[3],                         /*
+						                                *
+						                                *
 						                                *
 						                                *LookupData[3]
 						                                **/
 				default_key_source[4],                         /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[4]
 						                                **/
 				default_key_source[5],                         /*
+						                                *
+						                                *
 						                                *
 						                                *LookupData[5]
 						                                **/
 				default_key_source[6],                         /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[6]
 						                                **/
 				default_key_source[7],                         /*
+						                                *
+						                                *
 						                                *
 						                                *LookupData[7]
 						                                **/
 				KEY_INDEX_1,                                   /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[8]
 						                                **/
 				LOOKUP_DATA_SIZE_1,                         /*
 						                             *
+						                             *
+						                             *
 						                             *LookupDataSize:
+						                             *
+						                             *
 						                             *
 						                             *0x01
 						                             * :
 						                             *
+						                             *
+						                             *
 						                             *Size
 						                             * 9
+						                             *
+						                             *
 						                             *
 						                             *octets
 						                             **/
 				MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES,                         /*
 						                                                 *
+						                                                 *
+						                                                 *
 						                                                 *KeyIdLookupListEntries
 						                                                 *
 						                                                 *=
+						                                                 *
+						                                                 *
 						                                                 *
 						                                                 *1
 						                                                 **/
 				/* KeyDeviceList[1] */
 				EMPTY_DEV_HANDLE,                                   /*
 						                                     *
-						                                     *DeviceDescriptorHandle
-						                                     **/
-				false,                                      /*
-						                             *
-						                             *UniqueDevice
-						                             **/
-				false,                                      /*
-						                             *
-						                             *Blacklisted
-						                             **/
-				EMPTY_DEV_HANDLE,                                   /*
+						                                     *
 						                                     *
 						                                     *DeviceDescriptorHandle
 						                                     **/
 				false,                                      /*
 						                             *
+						                             *
+						                             *
 						                             *UniqueDevice
 						                             **/
 				false,                                      /*
+						                             *
+						                             *
 						                             *
 						                             *Blacklisted
 						                             **/
 				EMPTY_DEV_HANDLE,                                   /*
 						                                     *
-						                                     *DeviceDescriptorHandle
-						                                     **/
-				false,                                      /*
-						                             *
-						                             *UniqueDevice
-						                             **/
-				false,                                      /*
-						                             *
-						                             *Blacklisted
-						                             **/
-				EMPTY_DEV_HANDLE,                                   /*
+						                                     *
 						                                     *
 						                                     *DeviceDescriptorHandle
 						                                     **/
 				false,                                      /*
 						                             *
+						                             *
+						                             *
 						                             *UniqueDevice
 						                             **/
 				false,                                      /*
+						                             *
+						                             *
+						                             *
+						                             *Blacklisted
+						                             **/
+				EMPTY_DEV_HANDLE,                                   /*
+						                                     *
+						                                     *
+						                                     *
+						                                     *DeviceDescriptorHandle
+						                                     **/
+				false,                                      /*
+						                             *
+						                             *
+						                             *
+						                             *UniqueDevice
+						                             **/
+				false,                                      /*
+						                             *
+						                             *
+						                             *
+						                             *Blacklisted
+						                             **/
+				EMPTY_DEV_HANDLE,                                   /*
+						                                     *
+						                                     *
+						                                     *
+						                                     *DeviceDescriptorHandle
+						                                     **/
+				false,                                      /*
+						                             *
+						                             *
+						                             *
+						                             *UniqueDevice
+						                             **/
+				false,                                      /*
+						                             *
+						                             *
 						                             *
 						                             *Blacklisted
 						                             **/
 				MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES,                         /*
+						                                           *
+						                                           *
 						                                           *
 						                                           *KeyDeviceListEntries
 						                                           **/
 				/*  KeyUsageList */
 				FRAME_TYPE_DATA,                            /*
 						                             *
+						                             *
+						                             *
 						                             *FrameType
 						                             * -
 						                             *
+						                             *
+						                             *
 						                             *Data
+						                             *
+						                             *
 						                             *
 						                             *frames
 						                             **/
 				CMD_FRAME_ID_NA,                            /*
 						                             *
+						                             *
+						                             *
 						                             *CommandFrameIdentifier
+						                             *
+						                             *
 						                             *
 						                             *not
 						                             *
+						                             *
+						                             *
 						                             *used
 						                             *
+						                             *
+						                             *
 						                             *in
+						                             *
+						                             *
 						                             *
 						                             *ZIP
 						                             **/
 				MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES,                         /*
+						                                             *
+						                                             *
 						                                             *
 						                                             *KeyUsageListEntries
 						                                             **/
@@ -499,136 +591,210 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 				 * macDefaultKeySource || g_Sec_KeyIndex_1 */
 				default_key_source[0],                         /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[0]
 						                                **/
 				default_key_source[1],                         /*
+						                                *
+						                                *
 						                                *
 						                                *LookupData[1]
 						                                **/
 				default_key_source[2],                         /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[2]
 						                                **/
 				default_key_source[3],                         /*
+						                                *
+						                                *
 						                                *
 						                                *LookupData[3]
 						                                **/
 				default_key_source[4],                         /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[4]
 						                                **/
 				default_key_source[5],                         /*
+						                                *
+						                                *
 						                                *
 						                                *LookupData[5]
 						                                **/
 				default_key_source[6],                         /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[6]
 						                                **/
 				default_key_source[7],                         /*
+						                                *
+						                                *
 						                                *
 						                                *LookupData[7]
 						                                **/
 				KEY_INDEX_2,                                   /*
 						                                *
+						                                *
+						                                *
 						                                *LookupData[8]
 						                                **/
 				LOOKUP_DATA_SIZE_1,                         /*
 						                             *
+						                             *
+						                             *
 						                             *LookupDataSize:
+						                             *
+						                             *
 						                             *
 						                             *0x01
 						                             * :
 						                             *
+						                             *
+						                             *
 						                             *Size
 						                             * 9
+						                             *
+						                             *
 						                             *
 						                             *octets
 						                             **/
 				MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES,                         /*
 						                                                 *
+						                                                 *
+						                                                 *
 						                                                 *KeyIdLookupListEntries
 						                                                 *
 						                                                 *=
+						                                                 *
+						                                                 *
 						                                                 *
 						                                                 *1
 						                                                 **/
 				/* KeyDeviceList[1] */
 				EMPTY_DEV_HANDLE,                         /*
 						                           *
-						                           *DeviceDescriptorHandle
-						                           **/
-				false,                                      /*
-						                             *
-						                             *UniqueDevice
-						                             **/
-				false,                                      /*
-						                             *
-						                             *Blacklisted
-						                             **/
-				EMPTY_DEV_HANDLE,                         /*
+						                           *
 						                           *
 						                           *DeviceDescriptorHandle
 						                           **/
 				false,                                      /*
 						                             *
+						                             *
+						                             *
 						                             *UniqueDevice
 						                             **/
 				false,                                      /*
+						                             *
+						                             *
 						                             *
 						                             *Blacklisted
 						                             **/
 				EMPTY_DEV_HANDLE,                         /*
 						                           *
+						                           *
+						                           *
 						                           *DeviceDescriptorHandle
 						                           **/
 				false,                                      /*
 						                             *
+						                             *
+						                             *
 						                             *UniqueDevice
 						                             **/
 				false,                                      /*
+						                             *
+						                             *
+						                             *
+						                             *Blacklisted
+						                             **/
+				EMPTY_DEV_HANDLE,                         /*
+						                           *
+						                           *
+						                           *
+						                           *DeviceDescriptorHandle
+						                           **/
+				false,                                      /*
+						                             *
+						                             *
+						                             *
+						                             *UniqueDevice
+						                             **/
+				false,                                      /*
+						                             *
+						                             *
 						                             *
 						                             *Blacklisted
 						                             **/
 				EMPTY_DEV_HANDLE,                                   /*
 						                                     *
+						                                     *
+						                                     *
 						                                     *DeviceDescriptorHandle
 						                                     **/
 				false,                                      /*
+						                             *
+						                             *
 						                             *
 						                             *UniqueDevice
 						                             **/
 				false,                                      /*
 						                             *
+						                             *
+						                             *
 						                             *Blacklisted
 						                             **/
 				MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES,                         /*
+						                                           *
+						                                           *
 						                                           *
 						                                           *KeyDeviceListEntries
 						                                           **/
 				/*  KeyUsageList */
 				FRAME_TYPE_DATA,                            /*
 						                             *
+						                             *
+						                             *
 						                             *FrameType
 						                             * -
 						                             *
+						                             *
+						                             *
 						                             *Data
+						                             *
+						                             *
 						                             *
 						                             *frames
 						                             **/
 				CMD_FRAME_ID_NA,                            /*
 						                             *
+						                             *
+						                             *
 						                             *CommandFrameIdentifier
+						                             *
+						                             *
 						                             *
 						                             *not
 						                             *
+						                             *
+						                             *
 						                             *used
 						                             *
+						                             *
+						                             *
 						                             *in
+						                             *
+						                             *
 						                             *
 						                             *ZIP
 						                             **/
 				MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES,                         /*
+						                                             *
+						                                             *
 						                                             *
 						                                             *KeyUsageListEntries
 						                                             **/
@@ -664,41 +830,61 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 				 * macDefaultKeySource || g_Sec_KeyIndex_1 */
 				default_key_source[0],                 /*
 						                        *
+						                        *
+						                        *
 						                        *LookupData[0]
 						                        **/
 				default_key_source[1],                 /*
+						                        *
+						                        *
 						                        *
 						                        *LookupData[1]
 						                        **/
 				default_key_source[2],                 /*
 						                        *
+						                        *
+						                        *
 						                        *LookupData[2]
 						                        **/
 				default_key_source[3],                 /*
+						                        *
+						                        *
 						                        *
 						                        *LookupData[3]
 						                        **/
 				default_key_source[4],                 /*
 						                        *
+						                        *
+						                        *
 						                        *LookupData[4]
 						                        **/
 				default_key_source[5],                 /*
+						                        *
+						                        *
 						                        *
 						                        *LookupData[5]
 						                        **/
 				default_key_source[6],                 /*
 						                        *
+						                        *
+						                        *
 						                        *LookupData[6]
 						                        **/
 				default_key_source[7],                 /*
+						                        *
+						                        *
 						                        *
 						                        *LookupData[7]
 						                        **/
 				KEY_INDEX_3,                           /*
 						                        *
+						                        *
+						                        *
 						                        *LookupData[8]
 						                        **/
 				LOOKUP_DATA_SIZE_1,                 /*
+						                     *
+						                     *
 						                     *
 						                     *LookupDataSize:
 						                     * 0x01 :
@@ -706,62 +892,92 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 						                     * octets */
 				MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES,                 /*
 						                                         *
+						                                         *
+						                                         *
 						                                         *KeyIdLookupListEntries
 						                                         *
 						                                         *=
+						                                         *
+						                                         *
 						                                         *
 						                                         *1
 						                                         **/
 				/* KeyDeviceList[1] */
 				EMPTY_DEV_HANDLE,                 /*
 						                   *
-						                   *DeviceDescriptorHandle
-						                   **/
-				false,                              /*
-						                     *
-						                     *UniqueDevice
-						                     **/
-				false,                              /*
-						                     *
-						                     *Blacklisted
-						                     **/
-				EMPTY_DEV_HANDLE,                 /*
+						                   *
 						                   *
 						                   *DeviceDescriptorHandle
 						                   **/
 				false,                              /*
 						                     *
+						                     *
+						                     *
 						                     *UniqueDevice
 						                     **/
 				false,                              /*
+						                     *
+						                     *
 						                     *
 						                     *Blacklisted
 						                     **/
 				EMPTY_DEV_HANDLE,                 /*
 						                   *
+						                   *
+						                   *
 						                   *DeviceDescriptorHandle
 						                   **/
 				false,                              /*
 						                     *
+						                     *
+						                     *
 						                     *UniqueDevice
 						                     **/
 				false,                              /*
+						                     *
+						                     *
+						                     *
+						                     *Blacklisted
+						                     **/
+				EMPTY_DEV_HANDLE,                 /*
+						                   *
+						                   *
+						                   *
+						                   *DeviceDescriptorHandle
+						                   **/
+				false,                              /*
+						                     *
+						                     *
+						                     *
+						                     *UniqueDevice
+						                     **/
+				false,                              /*
+						                     *
+						                     *
 						                     *
 						                     *Blacklisted
 						                     **/
 				EMPTY_DEV_HANDLE,                           /*
 						                             *
+						                             *
+						                             *
 						                             *DeviceDescriptorHandle
 						                             **/
 				false,                              /*
+						                     *
+						                     *
 						                     *
 						                     *UniqueDevice
 						                     **/
 				false,                              /*
 						                     *
+						                     *
+						                     *
 						                     *Blacklisted
 						                     **/
 				MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES,                 /*
+						                                   *
+						                                   *
 						                                   *
 						                                   *KeyDeviceListEntries
 						                                   **/
@@ -771,10 +987,14 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 						                     * frames */
 				CMD_FRAME_ID_NA,                    /*
 						                     *
+						                     *
+						                     *
 						                     *CommandFrameIdentifier
 						                     * not used
 						                     * in ZIP */
 				MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES,                 /*
+						                                     *
+						                                     *
 						                                     *
 						                                     *KeyUsageListEntries
 						                                     **/
@@ -798,6 +1018,8 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 			};
 			wpan_mlme_set_req(macKeyTable,
 					INDEX_2,                            /*
+					                                     *
+					                                     *
 					                                     *
 					                                     *Index:
 					                                     * 2
@@ -828,7 +1050,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 			mac_dev_table[10] = COORD_IEEE_ADDRESS[1];
 			mac_dev_table[11] = COORD_IEEE_ADDRESS[0];
 			mac_dev_table[12] = 0;                  /* Frame counter
-					                         **/
+					                        **/
 			mac_dev_table[13] = 0;
 			mac_dev_table[14] = 0;
 			mac_dev_table[15] = 0;
@@ -836,6 +1058,8 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 
 			wpan_mlme_set_req(macDeviceTable,
 					coord_dev_index,                                            /*
+					                                                             *
+					                                                             *
 					                                                             *
 					                                                             *Index
 					                                                             **/
@@ -864,6 +1088,8 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 
 		wpan_mlme_set_req(macPANCoordExtendedAddress,
 				NO_PIB_INDEX,                                                    /*
+			                                                                          *
+			                                                                          *
 			                                                                          *
 			                                                                          *Index
 			                                                                          **/
@@ -897,6 +1123,8 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		wpan_mlme_set_req(macPANCoordShortAddress,
 				NO_PIB_INDEX,                                                    /*
 			                                                                          *
+			                                                                          *
+			                                                                          *
 			                                                                          *Index
 			                                                                          **/
 				&short_add);
@@ -912,7 +1140,11 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 			                                            **/
 		short_addr[1] = (uint8_t)(COORD_SHORT_ADDR >> 8);         /*
 			                                                   *
+			                                                   *
+			                                                   *
 			                                                   *high
+			                                                   *
+			                                                   *
 			                                                   *
 			                                                   *byte
 			                                                   **/
@@ -1040,13 +1272,21 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute,
 			 * Security */
 			uint8_t mac_sec_level_table[4] = {FRAME_TYPE_DATA,  /*
 					                                     *
+					                                     *
+					                                     *
 					                                     *FrameType:
+					                                     *
+					                                     *
 					                                     *
 					                                     *Data
 					                                     **/
 							  CMD_FRAME_ID_NA,  /*
 					                                     *
+					                                     *
+					                                     *
 					                                     *CommandFrameIdentifier:
+					                                     *
+					                                     *
 					                                     *
 					                                     *N/A
 					                                     **/
@@ -1058,7 +1298,11 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute,
 							  0X05,
 							  DEV_OVERRIDE_SEC_MIN /*
 					                                        *
+					                                        *
+					                                        *
 					                                        *DeviceOverrideSecurityMinimum:
+					                                        *
+					                                        *
 					                                        *
 					                                        *True
 					                                        **/
@@ -1088,41 +1332,61 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute,
 			uint8_t mac_key_table[43] = {
 				default_key_source[0],                 /*
 					                                *
+					                                *
+					                                *
 					                                *LookupData[0]
 					                                **/
 				default_key_source[1],                 /*
+					                                *
+					                                *
 					                                *
 					                                *LookupData[1]
 					                                **/
 				default_key_source[2],                 /*
 					                                *
+					                                *
+					                                *
 					                                *LookupData[2]
 					                                **/
 				default_key_source[3],                 /*
+					                                *
+					                                *
 					                                *
 					                                *LookupData[3]
 					                                **/
 				default_key_source[4],                 /*
 					                                *
+					                                *
+					                                *
 					                                *LookupData[4]
 					                                **/
 				default_key_source[5],                 /*
+					                                *
+					                                *
 					                                *
 					                                *LookupData[5]
 					                                **/
 				default_key_source[6],                 /*
 					                                *
+					                                *
+					                                *
 					                                *LookupData[6]
 					                                **/
 				default_key_source[7],                 /*
+					                                *
+					                                *
 					                                *
 					                                *LookupData[7]
 					                                **/
 				KEY_INDEX_0,                           /*
 					                                *
+					                                *
+					                                *
 					                                *LookupData[8]
 					                                **/
 				LOOKUP_DATA_SIZE_1,                 /*
+					                             *
+					                             *
 					                             *
 					                             *LookupDataSize:
 					                             * 0x01 :
@@ -1130,67 +1394,99 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute,
 					                             * octets */
 				MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES,                 /*
 					                                                 *
+					                                                 *
+					                                                 *
 					                                                 *KeyIdLookupListEntries
 					                                                 *
 					                                                 *=
+					                                                 *
+					                                                 *
 					                                                 *
 					                                                 *1
 					                                                 **/
 				/* KeyDeviceList[1] */
 				DEV_DESC_HANDLE_IDX_0,                           /*
 					                                          *
-					                                          *DeviceDescriptorHandle
-					                                          **/
-				true,                              /*
-					                            *
-					                            *UniqueDevice
-					                            **/
-				false,                              /*
-					                             *
-					                             *Blacklisted
-					                             **/
-				DEV_DESC_HANDLE_IDX_0,                           /*
+					                                          *
 					                                          *
 					                                          *DeviceDescriptorHandle
 					                                          **/
 				true,                              /*
 					                            *
-					                            *UniqueDevice
-					                            **/
-				false,                              /*
-					                             *
-					                             *Blacklisted
-					                             **/
-				DEV_DESC_HANDLE_IDX_0,                           /*
-					                                          *
-					                                          *DeviceDescriptorHandle
-					                                          **/
-				true,                              /*
+					                            *
 					                            *
 					                            *UniqueDevice
 					                            **/
 				false,                              /*
 					                             *
+					                             *
+					                             *
 					                             *Blacklisted
 					                             **/
 				DEV_DESC_HANDLE_IDX_0,                           /*
+					                                          *
+					                                          *
 					                                          *
 					                                          *DeviceDescriptorHandle
 					                                          **/
 				true,                              /*
 					                            *
+					                            *
+					                            *
 					                            *UniqueDevice
 					                            **/
 				false,                              /*
+					                             *
+					                             *
+					                             *
+					                             *Blacklisted
+					                             **/
+				DEV_DESC_HANDLE_IDX_0,                           /*
+					                                          *
+					                                          *
+					                                          *
+					                                          *DeviceDescriptorHandle
+					                                          **/
+				true,                              /*
+					                            *
+					                            *
+					                            *
+					                            *UniqueDevice
+					                            **/
+				false,                              /*
+					                             *
+					                             *
+					                             *
+					                             *Blacklisted
+					                             **/
+				DEV_DESC_HANDLE_IDX_0,                           /*
+					                                          *
+					                                          *
+					                                          *
+					                                          *DeviceDescriptorHandle
+					                                          **/
+				true,                              /*
+					                            *
+					                            *
+					                            *
+					                            *UniqueDevice
+					                            **/
+				false,                              /*
+					                             *
+					                             *
 					                             *
 					                             *Blacklisted
 					                             **/
 				MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES,                 /*
 					                                           *
+					                                           *
+					                                           *
 					                                           *KeyDeviceListEntries
 					                                           **/
 				/*  KeyUsageList */
 				FRAME_TYPE_BEACON,                    /*
+					                               *
+					                               *
 					                               *
 					                               *FrameType
 					                               * -
@@ -1199,10 +1495,14 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute,
 					                               **/
 				CMD_FRAME_ID_NA,                    /*
 					                             *
+					                             *
+					                             *
 					                             *CommandFrameIdentifier
 					                             * not used
 					                             * in ZIP */
 				MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES,                 /*
+					                                             *
+					                                             *
 					                                             *
 					                                             *KeyUsageListEntries
 					                                             **/

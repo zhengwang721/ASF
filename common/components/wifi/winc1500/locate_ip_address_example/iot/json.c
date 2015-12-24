@@ -22,9 +22,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -71,7 +68,7 @@ static char * _json_read_token(char *buffer, uint32_t buffer_size, char *dest, u
 	*cmd = JSON_CMD_NONE;
 
 	dest[0] = '\0';
-	
+
 	for (; buffer_size > 0; buffer_size--) {
 		char ch = *buffer++;
 		if ( ch == '\"') {
@@ -102,7 +99,7 @@ static char * _json_read_token(char *buffer, uint32_t buffer_size, char *dest, u
 				break;
 			}
 		}
-		
+
 		if (dest_index < dest_size) {
 			dest[dest_index++] = ch;
 		}
@@ -113,7 +110,7 @@ static char * _json_read_token(char *buffer, uint32_t buffer_size, char *dest, u
 	return buffer;
 }
 
-static void _json_parse(char *data, char *ptr, enum json_cmd cmd, struct json_obj *out) 
+static void _json_parse(char *data, char *ptr, enum json_cmd cmd, struct json_obj *out)
 {
 	int i;
 	int minus = 0;
@@ -165,7 +162,7 @@ static void _json_parse(char *data, char *ptr, enum json_cmd cmd, struct json_ob
 						minus_exp = 1;
 					}
 				}
-				
+
 				if (find_point == 0 && exponent < 0) {
 					out->type = JSON_TYPE_INTEGER;
 					out->value.i = (minus) ? num * -1 : num;
@@ -187,11 +184,11 @@ static void _json_parse(char *data, char *ptr, enum json_cmd cmd, struct json_ob
 			} else if (!strncmp(data, "true", 4)) {
 				out->type = JSON_TYPE_BOOLEAN;
 				out->value.b = 1;
-				
+
 			} else if (!strncmp(data, "false", 5)) {
 				out->type = JSON_TYPE_BOOLEAN;
 				out->value.b = 0;
-				
+
 			} else if(*data == '\0' || !strncmp(data, "null", 4)) {
 				out->type = JSON_TYPE_NULL;
 			} else {
@@ -207,7 +204,7 @@ static void _json_parse(char *data, char *ptr, enum json_cmd cmd, struct json_ob
 	} else {
 		out->name[0] = 0;
 	}
-	
+
 	if (cmd == JSON_CMD_ENTER_OBJECT) {
 		out->type = JSON_TYPE_OBJECT;
 		for (; *ptr != '{'; ptr--);
@@ -229,12 +226,12 @@ int json_create(struct json_obj *obj, const char *data, int data_len)
 			return -EINVAL;
 		}
 	}
-	
+
 	obj->type = JSON_TYPE_OBJECT;
 	obj->name[0] = 0;
 	obj->value.o = (char *)data;
 	obj->end_ptr = (char *)data + data_len;
-	
+
 	return 0;
 }
 
@@ -245,12 +242,12 @@ int json_get_child_count(struct json_obj *obj)
 	int child = 0;
 	char *ptr;
 	int depth = -1;
-	
-	if (obj == NULL || (obj->type != JSON_TYPE_OBJECT && obj->type != JSON_TYPE_ARRAY) || 
+
+	if (obj == NULL || (obj->type != JSON_TYPE_OBJECT && obj->type != JSON_TYPE_ARRAY) ||
 		obj->value.o == NULL) {
-		return -EINVAL;	
+		return -EINVAL;
 	}
-	
+
 	for (ptr = obj->value.o; ; ) {
 		ptr = _json_read_token(ptr, obj->end_ptr - ptr, dest, 1, &cmd);
 		if (ptr == NULL) {
@@ -271,7 +268,7 @@ int json_get_child_count(struct json_obj *obj)
 			}
 		}
 	}
-	
+
 	return child;
 }
 
@@ -282,12 +279,12 @@ int json_get_child(struct json_obj *obj, int index, struct json_obj *out)
 	int child = 0;
 	char *ptr;
 	int depth = -1;
-	
+
 	if (obj == NULL || out == NULL || (obj->type != JSON_TYPE_OBJECT && obj->type != JSON_TYPE_ARRAY) ||
 		obj->value.o == NULL) {
 		return -EINVAL;
 	}
-	
+
 	for (ptr = obj->value.o; ; ) {
 		ptr = _json_read_token(ptr, obj->end_ptr - ptr, dest, JSON_MAX_TOKEN_SIZE - 1, &cmd);
 		if (ptr == NULL) {
@@ -313,7 +310,7 @@ int json_get_child(struct json_obj *obj, int index, struct json_obj *out)
 			}
 		}
 	}
-	
+
 	return child;
 }
 
@@ -324,12 +321,12 @@ int json_find(struct json_obj *obj, const char *name, struct json_obj *out)
 	char *ptr;
 	char *name_ptr = (char *)name;
 	int depth = -1;
-	
+
 	if (obj == NULL || out == NULL || (obj->type != JSON_TYPE_OBJECT && obj->type != JSON_TYPE_ARRAY) ||
 		obj->value.o == NULL || name == NULL || strlen(name) == 0) {
 		return -EINVAL;
 	}
-	
+
 	for (ptr = obj->value.o; ; ) {
 		ptr = _json_read_token(ptr, obj->end_ptr - ptr, dest, JSON_MAX_TOKEN_SIZE - 1, &cmd);
 		if (ptr == NULL) {
@@ -338,7 +335,7 @@ int json_find(struct json_obj *obj, const char *name, struct json_obj *out)
 		if (dest[0] == '\0' && cmd == JSON_CMD_NONE) {
 			continue;
 		}
-		
+
 		if (depth == 0) {
 			_json_parse(dest, ptr, cmd, out);
 			if (!strncmp(name_ptr, out->name, strlen(out->name)) &&
@@ -362,6 +359,6 @@ int json_find(struct json_obj *obj, const char *name, struct json_obj *out)
 			depth++;
 		}
 	}
-	
+
 	return -1;
 }

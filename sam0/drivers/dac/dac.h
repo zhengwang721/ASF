@@ -62,10 +62,10 @@ extern "C" {
  */
 
 /**
- * Define DAC features set according to different device family.
+ * Define DAC features set according to different device families.
  * @{
  */
-#if (SAMD21 || SAMD10 || SAMD11)
+#if (SAMD21 || SAMD10 || SAMD11 || SAMDA1)
 #  define FEATURE_DAC_DATABUF_WRITE_PROTECTION
 #endif
 /**@}*/
@@ -90,15 +90,15 @@ typedef void (*dac_callback_t)(uint8_t channel);
 /** Enum for the possible callback types for the DAC module. */
 enum dac_callback {
 	/** Callback type for when a DAC channel data empty condition occurs
-	 *  (requires event triggered mode). */
+	 *  (requires event triggered mode) */
 	DAC_CALLBACK_DATA_EMPTY,
 
-	/** Callback type for when a DAC channel data under-run condition occurs
-	 *  (requires event triggered mode). */
+	/** Callback type for when a DAC channel data underrun condition occurs
+	 *  (requires event triggered mode) */
 	DAC_CALLBACK_DATA_UNDERRUN,
 
-	/** Callback type for when a DAC channel write buffer job complete.
-	 *  (requires event triggered mode). */
+	/** Callback type for when a DAC channel write buffer job complete (requires
+	 *  event triggered mode) */
 	DAC_CALLBACK_TRANSFER_COMPLETE,
 #if !defined(__DOXYGEN__)
 	DAC_CALLBACK_N,

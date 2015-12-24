@@ -72,7 +72,7 @@
 #if !defined(__DOXYGEN__)
 
 #  define _TCC_GCLK_ID(n,unused)           TPASTE3(TCC,n,_GCLK_ID),
-#  if (SAML21)
+#  if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
 #    define _TCC_APBCMASK(n,unused)        TPASTE2(MCLK_APBCMASK_TCC,n),
 #  else
 #    define _TCC_APBCMASK(n,unused)        TPASTE2(PM_APBCMASK_TCC,n),
@@ -151,7 +151,7 @@ uint8_t _tcc_get_inst_index(
  *
  * The default configuration is as follows:
  *  \li Don't run in standby
- *  \li When setting top,compare or pattern by API, do double buffering write
+ *  \li When setting top, compare, or pattern by API, do double buffering write
  *  \li The base timer/counter configurations:
  *     - GCLK generator 0 clock source
  *     - No prescaler
@@ -197,6 +197,10 @@ void tcc_get_config_defaults(
 
 	config->counter.direction              = TCC_COUNT_DIRECTION_UP;
 	config->counter.oneshot                = false;
+
+#ifdef FEATURE_TCC_GENERATE_DMA_TRIGGER
+	config->counter.dma_trigger_mode       = TCC_COUNT_OVERFLOW_DMA_TRIGGER_MODE_CONTINUE;
+#endif
 
 	/* Match/Capture defaults */
 #  define _TCC_CHANNEL_MATCH_VALUE_INIT(n, value) \
@@ -479,11 +483,11 @@ static inline enum status_code _tcc_build_waves(
  * \return Status of the initialization procedure.
  *
  * \retval STATUS_OK           The module was initialized successfully
- * \retval STATUS_BUSY         Hardware module was busy when the
+ * \retval STATUS_BUSY         The hardware module was busy when the
  *                             initialization procedure was attempted
  * \retval STATUS_INVALID_ARG  An invalid configuration option or argument
  *                             was supplied
- * \retval STATUS_ERR_DENIED   Hardware module was already enabled
+ * \retval STATUS_ERR_DENIED   The hardware module was already enabled
  */
 enum status_code tcc_init(
 		struct tcc_module *const module_inst,
@@ -633,7 +637,7 @@ enum status_code tcc_init(
 
 	hw->DRVCTRL.reg = drvctrl;
 
-#if (!SAML21)
+#if (!SAML21) && (!SAMC20) && (!SAMC21) && (!SAML22)
 	while (hw->SYNCBUSY.reg & (TCC_SYNCBUSY_WAVE | TCC_SYNCBUSY_WAVEB)) {
 		/* Wait for sync */
 	}
@@ -645,7 +649,7 @@ enum status_code tcc_init(
 	}
 	hw->COUNT.reg = config->counter.count;
 
-#if (!SAML21)
+#if (!SAML21) && (!SAMC20) && (!SAMC21) && (!SAML22)
 	while (hw->SYNCBUSY.reg & (TCC_SYNCBUSY_PER | TCC_SYNCBUSY_PERB)) {
 		/* Wait for sync */
 	}
@@ -653,7 +657,7 @@ enum status_code tcc_init(
 	hw->PER.reg = (config->counter.period);
 
 	for (i = 0; i <  _tcc_cc_nums[module_index]; i ++) {
-#if (!SAML21)
+#if (!SAML21) && (!SAMC20) && (!SAMC21) && (!SAML22)
 		while (hw->SYNCBUSY.reg & (
 			(TCC_SYNCBUSY_CC0 | TCC_SYNCBUSY_CCB0) << i)) {
 			/* Wait for sync */
@@ -1056,7 +1060,7 @@ static enum status_code _tcc_set_compare_value(
 	}
 
 	if (double_buffering_enabled) {
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21) || (SAML22)
 		tcc_module->CCBUF[channel_index].reg = compare;
 #else
 		while(tcc_module->SYNCBUSY.reg  &
@@ -1181,7 +1185,7 @@ static enum status_code _tcc_set_top_value(
 	}
 
 	if (double_buffering_enabled) {
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21) || (SAML22)
 		tcc_module->PERBUF.reg = top_value;
 #else
 		while(tcc_module->SYNCBUSY.reg  & TCC_SYNCBUSY_PERB) {
@@ -1331,7 +1335,7 @@ enum status_code tcc_set_pattern(
 	}
 
 	if (module_inst->double_buffering_enabled) {
-#if (SAML21)
+#if (SAML21) || (SAMC20) || (SAMC21) || (SAML22)
 		tcc_module->PATTBUF.reg = patt_value;
 #else
 		while(tcc_module->SYNCBUSY.reg  & TCC_SYNCBUSY_PATTB) {
@@ -1421,10 +1425,10 @@ uint32_t tcc_get_status(
 	}
 	/* Recoverable fault inputs */
 	if (status_flags & TCC_STATUS_FAULTAIN) {
-		status |= TCC_STATUS_NON_RECOVERABLE_FAULT_PRESENT(0);
+		status |= TCC_STATUS_RECOVERABLE_FAULT_PRESENT(0);
 	}
 	if (status_flags & TCC_STATUS_FAULTBIN) {
-		status |= TCC_STATUS_NON_RECOVERABLE_FAULT_PRESENT(1);
+		status |= TCC_STATUS_RECOVERABLE_FAULT_PRESENT(1);
 	}
 
 	/* Check for TCC capture overflow */

@@ -108,6 +108,6 @@ void waiting_for_get_attribute_response_timeout_cb(void *callback_parameter);
 #endif /* ZID_DEVICE_H */
 
 #endif  /* #if (((defined ZID_PROFILE) && (defined ZID_DEVICE)) || (defined
-         *DOXYGEN)) */
+         * DOXYGEN)) */
 
 /* EOF */

@@ -220,7 +220,7 @@ void pal_trx_irq_init_aes_ready(FUNC_PTR trx_irq_cb);
 
 /**
  * \brief Returns the current callback function for the transceiver RX END
- *interrupt
+ * interrupt
  *
  * \return Current callback function for the transceiver RX END interrupt
  * \ingroup group_pal_interrupt
@@ -229,7 +229,7 @@ FUNC_PTR pal_trx_irq_get_hdlr_rx_end(void);
 
 /**
  * \brief Returns the current callback function for the transceiver TX END
- *interrupt
+ * interrupt
  *
  * \return Current callback function for the transceiver TX END interrupt
  * \ingroup group_pal_interrupt

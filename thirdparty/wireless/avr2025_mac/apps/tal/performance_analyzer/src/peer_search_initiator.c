@@ -511,7 +511,7 @@ static void peer_rsp_rcvd_init(void *arg)
 					NULL,
 					NULL,
 					NULL,
-					NUL_VAL,NUL_VAL,NUL_VAL);
+					NUL_VAL, NUL_VAL, NUL_VAL);
 		}
 
 		/* PEER CONF send failed - so change to WAIT_FOR_EVENT state*/
@@ -582,7 +582,7 @@ static void peer_rsp_rcvd_tx_cb(retval_t status, frame_info_t *frame)
 					NULL,
 					NULL,
 					NULL,
-					NUL_VAL,NUL_VAL,NUL_VAL);
+					NUL_VAL, NUL_VAL, NUL_VAL);
 		}
 
 		/* PEER CONF send failed so change to WAIT_FOR_EVENT state*/

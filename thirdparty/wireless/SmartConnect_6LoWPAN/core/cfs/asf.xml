@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+
+		
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.cfs" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<!-- <build type="c-source"      value="cfs-coffee.c"/>
+			<build type="c-source"      value="cfs-eeprom.c"/>
+			<build type="c-source"      value="cfs-posix.c"/>
+			<build type="c-source"      value="cfs-posix-dir.c"/>
+			<build type="c-source"      value="cfs-ram.c"/>
+			<build type="c-source"      value="cfs-xmem.c"/> -->
+			<build type="header-file"   value="cfs.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>
+            <device-support value="sam0"/>		
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+</asf>

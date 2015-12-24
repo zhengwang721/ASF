@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_events_basic_use_case Quick Start Guide for EVENTS - Basic
@@ -49,7 +52,7 @@
  *  \li One user attached to the configured event channel
  *  \li No hardware event generator attached to the channel
  *
- * This use case allocates an event channel, this channel is not connected to any
+ * This use case allocates an event channel. This channel is not connected to any
  * hardware event generator, events are software triggered. One user is connected
  * to the allocated and configured event channel.
  *
@@ -61,16 +64,22 @@
  * \subsection asfdoc_sam0_events_basic_use_casesetup_code Code
  * Add to the main application source file, before any functions, according to
  * the kit used:
- * - SAM D20 Xplained Pro.
+ * - SAM D20 Xplained Pro:
  *   \snippet samd20_xplained_pro/conf_qs_events.h definition_event
- * - SAM D21 Xplained Pro.
+ * - SAM D21 Xplained Pro:
  *   \snippet samd21_xplained_pro/conf_qs_events.h definition_event
- * - SAM R21 Xplained Pro.
+ * - SAM R21 Xplained Pro:
  *   \snippet samr21_xplained_pro/conf_qs_events.h definition_event
- * - SAM D11 Xplained Pro.
+ * - SAM D11 Xplained Pro:
  *   \snippet samd11_xplained_pro/conf_qs_events.h definition_event
- * - SAM L21 Xplained Pro
+ * - SAM L21 Xplained Pro:
  *   \snippet saml21_xplained_pro/conf_qs_events.h definition_event
+ * - SAM L22 Xplained Pro:
+ *   \snippet saml22_xplained_pro/conf_qs_events.h definition_event
+ * - SAM DA1 Xplained Pro:
+ *   \snippet samda1_xplained_pro/conf_qs_events.h definition_event
+ * - SAM C21 Xplained Pro:
+ *   \snippet samc21_xplained_pro/conf_qs_events.h definition_event
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_basic.c setup
@@ -94,9 +103,9 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- * -# Adjust the configuration struct to request that the channel be attached
- *    to the specified event generator, that rising edges of the event signal
- *    be detected on the channel and that the synchronous event path be used.
+ * -# Adjust the configuration struct to request that the channel is to be attached
+ *    to the specified event generator, that rising edges of the event signal is to
+ *    be detected on the channel, and that the synchronous event path is to be used.
  *    \snippet qs_events_basic.c setup_3
  *    \br
  *
@@ -106,7 +115,7 @@
  *          values that have been altered from the default settings are taken
  *          into account by the user application.
  *
- * -# Attach an user to the channel.
+ * -# Attach a user to the channel.
  *    \snippet qs_events_basic.c setup_5
  *    \br
  *
@@ -121,7 +130,4 @@
  *    \snippet qs_events_basic.c main_1
  * -# Perform a software event trigger on the configured event channel.
  *    \snippet qs_events_basic.c main_2
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

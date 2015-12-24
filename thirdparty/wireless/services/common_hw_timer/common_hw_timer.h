@@ -49,7 +49,7 @@
  * \ingroup group_pal_common_sw_timer
  * \defgroup group_pal_common_hw_timer
  * Implements a common api interface for accessing timer drivers of all
- *architectures
+ * architectures
  * @{
  */
 

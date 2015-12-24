@@ -43,7 +43,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -52,8 +52,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include "return_val.h"
 #include "pal.h"
+#include "return_val.h"
 #include "bmm.h"
 #include "qmm.h"
 #include "app_config.h"
@@ -154,9 +154,7 @@ void qmm_queue_append(queue_t *q, buffer_t *buf)
 
 #if (_DEBUG_ > 1)
 		if (q->head == NULL) {
-			Assert(
-					"Corrupted queue: Null pointer has been queued" ==
-					0);
+			Assert("Corrupted queue: Null pointer has been queued");
 		}
 #endif
 
@@ -320,7 +318,7 @@ void qmm_queue_flush(queue_t *q)
 
 		if (NULL == buf_to_free) {
 #if (_DEBUG_ > 0)
-			Assert("Corrupted queue" == 0);
+			ABORT("Corrupted queue");
 #endif
 			q->size = 0;
 			return;

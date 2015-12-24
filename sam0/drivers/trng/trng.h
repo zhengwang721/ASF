@@ -50,7 +50,7 @@
 /**
  * \defgroup asfdoc_sam0_trng_group SAM True Random Number Generator (TRNG) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's True Random Number Generator functionality.
  *
  * The following driver API modes are covered by this manual:
@@ -59,11 +59,11 @@
  * - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - TRNG (True Random Number Generator)
  *
  * The following devices can use this module:
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_trng_prerequisites
@@ -83,7 +83,7 @@
  *
  * This driver provides an interface for the TRNG functions on the device.
  *
- * As soon as the TRNG is enabled, the module provides a new 32-bits random
+ * As soon as the TRNG is enabled, the module provides a new 32-bit random
  * data, for every 84 CLK_TRNG_APB clock cycles.
  *
  *
@@ -94,7 +94,7 @@
  *
  * \section asfdoc_sam0_trng_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_trng_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_trng_extra. This includes:
  *  - \ref asfdoc_sam0_trng_extra_acronyms
  *  - \ref asfdoc_sam0_trng_extra_dependencies
  *  - \ref asfdoc_sam0_trng_extra_errata
@@ -129,9 +129,9 @@ typedef void (*trng_callback_t)(struct trng_module *const module_inst);
 
 /** Enum for possible callback types for the TRNG module. */
 enum trng_callback {
-	/** Callback for specific number of random data ready. */
+	/** Callback for specific number of random data ready */
 	TRNG_CALLBACK_READ_BUFFER = 0,
-	/** Number of available callbacks. */
+	/** Number of available callbacks */
 #if !defined(__DOXYGEN__)
 	TRNG_CALLBACK_N,
 #endif
@@ -149,20 +149,20 @@ enum trng_callback {
  */
 struct trng_module {
 #if !defined(__DOXYGEN__)
-	/** Hardware module pointer of the associated TRNG peripheral. */
+	/** Hardware module pointer of the associated TRNG peripheral */
 	Trng *hw;
 #  if TRNG_CALLBACK_MODE == true
-	/** Array of callbacks. */
+	/** Array of callbacks */
 	trng_callback_t callback[TRNG_CALLBACK_N];
-	/** Bit mask for callbacks registered. */
+	/** Bit mask for callbacks registered */
 	uint8_t register_callback_mask;
-	/** Bit mask for callbacks enabled. */
+	/** Bit mask for callbacks enabled */
 	uint8_t enable_callback_mask;
-	/** Holds the status of the ongoing or last read job. */
+	/** Holds the status of the ongoing or last read job */
 	volatile enum status_code job_status;
-	/** Pointer to buffer used for TRNG results. */
+	/** Pointer to buffer used for TRNG results */
 	volatile uint32_t *job_buffer;
-	/** Remaining number of TRNG results in current job. */
+	/** Remaining number of TRNG results in current job */
 	volatile uint32_t remaining_number;
 #  endif
 #endif
@@ -174,8 +174,8 @@ struct trng_module {
  *  Configuration structure for a True Random Number Generator.
  */
 struct trng_config {
-	/** If \c true, the True Random Number Generator will not stopped in
-	 *  standby sleep mode. */
+	/** If \c true, the True Random Number Generator will not be stopped in
+	 *  standby sleep mode */
 	bool run_in_standby;
 };
 
@@ -186,7 +186,7 @@ struct trng_config {
  * disable events via \ref trng_enable_events() and \ref trng_disable_events().
  */
 struct trng_events {
-	/** Enable event generation on random data ready. */
+	/** Enable event generation on random data ready */
 	bool generate_event_on_data_ready;
 };
 
@@ -437,14 +437,14 @@ static inline enum status_code trng_read(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
- *		<td>11/2014</td>
- *		<td>Corrected documentation typos.</td>
+ *		<td>42444B</td>
+ *		<td>10/2015</td>
+ *		<td>Added support for SAM L22</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
- *		<td>09/2014</td>
- *		<td>Initial release</td>
+ *		<td>42444A</td>
+ *		<td>06/2015</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */

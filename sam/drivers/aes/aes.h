@@ -51,10 +51,11 @@
 #define AES_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_aes_group SAM4 Advanced Encryption Standard (AES)
+ * \defgroup asfdoc_sam_drivers_aes_group SAM4C/4E/V71/V70/S70/E70 Advanced Encryption Standard (AES) Driver
  *
- * This driver for SAM4C and SAM4E devices provides an interface for the configuration
- * and management of the device's Advanced Encryption Standard functionality.
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for 
+ * the configuration and management of the device's Advanced Encryption
+ * Standard functionality.
  *
  * The Advanced Encryption Standard module supports all five confidentiality
  * modes of operation for symmetrical key block cipher algorithms (as specified
@@ -64,6 +65,15 @@
  * - Output Feedback (OFB)
  * - Cipher Feedback (CFB)
  * - Counter (CTR)
+ *
+ *
+ * Devices from the following series can use this module:
+ * - Atmel | SMART SAM4C
+ * - Atmel | SMART SAM4E
+ * - Atmel | SMART SAMV71
+ * - Atmel | SMART SAMV70
+ * - Atmel | SMART SAME70
+ * - Atmel | SMART SAMS70
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_aes_prerequisites
@@ -97,7 +107,7 @@
  * DMA Controller (PDC) channels (thus minimizing processor intervention for
  * large data buffer transfers).
  *
- * As soon as the initialization vector, the input data and the key are
+ * As soon as the initialization vector, the input data, and the key are
  * configured, the encryption/decryption process may be started. Once the
  * process has completed the encrypted/decrypted data can be read out via
  * registers or through DMA channels.
@@ -201,6 +211,8 @@ typedef enum aes_interrupt_source {
 	AES_INTERRUPT_RECEIVE_BUFFER_FULL = AES_IER_RXBUFF,
 	/** Transmit buffer empty interrupt (SAM4C devices only). */
 	AES_INTERRUPT_TRANSMIT_BUFFER_FULL = AES_IER_TXBUFE,
+#elif SAMV70 || SAMV71 || SAME70 || SAMS70 
+	AES_INTERRUPT_TAG_READY = AES_IER_TAGRDY,
 #endif /* SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__) */
 } aes_interrupt_source_t;
 
@@ -210,6 +222,9 @@ typedef enum aes_interrupt_source {
 #elif SAM4C || SAM4CP || SAM4CM
 /** \internal Max number of interrupt sources. */
 #define AES_INTERRUPT_SOURCE_NUM 6
+#elif SAMV70 || SAMV71 || SAME70 || SAMS70
+/** \internal Max number of interrupt sources. */
+#define AES_INTERRUPT_SOURCE_NUM 3
 #endif
 
 /** AES interrupt callback function type. */
@@ -328,8 +343,10 @@ void aes_write_input_data(Aes *const p_aes,
 void aes_read_output_data(Aes *const p_aes,
 		uint32_t *p_output_data_buffer);
 
-#if SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__)
+#if SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70 || defined(__DOXYGEN__)
+#if !(SAMV70 || SAMV71 || SAME70 || SAMS70)
 Pdc *aes_get_pdc_base(Aes *p_aes);
+#endif
 
 /**
  * \brief Get the AES Additional Authenticated Data (AAD) length in bytes.
@@ -351,7 +368,7 @@ static inline uint32_t aes_read_authen_datalength(Aes *const p_aes)
  * \note This function is only available on SAM4C devices.
  *
  * \param[out]  p_aes Module hardware register base address pointer
- * \param[in]  length length in bytes of the AAD data to be processed
+ * \param[in]  length Length in bytes of the AAD data to be processed
  */
 static inline void aes_write_authen_datalength(Aes *const p_aes,
 		uint32_t length)
@@ -438,7 +455,7 @@ static inline void aes_write_ghash(Aes *const p_aes, uint32_t id,
  * \param[in]  p_aes Module hardware register base address pointer
  * \param[in]  id    Index into the TAGR array (range 0 to 3)
  *
- * \return the contents of the AES_TAGRx[x = 0...3] register specified.
+ * \return The contents of the AES_TAGRx[x = 0...3] register specified.
  */
 static inline uint32_t aes_read_tag(Aes *const p_aes, uint32_t id)
 {
@@ -453,7 +470,7 @@ static inline uint32_t aes_read_tag(Aes *const p_aes, uint32_t id)
  * \param[in]  p_aes Module hardware register base address pointer
  * \param[in]  id    Index into the GCMHR array (range 0 to 3)
  *
- * \return the contents of the AES_GCMHRx[x = 0...3] register specified.
+ * \return The contents of the AES_GCMHRx[x = 0...3] register specified.
  */
 static inline uint32_t aes_read_gcmh(Aes *const p_aes, uint32_t id)
 {
@@ -474,7 +491,7 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
 	p_aes->AES_GCMHR[id] = hword;
 }
 
-#endif /* #if SAM4C || SAM4CP || SAM4CM || defined(__DOXYGEN__) */
+#endif /* #if SAM4C || SAM4CP || SAM4CM || SAMV70 || SAMV71 || SAME70 || SAMS70 || defined(__DOXYGEN__) */
 
 #ifdef __cplusplus
 }
@@ -596,6 +613,12 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>42295B</td>
+ *		<td>07/2014</td>5
+ *		<td>Updated title of application note and added list of supported devices</td>
+ *	</tr>
+
+ *	<tr>
  *		<td>42295A</td>
  *		<td>05/2014</td>
  *		<td>Initial document release</td>
@@ -605,7 +628,7 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
  */
 
 /**
- * \page asfdoc_sam_drivers_aes_qsg Quick Start Guide for the AES driver
+ * \page asfdoc_sam_drivers_aes_qsg Quick Start Guide for the AES Driver
  *
  * This is the quick start guide for the \ref asfdoc_sam_drivers_aes_group, with
  * step-by-step instructions on how to configure and use the driver for

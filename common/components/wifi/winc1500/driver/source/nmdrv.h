@@ -43,13 +43,52 @@
 #define _NMDRV_H_
 
 #include "common/include/nm_common.h"
-#include "driver/include/m2m_wifi.h"
-#include "driver/source/m2m_hif.h"
+
+/**
+*  @struct		tstrM2mRev
+*  @brief		Structure holding firmware version parameters and build date/time
+*/
+typedef struct {
+	uint32 u32Chipid; /* HW revision which will be basically the chip ID */
+	uint8 u8FirmwareMajor; /* Version Major Number which represents the official release base */
+	uint8 u8FirmwareMinor; /* Version Minor Number which represents the engineering release base */
+	uint8 u8FirmwarePatch;	/* Version pathc Number which represents the pathces release base */
+	uint8 u8DriverMajor; /* Version Major Number which represents the official release base */
+	uint8 u8DriverMinor; /* Version Minor Number which represents the engineering release base */
+	uint8 u8DriverPatch; /* Version Patch Number which represents the pathces release base */
+	uint8 BuildDate[sizeof(__DATE__)];
+	uint8 BuildTime[sizeof(__TIME__)];
+	uint8 _PAD8_;
+} tstrM2mRev;
 
 #ifdef __cplusplus
      extern "C" {
  #endif
-
+/**
+*	@fn		nm_get_firmware_info(tstrM2mRev* M2mRev)
+*	@brief	Get Firmware version info
+*	@param [out]	M2mRev
+*			    pointer holds address of structure "tstrM2mRev" that contains the firmware version parameters
+*	@version	1.0
+*/
+sint8 nm_get_firmware_info(tstrM2mRev* M2mRev);
+/**
+*	@fn		nm_get_firmware_full_info(tstrM2mRev* pstrRev)
+*	@brief	Get Firmware version info
+*	@param [out]	M2mRev
+*			    pointer holds address of structure "tstrM2mRev" that contains the firmware version parameters
+*	@version	1.0
+*/
+sint8 nm_get_firmware_full_info(tstrM2mRev* pstrRev);
+/**
+*	@fn		nm_get_ota_firmware_info(tstrM2mRev* pstrRev)
+*	@brief	Get Firmware version info
+*	@param [out]	M2mRev
+*			    pointer holds address of structure "tstrM2mRev" that contains the firmware version parameters
+			
+*	@version	1.0
+*/
+sint8 nm_get_ota_firmware_info(tstrM2mRev* pstrRev);
 /*
 *	@fn		nm_drv_init
 *	@brief	Initialize NMC1000 driver

@@ -1,0 +1,38 @@
+<asf xmlversion="1.0">
+
+		
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="sicslowpan.c"/>
+			<build type="c-source"      value="uip6.c"/>
+			<build type="c-source"      value="uip-ds6.c"/>
+			<build type="c-source"      value="uip-ds6-nbr.c"/>
+			<build type="c-source"      value="uip-ds6-route.c"/>
+			<build type="c-source"      value="uip-icmp6.c"/>
+			<build type="c-source"      value="uip-nd6.c"/>
+			
+			<build type="header-file"   value="sicslowpan.h"/>
+			<build type="header-file"   value="uip-ds6.h"/>
+			<build type="header-file"   value="uip-ds6-nbr.h"/>
+			<build type="header-file"   value="uip-ds6-route.h"/>
+			<build type="header-file"   value="uip-icmp6.h"/>
+			<build type="header-file"   value="uip-nd6.h"/>
+			<build type="header-file"   value="uip-mcast6.h"/>
+			<build type="header-file"   value="multicast/roll-tm.h"/>
+			<build type="header-file"   value="multicast/smrf.h"/>
+			<build type="header-file"   value="multicast/uip-mcast6-engines.h"/>
+			<build type="header-file"   value="multicast/uip-mcast6-route.h"/>
+			<build type="header-file"   value="multicast/uip-mcast6-stats.h"/>
+			<build type="include-path" value="."/>	
+			<build type="include-path" value="multicast/"/>	
+			
+            <device-support value="sam0"/>
+            <build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+</asf>

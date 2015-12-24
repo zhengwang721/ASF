@@ -152,7 +152,6 @@ static void nwkDataReqSendFrame(NWK_DataReq_t *req)
 		frame->payload += sizeof(NwkFrameMulticastHeader_t);
 		frame->size += sizeof(NwkFrameMulticastHeader_t);
 	}
-
 #endif
 
 	frame->header.nwkSeq = ++nwkIb.nwkSeqNum;

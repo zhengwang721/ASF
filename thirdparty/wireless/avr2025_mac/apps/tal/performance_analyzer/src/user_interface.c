@@ -50,7 +50,7 @@
 #include "tal.h"
 # include "app_init.h"
 #if (LED_COUNT > 0)
-#if !(SAMD ||  SAMR21)
+#if !(SAMD ||  SAMR21 || SAML21)
 # include "led.h"
 #endif
 #endif
@@ -186,7 +186,7 @@ bool app_debounce_button(void)
 			key_cnt++;
 		}
 	} else if (!(button_pressed()) &&
-			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)){ 
+			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)) {
 		/* Button released */
 		ret = 1;
 		key_cnt = 0;
@@ -204,12 +204,14 @@ bool app_debounce_button(void)
  */
 bool button_pressed(void)
 {
-#if SAMD || SAMR21
+#ifdef SW0_PIN
+#if SAMD || SAMR21 || SAML21
 	if (port_pin_get_input_level(SW0_PIN)) {
 		return false;
 	} else {
 		return true;
 	}
+#endif
 #endif
 
 #ifdef SENSOR_TERMINAL_BOARD
@@ -291,7 +293,6 @@ void app_led_event(led_event_t ev)
 		LED_Off(TX_LED);
 		LED_Off(RX_LED);
 		break;
-		
 	}
 #endif
 }

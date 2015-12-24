@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.apps.mqtt.mqtt_samr21" caption="TBA">
+			<info type="description" value="summary">
+			</info>			
+			<build type="library" subtype="user" value="libMQTT_SAMR21.a" toolchain="armgcc"/>
+			<build type="header-file"      value="../mqtt.h"/>					
+			<build type="include-path" value="../"/>
+            <require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>			
+			<device-support value="samr21"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module> 
+	
+</asf>

@@ -740,8 +740,8 @@ static bool process_data_ind_not_transient(buffer_t *b_ptr, frame_info_t *f_ptr)
 								= MAC_ACTIVE_CAP;
 
 							/* Check whether the
-							 *radio needs to be
-							 *woken up. */
+							 * radio needs to be
+							 * woken up. */
 							mac_trx_wakeup();
 
 							/* Set transceiver in rx

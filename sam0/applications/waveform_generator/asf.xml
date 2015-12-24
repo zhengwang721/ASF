@@ -1,0 +1,26 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.waveform_generator" caption="Waveform Generator Example">
+		<info type="description" value="summary">
+		Generates standard waveforms like sine/triangular/saw-tooth using DAC in SAM D20 devices.
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="Analog Conversion"/>
+			<keyword value="Timers"/>
+			<keyword value="Peripheral Event System"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+
+		<build type="c-source" value="main.c"/>
+		<build type="include-path" value="."/>
+		<build type="library" subtype="compiler" value="libm" toolchain="armgcc"/>
+		<require idref="sam0.drivers.dac"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.events"/>
+		<require idref="sam0.drivers.tc"/>
+
+		<device-support value="samd20"/>
+	</module>
+</asf>

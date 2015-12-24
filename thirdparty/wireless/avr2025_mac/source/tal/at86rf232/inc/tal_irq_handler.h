@@ -88,7 +88,7 @@ void trx_irq_awake_handler_cb(void);
 void trx_irq_timestamp_handler_cb(void);
 
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) || (defined
-         *DOXYGEN) */
+         * DOXYGEN) */
 
 /* ! @} */
 #ifdef __cplusplus

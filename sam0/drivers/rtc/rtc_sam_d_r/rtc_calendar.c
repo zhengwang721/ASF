@@ -138,6 +138,7 @@ void rtc_calendar_disable(struct rtc_module *const module)
 
 /**
  * \brief Resets the RTC module
+ *
  * Resets the RTC module to hardware defaults.
  *
  * \param[in,out] module  Pointer to the software instance struct
@@ -167,9 +168,15 @@ void rtc_calendar_reset(struct rtc_module *const module)
 }
 
 /**
- * \internal Convert time structure to register_value.
+ * \brief Convert time structure to register_value.
+ * Retrieves register_value convert by the time structure.
+ *
+ * \param[in, out] module  Pointer to the software instance struct
+ * \param[in] time  Pointer to the time structure
+ *
+ * \return 32-bit value.
  */
-static uint32_t _rtc_calendar_time_to_register_value(
+uint32_t rtc_calendar_time_to_register_value(
 		struct rtc_module *const module,
 		const struct rtc_calendar_time *const time)
 {
@@ -205,9 +212,14 @@ static uint32_t _rtc_calendar_time_to_register_value(
 }
 
 /**
- * \internal Convert register_value to time structure.
+ * \brief Convert register_value to time structure.
+ * Retrieves the time structure convert by register_value.
+ *
+ * \param[in, out] module  Pointer to the software instance struct
+ * \param[in] register_value  The value stored in register
+ * \param[out] time  Pointer to the time structure
  */
-static void _rtc_calendar_register_value_to_time(
+void rtc_calendar_register_value_to_time(
 		struct rtc_module *const module,
 		const uint32_t register_value,
 		struct rtc_calendar_time *const time)
@@ -307,7 +319,7 @@ static void _rtc_calendar_set_config(
  *
  * \param[out] module  Pointer to the software instance struct
  * \param[in]   hw      Pointer to hardware instance
- * \param[in] config  Pointer to the configuration structure.
+ * \param[in]   config  Pointer to the configuration structure
  */
 void rtc_calendar_init(
 		struct rtc_module *const module,
@@ -450,7 +462,7 @@ void rtc_calendar_swap_time_mode(struct rtc_module *const module)
  * Sets the time provided to the calendar.
  *
  * \param[in, out] module  Pointer to the software instance struct
- * \param[in] time  The time to set in the calendar.
+ * \param[in] time  The time to set in the calendar
  */
 void rtc_calendar_set_time(
 		struct rtc_module *const module,
@@ -462,7 +474,7 @@ void rtc_calendar_set_time(
 
 	Rtc *const rtc_module = module->hw;
 
-	uint32_t register_value = _rtc_calendar_time_to_register_value(module, time);
+	uint32_t register_value = rtc_calendar_time_to_register_value(module, time);
 
 	while (rtc_calendar_is_syncing(module)) {
 		/* Wait for synchronization */
@@ -478,7 +490,7 @@ void rtc_calendar_set_time(
  * Retrieves the current time of the calendar.
  *
  * \param[in, out] module  Pointer to the software instance struct
- * \param[out] time  Pointer to value that will be filled with current time.
+ * \param[out] time  Pointer to value that will be filled with current time
  */
 void rtc_calendar_get_time(
 		struct rtc_module *const module,
@@ -505,7 +517,7 @@ void rtc_calendar_get_time(
 	uint32_t register_value = rtc_module->MODE2.CLOCK.reg;
 
 	/* Convert value to time structure. */
-	_rtc_calendar_register_value_to_time(module, register_value, time);
+	rtc_calendar_register_value_to_time(module, register_value, time);
 }
 
 /**
@@ -514,12 +526,12 @@ void rtc_calendar_get_time(
  * Sets the time and mask specified to the requested alarm.
  *
  * \param[in, out] module  Pointer to the software instance struct
- * \param[in] alarm        The alarm struct to set the alarm with.
- * \param[in] alarm_index  The index of the alarm to set.
+ * \param[in] alarm        The alarm struct to set the alarm with
+ * \param[in] alarm_index  The index of the alarm to set
  *
  * \return Status of setting alarm.
- * \retval STATUS_OK               If alarm was set correctly.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_OK               If alarm was set correctly
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  */
 enum status_code rtc_calendar_set_alarm(
 		struct rtc_module *const module,
@@ -538,7 +550,7 @@ enum status_code rtc_calendar_set_alarm(
 	}
 
 	/* Get register_value from time. */
-	uint32_t register_value = _rtc_calendar_time_to_register_value(module, &(alarm->time));
+	uint32_t register_value = rtc_calendar_time_to_register_value(module, &(alarm->time));
 
 	while (rtc_calendar_is_syncing(module)) {
 		/* Wait for synchronization */
@@ -556,16 +568,16 @@ enum status_code rtc_calendar_set_alarm(
 /**
  * \brief Get the current alarm time of specified alarm.
  *
- * Retrieves the current alarm time for the alarm specified.
+ * Retrieves the current alarm time for the alarm specified alarm.
  *
  * \param[in, out] module  Pointer to the software instance struct
  * \param[out] alarm  Pointer to the struct that will be filled with alarm
- *                    time and mask of the specified alarm.
- * \param[in] alarm_index  Index of alarm to get alarm time from.
+ *                    time and mask of the specified alarm
+ * \param[in] alarm_index  Index of alarm to get alarm time from
  *
  * \return Status of getting alarm.
- * \retval STATUS_OK               If alarm was read correctly.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_OK               If alarm was read correctly
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  */
 enum status_code rtc_calendar_get_alarm(
 		struct rtc_module *const module,
@@ -588,7 +600,7 @@ enum status_code rtc_calendar_get_alarm(
 			rtc_module->MODE2.Mode2Alarm[alarm_index].ALARM.reg;
 
 	/* Convert to time structure. */
-	_rtc_calendar_register_value_to_time(module, register_value, &(alarm->time));
+	rtc_calendar_register_value_to_time(module, register_value, &(alarm->time));
 
 	/* Read alarm mask */
 	alarm->mask = (enum rtc_calendar_alarm_mask)rtc_module->MODE2.Mode2Alarm[alarm_index].MASK.reg;
@@ -610,11 +622,11 @@ enum status_code rtc_calendar_get_alarm(
  * \note Can only be used when the RTC is operated at 1Hz.
  *
  * \param[in, out] module  Pointer to the software instance struct
- * \param[in] value Between -127 and 127 used for the correction.
+ * \param[in] value Between -127 and 127 used for the correction
  *
  * \return Status of the calibration procedure.
- * \retval STATUS_OK               If calibration was done correctly.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_OK               If calibration was done correctly
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  */
 enum status_code rtc_calendar_frequency_correction(
 		struct rtc_module *const module,

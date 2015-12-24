@@ -2,7 +2,7 @@
  * @file trx_access.c
  *
  * @brief Performs interface functionalities between the PHY layer and ASF
- *drivers
+ * drivers
  * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
@@ -49,7 +49,7 @@
  */
 
 #include "board.h"
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 #include "spi.h"
 #else
 #include "spi_master.h"
@@ -62,7 +62,7 @@
 
 static irq_handler_t irq_hdl_trx = NULL;
 
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 struct spi_slave_inst_config slave_dev_config;
 struct spi_config config;
 struct spi_module master;
@@ -75,7 +75,7 @@ struct spi_device SPI_AT86RFX_DEVICE = {
 };
 #endif
 
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 void AT86RFX_ISR(void);
 
 void AT86RFX_ISR(void)
@@ -86,8 +86,7 @@ AT86RFX_ISR()
 {
 	/*Clearing the RF interrupt*/
 	trx_irq_flag_clr();
-
-	/*Calling the interrupt routines*/
+  	/*Calling the interrupt routines*/
 	if (irq_hdl_trx) {
 		irq_hdl_trx();
 	}
@@ -96,7 +95,7 @@ AT86RFX_ISR()
 void trx_spi_init(void)
 {
 	/* Initialize SPI in master mode to access the transceiver */
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	spi_slave_inst_get_config_defaults(&slave_dev_config);
 	slave_dev_config.ss_pin = AT86RFX_SPI_CS;
 	spi_attach_slave(&slave, &slave_dev_config);
@@ -109,18 +108,23 @@ void trx_spi_init(void)
 	config.pinmux_pad3 = AT86RFX_SPI_SERCOM_PINMUX_PAD3;
 	spi_init(&master, AT86RFX_SPI, &config);
 	spi_enable(&master);
-	   
-	struct extint_chan_conf eint_chan_conf; 
-	extint_chan_get_config_defaults(&eint_chan_conf); 
-	eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN; 
-	eint_chan_conf.gpio_pin_mux = AT86RFX_IRQ_PINMUX; 
-	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_DOWN; 
-	eint_chan_conf.wake_if_sleeping    = true; 
-	eint_chan_conf.filter_input_signal = false; 
-	eint_chan_conf.detection_criteria  = EXTINT_DETECT_RISING; 
-	extint_chan_set_config(AT86RFX_IRQ_CHAN, &eint_chan_conf); 
-	extint_register_callback(AT86RFX_ISR, AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);
-	
+
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+	eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN;
+	eint_chan_conf.gpio_pin_mux = AT86RFX_IRQ_PINMUX;
+	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_DOWN;
+	#if (SAML21)
+	eint_chan_conf.enable_async_edge_detection = false;
+	#else
+	eint_chan_conf.wake_if_sleeping    = true;
+	#endif
+	eint_chan_conf.filter_input_signal = false;
+	eint_chan_conf.detection_criteria  = EXTINT_DETECT_RISING;
+	extint_chan_set_config(AT86RFX_IRQ_CHAN, &eint_chan_conf);
+	extint_register_callback(AT86RFX_ISR, AT86RFX_IRQ_CHAN,
+			EXTINT_CALLBACK_TYPE_DETECT);
+
 #else
 	spi_master_init(AT86RFX_SPI);
 	spi_master_setup_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE, SPI_MODE_0,
@@ -146,20 +150,20 @@ void PhyReset(void)
 
 uint8_t trx_reg_read(uint8_t addr)
 {
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	uint16_t register_value = 0;
 #else
 	uint8_t register_value = 0;
 #endif
 
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
 	/* Prepare the command byte */
 	addr |= READ_ACCESS_COMMAND;
 
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
 
@@ -199,8 +203,9 @@ uint8_t trx_reg_read(uint8_t addr)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 
 	return register_value;
@@ -209,13 +214,13 @@ uint8_t trx_reg_read(uint8_t addr)
 void trx_reg_write(uint8_t addr, uint8_t data)
 {
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
 	/* Prepare the command byte */
 	addr |= WRITE_ACCESS_COMMAND;
 
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
 
@@ -256,8 +261,9 @@ void trx_reg_write(uint8_t addr, uint8_t data)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 
@@ -266,7 +272,7 @@ void trx_irq_init(FUNC_PTR trx_irq_cb)
 	/*
 	 * Set the handler function.
 	 * The handler is set before enabling the interrupt to prepare for
-	 *spurious
+	 * spurious
 	 * interrupts, that can pop up the moment they are enabled
 	 */
 	irq_hdl_trx = (irq_handler_t)trx_irq_cb;
@@ -296,10 +302,10 @@ void trx_bit_write(uint8_t reg_addr, uint8_t mask, uint8_t pos,
 void trx_frame_read(uint8_t *data, uint8_t length)
 {
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	uint16_t temp;
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
@@ -348,19 +354,21 @@ void trx_frame_read(uint8_t *data, uint8_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 
 void trx_frame_write(uint8_t *data, uint8_t length)
 {
 	uint8_t temp;
+
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
 
@@ -371,7 +379,7 @@ void trx_frame_write(uint8_t *data, uint8_t length)
 	}
 	spi_write(&master, temp);
 	while (!spi_is_write_complete(&master)) {
-	}
+	} 
 	/* Dummy read since SPI RX is double buffered */
 	while (!spi_is_ready_to_read(&master)) {
 	}
@@ -403,8 +411,9 @@ void trx_frame_write(uint8_t *data, uint8_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 
@@ -420,11 +429,12 @@ void trx_frame_write(uint8_t *data, uint8_t length)
 void trx_sram_write(uint8_t addr, uint8_t *data, uint8_t length)
 {
 	uint8_t temp;
+
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
 
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
 
@@ -489,8 +499,9 @@ void trx_sram_write(uint8_t addr, uint8_t *data, uint8_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 
@@ -508,9 +519,9 @@ void trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length)
 	delay_us(1); /* wap_rf4ce */
 
 	/*Saving the current interrupt status & disabling the global interrupt
-	 **/
+	**/
 	ENTER_TRX_CRITICAL_REGION();
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	uint16_t temp;
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
@@ -580,8 +591,9 @@ void trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length)
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 #endif
+
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
+	 * interrupt */
 	LEAVE_TRX_CRITICAL_REGION();
 }
 
@@ -598,7 +610,7 @@ void trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length)
 void trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 {
 	uint8_t *odata;
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	uint16_t odata_var = 0;
 #endif
 	uint8_t temp;
@@ -612,7 +624,7 @@ void trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 		/* wait until SPI gets available */
 	}
 #endif
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	/* Start SPI transaction by pulling SEL low */
 	spi_select_slave(&master, &slave, true);
 
@@ -664,7 +676,7 @@ void trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 		while (!spi_is_ready_to_read(&master)) {
 		}
 
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 		spi_read(&master, &odata_var);
 		*odata++ = (uint8_t)odata_var;
 #else
@@ -681,7 +693,7 @@ void trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length)
 	}
 	while (!spi_is_ready_to_read(&master)) {
 	}
-#if SAMD || SAMR21
+#if SAMD || SAMR21 || SAML21
 	spi_read(&master, &odata_var);
 	*odata = (uint8_t)odata_var;
 #else

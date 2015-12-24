@@ -72,6 +72,7 @@
  * \name UDD Configuration
  */
 //@{
+#undef USB_DEVICE_MAX_EP   // undefine this definition in header file
 //! 1 endpoint used by HID mouse standard interface
 #define  USB_DEVICE_MAX_EP             1
 //@}

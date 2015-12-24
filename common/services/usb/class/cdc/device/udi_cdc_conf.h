@@ -122,6 +122,7 @@ extern "C" {
 #    define  UDI_CDC_COMM_EP_1             (6 | USB_EP_DIR_IN)  // Notify
 #  endif
 //! 3 endpoints used per CDC interface
+#undef USB_DEVICE_MAX_EP   // undefine this definition in header file
 #define  USB_DEVICE_MAX_EP             (3*UDI_CDC_PORT_NB)
 //@}
 

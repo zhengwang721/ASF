@@ -40,25 +40,31 @@
  * \asf_license_stop
  *
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_tcc_callback_use_case Quick Start Guide for TCC - Callback
  *
  * The supported board list:
- *    - SAM D21/R21/L21 Xplained Pro
+ *    - SAM D21/R21/L21/L22/DA1/C21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal, with a
  * varying duty cycle. Here the pulse width is increased each time the timer
  * count matches the set compare value.
- * When connect PWM output to LED it makes the LED vary its light. To see the
- * waveform, you may need an oscilloscope.
+ * When the PWM signal connects to LED, LED will light. To see the waveform,
+ * you may need an oscilloscope.
  *
  * The PWM output is set up as follows:
  * <table>
- *  <tr><th> Board        </td><th> Pin  </td><th> Connect to </td></tr>
- *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
- *  <tr><td> SAMR21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
- *  <tr><td> SAML21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
+ *  <tr><th> Board         </td><th> Pin  </td><th> Connect to </td></tr>
+ *  <tr><td> SAM D21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
+ *  <tr><td> SAM R21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
+ *  <tr><td> SAM L21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
+ *  <tr><td> SAM L22 Xpro  </td><td> PC27 </td><td> LED0       </td></tr>
+ *  <tr><td> SAM DA1 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
+ *  <tr><td> SAM C21 Xpro  </td><td> PA15 </td><td> LED0       </td></tr>
  * </table>
  *
  * The TCC module will be set up as follows:
@@ -119,7 +125,7 @@
  *           settings.
  *
  *  -# Alter the TCC settings to configure the counter width, wave generation
- *     mode and the compare channel 0 value.
+ *     mode, and the compare channel 0 value.
  *     \snippet qs_tcc_callback.c setup_change_config
  *  -# Alter the TCC settings to configure the PWM output on a physical device
  *     pin.
@@ -145,9 +151,6 @@
  * \subsection asfdoc_sam0_tcc_callback_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TCC module.
  *  \snippet qs_tcc_callback.c main_loop
- */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 

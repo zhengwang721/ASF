@@ -111,7 +111,7 @@ extern "C" {
  * - Implements the TAL state machine.
  * @ingroup apiTalApi
  */
-void tal_task(void);
+/* void tal_task(void); */
 
 uint32_t tal_convert_symbols_to_us_def(uint32_t symbols);
 
@@ -132,7 +132,7 @@ uint32_t tal_convert_us_to_symbols_def(uint32_t us);
  *
  * @ingroup apiTalApi
  */
-void tal_generate_rand_seed(void);
+/* void tal_generate_rand_seed(void); */
 
 #ifdef __cplusplus
 } /* extern "C" */

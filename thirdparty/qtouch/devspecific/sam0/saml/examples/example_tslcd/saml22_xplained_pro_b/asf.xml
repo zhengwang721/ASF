@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<project caption="SAML22 TSLCD1 Example on SAMDL22 Xplained Pro B" id="thirdparty.qtouch.devspecific.sam0.saml.examples.example_tslcd.saml22_xplained_pro_b">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_rtc.h"/>
+		<build type="header-file" value="conf_slcd.h"/>
+		<require idref="board.saml22_xplained_pro_b"/>
+		<require idref="thirdparty.qtouch.devspecific.sam0.saml.examples.example_tslcd"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<build type="define" name="_QTOUCH_" value=""/>
+		<device-support value="atsaml22n18a"/>
+	</project>
+</asf>

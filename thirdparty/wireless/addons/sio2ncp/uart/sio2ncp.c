@@ -113,8 +113,10 @@ void sio2ncp_init(void)
 #endif
 
 #if (BOARD == SAM4L_XPLAINED_PRO)
+#if defined (NCP_RESET_GPIO)
 	ioport_set_pin_dir(NCP_RESET_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
+#endif
 #endif /* (BOARD == SAM4L_XPLAINED_PRO) */
 	USART_NCP_RX_ISR_ENABLE();
 }
@@ -145,6 +147,15 @@ uint8_t sio2ncp_tx(uint8_t *data, uint8_t length)
 uint8_t sio2ncp_rx(uint8_t *data, uint8_t max_length)
 {
 	uint8_t data_received = 0;
+	if(serial_rx_buf_tail >= serial_rx_buf_head)
+	{
+		serial_rx_count = serial_rx_buf_tail - serial_rx_buf_head;
+	}
+	else
+	{
+		serial_rx_count = serial_rx_buf_tail + (SERIAL_RX_BUF_SIZE_NCP - serial_rx_buf_head);
+	}
+	
 	if (0 == serial_rx_count) {
 		return 0;
 	}
@@ -192,12 +203,14 @@ uint8_t sio2ncp_rx(uint8_t *data, uint8_t max_length)
 	while (max_length > 0) {
 		/* Start to copy from head. */
 		*data = serial_rx_buf[serial_rx_buf_head];
-		serial_rx_buf_head++;
-		serial_rx_count--;
 		data++;
 		max_length--;
-		if ((SERIAL_RX_BUF_SIZE_NCP) == serial_rx_buf_head) {
+		if ((SERIAL_RX_BUF_SIZE_NCP - 1) == serial_rx_buf_head) {
 			serial_rx_buf_head = 0;
+		}
+		else
+		{
+			serial_rx_buf_head++;
 		}
 	}
 	return data_received;
@@ -240,7 +253,6 @@ USART_NCP_ISR_VECT()
 
 	/* The number of data in the receive buffer is incremented and the
 	 * buffer is updated. */
-	serial_rx_count++;
 
 	serial_rx_buf[serial_rx_buf_tail] = temp;
 

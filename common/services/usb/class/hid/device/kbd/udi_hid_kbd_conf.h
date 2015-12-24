@@ -67,6 +67,7 @@
  */
 //@{
 //! 1 endpoint used by HID keyboard standard interface
+#undef USB_DEVICE_MAX_EP   // undefine this definition in header file
 #define  USB_DEVICE_MAX_EP             1
 //@}
 

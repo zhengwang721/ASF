@@ -82,7 +82,7 @@ void sm_init(void)
 /**
  * \brief This function puts the  device to sleep
  * \param interval : in seconds for the device to sleep.Range of Interval is
- *1-68719s
+ * 1-68719s
  */
 void sm_sleep(uint32_t interval)
 {

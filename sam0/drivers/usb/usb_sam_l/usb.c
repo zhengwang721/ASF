@@ -48,10 +48,10 @@
 
 /** Fields definition from a LPM TOKEN  */
 #define  USB_LPM_ATTRIBUT_BLINKSTATE_MASK      (0xF << 0)
-#define  USB_LPM_ATTRIBUT_BESL_MASK            (0xF << 4)
+#define  USB_LPM_ATTRIBUT_HIRD_MASK            (0xF << 4)
 #define  USB_LPM_ATTRIBUT_REMOTEWAKE_MASK      (1 << 8)
 #define  USB_LPM_ATTRIBUT_BLINKSTATE(value)    ((value & 0xF) << 0)
-#define  USB_LPM_ATTRIBUT_BESL(value)          ((value & 0xF) << 4)
+#define  USB_LPM_ATTRIBUT_HIRD(value)          ((value & 0xF) << 4)
 #define  USB_LPM_ATTRIBUT_REMOTEWAKE(value)    ((value & 1) << 8)
 #define  USB_LPM_ATTRIBUT_BLINKSTATE_L1        USB_LPM_ATTRIBUT_BLINKSTATE(1)
 
@@ -85,7 +85,9 @@ COMPILER_PACK_SET(1)
 COMPILER_WORD_ALIGNED
 union {
 	UsbDeviceDescriptor usb_endpoint_table[USB_EPT_NUM];
+#if !SAML22
 	UsbHostDescriptor usb_pipe_table[USB_PIPE_NUM];
+#endif
 } usb_descriptor_table;
 COMPILER_PACK_RESET()
 /** @} */
@@ -95,10 +97,12 @@ COMPILER_PACK_RESET()
  */
 static struct usb_module *_usb_instances;
 
+#if !SAML22
 /**
  * \brief Host pipe callback structure variable
  */
 static struct usb_pipe_callback_parameter pipe_callback_para;
+#endif
 
 /* Device LPM callback variable */
 static uint32_t device_callback_lpm_wakeup_enable;
@@ -131,6 +135,7 @@ static const uint8_t _usb_endpoint_irq_bits[USB_DEVICE_EP_CALLBACK_N] = {
 	USB_DEVICE_EPINTFLAG_STALL_Msk
 };
 
+#if !SAML22
 /**
  * \brief Bit mask for pipe job busy status
  */
@@ -773,7 +778,8 @@ enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     pipe_num      Pipe to configure
- * \param[in]     buf           Pointer to data buffer
+ * \param[in]     b_remotewakeup  Remote wake up flag
+ * \param[in]     hird  Host Initiated Resume Duration
  *
  * \return Status of the setup operation.
  * \retval STATUS_OK    The setup job was set successfully.
@@ -781,7 +787,7 @@ enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t
  * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configured.
  */
 enum status_code usb_host_pipe_lpm_job(struct usb_module *module_inst,
-		uint8_t pipe_num, bool b_remotewakeup, uint8_t besl)
+		uint8_t pipe_num, bool b_remotewakeup, uint8_t hird)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -807,7 +813,7 @@ enum status_code usb_host_pipe_lpm_job(struct usb_module *module_inst,
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].EXTREG.bit.SUBPID = 0x3;
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].EXTREG.bit.VARIABLE =
 			USB_LPM_ATTRIBUT_REMOTEWAKE(b_remotewakeup) |
-			USB_LPM_ATTRIBUT_BESL(besl) |
+			USB_LPM_ATTRIBUT_HIRD(hird) |
 			USB_LPM_ATTRIBUT_BLINKSTATE_L1;
 
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_BK0RDY;
@@ -1029,6 +1035,7 @@ void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num
 
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.AUTO_ZLP = value;
 }
+#endif
 
 /**
  * \brief Registers a USB device callback
@@ -1760,6 +1767,25 @@ static void _usb_device_interrupt_handler(void)
 					return;
 				}
 
+				// endpoint transfer complete interrupt
+				if (flags & USB_DEVICE_EPINTFLAG_TRCPT_Msk) {
+					if (_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_TRCPT1) {
+						_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRCPT1;
+						ep_callback_para.endpoint_address = USB_EP_DIR_IN | i;
+						ep_callback_para.sent_bytes = (uint16_t)(usb_descriptor_table.usb_endpoint_table[i].DeviceDescBank[1].PCKSIZE.bit.BYTE_COUNT);
+
+					} else if (_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_TRCPT0) {
+						_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRCPT0;
+						ep_callback_para.endpoint_address = USB_EP_DIR_OUT | i;
+						ep_callback_para.received_bytes = (uint16_t)(usb_descriptor_table.usb_endpoint_table[i].DeviceDescBank[0].PCKSIZE.bit.BYTE_COUNT);
+						ep_callback_para.out_buffer_size = (uint16_t)(usb_descriptor_table.usb_endpoint_table[i].DeviceDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE);
+					}
+					if(flags_run & USB_DEVICE_EPINTFLAG_TRCPT_Msk) {
+						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_TRCPT])(_usb_instances,&ep_callback_para);
+					}
+					return;
+				}
+
 				// endpoint transfer fail interrupt
 				if (flags & USB_DEVICE_EPINTFLAG_TRFAIL_Msk) {
 					if (_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_TRFAIL1) {
@@ -1784,25 +1810,6 @@ static void _usb_device_interrupt_handler(void)
 
 					if(flags_run & USB_DEVICE_EPINTFLAG_TRFAIL_Msk) {
 						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL])(_usb_instances,&ep_callback_para);
-					}
-					return;
-				}
-
-				// endpoint transfer complete interrupt
-				if (flags & USB_DEVICE_EPINTFLAG_TRCPT_Msk) {
-					if (_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_TRCPT1) {
-						_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRCPT1;
-						ep_callback_para.endpoint_address = USB_EP_DIR_IN | i;
-						ep_callback_para.sent_bytes = (uint16_t)(usb_descriptor_table.usb_endpoint_table[i].DeviceDescBank[1].PCKSIZE.bit.BYTE_COUNT);
-
-					} else if (_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_TRCPT0) {
-						_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRCPT0;
-						ep_callback_para.endpoint_address = USB_EP_DIR_OUT | i;
-						ep_callback_para.received_bytes = (uint16_t)(usb_descriptor_table.usb_endpoint_table[i].DeviceDescBank[0].PCKSIZE.bit.BYTE_COUNT);
-						ep_callback_para.out_buffer_size = (uint16_t)(usb_descriptor_table.usb_endpoint_table[i].DeviceDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE);
-					}
-					if(flags_run & USB_DEVICE_EPINTFLAG_TRCPT_Msk) {
-						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_TRCPT])(_usb_instances,&ep_callback_para);
 					}
 					return;
 				}
@@ -1845,8 +1852,10 @@ void usb_disable(struct usb_module *module_inst)
 void USB_Handler(void)
 {
 	if (_usb_instances->hw->DEVICE.CTRLA.bit.MODE) {
+#if !SAML22
 		/*host mode ISR */
 		_usb_host_interrupt_handler();
+#endif
 	} else {
 		/*device mode ISR */
 		_usb_device_interrupt_handler();
@@ -1905,7 +1914,9 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	struct system_pinmux_config pin_config;
 	struct system_gclk_chan_config gclk_chan_config;
 
+#if !SAML22
 	host_pipe_job_busy_status = 0;
+#endif
 
 	_usb_instances = module_inst;
 
@@ -1981,6 +1992,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	memset((uint8_t *)(&usb_descriptor_table.usb_endpoint_table[0]), 0,
 			sizeof(usb_descriptor_table.usb_endpoint_table));
 
+#if !SAML22
 	/* callback related init */
 	for (i = 0; i < USB_HOST_CALLBACK_N; i++) {
 		module_inst->host_callback[i] = NULL;
@@ -1996,6 +2008,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		module_inst->host_pipe_registered_callback_mask[i] = 0;
 		module_inst->host_pipe_enabled_callback_mask[i] = 0;
 	}
+#endif
 
 	/*  device callback related */
 	for (i = 0; i < USB_DEVICE_CALLBACK_N; i++) {

@@ -95,6 +95,7 @@ typedef struct {
 #define   DACC_MR_WORD_WORD (0x1u << 4) /**< \brief (DACC_MR) Word Transfer */
 #define DACC_MR_SLEEP (0x1u << 5) /**< \brief (DACC_MR) Sleep Mode */
 #define DACC_MR_FASTWKUP (0x1u << 6) /**< \brief (DACC_MR) Fast Wake up Mode */
+#define DACC_MR_ONE (0x1u << 8) /**< \brief (DACC_MR) Bit 8 must always be set to 1 when programming the DACC_MR */
 #define DACC_MR_REFRESH_Pos 8
 #define DACC_MR_REFRESH_Msk (0xffu << DACC_MR_REFRESH_Pos) /**< \brief (DACC_MR) Refresh Period */
 #define DACC_MR_REFRESH(value) ((DACC_MR_REFRESH_Msk & ((value) << DACC_MR_REFRESH_Pos)))

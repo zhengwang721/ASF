@@ -54,7 +54,7 @@ extern struct _extint_module _extint_dev;
 
 /**
  * \internal
- * This is the number of the channel whose callback is currently running
+ * This is the number of the channel whose callback is currently running.
  */
 uint8_t _current_channel;
 
@@ -114,7 +114,7 @@ enum status_code extint_register_callback(
  * \param[in] type      Type of callback function to unregister
  *
  * \return Status of the de-registration operation.
- * \retval STATUS_OK               The callback was Unregistered successfully
+ * \retval STATUS_OK               The callback was unregistered successfully
  * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied
  * \retval STATUS_ERR_BAD_ADDRESS  No matching entry was found in the
  *                                 registration table
@@ -205,7 +205,7 @@ enum status_code extint_chan_disable_callback(
  * \brief Find what channel caused the callback.
  *
  * Can be used in an EXTINT callback function to find what channel caused
- * the callback in case same callback is used by multiple channels.
+ * the callback in case the same callback is used by multiple channels.
  *
  * \return Channel number.
  */

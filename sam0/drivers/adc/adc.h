@@ -48,27 +48,29 @@
 #define ADC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_adc_group SAM Analog to Digital Converter Driver (ADC)
+ * \defgroup asfdoc_sam0_adc_group SAM Analog-to-Digital Converter (ADC) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's Analog to Digital Converter functionality, for
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
+ * and management of the device's Analog-to-Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
- * The following driver API modes are covered by this manual:
+ * The following driver Application Programming Interface (API) modes are covered by this manual:
  * - Polled APIs
  * \if ADC_CALLBACK_MODE
  * - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
- *  - ADC (Analog to Digital Converter)
+ * The following peripheral is used by this module:
+ *  - ADC (Analog-to-Digital Converter)
  *
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM C20/C21
  * \else
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D09/D10/D11
+ *  - Atmel | SMART SAM DA1
  * \endif
  *
  * The outline of this documentation is as follows:
@@ -91,9 +93,9 @@
  * functions on the device, to convert analog voltages to a corresponding
  * digital value. The ADC has up to 12-bit resolution, and is capable of
  * \if DEVICE_SAML21_SUPPORT
- * converting up to 1,000,000 samples per second (1 Msps).
+ * converting up to 1,000,000 samples per second (MSPS).
  * \else
- * converting up to 500K samples per second (Ksps).
+ * converting up to 500K samples per second (KSPS).
  * \endif
  *
  * The ADC has a compare function for accurate monitoring of user defined
@@ -159,7 +161,7 @@
  * sampling rate to be reduced.
  *
  * \subsection asfdoc_sam0_adc_module_overview_resolution ADC Resolution
- * The ADC supports full 8-bit, 10-bit, or 12-bit resolution. Hardware
+ * The ADC supports full 8-, 10-, or 12-bit resolution. Hardware
  * oversampling and decimation can be used to increase the
  * effective resolution at the expense of throughput. Using oversampling and
  * decimation mode the ADC resolution is increased from 12-bit to an effective
@@ -196,11 +198,11 @@
  * \subsection asfdoc_sam0_adc_module_overview_conversion Conversion Modes
  * ADC conversions can be software triggered on demand by the user application,
  * if continuous sampling is not required. It is also possible to configure the
- * ADC in free-running mode, where new conversions are started as soon as the
+ * ADC in free running mode, where new conversions are started as soon as the
  * previous conversion is completed, or configure the ADC to scan across a
  * number of input pins (see \ref asfdoc_sam0_adc_module_overview_pin_scan).
  *
- * \subsection asfdoc_sam0_adc_module_overview_diff_mode Differential and Single-Ended Conversion
+ * \subsection asfdoc_sam0_adc_module_overview_diff_mode Differential and Single-ended Conversion
  * The ADC has two conversion modes; differential and single-ended. When
  * measuring signals where the positive input pin is always at a higher voltage
  * than the negative input pin, the single-ended conversion mode should be used
@@ -238,7 +240,7 @@
  *
  * The effective ADC conversion rate will be reduced by a factor of the number
  * of accumulated samples;
- * however the effective resolution will be increased according to
+ * however, the effective resolution will be increased according to
  * \ref asfdoc_sam0_adc_module_hw_av_resolution "the table below".
  *
  * \anchor asfdoc_sam0_adc_module_hw_av_resolution
@@ -320,7 +322,7 @@
  * In single conversion, a latency of 13 ADC Generic Clock cycles is added for
  * the final sample result availability. As the correction time is always less
  * than the propagation delay, in free running mode this latency appears only
- * during the first conversion. After the first conversion is complete future
+ * during the first conversion. After the first conversion is complete, future
  * conversion results are available at the defined sampling rate.
  *
  * \subsection asfdoc_sam0_adc_module_overview_pin_scan Pin Scan
@@ -329,7 +331,7 @@
  * conversion is completed, the next conversion will start at the next positive
  * input channel and so on, until all requested pins to scan have been sampled
  * and converted.
- * SAM L21 has automatic sequences feature instead of pin scan mode. In automatic
+ * SAM L21/L22 has automatic sequences feature instead of pin scan mode. In automatic
  * sequence mode, all of 32 positives inputs can be included in a sequence. The
  * sequence starts from the lowest input, and go to the next enabled input
  * automatically.
@@ -352,7 +354,7 @@
  * monitor threshold values are user-configurable, and follow the overall ADC
  * sampling bit precision set when the ADC is configured by the user application.
  * For example, only the eight lower bits of the window threshold values will be
- * compares to the sampled data whilst the ADC is configured in 8-bit mode.
+ * compared to the sampled data whilst the ADC is configured in 8-bit mode.
  * In addition, if using differential mode, the 8<SUP>th</SUP> bit will be considered as
  * the sign bit even if bit 9 is zero.
  *
@@ -378,7 +380,7 @@
  *
  * \note The connection of events between modules requires the use of the
  *       \ref asfdoc_sam0_events_group "SAM Event System Driver (EVENTS)"
- *       to route output event of one module to the the input event of another.
+ *       to route output event of one module to the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
  *
@@ -436,6 +438,34 @@ extern "C" {
 
 /** @} */
 
+#if ADC_CALLBACK_MODE == true
+#   if (ADC_INST_NUM > 1)
+#       define _ADC_INTERRUPT_VECT_NUM(n, unused) \
+			SYSTEM_INTERRUPT_MODULE_ADC##n,
+/**
+ * \internal Get the interrupt vector for the given device instance
+ *
+ * \param[in] The ADC module instance number
+ *
+ * \return Interrupt vector for of the given ADC module instance.
+ */
+static enum system_interrupt_vector _adc_interrupt_get_interrupt_vector(
+		uint32_t inst_num)
+{
+	static uint8_t adc_interrupt_vectors[ADC_INST_NUM] = {
+		MREPEAT(ADC_INST_NUM, _ADC_INTERRUPT_VECT_NUM, 0)
+	};
+
+	return (enum system_interrupt_vector)adc_interrupt_vectors[inst_num];
+}
+#   endif
+#endif
+
+#if !defined(__DOXYGEN__)
+uint8_t _adc_get_inst_index(
+		Adc *const hw);
+#endif
+
 /**
  * \name Driver Initialization and Configuration
  * @{
@@ -447,6 +477,12 @@ enum status_code adc_init(
 
 void adc_get_config_defaults(
 		struct adc_config *const config);
+
+#if (SAMD) || (SAMR21)
+void adc_regular_ain_channel(
+		uint32_t *pin_array, uint8_t size);
+#endif
+
 /** @} */
 
 /**
@@ -463,7 +499,7 @@ void adc_get_config_defaults(
  *
  * \return Bitmask of \c ADC_STATUS_* flags.
  *
- * \retval ADC_STATUS_RESULT_READY  ADC Result is ready to be read
+ * \retval ADC_STATUS_RESULT_READY  ADC result is ready to be read
  * \retval ADC_STATUS_WINDOW        ADC has detected a value inside the set
  *                                  window range
  * \retval ADC_STATUS_OVERRUN       ADC result has overrun
@@ -540,7 +576,7 @@ static inline void adc_clear_status(
 /** @} */
 
 /**
- * \name Enable, Disable and Reset ADC Module, Start Conversion and Read Result
+ * \name Enable, Disable, and Reset ADC Module, Start Conversion and Read Result
  * @{
  */
 
@@ -565,7 +601,14 @@ static inline enum status_code adc_enable(
 	}
 
 #if ADC_CALLBACK_MODE == true
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   if (ADC_INST_NUM > 1)
+	system_interrupt_enable(_adc_interrupt_get_interrupt_vector(
+			_adc_get_inst_index(adc_module)));
+#   elif (SAMC20)
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC0);
+#	else
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   endif
 #endif
 
 	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
@@ -592,7 +635,14 @@ static inline enum status_code adc_disable(
 	Adc *const adc_module = module_inst->hw;
 
 #if ADC_CALLBACK_MODE == true
-	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   if (ADC_INST_NUM > 1)
+	system_interrupt_disable(_adc_interrupt_get_interrupt_vector(
+			_adc_get_inst_index(adc_module)));
+#   elif (SAMC20)
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC0);
+#	else
+		system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_ADC);
+#   endif
 #endif
 
 	while (adc_is_syncing(module_inst)) {
@@ -610,7 +660,7 @@ static inline enum status_code adc_disable(
 /**
  * \brief Resets the ADC module.
  *
- * Resets an ADC module, clearing all module state and registers to their
+ * Resets an ADC module, clearing all module state, and registers to their
  * default values.
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
@@ -641,7 +691,7 @@ static inline enum status_code adc_reset(
  * \brief Enables an ADC event input or output.
  *
  *  Enables one or more input or output events to or from the ADC module. See
- *  \ref adc_events "here" for a list of events this module supports.
+ *  \ref adc_events "Struct adc_events" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -678,7 +728,7 @@ static inline void adc_enable_events(
  * \brief Disables an ADC event input or output.
  *
  *  Disables one or more input or output events to or from the ADC module. See
- *  \ref adc_events "here" for a list of events this module supports.
+ *  \ref adc_events "Struct adc_events" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -796,7 +846,7 @@ static inline enum status_code adc_read(
 /**
  * \brief Flushes the ADC pipeline.
  *
- * Flushes the pipeline and restart the ADC clock on the next peripheral clock
+ * Flushes the pipeline and restarts the ADC clock on the next peripheral clock
  * edge. All conversions in progress will be lost. When flush is complete, the
  * module will resume where it left off.
  *
@@ -1011,10 +1061,10 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * </tr>
  * \else
  *	<tr>
- *		<td>Added support for SAMR21</td>
+ *		<td>Added support for SAM R21</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21 and new DMA quick start guide</td>
+ *		<td>Added support for SAM D21 and new DMA quick start guide</td>
  *	</tr>
  *	<tr>
  *		<td>Added ADC calibration constant loading from the device signature
@@ -1033,7 +1083,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_adc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
- * use cases. Note that QSGs can be compiled as a standalone application or be
+ * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_adc_basic_use_case
@@ -1046,35 +1096,45 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  * \if DEVICE_SAML21_SUPPORT
+  *	<tr>
+ *		<td>42451B</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM L22</td>
+ *	</tr>
  *  <tr>
- *      <td>A</td>
- *      <td>11/2014</td>
- *      <td>Initial release.</td>
+ *      <td>42451A</td>
+ *      <td>07/2015</td>
+ *      <td>Initial document release</td>
  * </tr>
  * \else
  *	<tr>
- *		<td>D</td>
+ *		<td>42109E</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM DA1 and SAM D09</td>
+ *	</tr>
+ *	<tr>
+ *		<td>42109D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11.</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42109C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42109B</td>
  *		<td>06/2013</td>
  *		<td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42109A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>

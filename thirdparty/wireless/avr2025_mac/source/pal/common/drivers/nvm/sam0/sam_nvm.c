@@ -94,7 +94,7 @@ status_code_t nvm_sam0_read(mem_type_t mem, uint32_t address,
 			uint16_t data = NVM_MEMORY[page_address++];
 
 			/* Copy first byte of the 16-bit chunk to the
-			 *destination buffer */
+			 * destination buffer */
 			buffer[i] = (data & 0xFF);
 
 			/* If we are not at the end of a read request with an

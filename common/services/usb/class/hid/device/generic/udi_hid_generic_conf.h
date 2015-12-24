@@ -77,6 +77,7 @@ extern "C" {
  */
 //@{
 //! 2 endpoints used by HID generic standard interface
+#undef USB_DEVICE_MAX_EP   // undefine this definition in header file
 #define  USB_DEVICE_MAX_EP    2
 //@}
 

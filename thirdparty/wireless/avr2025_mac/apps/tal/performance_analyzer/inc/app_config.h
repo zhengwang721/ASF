@@ -3,7 +3,8 @@
  *
  * \brief These are application-specific resources which are used
  *        in the application in addition to the underlaying stack
- * - Performance Analyzer application.
+ *        - Performance Analyzer application.
+ *
  * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -54,9 +55,8 @@
 /* === Includes ============================================================= */
 
 #include "stack_config.h"
-#include "user_interface.h"
-#include <conf_board.h>
 #include "board.h"
+#include "conf_board.h"
 
 /* === Macros =============================================================== */
 

@@ -211,6 +211,11 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_PA19D_PARC_PCEN2, MUX_PA19D_PARC_PCEN2);
 #endif
 
+#if (defined CONF_BOARD_USB_PORT)
+	ioport_set_pin_peripheral_mode(PIN_PA25A_USBC_DM, MUX_PA25A_USBC_DM);
+	ioport_set_pin_peripheral_mode(PIN_PA26A_USBC_DP, MUX_PA26A_USBC_DP);
+#endif /* (defined CONF_BOARD_USB_PORT) */
+
 #ifdef CONF_BOARD_OLED_UG_2832HSWEG04
 	ioport_set_pin_dir(UG_2832HSWEG04_DATA_CMD_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_mode(UG_2832HSWEG04_DATA_CMD_GPIO, IOPORT_MODE_PULLUP);

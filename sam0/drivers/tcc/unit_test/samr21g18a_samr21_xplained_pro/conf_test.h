@@ -59,8 +59,8 @@
 #define CONF_TEST_TCC1            TCC1
 
 #define CONF_EIC_CHAN             6
-#define CONF_EIC_PIN              PIN_PA22A_EIC_EXTINT6
-#define CONF_EIC_MUX              MUX_PA22A_EIC_EXTINT6
+#define CONF_EIC_PIN              PIN_PA06A_EIC_EXTINT6
+#define CONF_EIC_MUX              MUX_PA06A_EIC_EXTINT6
 
 #define CONF_TEST_PIN_OUT         PIN_PA08E_TCC0_WO0
 #define CONF_TEST_PIN_MUX         MUX_PA08E_TCC0_WO0

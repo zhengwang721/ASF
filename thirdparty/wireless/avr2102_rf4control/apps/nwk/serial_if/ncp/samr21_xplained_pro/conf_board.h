@@ -44,12 +44,11 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-
 #define CONF_BOARD_AT86RFX
 #define IC_TYPE             (0x00)
 
 #define MCU_SOC_NAME        "ATSAMR21G18A"
 
-#define AT86RFX_SPI_BAUDRATE		 5000000UL
+#define AT86RFX_SPI_BAUDRATE             5000000UL
 
 #endif /* CONF_BOARD_H_INCLUDED */

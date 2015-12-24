@@ -53,21 +53,19 @@
 int main(void)
 {
 	irq_initialize_vectors();
-	
-	#if SAMD || SAMR21
+
+	#if SAMD || SAMR21 || SAML21
 	system_init();
 	delay_init();
 	#else
 	sysclk_init();
 	board_init();
 	#endif
-	
+
 	wsndemo_init();
 	cpu_irq_enable();
-	
-	while(1)
-	{
-	wsndemo_task();	
+
+	while (1) {
+		wsndemo_task();
 	}
-	
 }

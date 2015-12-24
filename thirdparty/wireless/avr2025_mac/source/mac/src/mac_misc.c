@@ -172,13 +172,13 @@ retval_t mac_init(void)
 	port_pin_set_config(DEBUG_PIN15, &config_port_pin);
 
 	/*ioport_configure_pin(DEBUG_PIN1, IOPORT_DIR_OUTPUT |
-	*  IOPORT_INIT_LOW);
-	*  ioport_configure_pin(DEBUG_PIN2, IOPORT_DIR_OUTPUT |
-	*  IOPORT_INIT_LOW);
-	*  ioport_configure_pin(DEBUG_PIN3, IOPORT_DIR_OUTPUT |
-	*  IOPORT_INIT_LOW);
-	*  ioport_configure_pin(DEBUG_PIN4, IOPORT_DIR_OUTPUT |
-	*  IOPORT_INIT_LOW);*/
+	 *  IOPORT_INIT_LOW);
+	 *  ioport_configure_pin(DEBUG_PIN2, IOPORT_DIR_OUTPUT |
+	 *  IOPORT_INIT_LOW);
+	 *  ioport_configure_pin(DEBUG_PIN3, IOPORT_DIR_OUTPUT |
+	 *  IOPORT_INIT_LOW);
+	 *  ioport_configure_pin(DEBUG_PIN4, IOPORT_DIR_OUTPUT |
+	 *  IOPORT_INIT_LOW);*/
 	#endif
 
 	/* Initialize TAL */

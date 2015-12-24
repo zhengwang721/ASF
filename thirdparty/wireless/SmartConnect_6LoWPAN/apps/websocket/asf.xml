@@ -1,0 +1,22 @@
+<asf xmlversion="1.0">
+
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.apps.websocket" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="http-strings.c"/>
+			<build type="c-source"      value="websocket.c"/>
+			<build type="c-source"      value="websocket-http-client.c"/>
+			<build type="header-file"   value="http-strings.h"/>
+			<build type="header-file"   value="websocket.h"/>
+			<build type="header-file"   value="websocket-http-client.h"/>
+			<require idref="thirdparty.wireless.smartconnect_6lowpan.cfs"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>
+            <device-support value="sam0"/>		
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>       
+</asf>

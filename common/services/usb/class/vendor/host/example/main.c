@@ -113,7 +113,7 @@ static bool (*loop_back_tests[])(void) = {
  */
 int main(void)
 {
-#if SAMD21 || SAML21
+#if SAMD21 || SAML21 || SAMDA1
 	system_init();
 #else
 	sysclk_init();

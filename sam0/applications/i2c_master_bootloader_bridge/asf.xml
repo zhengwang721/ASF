@@ -1,0 +1,25 @@
+<asf xmlversion="1.0">
+		<module type="application" id="sam0.applications.i2c_master_bootloader_bridge" caption="I2C Master Bootloader Bridge">
+			<info type="description" value="summary">
+			I2C msater bootloader bridge.
+			</info>
+			<build type="header-file" value="conf_usb.h"/>
+			<build type="header-file" value="main.h"/>
+			<build type="header-file" value="ui.h"/>
+			<build type="c-source" value="main.c"/>
+			<build type="c-source" value="ui.c"/>
+			<build type="include-path" value="."/>
+			<build type="distribute" subtype="file" value="script/bootloader.py"/>
+			<require idref="sam0.drivers.system"/>
+			<require idref="sam0.drivers.sercom.i2c.master"/>
+			<require idref="sam0.drivers.system.interrupt"/>
+			<require idref="common.services.basic.sleepmgr"/>
+			<require idref="common.services.usb.class.device"/>
+			<require idref="sam0.drivers.sercom.usart"/>
+			<require idref="sam0.utils"/>
+			<require idref="sam0.utils.stdio"/>
+			<require idref="sam0.utils.stdio.stdio_serial"/>
+			<device-support value="samd21"/>
+			<info type="gui-flag" value="move-to-root"/>
+		</module>
+</asf>

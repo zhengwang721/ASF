@@ -999,7 +999,6 @@ bool wpan_mlme_gts_req(uint16_t DevShortAddr, gts_char_t GtsChar)
 	qmm_queue_append(&nhle_mac_q, buffer_header);
 #endif  /* ENABLE_QUEUE_CAPACITY */
 	return true;
-
 #endif /* GTS_SUPPORT */
 }
 

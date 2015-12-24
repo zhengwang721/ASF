@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+
+        <module type="meta" id="thirdparty.wireless.smartconnect_6lowpan.apps.about" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="about.c"/>
+			<build type="c-source"      value="about_dsc.c"/>
+			<build type="header-file"   value="about_dsc.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+			<device-support value="sam0"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+       
+</asf>

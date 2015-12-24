@@ -317,7 +317,7 @@ void system_board_init(void);
 /** \name Extension header #1 UART definitions
  *  @{
  */
-#define EXT1_UART_MODULE          USART
+#define EXT1_UART_MODULE          USART0
 #define EXT1_UART_RXD_MUX         IOPORT_MODE_MUX_A
 #define EXT1_UART_TXD_MUX         IOPORT_MODE_MUX_A
 /** @} */
@@ -657,7 +657,9 @@ void system_board_init(void);
 #define BOARD_AT30TSE_TWI_ID       ID_TWI4
 #define BOARD_TWI_SPEED            (400000u)
 #define BOARD_USING_AT30TSE        AT30TSE758
+#ifndef BOARD_AT30TSE_DEVICE_ADDR
 #define BOARD_AT30TSE_DEVICE_ADDR  0x07
+#endif
 //@}
 
 //! \name OLED1 led definitions */

@@ -13,7 +13,7 @@
 		<build type="header-file" value="conf_hw_timer.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_trx_access.h"/>
-
+        <build type="header-file" value="conf_perf_analyzer.h"/>
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf233"/>
@@ -27,11 +27,10 @@
 		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
 		
 		<require idref="board.sam4l_xplained_pro"/>
-		
-		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
+		<generator value="iarewarm"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>

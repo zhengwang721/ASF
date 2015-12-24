@@ -69,7 +69,7 @@
  * \defgroup group_mac_api_parser API Parser Module
  * This module is responsible for encoding and decoding the serial bytes to/from
  * NCP into MAC APIs to provide seamless working for application similar to
- *stack
+ * stack
  * running in same processor or on NCP.This
  * module is used for \ref twopapp .
  * @{

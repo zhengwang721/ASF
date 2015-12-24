@@ -1,0 +1,76 @@
+<asf xmlversion="1.0">
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
+	<!-- **************************************************************************************************** -->
+	<module type="application" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer_2" caption="Performance Analyzer v3.0">
+		<info type="description" value="summary">
+			A Serial interface based application,which communicates with Wireless Analyzer to demonstrate
+			various features and capabilities of the of Atmel Transceivers.
+		</info>
+		<build type="c-source" value="main.c"/>
+		<require idref="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer_2.component"/>
+		<device-support value="sam4l"/>
+		<device-support value="sam4s"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+	<module type="component" id="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer_2.component" caption="Performance Analyzer Application for AT86RF215">
+		<info type="description" value="summary">
+			A Serial interface based application,which communicates with Wireless Analyzer to demonstrate
+			various features and capabilities of the of Atmel Transceivers.
+		</info>
+		<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
+		<build type="c-source" value="src/performance_main.c"/>
+		<build type="c-source" value="src/init_state.c"/>
+		<build type="c-source" value="src/peer_search_initiator.c"/>
+		<build type="c-source" value="src/peer_search_receptor.c"/>
+		<build type="c-source" value="src/per_mode_common_utils.c"/>
+		<build type="c-source" value="src/per_mode_initiator.c"/>
+		<build type="c-source" value="src/per_mode_receptor.c"/>
+		<build type="c-source" value="src/range_measure.c"/>
+		<build type="c-source" value="src/perf_api_serial_handler.c"/>
+		<build type="c-source" value="src/user_interface.c"/>
+		<build type="c-source" value="src/wait_for_event.c"/>
+		<build type="header-file" value="inc/app_config.h"/>
+		<build type="header-file" value="inc/app_frame_format.h"/>
+		<build type="header-file" value="inc/app_init.h"/>
+		<build type="header-file" value="inc/app_peer_search.h"/>
+		<build type="header-file" value="inc/app_per_mode.h"/>
+		<build type="header-file" value="inc/app_range_mode.h"/>
+		<build type="header-file" value="inc/perf_api.h"/>
+		<build type="header-file" value="inc/perf_msg_const.h"/>
+		<build type="header-file" value="inc/specific_tal_config.h"/>
+		<build type="header-file" value="inc/perf_api_serial_handler.h"/>
+		<build type="header-file" value="inc/performance_main.h"/>
+		<build type="header-file" value="inc/user_interface.h"/>
+		<build type="include-path" value="inc/"/>
+		<build type="header-file" value="conf_common_sw_timer.h"/>
+		<build type="header-file" value="conf_pal.h"/>
+		<build type="include-path" value="."/>
+		
+		<build type="define"   name="HIGHEST_STACK_LAYER"                 value="TAL"/>
+		<build type="define"   name="ENABLE_LARGE_BUFFER"              value=""/>
+		<build type="define"   name="MULTI_TRX_SUPPORT"              value=""/>
+		<build type="define"   name="ENABLE_DEEP_SLEEP"              value=""/>
+		<build type="define"   name="ANTENNA_DIVERSITY"                   value="0"/>
+		<build type="define"   name="_DEBUG_"                             value="0"/>
+        <build type="define"   name="FFD"                                 value=""/>
+        <build type="define"   name="ENABLE_TFA"                          value=""/>
+		
+		<build type="doxygen-entry-point" value="group_perf_analyzer_2"/>
+		<device-support value="sam4l"/>
+		<device-support value="sam4s"/>
+		<build type="distribute" subtype="user-file" value="ProtocolSpecificationofPerformanceAnalyzerforRF215.pdf"/>
+		<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
+		<require idref="thirdparty.wireless.avr2025_mac.includes"/>
+		<require idref="thirdparty.wireless.addons.sio2host"/>
+		<require idref="thirdparty.wireless.addons.sio2ncp"/>
+		<require idref="thirdparty.wireless.avr2025_mac.source.tfa.ext.at86rf215"/>
+		
+		
+		<!-- .................................................................................................... -->
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+		</info>
+		<!-- **************************************************************************************************** -->
+	</module>
+</asf>
