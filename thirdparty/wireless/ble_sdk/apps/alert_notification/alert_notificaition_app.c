@@ -106,7 +106,7 @@ static void app_connected_state(bool connected)
 
 int main(void)
 {
-	#if SAMG55
+	#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

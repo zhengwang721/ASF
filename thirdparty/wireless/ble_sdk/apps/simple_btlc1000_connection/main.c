@@ -264,7 +264,7 @@ int main (void)
 	at_ble_events_t event;
 	uint8_t params[512];
 
-#if SAMG55
+#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

@@ -479,7 +479,7 @@ int main(void)
 {	
 	uint8_t status;
 	
-	#if SAMG55
+	#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

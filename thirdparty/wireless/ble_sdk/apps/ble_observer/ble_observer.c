@@ -511,7 +511,7 @@ static const ble_event_callback_t observer_app_gap_cb[] = {
 
 int main(void )
 {
-	#if SAMG55
+	#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

@@ -168,7 +168,7 @@ void button_cb(void)
 
 int main(void)
 {
-	#if SAMG55
+	#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

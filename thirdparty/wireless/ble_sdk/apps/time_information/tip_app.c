@@ -172,7 +172,7 @@ static const ble_event_callback_t tip_app_gatt_client_handle[] = {
  */
 int main (void)
 {
-#if SAMG55
+#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

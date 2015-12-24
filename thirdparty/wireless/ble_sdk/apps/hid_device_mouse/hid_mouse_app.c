@@ -309,7 +309,7 @@ static bool hid_mouse_move(int8_t pos, uint8_t index_report)
 
 int main(void )
 {		
-#if SAMG55
+#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

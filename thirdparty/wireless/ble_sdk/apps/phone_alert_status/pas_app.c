@@ -230,7 +230,7 @@ int main(void)
 	#ifdef ENABLE_PTS
 	uint8_t function_selector;
 	#endif
-	#if SAMG55
+	#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

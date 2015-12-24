@@ -168,7 +168,7 @@ static const ble_event_callback_t device_info_app_gap_cb[] = {
 int main(void)
 {
 	at_ble_status_t status;
-	#if SAMG55
+	#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();

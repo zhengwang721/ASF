@@ -185,7 +185,7 @@ static void htp_temperature_send(htp_app_t *htp_temp)
 	
 	#endif
 
-	#if SAMG55
+	#if SAMG55 || SAM4S
 	double temperature;
 	/* Read Temperature Value from IO1 Xplained Pro */
 	at30tse_read_temperature(&temperature);
@@ -405,7 +405,7 @@ int main (void)
 	at_ble_handle_t handle = 0;
 	bool temp_send_notification = false;
 
-#if SAMG55
+#if SAMG55 || SAM4S
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
