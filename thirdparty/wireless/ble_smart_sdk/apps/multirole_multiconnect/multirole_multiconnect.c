@@ -63,7 +63,7 @@
 #include "pxp_monitor.h"
 #include "immediate_alert.h"
 #include "timer_hw.h"
-//#include "conf_extint.h"
+#include "button.h"
 
 #if defined IMMEDIATE_ALERT_SERVICE
 #include "immediate_alert.h"
@@ -141,6 +141,7 @@ static ble_peripheral_state_t peripheral_advertising_cb(void)
 void button_cb(void)
 {
 	button_pressed = true;
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
 
 /**@brief Check for Link Loss and Path Loss alert
@@ -542,6 +543,9 @@ int main(void)
 	
 	/* Initialize serial console */
 	serial_console_init();
+
+	/* Initialize button */
+	button_init(button_cb);
 
 	/* Initialize the hardware timer */
 	hw_timer_init();
