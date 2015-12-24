@@ -47,13 +47,18 @@
 #include "conf_timer.h"
 
 /* === TYPES =============================================================== */
+#ifdef SAMD21
+#define TMRID TC3
+#else
+#define TMRID TC0
+#endif
 static struct hw_timer_struct
 {
 	struct tc_module timer_instance;
 	void            *timer_id;
 	uint32_t         timer_frequency;
 	uint32_t         timer_usage;
-}hw_timers[] = {{{0}, TC0, 0, 0}};
+}hw_timers[] = {{{0}, TMRID, 0, 0}};
 
 uint32_t timeout_count;
 uint32_t timer_count_per_ms;
