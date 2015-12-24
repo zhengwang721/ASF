@@ -57,6 +57,7 @@
 #include "platform.h"
 #include "timer.h"
 #include "led.h"
+#include "button.h"
 
 #include "pxp_monitor_app.h"
 
@@ -98,6 +99,7 @@ volatile bool button_pressed = false;
 void button_cb(void)
 {
 	button_pressed = true;
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 }
 
 /**@brief Check for Link Loss and Path Loss alert
@@ -198,6 +200,9 @@ int main(void)
 
 	/* Initialize serial console */
 	serial_console_init();
+	
+	/* Initialize button */
+	button_init(button_cb);
 
 	/* Initialize the hardware timer */
 	hw_timer_init();
