@@ -186,5 +186,13 @@ void platform_sleep(uint32_t ms)
 	delay_ms(ms);
 }
 
+bool platform_wakeup_pin_status(void)
+{
+	return (ble_wakeup_pin_level());
+}
 
+void plaform_ble_rx_callback(void)
+{
+	ble_wakeup_pin_set_high();
+}
 

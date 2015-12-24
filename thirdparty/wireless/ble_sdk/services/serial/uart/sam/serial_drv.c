@@ -273,6 +273,13 @@ static inline uint32_t usart_clear_tx_empty(Usart *p_usart)
 
 static inline void ble_pdc_uart_handler(void)
 {
+	if (usart_is_tx_buf_empty(BLE_UART) && (ble_usart_tx_cmpl == false))
+	{
+		usart_disable_interrupt(BLE_UART, US_IER_TXBUFE);
+		usart_clear_tx_empty(BLE_UART);
+		ble_usart_tx_cmpl  = true;
+	}
+		
 	if(!usart_is_rx_buffer_overrun(BLE_UART))
 	{
 		uint32_t timeout = usart_is_rx_timeout(BLE_UART);
@@ -304,14 +311,7 @@ static inline void ble_pdc_uart_handler(void)
 			#if SERIAL_DRV_RX_CB_ENABLE
 				SERIAL_DRV_RX_CB();
 			#endif
-		}
-		
-		if (usart_is_tx_buf_empty(BLE_UART))
-		{
-			usart_disable_interrupt(BLE_UART, US_IER_TXBUFE);
-			usart_clear_tx_empty(BLE_UART);
-			ble_usart_tx_cmpl  = true;
-		}
+		}		
 	}
 	else
 	{
@@ -357,6 +357,7 @@ void BLE_UART_Handler(void)
 
 static inline void ble_pdc_serial_drv_send(uint8_t *data, uint16_t len)
 {	
+	ble_usart_tx_cmpl = false;
 	ble_pdc_send_data(data, len);
 	
 	/* Wait for Tx Data write complete */
