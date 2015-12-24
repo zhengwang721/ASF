@@ -255,7 +255,8 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * This module is based on USB device stack full interrupt driven, and supporting
  * \ref sleepmgr_group "sleepmgr".
- * For AVR&reg; and Atmel&reg; | SMART SAM3/4 devices the \ref clk_group "clock services" is supported.
+ * For AVR&reg; and Atmel&reg; | SMART ARM&reg;-based SAM3/4 devices the
+ * \ref clk_group "clock services" is supported.
  * For SAM D21 devices the \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *
  * The following procedure must be executed to set up the project correctly:
@@ -276,7 +277,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * - Enable interrupts
  * - Initialize the clock service
  *
- * The usage of \ref sleepmgr_group "sleepmgr" service is optional, but recommended to reduce power
+ * The usage of \ref sleepmgr_group "sleep manager" service is optional, but recommended to reduce power
  * consumption:
  * - Initialize the sleep manager service
  * - Activate sleep mode when the application is in IDLE state
@@ -348,6 +349,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * \code
  udc_start();
  \endcode
+ *
  *   \note In case of USB dual roles (Device and Host) managed through USB OTG connector
  * (USB ID pin), the call of udc_start() must be removed and replaced by uhc_start().
  * Refer to section "Dual roles" for further information in the application note:
