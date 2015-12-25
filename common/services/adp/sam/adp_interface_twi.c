@@ -88,7 +88,7 @@ static enum status_code adp_interface_send(uint8_t* tx_buf, uint16_t length)
 */
 enum status_code adp_interface_read_response(uint8_t *data,	uint16_t length)
 {
-	enum status_code status;
+	enum status_code status = ERR_IO_ERROR;
 	uint8_t data_len = 0;
 	
 	twi_package_t packet_read = {

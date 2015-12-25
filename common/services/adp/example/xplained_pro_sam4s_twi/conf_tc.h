@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Sleep manager configuration
+ * \brief SAM 4S TC configuration
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,9 +43,12 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_SLEEPMGR_H
-#define CONF_SLEEPMGR_H
 
-#define CONFIG_SLEEPMGR_ENABLE
+#ifndef CONF_TC_H_INCLUDED
+#define CONF_TC_H_INCLUDED
 
-#endif /* CONF_SLEEPMGR_H */
+//[definition_tc]
+#define CONF_TC_MODULE TC0
+//[definition_tc]
+
+#endif /* CONF_EXAMPLE_H_INCLUDED */
