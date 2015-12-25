@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TC configuration
+ * \brief SAM L21 TC configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
