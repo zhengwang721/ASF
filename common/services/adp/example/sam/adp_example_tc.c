@@ -52,10 +52,8 @@ volatile bool time_out = true;
 
 void TC0_Handler(void)
 {
-	volatile uint32_t ul_dummy;
-
 	/* Clear status bit to acknowledge interrupt */
-	ul_dummy = tc_get_status(TC0, 0);
+	tc_get_status(TC0, 0);
 
 	time_out = true;
 }
