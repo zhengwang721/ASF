@@ -47,13 +47,14 @@
 #include <compiler.h>
 #include <asf.h>
 #include "adp_example_tc.h"
+#include "conf_tc.h"
 
 volatile bool time_out = true;
 
 void TC0_Handler(void)
 {
 	/* Clear status bit to acknowledge interrupt */
-	tc_get_status(TC0, 0);
+	tc_get_status(CONF_TC_MODULE, 0);
 
 	time_out = true;
 }
@@ -76,13 +77,13 @@ void adp_example_tc_init(void)
 
 	/** Configure TC for a 10Hz frequency and trigger on RC compare. */
 	tc_find_mck_divisor(10, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
-	tc_init(TC0, 0, ul_tcclks | TC_CMR_CPCTRG);
-	tc_write_rc(TC0, 0, (ul_sysclk / ul_div) / 10);
+	tc_init(CONF_TC_MODULE, 0, ul_tcclks | TC_CMR_CPCTRG);
+	tc_write_rc(CONF_TC_MODULE, 0, (ul_sysclk / ul_div) / 10);
 
 	/* Configure and enable interrupt on RC compare */
 	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
-	tc_enable_interrupt(TC0, 0, TC_IER_CPCS);
+	tc_enable_interrupt(CONF_TC_MODULE, 0, TC_IER_CPCS);
 
-	tc_start(TC0, 0);
+	tc_start(CONF_TC_MODULE, 0);
 }
 

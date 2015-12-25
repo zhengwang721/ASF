@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TC configuration
+ * \brief SAM 4S TC configuration
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
@@ -48,7 +48,7 @@
 #define CONF_TC_H_INCLUDED
 
 //[definition_tc]
-#define CONF_TC_MODULE TC3
+#define CONF_TC_MODULE TC0
 //[definition_tc]
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */
