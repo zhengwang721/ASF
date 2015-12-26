@@ -955,7 +955,7 @@ static inline void system_cpu_clock_set_divider(
  */
 static inline uint32_t system_cpu_clock_get_hz(void)
 {
-	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> MCLK->CPUDIV.reg);
+	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) / MCLK->CPUDIV.reg);
 
 }
 
