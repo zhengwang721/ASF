@@ -142,7 +142,7 @@ void init_clock(void)
 	regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_CORTUS_SPI0_CORE_CLK_EN);
 	regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_CORTUS_SPI1_CORE_CLK_EN);
 	//disable I2C0 Core clocks
-	regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_CORTUS_I2C0_CORE_CLK_EN);
+	//regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_CORTUS_I2C0_CORE_CLK_EN);		//do not disable I2C because I2C driver in ASF will not enable.
 	//disable ARM dual timer core clocks.
 	regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_DUALTIMER_CLK_EN);
 	//disable counter0 clock 
@@ -156,7 +156,7 @@ void init_clock(void)
 	regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_UART_1_CORE_CLK_EN);
 	regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_UART_1_IF_CLK_EN);
 	//disable I2C core 1 clocks
-	regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_CORTUS_I2C1_CORE_CLK_EN);
+	//regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_CORTUS_I2C1_CORE_CLK_EN);		//do not disable I2C because I2C driver in ASF will not enable.
 	REG_PL_WR(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0,regval);
 	default_samb11_clock_init[0] = regval;
 	
