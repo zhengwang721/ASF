@@ -165,6 +165,7 @@ void board_init(void)
 #endif  
 
 #ifdef CONF_BOARD_NAND
+
 	gpio_configure_pin(PIN_EBI_NANDOE, PIN_EBI_NANDOE_FLAGS);
 	gpio_configure_pin(PIN_EBI_NANDWE, PIN_EBI_NANDWE_FLAGS);
 	gpio_configure_pin(PIN_EBI_NANDCLE, PIN_EBI_NANDCLE_FLAGS);
@@ -179,6 +180,22 @@ void board_init(void)
 	gpio_configure_pin(PIN_EBI_NANDIO_7, PIN_EBI_NANDIO_7_FLAGS);
 	gpio_configure_pin(PIN_NF_CE_IDX, PIN_NF_CE_FLAGS);
 	gpio_configure_pin(PIN_NF_RB_IDX, PIN_NF_RB_FLAGS);
+	
+#endif
+
+#ifdef CONF_BOARD_SD_MMC_HSMCI
+
+/* Configure HSMCI pins */
+gpio_configure_pin(PIN_HSMCI_MCCDA_GPIO, PIN_HSMCI_MCCDA_FLAGS);
+gpio_configure_pin(PIN_HSMCI_MCCK_GPIO, PIN_HSMCI_MCCK_FLAGS);
+gpio_configure_pin(PIN_HSMCI_MCDA0_GPIO, PIN_HSMCI_MCDA0_FLAGS);
+gpio_configure_pin(PIN_HSMCI_MCDA1_GPIO, PIN_HSMCI_MCDA1_FLAGS);
+gpio_configure_pin(PIN_HSMCI_MCDA2_GPIO, PIN_HSMCI_MCDA2_FLAGS);
+gpio_configure_pin(PIN_HSMCI_MCDA3_GPIO, PIN_HSMCI_MCDA3_FLAGS);
+
+/* Configure SD/MMC card detect pin */
+gpio_configure_pin(SD_MMC_0_CD_GPIO, SD_MMC_0_CD_FLAGS);
+
 #endif
 
 

@@ -691,6 +691,33 @@ void at86rfx_isr(void);
 		| SMC_CYCLE_NRD_CYCLE(7))
 //@}
 
+//! \name HSMCI pins definition
+//@{
+/*! Number of slot connected on HSMCI interface */
+#define SD_MMC_HSMCI_MEM_CNT      1
+#define SD_MMC_HSMCI_SLOT_0_SIZE  4
+#define PINS_HSMCI   {0x3fUL << 26, PIOA, ID_PIOA, PIO_PERIPH_C, PIO_PULLUP}
+/** HSMCI MCCDA pin definition. */
+#define PIN_HSMCI_MCCDA_GPIO            (PIO_PA28_IDX)
+#define PIN_HSMCI_MCCDA_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCCK pin definition. */
+#define PIN_HSMCI_MCCK_GPIO             (PIO_PA29_IDX)
+#define PIN_HSMCI_MCCK_FLAGS            (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCDA0 pin definition. */
+#define PIN_HSMCI_MCDA0_GPIO            (PIO_PA30_IDX)
+#define PIN_HSMCI_MCDA0_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCDA1 pin definition. */
+#define PIN_HSMCI_MCDA1_GPIO            (PIO_PA31_IDX)
+#define PIN_HSMCI_MCDA1_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCDA2 pin definition. */
+#define PIN_HSMCI_MCDA2_GPIO            (PIO_PA26_IDX)
+#define PIN_HSMCI_MCDA2_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** HSMCI MCDA3 pin definition. */
+#define PIN_HSMCI_MCDA3_GPIO            (PIO_PA27_IDX)
+#define PIN_HSMCI_MCDA3_FLAGS           (PIO_PERIPH_C | PIO_DEFAULT)
+/** SD/MMC card detect pin definition. */
+//@}
+
 /** @} */
 
 /** @} */
