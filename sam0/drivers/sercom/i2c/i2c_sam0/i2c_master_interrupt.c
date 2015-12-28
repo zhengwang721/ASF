@@ -322,7 +322,7 @@ static enum status_code _i2c_master_read_packet(
 	} else {
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
 	}
-	
+
 	if (packet->ten_bit_address) {
 		/*
 		 * Write ADDR.ADDR[10:1] with the 10-bit address. ADDR.TENBITEN must
