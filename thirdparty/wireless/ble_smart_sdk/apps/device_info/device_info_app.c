@@ -230,13 +230,7 @@ int main(void)
 									BLE_GAP_EVENT_TYPE,
 									device_info_app_gap_cb);
 
-	/* Register callback for paired event */
-//	register_ble_paired_event_cb(ble_paired_app_event);
-
-	/* Register callback for disconnected event */
-//	register_ble_disconnected_event_cb(ble_disconnected_app_event);
-
-//	register_ble_user_event_cb(ble_user_event);
+	register_ble_user_event_cb(ble_user_event);
 
 	/* Capturing the events  */
 	while (app_exec) {
@@ -247,7 +241,7 @@ int main(void)
 }
 
 /**
- * callback handler called when AT_BLE_PLATFORM_EVENT is occured.
+ * callback handler called when AT_BLE_PLATFORM_EVENT is occurred.
  */
 static void ble_user_event(void)
 {
