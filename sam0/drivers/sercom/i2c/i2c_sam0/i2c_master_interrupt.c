@@ -316,9 +316,13 @@ static enum status_code _i2c_master_read_packet(
 		_i2c_master_send_hs_master_code(module, packet->hs_master_code);
 	}
 
-	/* Set action to ACK. */
-	i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
-
+	/* Set action to ACK or NACK. */
+	if (packet->data_length > 1) {
+		i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;	
+	} else {
+		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
+	}
+	
 	if (packet->ten_bit_address) {
 		/*
 		 * Write ADDR.ADDR[10:1] with the 10-bit address. ADDR.TENBITEN must
