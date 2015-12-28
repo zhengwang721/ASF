@@ -96,8 +96,6 @@
 #define BATTERY_MAX_LEVEL		(100)
 #define BATTERY_MIN_LEVEL		(0)
 
-at_ble_addr_t peer_addr
-= {AT_BLE_ADDRESS_PUBLIC, {0x03, 0x18, 0xf0, 0x05, 0xf0, 0xf8}};
 
 bat_gatt_service_handler_t bas_service_handler;
 
@@ -282,7 +280,7 @@ static at_ble_status_t bas_paired_app_event(void *param)
 		battery_conn_handle = ble_pair_done->handle;
 		timer_cb_done = false;
 		bat_char_notification_confirmed = true;
-		hw_timer_start(BATTERY_UPDATE_INTERVAL);
+		/* hw_timer_start(BATTERY_UPDATE_INTERVAL); */
 		battery_stop_simulation = false;
 	}	
 	return AT_BLE_SUCCESS;
@@ -310,7 +308,7 @@ static at_ble_status_t bas_encryption_status_changed_app_event(void *param)
 		battery_conn_handle = ble_enc_status->handle;
 		timer_cb_done = false;
 		bat_char_notification_confirmed = true;
-		hw_timer_start(BATTERY_UPDATE_INTERVAL);
+		/* hw_timer_start(BATTERY_UPDATE_INTERVAL); */
 		battery_stop_simulation = false;
 	}	
 	return AT_BLE_SUCCESS;
@@ -328,6 +326,7 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 		{
 			battery_start_advertisement();
 			peripheral_state = PERIPHERAL_ADVERTISING_STATE;
+			battery_level = 0;
 		}
 		
 	}
@@ -416,7 +415,7 @@ static at_ble_status_t ble_char_changed_app_event(void *param)
 static at_ble_status_t battery_simulation_task(void *param)
 {
 	if(battery_stop_simulation)
-	{
+	{		
 		return AT_BLE_FAILURE;
 	}
 	if (timer_cb_done)
@@ -446,27 +445,11 @@ static at_ble_status_t battery_simulation_task(void *param)
 			}
 		}
 	}
-	
-	hw_timer_start(BATTERY_UPDATE_INTERVAL);
-	
-	/*
-	
-		if (isCharChanged == true) {
-			//bat_char_changed_event(&bas_service_handler, &bas_char_handle, &flag);
 
-			if (flag) {
-				hw_timer_start(BATTERY_UPDATE_INTERVAL);
-			} else {
-				hw_timer_stop();
-			}
-
-			isCharChanged = false;
-		}
-		*/
-	
-        ALL_UNUSED(param);
+	ALL_UNUSED(param);
 	return AT_BLE_SUCCESS;
 }
+
 void multirole_multiconnect_app_var_init()
 {
 	ble_event_callback_t battery_app_gap_tmp[] = {
@@ -552,20 +535,13 @@ int main(void)
 
 	/* Register the callback */
 	hw_timer_register_callback(timer_callback_handler);
-	
-	/* Register the callback */
-	register_hw_timer_start_func_cb(hw_timer_start);
-	register_hw_timer_stop_func_cb(hw_timer_stop);
 
 	/* initialize the BLE chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
 	/* Initialize the battery service */
-	bat_init_var();
-	bat_init_service(&bas_service_handler, &battery_level);
-	
-	register_peripheral_state_cb(peripheral_advertising_cb);
-	
+	bat_init_service(&bas_service_handler, &battery_level);	
+
 	/* Define the primary service in the GATT server database */
 	if((status = bat_primary_service_define(&bas_service_handler))!= AT_BLE_SUCCESS)
 	{
@@ -590,6 +566,10 @@ int main(void)
 
 	/* Initialize the pxp service */
 	pxp_app_init();
+	
+	register_hw_timer_start_func_cb(hw_timer_start);
+	register_hw_timer_stop_func_cb(hw_timer_stop);
+	register_peripheral_state_cb(peripheral_advertising_cb);
 
 	while (1) {
 		/* BLE Event Task */
@@ -636,7 +616,7 @@ int main(void)
 				}
 			} else if (pxp_connect_request_flag == PXP_DEV_CONNECTED) {
 				rssi_update(ble_dev_info[0].conn_info.handle);
-				hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
+				//hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
 			}
 
 			app_timer_done = false;
