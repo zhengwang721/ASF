@@ -21,7 +21,8 @@
 				<require idref="sam0.drivers.sercom.spi"/>
 				<build type="c-source" value="sam0/adp_interface_spi.c"/>
 				<build type="define" name="ADP_MODE_SPI" value="" />
-				<device-support value="sam0"/>
+				<device-support value="samd21"/>
+				<device-support value="saml21"/>
 			</module>
 		</select-by-device>
 
@@ -32,7 +33,8 @@
 				<build type="c-source" value="sam0/adp_interface_twi.c"/>
 				<build type="define" name="ADC_CALLBACK_MODE" value="false"/>
 				<build type="define" name="ADP_MODE_TWI" value=""/>
-				<device-support value="sam0"/>
+				<device-support value="samd21"/>
+				<device-support value="saml21"/>
 			</module>
 		</select-by-device>
 
