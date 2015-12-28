@@ -58,6 +58,8 @@
 #include "at_ble_errno.h"
 #include "at_ble_trace.h"
 
+void app_init(void);
+
 volatile unsigned char app_stack_patch[1024];
 
 static ble_event_callback_t app_gap_handle[GAP_HANDLE_FUNC_MAX];
@@ -81,13 +83,13 @@ static at_ble_status_t app_disconnected_event_handler(void *params)
 	anp_client_adv();
 	return AT_BLE_SUCCESS;
 }
-
-void button_cb(void)
+/*
+static void button_cb(void)
 {
-	/** For user  */
+	//For user  
 }
-
-void app_init()
+*/
+void app_init(void)
 {
 	ble_event_callback_t app_gap_handle_tmp[] = {
 		NULL,
@@ -114,7 +116,7 @@ void app_init()
 	memcpy(app_gap_handle, app_gap_handle_tmp, sizeof(ble_event_callback_t) * GAP_HANDLE_FUNC_MAX);
 }
 
-void main(void)
+int main(void)
 {
 	at_ble_addr_t addr = {AT_BLE_ADDRESS_PUBLIC, {0x54, 0x05, 0x11, 0x6a, 0x7f, 0x7f}};
 
@@ -145,4 +147,6 @@ void main(void)
 	while (1) {
 		ble_event_task();
 	}
+	
+	return 0;
 }

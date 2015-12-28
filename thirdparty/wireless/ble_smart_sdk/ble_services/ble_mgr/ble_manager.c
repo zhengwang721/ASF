@@ -128,7 +128,7 @@ bool app_device_bond;
 at_ble_auth_t auth_info;
 
 at_ble_events_t event;
-uint8_t params[BLE_EVENT_PARAM_MAX_SIZE];
+uint8_t evt_params[BLE_EVENT_PARAM_MAX_SIZE];
 
 /** @brief initializes the platform */
 static void ble_init(at_ble_init_config_t * args);
@@ -155,14 +155,14 @@ static void init_global_var(void)
 	auth_info = AT_BLE_AUTH_NO_MITM_NO_BOND;
 
 	event = AT_BLE_UNDEFINED_EVENT;
-	memset(params, 0, BLE_EVENT_PARAM_MAX_SIZE);
+	memset(evt_params, 0, BLE_EVENT_PARAM_MAX_SIZE);
 }
 
 /** @brief function to get event from stack */
 at_ble_status_t ble_event_task(void)
 {
-	if (at_ble_event_get(&event, params, BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) {
-		ble_event_manager(event, params);
+	if (at_ble_event_get(&event, evt_params, BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) {
+		ble_event_manager(event, evt_params);
 		return AT_BLE_SUCCESS;
 	}
 

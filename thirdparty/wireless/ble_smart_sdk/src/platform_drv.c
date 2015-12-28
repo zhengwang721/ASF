@@ -60,12 +60,14 @@
 
 #include "reg_common.h"
 
+void init_clock(void);
+void spi_flash_turn_off(void);
 
 uint8_t (*platform_register_isr)(uint8_t isr_index,void *fp);
 uint8_t (*platform_unregister_isr)(uint8_t isr_index);
 uint32_t  *apps_resume_cb;
 uint32_t 	*actualfreq;
-void (*volatile updateuartbr_fp)();
+void (*volatile updateuartbr_fp)(void);
 void (*rwip_prevent_sleep_set)(uint16_t prv_slp_bit);
 void (*rwip_prevent_sleep_clear)(uint16_t prv_slp_bit);
 //#ifdef CHIPVERSION_B0
@@ -229,15 +231,15 @@ plf_drv_status platform_driver_init()
 		NMI_MsgQueueRecv = (int(*)(void*, void ** )) 0x00017c7b;
 		InternalAppMsgQHandle = (void*) 0x10002bd8;
 		ke_free = (void(*)(void*)) 0x00015bc9;
-#elif CHIPVERSION_A4
-		ke_msg_send 	= (void (*)(void const *))0x00015f4d;
-		ke_msg_alloc 	= (void* (*)(ke_msg_id_t const id, ke_task_id_t const dest_id,
-										ke_task_id_t const src_id, uint16_t const param_len) ) 0x00015f1d;
-		os_sem_up 		= (int (*)(void*)) 0x00017dd9;
-		gstrFwSem 		= (void*) 0x100004e4;
-		NMI_MsgQueueRecv = (int(*)(void*, void ** )) 0x00017f67;
-		InternalAppMsgQHandle = (void*) 0x10001158;
-		ke_free = (void(*)(void*)) 0x00015e3d;
+//#elif CHIPVERSION_A4
+		//ke_msg_send     = (void (*)(void const *)) 0x00015f4d;
+		//ke_msg_alloc    = (void * (*)(ke_msg_id_t const id, ke_task_id_t const dest_id,
+				//ke_task_id_t const src_id, uint16_t const param_len)) 0x00015f1d;
+		//os_sem_up               = (int (*)(void *)) 0x00017dd9;
+		//gstrFwSem               = (void *)0x100004e4;
+		//NMI_MsgQueueRecv = (int (*)(void *, void ** )) 0x00017f67;
+		//InternalAppMsgQHandle = (void *)0x10001158;
+		//ke_free = (void (*)(void *)) 0x00015e3d;
 #elif CHIPVERSION_B0
 		ke_msg_send 	= (void (*)(void const *))(*((unsigned int *)0x100400e4));
 		ke_msg_alloc 	= (void* (*)(ke_msg_id_t const id, ke_task_id_t const dest_id,
@@ -436,11 +438,11 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 				if(ble_stack_message_handler) {
 					ke_msg_hdr = (struct ke_msghdr *)((void *)(rx_buffer+BLE_EVENT_BUFFER_START_INDEX));
 					ke_msg_hdr->id = rcv_msg->id;
-#if (CHIPVERSION_A3 || CHIPVERSION_A4)
-					ke_msg_hdr->src_id = rcv_msg->src_id;
-#else
+//#if (CHIPVERSION_A3 || CHIPVERSION_A4)
+					//ke_msg_hdr->src_id = rcv_msg->src_id;
+//#else
 					ke_msg_hdr->src_id = gapm_get_id_from_task(rcv_msg->src_id);
-#endif	//(CHIPVERSION_A3 || CHIPVERSION_A4)
+//#endif  /* (CHIPVERSION_A3 || CHIPVERSION_A4) */
 					ke_msg_hdr->dest_id = rcv_msg->dest_id;
 					ke_msg_hdr->param_len = rcv_msg->param_len;
 					ke_msg_hdr++;

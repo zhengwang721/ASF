@@ -28,6 +28,7 @@ static struct platform_event platform_event_pool[PLATFORM_EVENT_POOL_DEPTH];
 
 static struct platform_event *platform_event_free_list = NULL;
 static struct platform_event* platform_event_pending_list = NULL;
+void platform_event_free(struct platform_event *event);
 //struct str_watched_event watched_event;
 
 void platform_event_free(struct platform_event* event)

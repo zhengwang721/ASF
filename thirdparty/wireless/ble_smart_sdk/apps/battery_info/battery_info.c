@@ -112,6 +112,8 @@ at_ble_handle_t bat_connection_handle;
 static ble_event_callback_t battery_app_gap_cb[GAP_HANDLE_FUNC_MAX];
 static ble_event_callback_t battery_app_gatt_server_cb[GATT_SERVER_HANDLER_FUNC_MAX];
 
+void app_var_init(void);
+
 /**
  * \Timer callback handler called on timer expiry
  */
@@ -198,7 +200,7 @@ static at_ble_status_t ble_char_changed_app_event(void *param)
 	return AT_BLE_SUCCESS;
 }
 
-void app_var_init()
+void app_var_init(void)
 {
 	ble_event_callback_t battery_app_gap_cb_tmp[] = {
 		NULL,
