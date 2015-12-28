@@ -64,6 +64,7 @@
 
 static at_ble_status_t app_connected_event_handler(void *params);
 static at_ble_status_t app_disconnected_event_handler(void *params);
+static void button_cb(void);
 
 static const ble_event_callback_t app_gap_handle[] = {
 	NULL,
@@ -208,7 +209,7 @@ static void app_ringer_setting_notify(uint8_t *data, uint8_t len)
 /**
  * @brief Button Press Callback 
  */
-void button_cb(void)
+static void button_cb()
 {
 	DBG_LOG("button_cb %d %d ", app_state, flag);
 	if (app_state && !flag) {
@@ -230,7 +231,6 @@ int main(void)
 {
 	/* To keep the app executing */
 	bool app_exec = true;	
-	at_ble_status_t status;
 	app_state = false;
 		
 	platform_driver_init();
