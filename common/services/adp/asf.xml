@@ -28,7 +28,6 @@
 				<build type="c-source" value="sam0/adp_interface_spi.c"/>
 				<build type="define" name="ADP_MODE_SPI" value="" />
 				<device-support value="samd21"/>
-				<device-support value="saml21"/>
 			</module>
 			<module type="service" id="common.services.adp#spi#1" caption="ADP - Atmel Data Protocol - SAM SPI implementation">
 				<require idref="common.services.adp.sam"/>
@@ -47,7 +46,6 @@
 				<build type="define" name="ADC_CALLBACK_MODE" value="false"/>
 				<build type="define" name="ADP_MODE_TWI" value=""/>
 				<device-support value="samd21"/>
-				<device-support value="saml21"/>
 			</module>
 			<module type="service" id="common.services.adp#twi#1" caption="ADP - Atmel Data Protocol - SAM TWI implementation">
 				<require idref="common.services.adp.sam"/>
@@ -65,8 +63,8 @@
 		<build type="c-source" value="adp_terminal.c"/>
 		<build type="include-path" value="." />
 		<build type="header-file" subtype="api" value="adp_terminal.h"/>
-		<device-support value="sam0"/>
-		<device-support value="sam"/>
+		<device-support value="samd21"/>
+		<device-support value="sam4s"/>
 	</module>
 
 </asf>
