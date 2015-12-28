@@ -146,6 +146,8 @@ static at_ble_characteristic_t chars[] = {
 	}
 };
 
+at_ble_init_config_t pf_cfg;
+
 /* Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_address(at_ble_addr_t *addr)
 {
@@ -202,9 +204,6 @@ static void ble_data_sent_confim(void)
 /* Initialize the BLE */
 static void ble_init(void)
 {
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-	
 	/* Initialize the platform */
 	DBG_LOG("Initializing BTLC1000");
 	
@@ -213,8 +212,28 @@ static void ble_init(void)
 	pf_cfg.memPool.memStartAdd = &(db_mem[0]);
 	
 	/*Bus configuration*/
-	busConfig.bus_type = AT_BLE_UART;
-	pf_cfg.plf_config = &busConfig;
+	pf_cfg.bus_info.bus_type = AT_BLE_UART;
+		
+#if UART_FLOWCONTROL_6WIRE_MODE == true
+	/* Enable Hardware Flow-control on BTLC1000 */
+	pf_cfg.bus_info.bus_flow_control_enabled = true; // enable flow control
+#else
+	/* Disable Hardware Flow-control on BTLC1000 */
+	pf_cfg.bus_info.bus_flow_control_enabled = false; // Disable flow control
+#endif	
+	
+	/* Register Platform callback API's */
+	pf_cfg.platform_api_list.at_ble_create_timer = platform_create_timer;
+	pf_cfg.platform_api_list.at_ble_delete_timer = platform_delete_timer;
+	pf_cfg.platform_api_list.at_ble_start_timer = platform_start_timer;
+	pf_cfg.platform_api_list.at_ble_stop_timer = platform_stop_timer;
+	pf_cfg.platform_api_list.at_ble_sleep = platform_sleep;
+	pf_cfg.platform_api_list.at_ble_gpio_set = platform_gpio_set;
+	pf_cfg.platform_api_list.at_ble_send_sync = platform_send_sync;
+	pf_cfg.platform_api_list.at_ble_recv_async = platform_recv_async;
+	pf_cfg.platform_api_list.at_ble_reconfigure_usart = platform_configure_hw_fc_uart;
+	
+	platform_init(pf_cfg.bus_info.bus_type, pf_cfg.bus_info.bus_flow_control_enabled);
 	
 	/* Init BLE device */
 	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
