@@ -285,6 +285,7 @@ void sysclk_init(void)
 		supc_set_regulator_trim_user(SUPC, trim_value);
 #else
 		trim_value = unique_id[12] & 0x00FF0000;
+		trim_value = trim_value >> 4;
 		supc_set_regulator_trim_user(SUPC, trim_value);
 #endif
 	}
