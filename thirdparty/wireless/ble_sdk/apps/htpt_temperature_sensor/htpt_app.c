@@ -70,10 +70,6 @@
 #define BLE_DEVICE_NAME				"ATMEL-HTP"
 #endif
 
-#define BLE_ATT_DB_MEMORY_SIZE				(1250) 
-
-uint32_t att_db_mem[BLE_ATT_DB_MEMORY_SIZE/4];
-
 /** @brief device information service handler **/
 dis_gatt_service_handler_t dis_service_handler;
 
@@ -136,27 +132,8 @@ static void ble_data_sent_confim(void)
 /* Initialize the BLE */
 static void ble_init(void)
 {	
-	at_ble_init_config_t pf_cfg;
-	platform_config busConfig;
-	
-	/*Memory allocation required by GATT Server DB*/
-	pf_cfg.memPool.memSize = BLE_ATT_DB_MEMORY_SIZE;
-	pf_cfg.memPool.memStartAdd = (uint8_t *)att_db_mem;
-	
-	/*Bus configuration*/
-	busConfig.bus_type = AT_BLE_UART;
-	pf_cfg.plf_config = &busConfig;
-	
-	/* Initialize the platform */
-	DBG_LOG("Initializing BTLC1000");
-	
-	/* Init BLE device */
-	if(at_ble_init(&pf_cfg) != AT_BLE_SUCCESS)
-	{
-		DBG_LOG("BTLC1000 Initialization failed");
-		DBG_LOG("Please check the power and connection / hardware connector");
-		while(1);
-	}
+	/* initialize the ble chip  and Set the device mac address */
+	ble_device_init(NULL);
 	
 }
 
