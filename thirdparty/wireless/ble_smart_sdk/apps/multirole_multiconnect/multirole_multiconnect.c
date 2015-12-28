@@ -130,13 +130,15 @@ static at_ble_status_t ble_char_changed_app_event(void *param);
 static at_ble_status_t ble_notification_confirmed_app_event(void *param);
 static at_ble_status_t battery_simulation_task(void *param);
 static at_ble_status_t ble_connected_app_event(void *param);
+static void multirole_multiconnect_app_var_init(void);
+static void button_cb(void);
 
 static ble_peripheral_state_t peripheral_advertising_cb(void)
 {
 	return peripheral_state;
 }
 
-void button_cb(void)
+static void button_cb()
 {
 	button_pressed = true;
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
@@ -450,7 +452,7 @@ static at_ble_status_t battery_simulation_task(void *param)
 	return AT_BLE_SUCCESS;
 }
 
-void multirole_multiconnect_app_var_init()
+static void multirole_multiconnect_app_var_init()
 {
 	ble_event_callback_t battery_app_gap_tmp[] = {
 	NULL,
@@ -502,9 +504,9 @@ void multirole_multiconnect_app_var_init()
 	battery_conn_handle = 0xFFFF;
 	battery_stop_simulation = true;
 	
-	peripheral_state = PERIPHERAL_IDLE_STATE;
-	
+	peripheral_state = PERIPHERAL_IDLE_STATE;	
 }
+
 int main(void)
 {	
 	uint8_t status;
@@ -567,7 +569,7 @@ int main(void)
 	/* Initialize the pxp service */
 	pxp_app_init();
 	
-	register_hw_timer_start_func_cb(hw_timer_start);
+	register_hw_timer_start_func_cb((hw_timer_start_func_cb_t)hw_timer_start);
 	register_hw_timer_stop_func_cb(hw_timer_stop);
 	register_peripheral_state_cb(peripheral_advertising_cb);
 
