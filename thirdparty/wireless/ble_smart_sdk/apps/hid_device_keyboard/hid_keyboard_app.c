@@ -171,6 +171,8 @@ static const ble_event_callback_t hid_app_gatt_server_handle[] = {
 	NULL
 };
 
+/* declare button callback function */
+static void button_cb(void);
 
 /* Callback called during disconnect */
 static at_ble_status_t hid_connect_cb(void *params)
@@ -236,7 +238,7 @@ static at_ble_status_t hid_notification_confirmed_cb(void *params)
 }
 
 /* Callback called when user press the button for writing new characteristic value */
-void button_cb(void)
+static void button_cb()
 {
 	if (conn_status) {
 		key_status = 1;

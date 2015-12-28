@@ -134,6 +134,7 @@ static uint8_t hid_app_mouse_report_map[] = {
 static at_ble_status_t hid_connect_cb(void *params);
 static at_ble_status_t hid_disconnect_cb(void *params);
 static at_ble_status_t hid_notification_confirmed_cb(void *params);
+static void button_cb(void);
 
 static const ble_event_callback_t hid_app_gap_handle[] = {
 NULL,
@@ -243,7 +244,7 @@ static at_ble_status_t hid_notification_confirmed_cb(void *params)
 }
 
 /* Callback called when user press the button for writing new characteristic value */
-void button_cb(void)
+static void button_cb(void)
 {
 	if( conn_status )  {			
 		mouse_status = 1;
