@@ -265,7 +265,7 @@ void configure_dma_resource(struct dma_resource *resource, uint8_t channel_num)
 
 	case DMAC_CHANNEL0_ID:
 		/* Trigger is enabled for each beat transfer */
-		config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
+		config.trigger_action = DMA_TRIGGER_ACTION_BEAT;
 		/* Peripheral trigger source is ADC result ready */
 		config.peripheral_trigger = ADC_DMAC_ID_RESRDY;
 		/* Generate event once DMA transfer is done */
