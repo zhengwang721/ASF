@@ -261,7 +261,7 @@ static at_ble_status_t app_disconnected_event_handler(void *params)
 /**
  * @brief Button Press Callback
  */
-void button_cb(void)
+static void button_cb(void)
 {
 	if (app_state) {
 		DBG_LOG("Going to disconnect ");
