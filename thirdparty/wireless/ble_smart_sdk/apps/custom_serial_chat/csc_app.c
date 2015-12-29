@@ -105,7 +105,7 @@ static void uart_rx_callback(void)
 	if(buff == '\r') {
 		if(send_length) {
 			send_plf_int_msg_ind(UART_RX_COMPLETE, UART_RX_INTERRUPT_MASK_RX_FIFO_NOT_EMPTY_MASK, send_data, send_length);
-			DBG_LOG("");
+			DBG_LOG(" ");
 		}
 	}
 	else {
