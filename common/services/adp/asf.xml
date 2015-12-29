@@ -58,13 +58,4 @@
 
 	</select-by-config>
 
-	<module type="service" id="common.services.adp.terminal" caption="ADP terminal">
-		<require idref="common.services.adp"/>
-		<build type="c-source" value="adp_terminal.c"/>
-		<build type="include-path" value="." />
-		<build type="header-file" subtype="api" value="adp_terminal.h"/>
-		<device-support value="samd21"/>
-		<device-support value="sam4s"/>
-	</module>
-
 </asf>
