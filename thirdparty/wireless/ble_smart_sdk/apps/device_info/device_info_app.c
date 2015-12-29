@@ -155,7 +155,7 @@ static at_ble_status_t ble_connected_app_event(void *param)
 	return AT_BLE_SUCCESS;
 }
 
-void button_cb(void)
+static void button_cb(void)
 {
 	/* For user usage */
 	DBG_LOG("button_cb");
@@ -167,16 +167,16 @@ static const ble_event_callback_t device_info_app_gap_cb[] = {
 	NULL,
 	NULL,
 	NULL,
-	ble_connected_app_event,
-	ble_disconnected_app_event,
+	(ble_event_callback_t)ble_connected_app_event,
+	(ble_event_callback_t)ble_disconnected_app_event,
 	NULL,
 	NULL,
-	ble_paired_app_event,
+	(ble_event_callback_t)ble_paired_app_event,
 	NULL,
 	NULL,
 	NULL,
 	NULL,
-	ble_paired_app_event,
+	(ble_event_callback_t)ble_paired_app_event,
 	NULL,
 	NULL,
 	NULL,

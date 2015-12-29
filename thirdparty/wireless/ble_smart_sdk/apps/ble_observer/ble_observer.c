@@ -437,8 +437,8 @@ at_ble_status_t ble_observer_scan_data_handler(at_ble_scan_info_t *scan_info_dat
 
 static const ble_event_callback_t observer_app_gap_cb[] = {
 	NULL,
-	ble_observer_scan_info_handler,
-	ble_observer_scan_data_handler,
+	(ble_event_callback_t)ble_observer_scan_info_handler,
+	(ble_event_callback_t)ble_observer_scan_data_handler,
 	NULL,
 	NULL,
 	NULL,
