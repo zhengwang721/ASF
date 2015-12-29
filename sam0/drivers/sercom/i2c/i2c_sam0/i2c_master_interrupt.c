@@ -311,16 +311,18 @@ static enum status_code _i2c_master_read_packet(
 	module->transfer_direction = I2C_TRANSFER_READ;
 	module->status             = STATUS_BUSY;
 
+	bool sclsm_flag = i2c_module->CTRLA.bit.SCLSM;
+
 	/* Switch to high speed mode */
 	if (packet->high_speed) {
 		_i2c_master_send_hs_master_code(module, packet->hs_master_code);
 	}
 
 	/* Set action to ACK or NACK. */
-	if (packet->data_length > 1) {
-		i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;	
-	} else {
+	if ((sclsm_flag) && (packet->data_length == 1)) {
 		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
+	} else {
+		i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
 	}
 
 	if (packet->ten_bit_address) {
