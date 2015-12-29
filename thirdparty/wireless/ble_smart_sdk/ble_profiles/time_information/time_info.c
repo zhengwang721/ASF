@@ -123,12 +123,12 @@ volatile bool Desc_found = false;
 read_response_callback_t read_response_callback = NULL;
 
 static const ble_event_callback_t time_info_gatt_client_handle[] = {
-	time_info_service_found_handler,
+	(void*)time_info_service_found_handler,
 	NULL,
-	time_info_characteristic_found_handler,
-	time_info_descriptor_found_handler,
-	time_info_discovery_complete_handler,
-	time_info_characteristic_read_response,
+	(void*)time_info_characteristic_found_handler,
+	(void*)time_info_descriptor_found_handler,
+	(void*)time_info_discovery_complete_handler,
+	(void*)time_info_characteristic_read_response,
 	NULL,
 	NULL,
 	NULL,
@@ -141,8 +141,8 @@ static const ble_event_callback_t ble_mgr_gap_handle[] = {
 	NULL,
 	NULL,
 	NULL,
-	time_info_service_discover,
-	time_info_disconnected_event_handler,
+	(void*)time_info_service_discover,
+	(void*)time_info_disconnected_event_handler,
 	NULL,
 	NULL,
 	NULL,
@@ -156,7 +156,8 @@ static const ble_event_callback_t ble_mgr_gap_handle[] = {
 	NULL,
 	NULL
 };
-static at_ble_handle_t time_info_conn_handle = 0;
+
+
 /***********************************************************************************
  *									Implementations	                               *
  **********************************************************************************/
