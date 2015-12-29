@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP service example ADC functions for SAM 4S
+ * \brief ADP service example ADC functions for SAM
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *

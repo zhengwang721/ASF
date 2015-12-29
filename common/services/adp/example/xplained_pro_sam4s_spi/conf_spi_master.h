@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Spi Master configuration.
+ * \brief SPI Master configuration.
  *
  * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *

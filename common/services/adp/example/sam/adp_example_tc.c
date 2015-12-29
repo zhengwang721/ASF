@@ -67,7 +67,7 @@ void adp_example_tc_init(void)
 	uint32_t ul_sysclk = sysclk_get_cpu_hz();
 
 	/* Configure PMC */
-	pmc_enable_periph_clk(ID_TC0);
+	pmc_enable_periph_clk(CONF_ID_TC);
 #if SAMG55
 	/* Enable PCK output */
 	pmc_disable_pck(PMC_PCK_3);
@@ -81,7 +81,7 @@ void adp_example_tc_init(void)
 	tc_write_rc(CONF_TC_MODULE, 0, (ul_sysclk / ul_div) / 10);
 
 	/* Configure and enable interrupt on RC compare */
-	NVIC_EnableIRQ((IRQn_Type) ID_TC0);
+	NVIC_EnableIRQ((IRQn_Type) CONF_ID_TC);
 	tc_enable_interrupt(CONF_TC_MODULE, 0, TC_IER_CPCS);
 
 	tc_start(CONF_TC_MODULE, 0);
