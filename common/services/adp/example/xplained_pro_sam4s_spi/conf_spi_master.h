@@ -47,11 +47,6 @@
 #ifndef CONF_SPI_MASTER_H_INCLUDED
 #define CONF_SPI_MASTER_H_INCLUDED
 
-//! \name Embedded debugger SPI interface definitions
-//@{
-#define EDBG_SPI_MODULE           SPI
-//@}
-
 /* Possibility to change low-level configurations here. */
 
 /** Default Configuration of SPI Master Delay BCS */

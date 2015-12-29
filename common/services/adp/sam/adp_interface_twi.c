@@ -45,6 +45,11 @@
 #include <asf.h>
 #include "adp_interface.h"
 
+//! \name Embedded debugger TWI interface definitions
+//@{
+#define EDBG_TWI_MODULE           TWI0
+//@}
+
 #define TWI_EDBG_SLAVE_ADDR 0x28
 #define TIMEOUT 1000
 

@@ -48,8 +48,10 @@
 #include <asf.h>
 #include "adp_interface.h"
 
-
-
+//! \name Embedded debugger SPI interface definitions
+//@{
+#define EDBG_SPI_MODULE           SPI
+//@}
 
 #define SPI_CHIP_SEL  SPI_NPCS3_PA5_GPIO
 

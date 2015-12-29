@@ -55,9 +55,4 @@
 /** SPI MACRO definition */
 #define CONF_BOARD_TWI0
 
-//! \name Embedded debugger TWI interface definitions
-//@{
-#define EDBG_TWI_MODULE           TWI0
-//@}
-
 #endif /* CONF_BOARD_H_INCLUDED */
