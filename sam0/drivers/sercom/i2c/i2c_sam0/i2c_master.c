@@ -553,8 +553,12 @@ static enum status_code _i2c_master_read_packet(
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(module);
 
-	/* Set action to ack. */
-	i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
+	/* Set action to ack or nack. */
+	if ((sclsm_flag) && (packet->data_length == 1)) {
+		i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
+	} else {
+		i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;	
+	}
 
 	/* Check for address response error unless previous error is
 	 * detected. */
