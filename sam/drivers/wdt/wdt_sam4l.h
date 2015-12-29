@@ -195,12 +195,6 @@ static inline uint32_t wdt_get_status(struct wdt_dev_inst *const dev_inst)
 
 bool wdt_reset_mcu(void);
 
-void wdt_enable_interrupt(struct wdt_dev_inst *const dev_inst);
-
-void wdt_disable_interrupt(struct wdt_dev_inst *const dev_inst);
-
-void wdt_clear_interrupt(struct wdt_dev_inst *const dev_inst);
-
 /**
  * \brief Get the watchdog interrupt mask.
  *
@@ -223,6 +217,42 @@ static inline uint32_t wdt_get_interrupt_status(struct wdt_dev_inst *const dev_i
 	Wdt *wdt = dev_inst->hw_dev;
 
 	return wdt->WDT_ISR;
+}
+
+/**
+ * \brief Enable the WDT module interrupt.
+ *
+ * \param dev_inst    Device structure pointer.
+ */
+static inline void wdt_enable_interrupt(struct wdt_dev_inst *const dev_inst)
+{
+	Wdt *wdt = dev_inst->hw_dev;
+
+	wdt->WDT_IER = WDT_IER_WINT;
+}
+
+/**
+ * \brief Disable the WDT module interrupt.
+ *
+ * \param dev_inst    Device structure pointer.
+ */
+static inline void wdt_disable_interrupt(struct wdt_dev_inst *const dev_inst)
+{
+	Wdt *wdt = dev_inst->hw_dev;
+
+	wdt->WDT_IDR = WDT_IDR_WINT;
+}
+
+/**
+ * \brief Clear the WDT module interrupt status.
+ *
+ * \param dev_inst    Device structure pointer.
+ */
+static inline void wdt_clear_interrupt(struct wdt_dev_inst *const dev_inst)
+{
+	Wdt *wdt = dev_inst->hw_dev;
+
+	wdt->WDT_ICR = WDT_ICR_WINT;
 }
 
 /**

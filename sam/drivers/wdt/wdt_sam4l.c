@@ -257,41 +257,7 @@ bool wdt_reset_mcu(void)
 	}
 }
 
-/**
- * \brief Enable the WDT module interrupt.
- *
- * \param dev_inst    Device structure pointer.
- */
-void wdt_enable_interrupt(struct wdt_dev_inst *const dev_inst)
-{
-	Wdt *wdt = dev_inst->hw_dev;
 
-	wdt->WDT_IER = WDT_IER_WINT;
-}
-
-/**
- * \brief Disable the WDT module interrupt.
- *
- * \param dev_inst    Device structure pointer.
- */
-void wdt_disable_interrupt(struct wdt_dev_inst *const dev_inst)
-{
-	Wdt *wdt = dev_inst->hw_dev;
-
-	wdt->WDT_IDR = WDT_IDR_WINT;
-}
-
-/**
- * \brief Clear the WDT module interrupt status.
- *
- * \param dev_inst    Device structure pointer.
- */
-void wdt_clear_interrupt(struct wdt_dev_inst *const dev_inst)
-{
-	Wdt *wdt = dev_inst->hw_dev;
-
-	wdt->WDT_ICR = WDT_ICR_WINT;
-}
 
 /**
  * @}
