@@ -33,7 +33,7 @@ void hw_timer_register_callback(hw_timer_callback_t timer_callback_handler)
 	NVIC_EnableIRQ(DUALTIMER0_IRQn);
 }
 
-void hw_timer_start(int delay)
+void hw_timer_start(uint32_t delay)
 {
 	if(delay <= 0) {
 		delay = 1;

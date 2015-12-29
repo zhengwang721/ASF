@@ -96,7 +96,7 @@ pxp_current_alert_t alert_level = PXP_NO_ALERT;
 
 volatile bool button_pressed = false;
 
-void button_cb(void)
+static void button_cb(void)
 {
 	button_pressed = true;
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
