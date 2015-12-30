@@ -514,9 +514,9 @@ enum i2c_transfer_direction {
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that a QSG can be compiled as a standalone application or be
  * added to the user application. When testing the I2C high-speed mode, there are various
- * high frequency interference, which can lead to distortion of the waveform, which leads 
- * to failure of communication. connect in the two boards in order to obtain a stronger pull-up,
- * and the baud rate speed cannot be higher than than 2MHz. 
+ * high frequency interference, which can lead to distortion of the waveform and failure 
+ * of communication. Connect in the two boards in order to obtain a stronger pull-up,
+ * and the baud rate speed cannot be higher than 1.5MHz. 
  *
  * \if I2C_MASTER_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
