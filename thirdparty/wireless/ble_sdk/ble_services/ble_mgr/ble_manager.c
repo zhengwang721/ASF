@@ -1124,7 +1124,6 @@ at_ble_status_t ble_pair_request_handler(void *params)
 		if((ble_dev_info[idx].conn_info.handle == pair_req->handle) && (ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED))
 		{
 			ble_dev_info[idx].conn_state = BLE_DEVICE_PAIRING;
-			DBG_LOG("Device state pairing");
 			break;
 		}
 	}
