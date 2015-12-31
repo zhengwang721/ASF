@@ -51,4 +51,7 @@
 #define CONF_TC_MODULE TC0
 //[definition_tc]
 
+/* define CONF_ID_TC */
+#define CONF_ID_TC ID_TC0
+
 #endif /* CONF_EXAMPLE_H_INCLUDED */
