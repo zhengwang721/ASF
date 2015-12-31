@@ -156,6 +156,12 @@
 #endif	/* BLE_DEVICE_NAME */
 #endif	/*SCAN_PARAM_SERVICE*/
 
+#if defined HTPT_SERVICE
+#ifndef BLE_DEVICE_NAME
+#define BLE_DEVICE_NAME "ATMEL-HTP"
+#endif  
+#endif
+
 #if defined	DEVICE_INFORMATION_SERVICE
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-DIS"
@@ -381,6 +387,9 @@ typedef enum
 /** ANCS service UUID. */
 #define ANP_ANCS_SERVICE_UUID					("\xD0\x00\x2D\x12\x1E\x4B\x0F\xA4\x99\x4E\xCE\xB5\x31\xF4\x05\x79")
 
+/** HTPT SERVICE UUID */
+#define HTPT_SERVICE_UUID						(0x1809)
+
 /* Characteristics UUID's */
 /* Alert Level Characteristic UUID */
 #define ALERT_LEVEL_CHAR_UUID					(0x2A06)
@@ -582,7 +591,7 @@ typedef enum {
 #define ADV_ELEMENT_SIZE					2
 
 #ifndef SERVICE_UUID16_MAX_NUM
-#define SERVICE_UUID16_MAX_NUM				14
+#define SERVICE_UUID16_MAX_NUM				15
 #endif
 
 #ifndef PUBLIC_TARGET_ADDR_MAX_NUM
@@ -717,6 +726,13 @@ typedef enum {
 #define BLE_GAP_ADV_SERVICE_16BIT_UUID13_ENABLE			true
 #endif
 #define BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID13_VAL		PAS_SERVICE_UUID
+
+#ifndef HTPT_SERVICE
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID14_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_16BIT_UUID14_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_16BIT_UUID14_VAL		HTPT_SERVICE_UUID
 
 #endif
 

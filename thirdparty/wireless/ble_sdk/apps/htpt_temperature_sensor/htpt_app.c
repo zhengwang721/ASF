@@ -551,27 +551,12 @@ void ble_device_config(at_ble_addr_t *addr)
 /* Advertisement data set and advertisement start */
 void htpt_set_advertisement_data(void)
 {
-	uint8_t idx = 0;
-	uint8_t adv_data[HT_ADV_DATA_NAME_LEN + HT_ADV_DATA_APPEARANCE_LEN + HT_ADV_DATA_UUID_LEN + 3*2];
+	at_ble_status_t status;
+	status = ble_advertisement_data_set();
 	
-	/* Prepare ADV Data */
-	adv_data[idx++] = HT_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = HT_ADV_DATA_UUID_TYPE;
-	memcpy(&adv_data[idx], HT_ADV_DATA_UUID_DATA, HT_ADV_DATA_UUID_LEN);				
-	idx += HT_ADV_DATA_UUID_LEN;
-	
-	adv_data[idx++] = HT_ADV_DATA_APPEARANCE_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = HT_ADV_DATA_APPEARANCE_TYPE;
-	memcpy(&adv_data[idx], HT_ADV_DATA_APPEARANCE_DATA, HT_ADV_DATA_APPEARANCE_LEN);
-	idx += HT_ADV_DATA_APPEARANCE_LEN;
-	
-	adv_data[idx++] = HT_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = HT_ADV_DATA_NAME_TYPE;
-	memcpy(&adv_data[idx], HT_ADV_DATA_NAME_DATA, HT_ADV_DATA_NAME_LEN);
-	idx += HT_ADV_DATA_NAME_LEN;			
-	
-	
-	at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN);
+	if (status != AT_BLE_SUCCESS) {
+		DBG_LOG("Advertisement set failed reason %d",status);
+	}
 	
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 
 	                   APP_HT_FAST_ADV, APP_HT_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
