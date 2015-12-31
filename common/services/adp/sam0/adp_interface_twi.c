@@ -99,7 +99,7 @@ static enum status_code adp_interface_send(uint8_t* tx_buf, uint16_t length)
 */
 enum status_code adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 {
-	enum status_code status;
+	enum status_code status = STATUS_ERR_IO;
 	uint8_t data_len = 0;
 
 	struct i2c_master_packet packet = {

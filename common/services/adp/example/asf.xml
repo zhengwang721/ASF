@@ -22,6 +22,7 @@
 			<build type="c-source" value="sam0/adp_example_tc.c"/>
 			<require idref="common.services.adp.example.common"/>
 			<device-support value="samd21"/>
+			<device-support value="saml21"/>
 		</module>
 
 		<module type="application" id="common.services.adp.example#sam" caption="ADP example application">
