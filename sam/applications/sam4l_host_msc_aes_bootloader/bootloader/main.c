@@ -646,6 +646,10 @@ int main(void)
 	uint8_t lun;
 	FRESULT res;
 
+	/* Enabling the internal pull-up of the user button pin */
+	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
+
 	/* Check whether the bootloader mode is activated */
 	bootloader_mode_check();
 
