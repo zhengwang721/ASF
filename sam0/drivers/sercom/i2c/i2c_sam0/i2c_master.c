@@ -89,7 +89,6 @@ static enum status_code _i2c_master_set_config(
 	uint32_t tmp_ctrla;
 	int32_t tmp_baud = 0;
 	int32_t tmp_baud_hs = 0;
-	int32_t tmp_baudlow = 0;
 	int32_t tmp_baudlow_hs = 0;
 	enum status_code tmp_status_code = STATUS_OK;
 
@@ -199,7 +198,7 @@ static enum status_code _i2c_master_set_config(
 	}
 	if (tmp_status_code != STATUS_ERR_BAUDRATE_UNAVAILABLE) {
 		/* Baud rate acceptable. */
-		i2c_module->BAUD.reg = SERCOM_I2CM_BAUD_BAUD(tmp_baud) | SERCOM_I2CM_BAUD_BAUDLOW(tmp_baudlow) |
+		i2c_module->BAUD.reg = SERCOM_I2CM_BAUD_BAUD(tmp_baud) |
 			SERCOM_I2CM_BAUD_HSBAUD(tmp_baud_hs) | SERCOM_I2CM_BAUD_HSBAUDLOW(tmp_baudlow_hs);
 	}
 
