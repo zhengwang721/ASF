@@ -185,7 +185,7 @@ static enum status_code _i2c_master_set_config(
 	/* For High speed mode, set the SCL ratio of high:low to 1:2. */
 	if (config->transfer_speed == I2C_MASTER_SPEED_HIGH_SPEED) {
 		tmp_baudlow_hs = (int32_t)((fgclk * 2.0) / (3.0 * fscl_hs) - 1);
-		if (tmp_baudlow) {
+		if (tmp_baudlow_hs) {
 			tmp_baud_hs = (int32_t)(fgclk / fscl_hs) - 2 - tmp_baudlow_hs;
 		} else {
 			tmp_baud_hs = (int32_t)(div_ceil(fgclk, 2 * fscl_hs)) - 1;
