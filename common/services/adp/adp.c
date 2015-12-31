@@ -64,7 +64,7 @@ static uint16_t length_received;
 /** Current state */
 static enum rx_state_e rx_state;
 
-volatile uint16_t adp_add_send_byte(uint8_t* buffer, uint8_t index, uint8_t* data, uint16_t length)
+uint16_t adp_add_send_byte(uint8_t* buffer, uint8_t index, uint8_t* data, uint16_t length)
 {
 	for(uint16_t i = 0; i < length; i++) {
 		if (*(data + i) == ADP_TOKEN){

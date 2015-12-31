@@ -938,6 +938,6 @@ bool adp_transceive_single_stream(uint16_t stream_id, uint8_t* data, uint8_t dat
 
 /* Init SPI/TWI interface used. And some other misc init */
 void adp_init(void);
-volatile uint16_t adp_add_send_byte(uint8_t* buffer, uint8_t index, uint8_t* data, uint16_t length);
+uint16_t adp_add_send_byte(uint8_t* buffer, uint8_t index, uint8_t* data, uint16_t length);
 
 #endif

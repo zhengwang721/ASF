@@ -138,6 +138,7 @@ void rtc_calendar_disable(struct rtc_module *const module)
 
 /**
  * \brief Resets the RTC module
+ *
  * Resets the RTC module to hardware defaults.
  *
  * \param[in,out] module  Pointer to the software instance struct
@@ -173,7 +174,7 @@ void rtc_calendar_reset(struct rtc_module *const module)
  * \param[in, out] module  Pointer to the software instance struct
  * \param[in] time  Pointer to the time structure
  *
- * \return 32-bit value
+ * \return 32-bit value.
  */
 uint32_t rtc_calendar_time_to_register_value(
 		struct rtc_module *const module,
@@ -567,7 +568,7 @@ enum status_code rtc_calendar_set_alarm(
 /**
  * \brief Get the current alarm time of specified alarm.
  *
- * Retrieves the current alarm time for the alarm specified.
+ * Retrieves the current alarm time for the alarm specified alarm.
  *
  * \param[in, out] module  Pointer to the software instance struct
  * \param[out] alarm  Pointer to the struct that will be filled with alarm
