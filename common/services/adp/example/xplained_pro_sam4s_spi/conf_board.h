@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ADP service example TC functions
+ * \brief Board configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,11 +43,21 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef ADP_EXAMPLE_TC_H_INCLUDED
-#  define ADP_EXAMPLE_TC_H_INCLUDED
 
-extern volatile bool time_out;
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-void adp_example_tc_init(void);
+#define USER_LED_PIN         LED_0_PIN
+#define USER_LED_ACTIVE      LED_0_ACTIVE
+#define USER_LED_INACTIVE    LED_0_INACTIVE
+#define USER_LED_GPIO        LED0_GPIO
 
-#endif
+/** SPI MACRO definition */
+#define CONF_BOARD_SPI
+
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS3
+#define CONF_BOARD_SPI_NPCS3_GPIO  SPI_NPCS3_PA5_GPIO
+#define CONF_BOARD_SPI_NPCS3_FLAGS SPI_NPCS3_PA5_FLAGS
+
+#endif /* CONF_BOARD_H_INCLUDED */

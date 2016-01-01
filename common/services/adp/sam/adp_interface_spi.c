@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP service implementation
+ * \brief ADP SPI interface implementation
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -45,13 +45,23 @@
  */
 
 #include <compiler.h>
-#include <system.h>
-
 #include <asf.h>
 #include "adp_interface.h"
 
-struct spi_module edbg_spi;
-struct spi_slave_inst slave;
+//! \name Embedded debugger SPI interface definitions
+//@{
+#define EDBG_SPI_MODULE           SPI
+//@}
+
+#define SPI_CHIP_SEL  SPI_NPCS3_PA5_GPIO
+
+#define SPI_DEVICE_ID         3
+#define SPI_BAUDRATE          1500000
+
+struct spi_device SPI_DEVICE = {
+	/** Board specific select id */
+	.id = SPI_DEVICE_ID
+};
 
 /**
 * \brief Send SPI start condition
@@ -59,7 +69,7 @@ struct spi_slave_inst slave;
 */
 static void adp_interface_send_start(void)
 {
-	spi_select_slave(&edbg_spi, &slave, true);
+	spi_select_device(EDBG_SPI_MODULE, &SPI_DEVICE);
 }
 
 /**
@@ -68,7 +78,7 @@ static void adp_interface_send_start(void)
 */
 static void adp_interface_send_stop(void)
 {
-	spi_select_slave(&edbg_spi, &slave, false);
+	spi_deselect_device(EDBG_SPI_MODULE, &SPI_DEVICE);
 }
 
 /**
@@ -80,40 +90,24 @@ static void adp_interface_send_stop(void)
 */
 static void adp_interface_transceive(uint8_t *tx_data, uint8_t *rx_data, uint16_t length)
 {
-	spi_transceive_buffer_wait(&edbg_spi, tx_data, rx_data, length);
+	spi_transceive_packet(EDBG_SPI_MODULE, tx_data, rx_data, length);
 }
 
 /**
-* \brief Initialize EDBG SPI communication for SAM0
+* \brief Initialize EDBG SPI communication for SAM
 *
 */
 enum status_code adp_interface_init(void)
 {
-	enum status_code return_value;
+	sysclk_init();
 
-	system_init();
+	/* Configure the SPI interface */
+	spi_master_init(EDBG_SPI_MODULE);
+	spi_master_setup_device(EDBG_SPI_MODULE, &SPI_DEVICE, SPI_MODE_0,
+			SPI_BAUDRATE, 0);
+	spi_enable(EDBG_SPI_MODULE);
 
-	struct spi_slave_inst_config slave_dev_config;
-
-	struct spi_config config;
-
-	spi_slave_inst_get_config_defaults(&slave_dev_config);
-	slave_dev_config.ss_pin = (EDBG_SPI_SERCOM_PINMUX_PAD1 >> 16) & 0xFF;
-	spi_attach_slave(&slave, &slave_dev_config);
-
-	spi_get_config_defaults(&config);
-	config.mode_specific.master.baudrate = 1000000;
-	config.mux_setting = EDBG_SPI_SERCOM_MUX_SETTING;
-	config.pinmux_pad0 = EDBG_SPI_SERCOM_PINMUX_PAD0;
-	config.pinmux_pad1 = PINMUX_UNUSED;
-	config.pinmux_pad2 = EDBG_SPI_SERCOM_PINMUX_PAD2;
-	config.pinmux_pad3 = EDBG_SPI_SERCOM_PINMUX_PAD3;
-
-	return_value = spi_init(&edbg_spi, EDBG_SPI_MODULE, &config);
-
-	spi_enable(&edbg_spi);
-
-	return return_value;
+	return STATUS_OK;
 }
 
 /**
@@ -144,11 +138,11 @@ void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t
 */
 enum status_code adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 {
-	bool status;
+	enum status_code status;
 
 	/* Send SPI start condition */
 	adp_interface_send_start();	
-	status = spi_read_buffer_wait(&edbg_spi, rx_buf, length, 0xFF);
+	status = spi_read_packet(EDBG_SPI_MODULE, rx_buf, length);
 	/* Send SPI end condition */
 	adp_interface_send_stop();
 

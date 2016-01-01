@@ -40,82 +40,75 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include <compiler.h>
-#include <system.h>
-
 #include <asf.h>
-#include <adp_interface.h>
+#include "adp_interface.h"
 
-#define EDBG_TWI EDBG_I2C_MODULE
+//! \name Embedded debugger TWI interface definitions
+//@{
+#define EDBG_TWI_MODULE           TWI0
+//@}
+
 #define TWI_EDBG_SLAVE_ADDR 0x28
 #define TIMEOUT 1000
 
-struct i2c_master_module i2c_master_instance;
-
 /**
-* \brief Initialize EDBG I2C communication for SAM0
+* \brief Initialize EDBG TWI interface for SAM4S
 *
 */
 enum status_code adp_interface_init(void)
 {
-	enum status_code return_value;
+	sysclk_init();
 
-	system_init();
-
-	struct i2c_master_config config_i2c_master;
-	i2c_master_get_config_defaults(&config_i2c_master);
-	config_i2c_master.buffer_timeout = 10000;
-	return_value = i2c_master_init(&i2c_master_instance, EDBG_TWI, &config_i2c_master);
-	i2c_master_enable(&i2c_master_instance);
-	return return_value;
-}
-
-static enum status_code adp_interface_send(uint8_t* tx_buf, uint16_t length)
-{
-	enum status_code status;
-	
-	struct i2c_master_packet packet = {
-		.address = TWI_EDBG_SLAVE_ADDR,
-		.data_length = length,
-		.data = tx_buf,
+	/* Configure the TWI interface */
+	twi_master_options_t opt = {
+		.speed = 100000,
+		.chip  = TWI_EDBG_SLAVE_ADDR
 	};
-	/* Send data to PC */
-	status = i2c_master_write_packet_wait(&i2c_master_instance, &packet);
-	
-	return status;
+	return twi_master_setup(EDBG_TWI_MODULE, &opt);
 }
 
 /**
-* \brief Read response on I2C from PC
+* \brief Send data on TWI
 *
-* return Status
-* \param[in]  rx_buf  Pointer to receive the data
-* \param[in]  length  The length of the read data
-* \param[out] rx_buf  Pointer to store the received SPI character
+* \param[in] data   Pointer to data to send
+* \param[in] length Number of bytes to send
 */
-enum status_code adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
+static enum status_code adp_interface_send(uint8_t* tx_buf, uint16_t length)
 {
-	enum status_code status = STATUS_ERR_IO;
-	uint8_t data_len = 0;
-
-	struct i2c_master_packet packet = {
-		.address = TWI_EDBG_SLAVE_ADDR,
-		.data_length = 1,
-		.data = &data_len,
+	twi_package_t packet_write = {
+		.chip         = TWI_EDBG_SLAVE_ADDR, /* TWI slave bus address */
+		.buffer       = tx_buf,        /* transfer data source buffer */
+		.length       = length               /* transfer data size (bytes) */
 	};
-	i2c_master_read_packet_wait(&i2c_master_instance, &packet);
+	return twi_master_write(EDBG_TWI_MODULE, &packet_write);
+}
+
+/**
+* \brief Read data on TWI
+*
+* \param[out] data   Pointer to place received data
+* \param[in]  length Number of bytes to receive
+*/
+enum status_code adp_interface_read_response(uint8_t *data,	uint16_t length)
+{
+	enum status_code status = ERR_IO_ERROR;
+	uint8_t data_len = 0;
 	
-	if (data_len != 0)
-	{
-		packet.data_length = data_len;
-		packet.data = rx_buf;
-		status = i2c_master_read_packet_wait(&i2c_master_instance, &packet);
+	twi_package_t packet_read = {
+		.chip         = TWI_EDBG_SLAVE_ADDR, // TWI slave bus address
+		.buffer       = &data_len,                // transfer data destination buffer
+		.length       = 1               // transfer data size (bytes)
+	};
+	twi_master_read(EDBG_TWI_MODULE, &packet_read);
+	
+	if(data_len != 0){
+		packet_read.length = data_len;
+		packet_read.buffer = data;
+		status = twi_master_read(EDBG_TWI_MODULE, &packet_read);	
 	}
-	
+
 	return status;
 }
 
@@ -127,7 +120,8 @@ enum status_code adp_interface_read_response(uint8_t* rx_buf, uint16_t length)
 * \param[out] rx_buf  Pointer to store the received I2C character
 */
 void adp_interface_transceive_procotol(uint8_t* tx_buf, uint16_t length, uint8_t* rx_buf)
-{	
+{
 	adp_interface_send(tx_buf, length);
 	adp_interface_read_response(rx_buf, length);
 }
+

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ADP service example TC functions
+ * \brief SAM 4S TC configuration
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,11 +43,15 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef ADP_EXAMPLE_TC_H_INCLUDED
-#  define ADP_EXAMPLE_TC_H_INCLUDED
 
-extern volatile bool time_out;
+#ifndef CONF_TC_H_INCLUDED
+#define CONF_TC_H_INCLUDED
 
-void adp_example_tc_init(void);
+//[definition_tc]
+#define CONF_TC_MODULE TC0
+//[definition_tc]
 
-#endif
+/* define CONF_ID_TC */
+#define CONF_ID_TC ID_TC0
+
+#endif /* CONF_EXAMPLE_H_INCLUDED */

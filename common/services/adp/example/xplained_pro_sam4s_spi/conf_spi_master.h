@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ADP service example TC functions
+ * \brief SPI Master configuration.
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,11 +43,25 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef ADP_EXAMPLE_TC_H_INCLUDED
-#  define ADP_EXAMPLE_TC_H_INCLUDED
 
-extern volatile bool time_out;
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-void adp_example_tc_init(void);
+/* Possibility to change low-level configurations here. */
 
-#endif
+/** Default Configuration of SPI Master Delay BCS */
+#define CONFIG_SPI_MASTER_DELAY_BCS            0
+
+/** Default Configuration of SPI Master Bits per Transfer Definition */
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
+
+/** Default Configuration of SPI Master Delay BCT */
+#define CONFIG_SPI_MASTER_DELAY_BCT            0
+
+/** Default Configuration of SPI Master Delay BS */
+#define CONFIG_SPI_MASTER_DELAY_BS             0
+
+/** Default Configuration of SPI Master Dummy Field */
+#define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

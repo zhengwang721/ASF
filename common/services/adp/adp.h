@@ -644,7 +644,7 @@ enum adp_dashboard_element_type {
 	uint16_t  y;            \
 	uint16_t  width;        \
 	uint16_t  height;       \
-	enum adp_dashboard_element_type element_type; 
+	enum adp_dashboard_element_type element_type 
 
 SHORTENUM struct adp_msg_conf_dashboard_element_common {
 	/* Dashboard ID */

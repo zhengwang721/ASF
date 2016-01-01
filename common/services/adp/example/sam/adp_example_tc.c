@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP service example TC functions
+ * \brief ADP service example TC functions for SAM
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -43,11 +43,47 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef ADP_EXAMPLE_TC_H_INCLUDED
-#  define ADP_EXAMPLE_TC_H_INCLUDED
 
-extern volatile bool time_out;
+#include <compiler.h>
+#include <asf.h>
+#include "adp_example_tc.h"
+#include "conf_tc.h"
 
-void adp_example_tc_init(void);
+volatile bool time_out = true;
 
+void TC0_Handler(void)
+{
+	/* Clear status bit to acknowledge interrupt */
+	tc_get_status(CONF_TC_MODULE, 0);
+
+	time_out = true;
+}
+
+
+void adp_example_tc_init(void)
+{
+	uint32_t ul_div;
+	uint32_t ul_tcclks;
+	uint32_t ul_sysclk = sysclk_get_cpu_hz();
+
+	/* Configure PMC */
+	pmc_enable_periph_clk(CONF_ID_TC);
+#if SAMG55
+	/* Enable PCK output */
+	pmc_disable_pck(PMC_PCK_3);
+	pmc_switch_pck_to_sclk(PMC_PCK_3, PMC_PCK_PRES_CLK_1);
+	pmc_enable_pck(PMC_PCK_3);
 #endif
+
+	/** Configure TC for a 10Hz frequency and trigger on RC compare. */
+	tc_find_mck_divisor(10, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
+	tc_init(CONF_TC_MODULE, 0, ul_tcclks | TC_CMR_CPCTRG);
+	tc_write_rc(CONF_TC_MODULE, 0, (ul_sysclk / ul_div) / 10);
+
+	/* Configure and enable interrupt on RC compare */
+	NVIC_EnableIRQ((IRQn_Type) CONF_ID_TC);
+	tc_enable_interrupt(CONF_TC_MODULE, 0, TC_IER_CPCS);
+
+	tc_start(CONF_TC_MODULE, 0);
+}
+

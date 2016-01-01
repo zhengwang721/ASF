@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADP service example TC functions
+ * \brief ADP service example ADC functions for SAM
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -40,14 +40,28 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#ifndef ADP_EXAMPLE_TC_H_INCLUDED
-#  define ADP_EXAMPLE_TC_H_INCLUDED
 
-extern volatile bool time_out;
+#include <compiler.h>
+#include <asf.h>
+#include "adp_example_adc.h"
 
-void adp_example_tc_init(void);
+#define ADC_CLOCK  6000000
 
-#endif
+void adp_example_adc_init(void)
+{
+	// Enable ADC clock
+	pmc_enable_periph_clk(ID_ADC);
+
+	adc_init(ADC, sysclk_get_main_hz(), ADC_CLOCK, ADC_STARTUP_TIME_4);
+	adc_configure_timing(ADC, 1, ADC_SETTLING_TIME_3, 1);
+	adc_set_resolution(ADC, ADC_12_BITS);
+	adc_enable_channel(ADC, ADC_CHANNEL_0);
+	adc_configure_trigger(ADC, ADC_TRIG_SW, ADC_MR_FREERUN_OFF);
+}
+
+uint16_t adp_example_adc_get_value(void)
+{
+	adc_start(ADC);
+	while ((adc_get_status(ADC) & ADC_ISR_DRDY) != ADC_ISR_DRDY);
+	return adc_get_latest_value(ADC) & 0xFFF;
+}
