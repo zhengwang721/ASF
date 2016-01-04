@@ -1182,7 +1182,7 @@ at_ble_status_t ble_pair_request_handler(void *params)
 	}
 
 	/* Send pairing response */
-	DBG_LOG("Sending pairing response");
+	DBG_LOG_DEV("Sending pairing response");
 
 	if(at_ble_authenticate(pair_req->handle, &features, &ble_dev_info[idx].host_ltk, NULL) != AT_BLE_SUCCESS)
 	{
