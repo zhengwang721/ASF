@@ -4,7 +4,7 @@
  * \brief SAM4L USB Host Mass Storage Bootloader Application with CRC Check and 
  * AES decryption support.
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -647,8 +647,10 @@ int main(void)
 	FRESULT res;
 
 	/* Enabling the internal pull-up of the user button pin */
+#if BOARD == SAM4L_XPLAINED_PRO
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
+#endif
 
 	/* Check whether the bootloader mode is activated */
 	bootloader_mode_check();
