@@ -52,6 +52,7 @@
  * This is the reference manual for the HID Device Profile
  */
 /*- Includes ---------------------------------------------------------------*/
+#include <asf.h>
 #include "timer_hw.h"
 #include "ble_utils.h"
 #include "ble_manager.h"

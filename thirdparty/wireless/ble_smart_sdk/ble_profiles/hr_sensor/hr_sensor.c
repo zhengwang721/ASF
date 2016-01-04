@@ -50,6 +50,7 @@
 *							        Includes
 *                                       *
 ****************************************************************************************/
+#include <asf.h>
 #include <string.h>
 #include "timer_hw.h"
 #include "at_ble_api.h"
