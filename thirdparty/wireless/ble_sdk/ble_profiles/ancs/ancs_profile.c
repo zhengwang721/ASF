@@ -228,7 +228,7 @@ at_ble_status_t anp_client_characteristic_found_handler(void *params)
 		memcpy((uint8_t *)&ancs_data.data_source_char, &app_anp_info.char_info, sizeof(at_ble_characteristic_found_t));
 	}
 	
-	DBG_LOG("Characteristic Info:\r\n -->ConnHandle: 0x%02x\r\n -->Char handle: "
+	DBG_LOG_DEV("Characteristic Info:\r\n -->ConnHandle: 0x%02x\r\n -->Char handle: "
 			"0x%02x\r\n -->Value handle: 0x%02x\r\n -->Properties: 0x%02x",
 			app_anp_info.char_info.conn_handle,
 			app_anp_info.char_info.char_handle,
