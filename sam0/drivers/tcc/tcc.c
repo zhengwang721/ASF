@@ -969,6 +969,9 @@ uint32_t tcc_get_count_value(
 		if (TCC_CTRLBSET_CMD_NONE == last_cmd) {
 			/* Issue read command and break */
 			tcc_module->CTRLBSET.bit.CMD = TCC_CTRLBSET_CMD_READSYNC_Val;
+			while (tcc_module->SYNCBUSY.bit.CTRLB) {
+				/* Wait for sync */
+			}
 			break;
 		} else if (TCC_CTRLBSET_CMD_READSYNC == last_cmd) {
 			/* Command have been issued */
