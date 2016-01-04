@@ -218,8 +218,8 @@ plf_drv_status platform_driver_init()
 		handle_ext_wakeup_isr = (void (*)(void))0x14085;
 #endif
 		platform_unregister_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX);
-		platform_register_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX,PORT1_COMB_Handler);
-		platform_register_isr(GPIO0_COMBINED_VECTOR_TABLE_INDEX,gpio0_combined_isr_handler);
+		platform_register_isr(GPIO1_COMBINED_VECTOR_TABLE_INDEX,(void*)PORT1_COMB_Handler);
+		platform_register_isr(GPIO0_COMBINED_VECTOR_TABLE_INDEX,(void*)gpio0_combined_isr_handler);
 		
 		// Initializing the FW messaging functions.
 #ifdef CHIPVERSION_A3
