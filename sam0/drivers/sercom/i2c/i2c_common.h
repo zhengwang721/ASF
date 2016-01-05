@@ -137,11 +137,13 @@ extern "C" {
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the selected
- * device supports those features. When using the I2C high-speed mode for off-board communication,
+ * device supports those features. 
+ * \note When using the I2C high-speed mode for off-board communication,
  * there are various high frequency interference, which can lead to distortion of the signals 
  * and communication failure. When using Xplained Pro boards in order to test I2C high-speed 
  * communication, the following recommendation should be followed:
- * - Use the SDA-line on PA08 and SCL-line on PA09 for both boards. This will provide stronger pull-ups on both SDA and SCL.
+ * - Use the SDA-line on PA08 and SCL-line on PA09 for both boards. This will provide stronger
+ * pull-ups on both SDA and SCL.
  * - The SCL should not be higher than 1.5MHz.
  *
  * \subsection asfdoc_sam0_sercom_i2c_functional_desc Functional Description
