@@ -513,9 +513,12 @@ enum i2c_transfer_direction {
  * applications for \ref asfdoc_sam0_sercom_i2c_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that a QSG can be compiled as a standalone application or be
- * added to the user application. When testing the I2C high-speed mode, there are various
- * high frequency interference, which can lead to distortion of the waveform and failure 
- * of communication. The baud rate speed cannot be higher than 1.5MHz. 
+ * added to the user application. When using the I2C high-speed mode for off-board communication,
+ * there are various high frequency interference, which can lead to distortion of the signals 
+ * and communication failure. When using Xplained Pro boards in order to test I2C high-speed 
+ * communication, the following recommendation should be followed:
+ * - Use the SDA-line on PA08 and SCL-line on PA09 for both boards. This will provide stronger pull-ups on both SDA and SCL.
+ * - The SCL should not be higher than 1.5MHz. 
  *
  * \if I2C_MASTER_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
