@@ -178,9 +178,10 @@ static void bootloader_mode_check()
 		/* Get the pointer to the GPIO Port Address */
 		temp = (uint32_t)((GPIO_ADDR +
 						(BOOT_LOAD_PIN >> 5) * sizeof(GpioPort)));
-		/* Enable the input mode in Boot GPIO Pin */
+		/* Enable the input mode in Boot GPIO Pin and enable the internal pull-up*/
 		((GpioPort *)temp)->GPIO_ODERC = GPIO_BOOT_PIN_MASK;
 		((GpioPort *)temp)->GPIO_STERS = GPIO_BOOT_PIN_MASK;
+		((GpioPort *)temp)->GPIO_PUERS = GPIO_BOOT_PIN_MASK;
 		/* Activation of bootloader mode pin */
 		boot_mode = ((((GpioPort *)temp)->GPIO_PVR & GPIO_BOOT_PIN_MASK)
 							== BOOT_LOAD_PIN_ACTIVE_LVL);
@@ -645,12 +646,6 @@ int main(void)
 	uint32_t file_size = 0;
 	uint8_t lun;
 	FRESULT res;
-
-	/* Enabling the internal pull-up of the user button pin */
-#if BOARD == SAM4L_XPLAINED_PRO
-	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
-#endif
 
 	/* Check whether the bootloader mode is activated */
 	bootloader_mode_check();
