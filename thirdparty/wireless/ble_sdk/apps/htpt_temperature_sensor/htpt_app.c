@@ -295,7 +295,7 @@ static at_ble_status_t app_pair_done_event_handler(void *params)
 	memcpy((uint8_t *)&pair_params, params, sizeof(at_ble_pair_done_t));
 	if(pair_params.status == AT_BLE_SUCCESS)
 	{
-		DBG_LOG("Pairing procedure completed successfully");
+		DBG_LOG_DEV("Pairing procedure completed successfully");
 		app_device_bond = true;
 		auth_info = pair_params.auth;
 		

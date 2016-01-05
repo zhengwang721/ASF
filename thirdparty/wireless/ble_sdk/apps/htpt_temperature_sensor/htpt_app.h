@@ -57,7 +57,7 @@
 
 #define APP_HT_FAST_ADV 1600 //1000 ms
 
-#define APP_HT_ADV_TIMEOUT 1000 // 100 Secs
+#define APP_HT_ADV_TIMEOUT 655 // 100 Secs
 
 #define SCAN_RESP_LEN 10
 #define ADV_DATA_LEN 18
