@@ -126,7 +126,7 @@ void *platform_configure_timer(platform_hw_timer_callback_t bus_tc_cb_ptr)
 		NVIC_EnableIRQ(TC1_IRQn);
 		tc_stop(BUS_TIMER, BUS_TIMER_CHANNEL_ID);
 		Enable_global_interrupt();
-		return bus_timer_callback;
+		return (void *)bus_timer_callback;
 	}
 	Enable_global_interrupt();
 	return NULL;	
