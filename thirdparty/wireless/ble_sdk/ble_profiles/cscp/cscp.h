@@ -69,7 +69,7 @@
 //	<i> Defines inteval at which advertisement timout in ms.
 //	<i> Default: 1000
 //	<id> csc_adv_timeout
-#define APP_CSC_ADV_TIMEOUT				(655) // 100 Secs
+#define APP_CSC_ADV_TIMEOUT				(655) // 10 min
 
 /** @brief scan_resp_len is the length of the scan response data */
 //	<o> Scan Response Buffer <1-20>

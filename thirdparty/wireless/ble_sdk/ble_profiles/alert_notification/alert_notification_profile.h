@@ -71,7 +71,7 @@
 //	<i> Defines inteval at which advertisement timout in ms.
 //	<i> Default: 1000
 //	<id> anp_app_anp_adv_timeout
-#define APP_ANP_ADV_TIMEOUT							(1000) // 100 Secs
+#define APP_ANP_ADV_TIMEOUT							(655) // 10 min
 
 /**@brief Scan Response length*/
 //	<o> Scan Response Buffer <1-20>

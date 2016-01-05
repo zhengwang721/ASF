@@ -70,7 +70,7 @@
 //	<i> Defines inteval at which advertisement timout in ms.
 //	<i> Default: 1000
 //	<id> hr_sensor_adv_timeout
-#define HR_SENSOR_ADV_TIMEOUT							(655) // 100 Secs
+#define HR_SENSOR_ADV_TIMEOUT							(655) // 10 min
 
 /** @brief scan_resp_len is the length of the scan response data */
 //	<o> Scan Response Buffer <1-20>

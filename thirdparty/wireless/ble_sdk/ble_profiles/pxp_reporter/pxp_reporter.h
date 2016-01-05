@@ -83,7 +83,7 @@
 //  <i> Defines interval at which advertisement timeout in ms.
 //  <i> Default: 1000
 //  <id> pxp_reporter_adv_timeout
-#define APP_PXP_ADV_TIMEOUT				(1000) // 100 Secs
+#define APP_PXP_ADV_TIMEOUT				(655) // 10 min
 
 /** @brief scan_resp_len is the length of the scan response data */
 //  <o> Scan Response Buffer <1-20>
