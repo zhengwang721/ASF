@@ -137,7 +137,7 @@ extern "C" {
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the selected
- * device supports those features.When using the I2C high-speed mode for off-board communication,
+ * device supports those features. When using the I2C high-speed mode for off-board communication,
  * there are various high frequency interference, which can lead to distortion of the signals 
  * and communication failure. When using Xplained Pro boards in order to test I2C high-speed 
  * communication, the following recommendation should be followed:
