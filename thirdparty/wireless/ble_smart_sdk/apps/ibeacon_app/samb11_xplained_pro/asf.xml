@@ -12,9 +12,6 @@
 
 		<require idref="thirdparty.wireless.ble_smart_sdk.services"/>
 
-		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
-
-
 		<require idref="board.samb11_xplained_pro"/>
 		<!--require idref="sam0.drivers.extint"/-->
 		<!--config name="config.sam0.drivers.tc" value="callback"/-->

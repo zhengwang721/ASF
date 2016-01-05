@@ -13,7 +13,6 @@
 		
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.alert_notification"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.services"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
 		
 		<device-support-alias value="ble_smart_stack_lib_support"/>
 

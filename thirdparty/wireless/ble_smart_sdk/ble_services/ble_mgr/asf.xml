@@ -11,6 +11,7 @@
 		<require idref="thirdparty.wireless.ble_smart_sdk.src"/>
 
 		<require idref="thirdparty.wireless.ble_smart_sdk.services"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
 		<!--require idref="thirdparty.wireless.ble_smart_sdk.services.console"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.services.timer"/-->
 

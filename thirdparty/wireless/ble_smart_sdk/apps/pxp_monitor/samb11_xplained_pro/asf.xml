@@ -11,8 +11,6 @@
 		<require idref="common2.components.memory.eeprom.at30tse75x"/>
 		<require idref="sam0.drivers.timer"/-->
 
-		<require idref="thirdparty.wireless.ble_smart_sdk.utils"/>
-
 		<require idref="board.samb11_xplained_pro"/>
 		<!--require idref="sam0.drivers.extint"/-->
 		<!--config name="config.sam0.drivers.tc" value="callback"/-->
