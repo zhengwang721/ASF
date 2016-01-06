@@ -918,7 +918,7 @@ uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm)
 {
 	uint32_t ul_gpnvm_bits;
 
-	if (ul_gpnvm >= GPNVM_READ_NUM_MAX) {
+	if (ul_gpnvm >= GPNVM_NUM_MAX) {
 		return FLASH_RC_INVALID;
 	}
 
