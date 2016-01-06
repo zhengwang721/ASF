@@ -76,9 +76,9 @@
 
 /** @brief APP_FMP_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in
  *seconds, 0x0000 disables time-out.*/
-//	<o> Advertisement Timeout <1000-10000:50>
-//	<i> Defines inteval at which advertisement timout in ms.
-//	<i> Default: 1000
+//     <o> Advertisement Timeout <1-655>
+//     <i> Defines interval at which advertisement timeout in sec.
+//     <i> Default: 655
 //	<id> fmp_adv_timeout
 #define APP_FMP_ADV_TIMEOUT				(655) /* 10  min */
 

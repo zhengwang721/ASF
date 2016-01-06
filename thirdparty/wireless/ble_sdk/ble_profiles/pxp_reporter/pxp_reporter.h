@@ -86,9 +86,9 @@
 #define APP_PXP_ADV_TIMEOUT				(655) // 10 min
 
 /** @brief scan_resp_len is the length of the scan response data */
-//  <o> Scan Response Buffer <1-20>
-//  <i> Defines size of buffer for scan response.
-//  <i> Default: 10
+//     <o> Advertisement Timeout <1-655>
+//     <i> Defines interval at which advertisement timeout in sec.
+//     <i> Default: 655
 //  <id> pxp_reporter_scan_resp_len
 #define SCAN_RESP_LEN					(10)
 
