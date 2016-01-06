@@ -149,6 +149,7 @@ void TC1_Handler(void)
 
 void platform_start_bus_timer(void *timer_handle, uint32_t ms)
 {
+	(void) timer_handle;
 	if (ms > 65)
 	{
 		/* handle using software timer. currently not supported by hardware timer for more than 65536ms */
@@ -161,12 +162,14 @@ void platform_start_bus_timer(void *timer_handle, uint32_t ms)
 
 void platform_delete_bus_timer(void *timer_handle)
 {
+	(void) timer_handle;
 	tc_stop(BUS_TIMER, BUS_TIMER_CHANNEL_ID);
 }
 
 
 void platform_stop_bus_timer(void *timer_handle)
 {
+	(void) timer_handle;
 	tc_stop(BUS_TIMER, BUS_TIMER_CHANNEL_ID);
 }
 
