@@ -211,7 +211,6 @@ static void app_ringer_setting_notify(uint8_t *data, uint8_t len)
  */
 static void button_cb()
 {
-	DBG_LOG("button_cb %d %d ", app_state, flag);
 	if (app_state && !flag) {
 		DBG_LOG("button Pressed");
 		flag = true;
