@@ -134,7 +134,10 @@ void platform_process_rxdata(uint8_t t_rx_data)
 {
 	if (AT_BLE_UART == platform_bus_type)
 	{
-		recv_async_cb(t_rx_data);
+		if(recv_async_cb != NULL)
+        {
+			recv_async_cb(t_rx_data);
+        }
 	}
 }
 

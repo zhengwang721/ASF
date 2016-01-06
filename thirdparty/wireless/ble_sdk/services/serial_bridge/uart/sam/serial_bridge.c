@@ -61,7 +61,8 @@ static ser_fifo_desc_t ble_eusart_rx_fifo;
 static uint8_t ble_eusart_rx_buf[BLE_MAX_TX_PAYLOAD_SIZE];
 
 ser_fifo_desc_t ble_usart_tx_fifo;
-extern ser_fifo_desc_t ble_usart_rx_fifo;
+ser_fifo_desc_t ble_usart_rx_fifo;
+uint8_t ble_usart_rx_buf[BLE_MAX_RX_PAYLOAD_SIZE];
 
 /* === TYPES =============================================================== */
 
@@ -142,6 +143,7 @@ uint8_t serial_bridge_init(void)
 	ser_fifo_init(&ble_eusart_rx_fifo, ble_eusart_rx_buf, BLE_MAX_RX_PAYLOAD_SIZE);
 	ser_fifo_init(&ble_eusart_tx_fifo, ble_eusart_tx_buf, BLE_MAX_TX_PAYLOAD_SIZE);
 	ser_fifo_init(&ble_usart_tx_fifo, ble_usart_tx_buf, BLE_MAX_TX_PAYLOAD_SIZE);
+	ser_fifo_init(&ble_usart_rx_fifo, ble_usart_rx_buf, BLE_MAX_RX_PAYLOAD_SIZE);
 
 	/* Enable UART interrupt */
 	NVIC_EnableIRQ(SB_UART_IRQn);
@@ -252,5 +254,11 @@ void serial_bridge_task(void)
 	}
 }
 
+extern void platfrom_start_rx(void);
+void platform_dtm_interface_receive(uint8_t rx_data)
+{
+	platfrom_start_rx();
+	ser_fifo_push_uint8(&ble_usart_rx_fifo, (uint8_t)rx_data);
+}
 
 /* EOF */

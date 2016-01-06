@@ -60,9 +60,6 @@ static void serial_drv_write_cb(struct usart_module *const usart_module);
 /* === GLOBALS ========================================================== */
 struct usart_module usart_instance;
 
-ser_fifo_desc_t ble_usart_rx_fifo;
-uint8_t ble_usart_rx_buf[BLE_MAX_RX_PAYLOAD_SIZE];
-
 static uint16_t rx_data;
 
 
@@ -88,8 +85,6 @@ static inline void usart_configure_flowcontrol(void)
 
 	usart_enable(&usart_instance);
 	
-	ser_fifo_init(&ble_usart_rx_fifo, ble_usart_rx_buf, BLE_MAX_RX_PAYLOAD_SIZE);
-
 	/* register and enable usart callbacks */
 	usart_register_callback(&usart_instance,
 	serial_drv_read_cb, USART_CALLBACK_BUFFER_RECEIVED);
@@ -120,8 +115,6 @@ uint8_t configure_serial_drv(void)
 
 	usart_enable(&usart_instance);
 	
-	ser_fifo_init(&ble_usart_rx_fifo, ble_usart_rx_buf, BLE_MAX_RX_PAYLOAD_SIZE);
-
 	/* register and enable usart callbacks */
 	usart_register_callback(&usart_instance,
 		serial_drv_read_cb, USART_CALLBACK_BUFFER_RECEIVED);
