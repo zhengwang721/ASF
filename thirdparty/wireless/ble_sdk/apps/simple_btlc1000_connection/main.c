@@ -64,7 +64,7 @@
 #define BEACON_ADV_INTERVAL (1600) //in 0.625ms
 
 /* Beacon Advertisement timeout */
-#define BEACON_ADV_TIMEOUT	(655) //in 0.625ms
+#define BEACON_ADV_TIMEOUT	(0) //in 0.625ms
 
 /* Beacon Advertise at exact interval */
 #define BEACON_ABSOLUTE_INTERVAL_ADV (true)

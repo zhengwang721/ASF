@@ -52,9 +52,6 @@
 /* === GLOBALS ========================================================== */
 volatile bool ble_usart_tx_cmpl = true;
 
-ser_fifo_desc_t ble_usart_rx_fifo;
-uint8_t ble_usart_rx_buf[BLE_MAX_RX_PAYLOAD_SIZE];
-
 static volatile uint16_t ble_txbyte_count = 0;
 #if UART_FLOWCONTROL_6WIRE_MODE == true
 static volatile uint8_t *ble_txbuf_ptr = NULL;
@@ -98,8 +95,6 @@ pdc_packet_t ble_usart_rx_pkt;
 uint8_t pdc_rx_buffer[BLE_MAX_RX_PAYLOAD_SIZE];
 //uint8_t pdc_rx_next_buffer[BLE_MAX_RX_PAYLOAD_SIZE]; //Improved with Next Buffer chain
 volatile bool pdc_uart_enabled = false;
-
-extern volatile enum tenuTransportState slave_state;
 
 void ble_pdc_send_data(uint8_t *buf, uint16_t len);
 
@@ -196,7 +191,6 @@ static inline uint8_t configure_primary_uart(void)
 #else //SAMG55
   	usart_enable_interrupt(BLE_UART, US_IER_RXBUFF | US_IER_OVRE | US_IER_TIMEOUT | US_IER_CMP);
 #endif  	
-  	ser_fifo_init(&ble_usart_rx_fifo, ble_usart_rx_buf, BLE_MAX_RX_PAYLOAD_SIZE);
 
   	/* Enable UART interrupt */
   	NVIC_EnableIRQ(BLE_UART_IRQn);
@@ -237,8 +231,6 @@ static inline uint8_t configure_patch_usart(void)
 
 	 /* Enable UART IRQ */
 	 usart_enable_interrupt(BLE_PATCH_UART, US_IER_RXRDY);
-	 
-	 ser_fifo_init(&ble_usart_rx_fifo, ble_usart_rx_buf, BLE_MAX_RX_PAYLOAD_SIZE);
 
 	 /* Enable UART interrupt */
 	 NVIC_EnableIRQ(BLE_PATCH_UART_IRQn);
@@ -441,7 +433,7 @@ static inline void ble_patch_serial_drv_send(uint8_t *data, uint16_t len)
 {
   ble_txbuf_ptr = data;
   ble_txbyte_count = len;
-  
+  ble_usart_tx_cmpl = false;
   if(ble_txbyte_count)
   {
 	  g_txdata = *ble_txbuf_ptr;
@@ -453,7 +445,7 @@ static inline void ble_patch_serial_drv_send(uint8_t *data, uint16_t len)
 		  ++ble_txbuf_ptr;
 	  }
 	  /* Wait for ongoing transmission complete */
-	  while(ble_usart_tx_cmpl == true);
+	  while(ble_usart_tx_cmpl == false);
 	  
 	  if(ble_usart_tx_cmpl)
 	  {
