@@ -121,15 +121,12 @@ extern "C" {
 #elif (SAM4C32 || SAM4CMP32 || SAM4CMS32)
 /* The max GPNVM number SAM4C(M)32. */
 # define GPNVM_NUM_MAX        3
+#elif (SAMG)
+/* The max GPNVM number SAMG. */
+# define GPNVM_NUM_MAX        7
 #else
 /* The max GPNVM number. */
 # define GPNVM_NUM_MAX        2
-#endif
-
-#if (SAMG)
-# define GPNVM_READ_NUM_MAX   7
-#else
-# define GPNVM_READ_NUM_MAX   2
 #endif
 
 #if (SAM4C || SAM4CP || SAM4CM)
