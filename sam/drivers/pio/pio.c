@@ -768,7 +768,7 @@ void pio_toggle_pin(uint32_t ul_pin)
  * \brief Perform complete pin(s) configuration; general attributes and PIO init
  * if necessary.
  *
- * \param ul_pin Bitmask of one or more pin(s) to configure.
+ * \param ul_pin The pin index.
  * \param ul_flags Pins attributes.
  *
  * \return Whether the pin(s) have been configured properly.
