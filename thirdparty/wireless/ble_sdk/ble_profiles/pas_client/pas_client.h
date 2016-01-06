@@ -65,12 +65,13 @@
 //	<id> pas_fast_adv
 #define APP_PAS_FAST_ADV						(1600) //1000 ms
 
-/**@brief Advertisement Timeout*/
-//	<o> Advertisement Timeout <1000-10000:50>
-//	<i> Defines inteval at which advertisement timout in ms.
-//	<i> Default: 1000
+/** @brief APP_PAS_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x028F in 
+ *seconds, 0x0000 disables time-out.*/
+//	<o> Advertisement Timeout <1-655>
+//	<i> Defines interval at which advertisement timeout in sec.
+//	<i> Default: 655
 //	<id> pas_adv_timeout
-#define APP_PAS_ADV_TIMEOUT						(655) // 100 Secs
+#define APP_PAS_ADV_TIMEOUT						(655) // 10 min
 
 /**@brief Scan Response length*/
 //	<o> Scan Response Buffer <1-20>

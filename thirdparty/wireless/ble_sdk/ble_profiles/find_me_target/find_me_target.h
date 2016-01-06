@@ -74,13 +74,13 @@
 //	<id> fmp_sensor_fast_adv
 #define APP_FMP_FAST_ADV				(1600) /* 1000 ms */
 
-/** @brief APP_FMP_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in
+/** @brief APP_FMP_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x028F in 
  *seconds, 0x0000 disables time-out.*/
-//	<o> Advertisement Timeout <1000-10000:50>
-//	<i> Defines inteval at which advertisement timout in ms.
-//	<i> Default: 1000
+//	<o> Advertisement Timeout <1-655>
+//	<i> Defines interval at which advertisement timeout in sec.
+//	<i> Default: 655
 //	<id> fmp_adv_timeout
-#define APP_FMP_ADV_TIMEOUT				(655) /* 100 Secs */
+#define APP_FMP_ADV_TIMEOUT				(655) /* 10 min */
 
 /** @brief scan_resp_len is the length of the scan response data */
 //	<o> Scan Response Buffer <1-20>
