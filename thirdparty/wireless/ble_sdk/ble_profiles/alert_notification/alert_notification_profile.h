@@ -66,18 +66,11 @@
 //	<id> anp_app_anp_fast_adv
 #define APP_ANP_FAST_ADV							(1600) //1000 ms
 
-<<<<<<< HEAD
 /** @brief APP_ANP_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x028F in 
  *seconds, 0x0000 disables time-out.*/
 //	<o> Advertisement Timeout <1-655>
 //	<i> Defines interval at which advertisement timeout in sec.
 //	<i> Default: 655
-=======
-/**@brief Advertisement Timeout*/
-//     <o> Advertisement Timeout <1-655>
-//     <i> Defines interval at which advertisement timeout in sec.
-//     <i> Default: 655
->>>>>>> 14c484b10a1e98f84cbe2af27dd2c79727cc77ff
 //	<id> anp_app_anp_adv_timeout
 #define APP_ANP_ADV_TIMEOUT							(655) // 10 min
 
