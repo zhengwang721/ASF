@@ -194,7 +194,7 @@ at_ble_status_t csc_prf_connected_state_handler(void *params)
 		if(status != AT_BLE_SUCCESS){
 			DBG_LOG("Failed to start service discovery. status = %d", status);
 		} else {
-			DBG_LOG("Started service discovery");
+			DBG_LOG_DEV("Started service discovery");
 		}		
 	}
 	return AT_BLE_SUCCESS;

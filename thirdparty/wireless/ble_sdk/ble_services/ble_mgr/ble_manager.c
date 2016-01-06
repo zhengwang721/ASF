@@ -227,10 +227,6 @@ void ble_device_init(at_ble_addr_t *addr)
 	
 	platform_init(pf_cfg.bus_info.bus_type, pf_cfg.bus_info.bus_flow_control_enabled);
 	
-	/*Trace Logs*/
-    trace_register_printFn((void *)&printf);
-    trace_set_level(TRACE_LVL_DISABLE);
-	
 	ble_init(&pf_cfg);
 
 	/* Register it in first index of callback handler */
@@ -1182,7 +1178,7 @@ at_ble_status_t ble_pair_request_handler(void *params)
 	}
 
 	/* Send pairing response */
-	DBG_LOG("Sending pairing response");
+	DBG_LOG_DEV("Sending pairing response");
 
 	if(at_ble_authenticate(pair_req->handle, &features, &ble_dev_info[idx].host_ltk, NULL) != AT_BLE_SUCCESS)
 	{

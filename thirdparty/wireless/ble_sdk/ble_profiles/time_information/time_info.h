@@ -70,7 +70,7 @@
 //  <i> Defines inteval at which advertisement timout in ms.
 //  <i> Default: 1000
 //  <id> tip_adv_timeout
-#define APP_TP_ADV_TIMEOUT							(1000)		// 100 Secs
+#define APP_TP_ADV_TIMEOUT							(655)		// 100 Secs
 
 /**@brief Scan Response length*/
 //  <o> Scan Response Buffer <1-20>

@@ -64,7 +64,7 @@
 #define APP_BROADCAST_FAST_ADV                  (1600)
 
 /* 100 Secs */
-#define APP_BROADCAST_ADV_TIMEOUT               (1000)
+#define APP_BROADCAST_ADV_TIMEOUT               (655)
 
 /* maximum length of advertisement data */
 #define MAX_ADV_LEN								(28)
