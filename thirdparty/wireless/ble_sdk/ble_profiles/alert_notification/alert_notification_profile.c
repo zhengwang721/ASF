@@ -92,23 +92,22 @@ connected_callback_t connected_cb;
 uint8_t start_notification = 0;
 at_ble_handle_t anp_conn_handle = 0;
 
-
 static const ble_event_callback_t anp_gap_handle[] = {
 	NULL,
 	NULL,
 	NULL,
 	NULL,
 	NULL,
-	anp_info_service_discover,
+	anp_info_connect_handler,
 	anp_client_disconnected_event_handler,
 	NULL,
 	NULL,
-	anp_client_security_done_handler,
+	anp_info_service_discover,
 	NULL,
 	NULL,
 	NULL,
 	NULL,
-	anp_client_security_done_handler,
+	anp_info_service_discover,
 	NULL,
 	NULL,
 	NULL,
@@ -215,18 +214,32 @@ at_ble_status_t alert_service_discovery(void)
 }
 
 /**
+ * @brief Connection handler callback
+ * @param[in] at_ble_connected_t which consists of connection handle
+ * @return at_ble_status_t which return AT_BLE_SUCCESS on success
+ */
+at_ble_status_t anp_info_connect_handler(void *params)
+{
+	at_ble_connected_t *conn_params = (at_ble_connected_t *)params;
+	if (conn_params->conn_status != AT_BLE_SUCCESS) {
+		DBG_LOG("conn_params->conn_status %x",conn_params->conn_status);
+		return conn_params->conn_status;
+	}
+	anp_conn_handle = conn_params->handle;
+	connected_cb(true);
+	#if !BLE_PAIR_ENABLE
+		alert_service_discovery();
+	#endif
+	return AT_BLE_SUCCESS;
+}
+
+/**
  * @brief Discovering the services of Alert Notification
  * @param[in] at_ble_connected_t which consists of connection handle
  * @return at_ble_status_t which return AT_BLE_SUCCESS on success
  */
 at_ble_status_t anp_info_service_discover(void *params)
 {	
-	at_ble_connected_t *conn_params = (at_ble_connected_t *)params;
-	if (conn_params->conn_status != AT_BLE_SUCCESS) {
-		return conn_params->conn_status;
-	}
-	anp_conn_handle = conn_params->handle;
-	connected_cb(true);
 	return alert_service_discovery();
 }
 
@@ -289,11 +302,9 @@ at_ble_status_t anp_client_discovery_complete_handler(void *params)
 				at_ble_disconnect(ble_dev_info[0].conn_info.handle, AT_BLE_TERMINATED_BY_USER);
 			}
 			
-			if (discover_char_flag) {
+			if (!discover_char_flag) {
 				DBG_LOG("GATT characteristic discovery completed");
-				#if !BLE_PAIR_ENABLE
-						anp_client_security_done_handler(NULL);
-				#endif
+				anp_client_security_done_handler(NULL);
 			}
 		}
 		return AT_BLE_SUCCESS;
