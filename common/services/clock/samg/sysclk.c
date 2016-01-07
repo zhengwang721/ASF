@@ -292,7 +292,7 @@ void sysclk_init(void)
 #endif
 
 #if SAMG55
-/* Set the trim value when system run near 120M */
+/* Set the trim value when system run near 120M or 100M*/
 if ((SystemCoreClock <= (CHIP_FREQ_CPU_MAX + (CHIP_FREQ_CPU_MAX >> 3))) &&
 (SystemCoreClock >= (CHIP_FREQ_CPU_MAX - (CHIP_FREQ_CPU_MAX >> 3)))) {
 	/* Get the trim value from unique ID area */
@@ -300,6 +300,9 @@ if ((SystemCoreClock <= (CHIP_FREQ_CPU_MAX + (CHIP_FREQ_CPU_MAX >> 3))) &&
 	unique_id, 32);
 
 	trim_value = unique_id[16] & 0x0000FFFF;
+	if(trim_value >= 255){
+		trim_value = trim_value >> 8;
+	}
 	supc_set_regulator_trim_user(SUPC, trim_value);
 }
 #endif
