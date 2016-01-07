@@ -114,6 +114,8 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 {
 #if SAMD || SAMR21 || SAML21
 	status_code_genare_t status;
+#elif SAM4S
+	uint32_t status;
 #else
 	status_code_t status;
 #endif /*SAMD || SAMR21 || SAML21 */
@@ -124,8 +126,7 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 			= usart_serial_write_packet(&host_uart_module,
 				(const uint8_t *)data, length);
 #elif SAM4S
-	   status =  uart_write(USART_HOST,
-				(const uint8_t)*data);
+	   status =  uart_write(USART_HOST,(*data));
 #else
 		status = usart_serial_write_packet(USART_HOST,
 				(const uint8_t *)data,
