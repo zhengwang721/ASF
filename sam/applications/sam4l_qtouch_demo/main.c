@@ -76,8 +76,7 @@
  * (over the USART). The current SAM4L sleep mode is displayed by the board
  * monitor on the OLED display.
  *
- * It requires a board monitor firmware version V1.4 or greater if it run on the 
- * SAM4L_EK.
+ * It requires a board monitor firmware version V1.4 if it runs on SAM4L_EK board.
  *
  * \section Usage
  *
