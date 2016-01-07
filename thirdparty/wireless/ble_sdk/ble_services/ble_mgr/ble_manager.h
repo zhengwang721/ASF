@@ -127,7 +127,6 @@
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-ANS"
 #endif	/* BLE_DEVICE_NAME */
-//#define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
 
 #if defined PAS_CLIENT

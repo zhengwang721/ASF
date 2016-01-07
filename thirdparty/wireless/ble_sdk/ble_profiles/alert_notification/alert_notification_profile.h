@@ -141,6 +141,13 @@ void anp_client_init( void *params);
 void anp_client_adv(void);
 
 /**
+ * @brief Connection handler callback
+ * @param[in] at_ble_connected_t which consists of connection handle
+ * @return at_ble_status_t which return AT_BLE_SUCCESS on success
+ */
+at_ble_status_t anp_info_connect_handler(void *params);
+
+/**
  * @brief Handler for disconnection event
  * @param[in] disconnected event parameter containing details like handle
  * \note Called by the ble_manager after receiving disconnection event
