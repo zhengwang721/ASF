@@ -299,7 +299,7 @@ if ((SystemCoreClock <= (CHIP_FREQ_CPU_MAX + (CHIP_FREQ_CPU_MAX >> 3))) &&
 	efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI,
 	unique_id, 32);
 
-	trim_value = unique_id[16] & 0x000000FF;
+	trim_value = unique_id[16] & 0x0000FFFF;
 	supc_set_regulator_trim_user(SUPC, trim_value);
 }
 #endif
