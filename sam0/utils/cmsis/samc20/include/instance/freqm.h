@@ -69,5 +69,6 @@
 
 /* ========== Instance parameters for FREQM peripheral ========== */
 #define FREQM_GCLK_ID_MSR           3        // Index of measure generic clock
+#define FREQM_GCLK_ID_REF           4        // Index of reference generic clock
 
 #endif /* _SAMC20_FREQM_INSTANCE_ */

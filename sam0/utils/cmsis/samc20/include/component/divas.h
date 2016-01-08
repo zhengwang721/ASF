@@ -199,6 +199,7 @@ typedef struct {
   __IO DIVAS_SQRNUM_Type         SQRNUM;      /**< \brief Offset: 0x18 (R/W 32) Square Root Input */
 } Divas;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
 #define SECTION_DIVAS_IOBUS
 
 /*@}*/
