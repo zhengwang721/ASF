@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Bootloader specific configuration.
+ * \brief Main functions
  *
- * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,30 +40,54 @@
  * \asf_license_stop
  *
  */
- /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+
+#ifndef _MAIN_H_
+#define _MAIN_H_
+
+#include "usb_protocol_cdc.h"
+
+#ifdef USB_DEVICE_LPM_SUPPORT
+/*! \brief Enters the application in low power mode
+ * Callback called when USB host sets LPM suspend state
+ */
+void main_suspend_lpm_action(void);
+
+/*! \brief Called by UDC when USB Host request to enable LPM remote wakeup
+ */
+void main_remotewakeup_lpm_enable(void);
+
+/*! \brief Called by UDC when USB Host request to disable LPM remote wakeup
+ */
+void main_remotewakeup_lpm_disable(void);
+#endif
+
+/*! \brief Opens the communication port
+ * This is called by CDC interface when USB Host enable it.
+ *
+ * \retval true if cdc startup is successfully done
+ */
+bool main_cdc_enable(uint8_t port);
+
+/*! \brief Closes the communication port
+ * This is called by CDC interface when USB Host disable it.
+ */
+void main_cdc_disable(uint8_t port);
+
+/*! \brief Save new DTR state to change led behavior.
+ * The DTR notify that the terminal have open or close the communication port.
+ */
+void main_cdc_set_dtr(uint8_t port, bool b_enable);
+
+/*! \brief Called by CDC interface
+ * Callback running when CDC device have received data
  */
 
-#ifndef CONF_BOOTLOADER_H_INCLUDED
-#define CONF_BOOTLOADER_H_INCLUDED
+void main_cdc_rx_notify(uint8_t port);
 
-#include "conf_board.h"
+/*! \brief Configures communication line
+ *
+ * \param cfg      line configuration
+ */
+void main_cdc_set_coding(uint8_t port, usb_cdc_line_coding_t * cfg);
 
-#define APP_START_ADDRESS          0x00006000
-#define BOOT_LED                   LED0_PIN
-#define BOOT_LOAD_PIN              SW0_PIN
-#define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
-
-#define BOOT_USART_MODULE          EDBG_CDC_MODULE
-#define BOOT_USART_BAUDRATE        115200
-#define BOOT_USART_MUX_SETTINGS    EDBG_CDC_SERCOM_MUX_SETTING
-#define BOOT_USART_PAD0            EDBG_CDC_SERCOM_PINMUX_PAD0
-#define BOOT_USART_PAD1            EDBG_CDC_SERCOM_PINMUX_PAD1
-#define BOOT_USART_GCLK_SOURCE     GCLK_GENERATOR_0
-
-#define APP_START_PAGE             (APP_START_ADDRESS / FLASH_PAGE_SIZE)
-
-/* DEBUG LED output enable/disable */
-#define DEBUG_ENABLE               false
-
-#endif /* CONF_BOOTLOADER_H_INCLUDED */
+#endif // _MAIN_H_

@@ -3,7 +3,7 @@
  *
  * \brief USART functions for SAM-BA on SAM0
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -82,7 +82,7 @@ void usart_open()
 	usart_get_config_defaults(&config);
 
 	config.baudrate     = BOOT_USART_BAUDRATE;
-	config.mux_setting = BOOT_USART_MUX_SETTINGS;
+	config.mux_setting  = BOOT_USART_MUX_SETTINGS;
 #ifdef BOOT_USART_PAD0
 	config.pinmux_pad0  = BOOT_USART_PAD0;
 #endif
@@ -132,7 +132,7 @@ void usart_close(void)
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
-int usart_putc(uint8_t value)
+int usart_putc(int value)
 {
 	usart_write_wait(&usart_sam_ba, (uint16_t)value);
 	return 1;
@@ -140,12 +140,12 @@ int usart_putc(uint8_t value)
 
 
 
-uint8_t usart_getc(void) {
+int usart_getc(void) {
 	uint16_t retval;
 	//Wait until input buffer is filled
 	while(!(usart_is_rx_ready()));
 	usart_read_wait(&usart_sam_ba, &retval);
-	return (uint8_t)retval;
+	return (int)retval;
 
 }
 

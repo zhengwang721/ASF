@@ -3,7 +3,7 @@
  *
  * \brief USB Device Communication Device Class (CDC) interface definitions.
  *
- * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -408,6 +408,17 @@ int udi_cdc_getc(void);
  * \return the number of data remaining
  */
 iram_size_t udi_cdc_read_buf(void* buf, iram_size_t size);
+
+/**
+ * \brief Non polling reads of a up to 'size' data from CDC line
+ *
+ * \param port      Communication port number to manage
+ * \param buf       Buffer where to store read data
+ * \param size      Maximum number of data to read (size of buffer)
+ *
+ * \return the number of data effectively read
+ */
+iram_size_t udi_cdc_read_no_polling(void* buf, iram_size_t size);
 
 /**
  * \brief Gets the number of free byte in TX buffer
