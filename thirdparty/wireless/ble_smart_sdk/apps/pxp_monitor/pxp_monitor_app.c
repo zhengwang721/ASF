@@ -108,6 +108,7 @@ static void button_cb(void)
 *
 * @param[in] conn_handle Connection handle of a connected device
 */
+#ifndef ENABLE_PTS
 static void rssi_update(at_ble_handle_t conn_handle)
 {
 	int8_t rssi_power = 0;
@@ -159,6 +160,7 @@ static void rssi_update(at_ble_handle_t conn_handle)
 		DBG_LOG_CONT("---No Alert");
 	}
 }
+#endif
 
 /**@brief Proximity Application initialization
 * start the device scanning process
@@ -194,7 +196,7 @@ static void timer_callback_handler(void)
 }
 
 int main(void)
-{
+{	
 	platform_driver_init();
 	acquire_sleep_lock();
 
@@ -230,10 +232,13 @@ int main(void)
 			if (button_pressed) {
 				DBG_LOG("Press 1 for service discovery");
 				DBG_LOG("Press 2 for encryption start");
-				DBG_LOG("Press 3 for send MID ALERT");
-				DBG_LOG("Press 4 for send HIGH ALERT");
-				DBG_LOG("Press 5 for send NO ALERT");
-				DBG_LOG("Press 6 for disconnection");
+				DBG_LOG("Press 3 for send MID ALERT on Immediate Alert Service");
+				DBG_LOG("Press 4 for send HIGH ALERT on Immediate Alert Service");
+				DBG_LOG("Press 5 for send NO ALERT on Immediate Alert Service");
+				DBG_LOG("Press 6 for send MILD ALERT on Link Loss Service");
+				DBG_LOG("Press 7 for send HIGH ALERT on Link Loss Service");
+				DBG_LOG("Press 8 for send NO ALERT on Link Loss Service");
+				DBG_LOG("Press 9 for disconnection");
 				uint8_t option = getchar();
 				switch (option) {
 				case '1':
@@ -260,6 +265,21 @@ int main(void)
 								IAS_NO_ALERT);
 					break;
 				case '6':
+					lls_alert_level_write(ble_dev_info[0].conn_info.handle,
+								lls_handle.char_handle,
+								LLS_MILD_ALERT);
+					break;
+				case '7':
+					lls_alert_level_write(ble_dev_info[0].conn_info.handle,
+								lls_handle.char_handle,
+								LLS_HIGH_ALERT);
+					break;
+				case '8':
+					lls_alert_level_write(ble_dev_info[0].conn_info.handle,
+								lls_handle.char_handle,
+								LLS_NO_ALERT);
+					break;
+				case '9':
 					at_ble_disconnect(ble_dev_info[0].conn_info.handle, AT_BLE_TERMINATED_BY_USER);
 					break;
 				}
@@ -279,6 +299,7 @@ int main(void)
 					at_ble_disconnected_t pxp_connect_request_fail;
 					pxp_connect_request_fail.reason
 						= AT_BLE_TERMINATED_BY_USER;
+					pxp_connect_request_fail.handle = ble_dev_info[0].conn_info.handle;
 					pxp_connect_request_flag = PXP_DEV_UNCONNECTED;
 					if (at_ble_connect_cancel() == AT_BLE_SUCCESS) {
 						DBG_LOG("Connection Timeout");
