@@ -1,53 +1,53 @@
 /**
- * \file
- *
- * \brief Device Information Service - Application
- *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
-
+* \file
+*
+* \brief Device Information Service - Application
+*
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
+*
+* \asf_license_start
+*
+* \page License
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* 3. The name of Atmel may not be used to endorse or promote products derived
+*    from this software without specific prior written permission.
+*
+* 4. This software may only be redistributed and used in connection with an
+*    Atmel microcontroller product.
+*
+* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+* \asf_license_stop
+*
+*/
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+*/
 
 /****************************************************************************************
-*							        Includes	                                        *
+*							        Includes	                                     	*
 ****************************************************************************************/
+
 
 #include <asf.h>
 /* #include "conf_extint.h" */
@@ -68,23 +68,20 @@
 volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
 /* === GLOBALS ============================================================ */
-bool volatile timer_cb_done;
+bool volatile timer_cb_done = false; 
 uint8_t fw_version[10];
 at_ble_handle_t dis_conn_handle;
 dis_gatt_service_handler_t dis_service_handler;
-
-/* To keep the application in execution continuously*/
+/* To keep the applicaiton in execution continuosly*/
 bool app_exec = true;
 
-static void ble_user_event(void);
-
 /**
- * \Timer callback handler called on timer expiry
- */
+* \Timer callback handler called on timer expiry
+*/
 
 static void timer_callback_handler(void)
 {
-	/* Timer call back */
+	//Timer call back
 	timer_cb_done = true;
 
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
@@ -92,56 +89,47 @@ static void timer_callback_handler(void)
 
 /* Advertisement data set and Advertisement start */
 static at_ble_status_t device_information_advertise(void)
-{
-	uint8_t idx = 0;
-	uint8_t adv_data [ DIS_ADV_DATA_NAME_LEN + DIS_ADV_DATA_UUID_LEN   + (2 * 2)];
-	uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
-
-	adv_data[idx++] = DIS_ADV_DATA_UUID_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = DIS_ADV_DATA_UUID_TYPE;
-
-	/* Appending the UUID */
-	adv_data[idx++] = (uint8_t)DIS_SERVICE_UUID;
-	adv_data[idx++] = (uint8_t)(DIS_SERVICE_UUID >> 8);
-
-	/* Appending the complete name to the Ad packet */
-	adv_data[idx++] = DIS_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	adv_data[idx++] = DIS_ADV_DATA_NAME_TYPE;
-
-	memcpy(&adv_data[idx], DIS_ADV_DATA_NAME_DATA, DIS_ADV_DATA_NAME_LEN );
-	idx += DIS_ADV_DATA_NAME_LEN;
-
-	/* Adding the advertisement data and scan response data */
-	if (!(at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) == AT_BLE_SUCCESS)) {
-		DBG_LOG("Failed to set adv data");
+{	
+	at_ble_status_t status = AT_BLE_FAILURE;
+	
+	if((status = ble_advertisement_data_set()) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("advertisement data set failed reason :%d",status);
+		return status;
 	}
-
+	
 	/* Start of advertisement */
-	if (at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_DIS_FAST_ADV, APP_DIS_ADV_TIMEOUT, 0) == AT_BLE_SUCCESS) {
+	if((status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, APP_DIS_FAST_ADV, APP_DIS_ADV_TIMEOUT, 0)) == AT_BLE_SUCCESS)
+	{
 		DBG_LOG("BLE Started Adv");
 		return AT_BLE_SUCCESS;
-	} else {
-		DBG_LOG("BLE Adv start Failed");
 	}
-
-	return AT_BLE_FAILURE;
+	else
+	{
+		DBG_LOG("BLE Adv start Failed status :%d",status);
+	}
+	return status;
 }
 
 /* Callback registered for AT_BLE_PAIR_DONE event from stack */
-static void ble_paired_app_event(at_ble_handle_t conn_handle)
+static at_ble_status_t ble_paired_app_event(void *param)
 {
+	at_ble_pair_done_t *at_ble_pair_done = (at_ble_pair_done_t *)param;
 	LED_On(LED0);
 	hw_timer_start(FIRMWARE_UPDATE_INTERVAL);
-	dis_conn_handle = conn_handle;
+	dis_conn_handle = at_ble_pair_done->handle;
+	return AT_BLE_SUCCESS;
 }
 
 /* Callback registered for AT_BLE_DISCONNECTED event from stack */
-static void ble_disconnected_app_event(at_ble_handle_t conn_handle)
+static at_ble_status_t ble_disconnected_app_event(void *param)
 {
 	hw_timer_stop();
 	timer_cb_done = false;
 	LED_Off(LED0);
 	device_information_advertise();
+    ALL_UNUSED(param);
+	return AT_BLE_SUCCESS;
 }
 
 /* Callback registered for AT_BLE_CONNECTED event from stack */
@@ -167,97 +155,89 @@ static const ble_event_callback_t device_info_app_gap_cb[] = {
 	NULL,
 	NULL,
 	NULL,
-	(ble_event_callback_t)ble_connected_app_event,
-	(ble_event_callback_t)ble_disconnected_app_event,
+	ble_connected_app_event,
+	ble_disconnected_app_event,
 	NULL,
 	NULL,
-	(ble_event_callback_t)ble_paired_app_event,
+	ble_paired_app_event,
 	NULL,
 	NULL,
 	NULL,
 	NULL,
-	(ble_event_callback_t)ble_paired_app_event,
+	ble_paired_app_event,
 	NULL,
 	NULL,
 	NULL,
 	NULL
 };
+ 
 /**
- * \Device Information Service Application main function
- */
+* \Device Information Service Application main function
+*/
 int main(void)
 {
 	at_ble_status_t status;
-	app_exec = true;
-
-	timer_cb_done = false;
-	memset(fw_version, 0x00, 10);
-	memset(&dis_service_handler, 0x00, sizeof(dis_gatt_service_handler_t));
 
 	platform_driver_init();
 	acquire_sleep_lock();
-
-	/* Initialize serial console */
-	serial_console_init();
-
-	/* Initialize the hardware timer */
-	hw_timer_init();
-
-	/* Register the callback */
-	hw_timer_register_callback(timer_callback_handler);
-
-	DBG_LOG("Initializing Device Information Service Application");
-
-	/* initialize the ble chip  and Set the device mac address */
-	ble_device_init(NULL);
 
 	/* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
 
+	/* Initialize serial console */
+	serial_console_init();
+	
+	/* Initialize the hardware timer */
+	hw_timer_init();
+	
+	/* Register the callback */
+	hw_timer_register_callback(timer_callback_handler);
+	
+	DBG_LOG("Initializing Device Information Service Application");
+	
+	/* initialize the ble chip  and Set the device mac address */
+	ble_device_init(NULL);
+
+
+
 	/* Initialize the dis */
 	dis_init_service(&dis_service_handler);
-
+	
 	/* Define the primary service in the GATT server database */
-	if ((status = dis_primary_service_define(&dis_service_handler)) != AT_BLE_SUCCESS) {
-		DBG_LOG("Device Information Service definition failed,reason %x", status);
+	if ((status = dis_primary_service_define(&dis_service_handler)) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Device Information Service definition failed,reason %x",status);
 	}
-
+	
 	device_information_advertise();
-
+	
 	/* Register callbacks for gap related events */
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 									BLE_GAP_EVENT_TYPE,
 									device_info_app_gap_cb);
-
-	register_ble_user_event_cb(ble_user_event);
-
-	/* Capturing the events  */
+										
+	/* Capturing the events  */ 
 	while (app_exec) {
 		/* BLE Event Task */
-		ble_event_task();
-	}
+		ble_event_task();	
+		if (timer_cb_done)
+		{
+			static uint8_t fw_update;
+			dis_info_data fw_info_data;
+			timer_cb_done = false;
+			strcpy((char *)fw_version, "FW_VER-000");
+			fw_update = fw_update %100;				
+			fw_version[8] = (fw_update / 10)+'0';
+			fw_version[9] = (fw_update % 10)+'0';
+			fw_info_data.info_data = (uint8_t *)fw_version;
+			fw_info_data.data_len = 10;
+			UPDATE_FIRMWARE_REVISION(&dis_service_handler, &fw_info_data, dis_conn_handle);
+			fw_update++;
+			DBG_LOG("Updating Firmware to ver:%s", fw_version);
+			hw_timer_start(FIRMWARE_UPDATE_INTERVAL);
+		}
+			
+	}	
 	return 0;
-}
-
-/**
- * callback handler called when AT_BLE_PLATFORM_EVENT is occurred.
- */
-static void ble_user_event(void)
-{
-	if (timer_cb_done) {
-		static uint8_t fw_update;
-		dis_info_data fw_info_data;
-		timer_cb_done = false;
-		strcpy((char *)fw_version, "FW_VER-000");
-		fw_update = fw_update % 100;
-		fw_version[8] = (fw_update / 10) + '0';
-		fw_version[9] = (fw_update % 10) + '0';
-		fw_info_data.info_data = (uint8_t *)fw_version;
-		fw_info_data.data_len = 10;
-		UPDATE_FIRMWARE_REVISION(&dis_service_handler, &fw_info_data, dis_conn_handle);
-		fw_update++;
-		DBG_LOG("Updating Firmware to ver:%s", fw_version);
-		hw_timer_start(FIRMWARE_UPDATE_INTERVAL);
-	}
 }
