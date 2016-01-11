@@ -66,12 +66,13 @@
 //	<id> anp_app_anp_fast_adv
 #define APP_ANP_FAST_ADV							(1600) //1000 ms
 
-/**@brief Advertisement Timeout*/
-//	<o> Advertisement Timeout <1000-10000:50>
-//	<i> Defines inteval at which advertisement timout in ms.
-//	<i> Default: 1000
+/** @brief APP_ANP_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x028F in 
+ *seconds, 0x0000 disables time-out.*/
+//	<o> Advertisement Timeout <1-655>
+//	<i> Defines interval at which advertisement timeout in sec.
+//	<i> Default: 655
 //	<id> anp_app_anp_adv_timeout
-#define APP_ANP_ADV_TIMEOUT							(1000) // 100 Secs
+#define APP_ANP_ADV_TIMEOUT							(655) // 10 min
 
 /**@brief Scan Response length*/
 //	<o> Scan Response Buffer <1-20>
@@ -138,6 +139,13 @@ void anp_client_init( void *params);
  * \note Called by the ble_manager
  */
 void anp_client_adv(void);
+
+/**
+ * @brief Connection handler callback
+ * @param[in] at_ble_connected_t which consists of connection handle
+ * @return at_ble_status_t which return AT_BLE_SUCCESS on success
+ */
+at_ble_status_t anp_info_connect_handler(void *params);
 
 /**
  * @brief Handler for disconnection event

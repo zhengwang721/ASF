@@ -111,18 +111,18 @@ int main(void)
 
 	/* Initialize serial console */
 	serial_console_init();
-
-	DBG_LOG("Alert Notification Profile Application");
-
-	/* Initializing the hardware timer */
-	hw_timer_init();
-
+	
 	/* Initializing the button */
 	button_init(button_cb);
-
+	
+	/* Initializing the hardware timer */
+	hw_timer_init();
+	
 	/*Registration of timer callback*/
 	hw_timer_register_callback(timer_callback_handler);
-
+	
+	DBG_LOG("Alert Notification Profile Application");
+	
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 	
