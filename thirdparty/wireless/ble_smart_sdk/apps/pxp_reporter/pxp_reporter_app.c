@@ -170,6 +170,7 @@ int main(void)
 {
 	platform_driver_init();
 	acquire_sleep_lock();
+
 	/* Initialize LED */
 	led_init();
 		
