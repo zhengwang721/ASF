@@ -93,6 +93,7 @@ Pdc *ble_usart_pdc;
 pdc_packet_t ble_usart_tx_pkt;
 pdc_packet_t ble_usart_rx_pkt;
 uint8_t pdc_rx_buffer[BLE_MAX_RX_PAYLOAD_SIZE];
+uint8_t *pdc_rxbuf_readaddr = NULL;
 //uint8_t pdc_rx_next_buffer[BLE_MAX_RX_PAYLOAD_SIZE]; //Improved with Next Buffer chain
 volatile bool pdc_uart_enabled = false;
 
@@ -269,11 +270,13 @@ static inline void pdc_update_rx_transfer(void)
 	  
 	/* Configure the PDC for data receive */
 	pdc_rx_init(ble_usart_pdc, &ble_usart_rx_pkt, NULL);
+	pdc_rxbuf_readaddr = &pdc_rx_buffer[0];
 #endif
 
 #if SAM4S
 	if(true == first_byte_received)
 	{
+		static uint8_t slave_state_connected = false;
 		first_byte_received = false;
 	
 		/* Initialize the Rx buffers for data receive */
@@ -282,6 +285,12 @@ static inline void pdc_update_rx_transfer(void)
 		pdc_enable_transfer(ble_usart_pdc, PERIPH_PTCR_RXTEN);
 
 		ble_usart_rx_pkt.ul_size =  1;
+		pdc_rxbuf_readaddr = &pdc_rx_buffer[1];
+		if (!slave_state_connected)
+		{
+			slave_state_connected = true;
+			pdc_rxbuf_readaddr = &pdc_rx_buffer[0];
+		}
 	}
 	else
 	{
@@ -293,6 +302,7 @@ static inline void pdc_update_rx_transfer(void)
 		pdc_enable_transfer(ble_usart_pdc, PERIPH_PTCR_RXTEN);
 
 		ble_usart_rx_pkt.ul_size = BLE_MAX_RX_PAYLOAD_SIZE - 1;
+		pdc_rxbuf_readaddr = &pdc_rx_buffer[0];
 	}
 	/* Configure the PDC for data receive */
 	pdc_rx_init(ble_usart_pdc, &ble_usart_rx_pkt, NULL);
@@ -343,12 +353,13 @@ static inline void ble_pdc_uart_handler(void)
 			rx_count = (ble_usart_rx_pkt.ul_size - pdc_read_rx_counter(ble_usart_pdc));
 			if(rx_count)
 			{
-				platform_dma_process_rxdata((uint8_t *)ble_usart_rx_pkt.ul_addr, rx_count);
+				pdc_update_rx_transfer();								
+				platform_dma_process_rxdata(pdc_rxbuf_readaddr, rx_count);		
 				#if SERIAL_DRV_RX_CB_ENABLE
 					SERIAL_DRV_RX_CB();
 				#endif
-			}			
-			pdc_update_rx_transfer();
+			}						
+				
 			
 			if (timeout)
 			{
@@ -369,7 +380,8 @@ static inline void ble_pdc_uart_handler(void)
 	}
 	else
 	{
-	 /* Handle Buffer Over-Run Error */
+	 /* Handle Buffer Over-Run Error */	
+	 usart_reset_status(BLE_UART);		  
 	}	
 }
 
