@@ -47,6 +47,7 @@
 #include "conf_console.h"
 #include "usart.h"
 #include "platform.h"
+#include "timer_hw.h"
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
@@ -72,12 +73,19 @@ void serial_console_init(void)
 	usart_enable(&cdc_uart_module);
 }
 
+uint8_t timer_status = 1;
+void timer_cb(void *param)
+{
+	timer_status = 0;
+}
+
 uint8_t getchar_timeout(uint32_t timeout)
 {
 	uint16_t temp = NULL;
 
-	//start_timer(timeout);
-	while((STATUS_OK != usart_read_wait(&cdc_uart_module, &temp)) /*&& (timer_done()>0)*/);
+	hw_timer_register_callback(timer_cb);
+	hw_timer_start(timeout);
+	while((STATUS_OK != usart_read_wait(&cdc_uart_module, &temp)) && timer_status);
 
 	return ((uint8_t)temp);	
 }

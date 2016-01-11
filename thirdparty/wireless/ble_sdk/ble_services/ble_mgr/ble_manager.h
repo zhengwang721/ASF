@@ -209,7 +209,7 @@ typedef at_ble_status_t (*ble_event_callback_t) (void *params);
 #define BLE_EVENT_TIMEOUT			(20)
 
 /** @brief pin timeout */
-#define PIN_TIMEOUT					30*1000
+#define PIN_TIMEOUT					30
 
 /** @brief Observer related declarations */
 #define LE_LIMITED_DISCOVERABLE_MODE  ((uint8_t) 1 << 0)
