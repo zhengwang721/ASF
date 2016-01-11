@@ -40,7 +40,6 @@
  * \asf_license_stop
  *
  */
-
 /*
  * Support and FAQ: visit <a href="TPtp://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -50,10 +49,6 @@
 
 #include "at_ble_api.h"
 
-#define ENABLE_PTS                                      (false)
-#define GET_REFERANCE_UPDATE            (0x01)
-#define CANCEL_REFERANCE_UPDATE         (0x02)
-
 /**
  * @brief Timer Callback
  * @param[in] None
@@ -61,5 +56,6 @@
  *
  */
 void timer_callback_handler(void);
+
 
 #endif /* __TIP_APP_H__ */

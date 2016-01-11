@@ -40,17 +40,15 @@
  * \asf_license_stop
  *
  */
-
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-/**
+ /**
  * \mainpage
  * \section preface Preface
  * This is the reference manual for the Time Information Profile Application
  */
-
 /***********************************************************************************
  *									Includes		                               *
  **********************************************************************************/
@@ -92,9 +90,8 @@ static bool completed_prev_read = true;
 /***********************************************************************************
  *									Implementations                               *
  **********************************************************************************/
-
 /**
- * @brief Button Press Callback
+ * @brief Button Press Callback 
  */
 static void button_cb(void)
 {
@@ -112,7 +109,7 @@ void timer_callback_handler(void)
 }
 
 /**
- * @brief Callback registered for characteristic read response
+ * @brief Callback registered for characteristic read response 
  * @param[in] char_read_resp @ref at_ble_characteristic_read_response_t
  * @return None
  *
@@ -180,75 +177,97 @@ static const ble_event_callback_t tip_app_gatt_client_handle[] = {
 /**
  * @brief Main Function for Time Information Callback
  */
-int main(void)
+int main (void)
 {
-#if ENABLE_PTS
-	bool event = true;
-#endif
 
 	platform_driver_init();
 	acquire_sleep_lock();
 
 	/* Initializing the console  */
 	serial_console_init();
-
-	/* Initializing the hardware timer */
-	hw_timer_init();
-
-	/*Registration of timer callback*/
-	hw_timer_register_callback(timer_callback_handler);
-	//time_info_register_read_response_callback(app_read_response_cb);
-
-	DBG_LOG("Time Profile Application");
-
-	/* initialize the BLE chip  and Set the device mac address */
-	ble_device_init(NULL);
-
+	
 	/* initialize the button & LED */
 	button_init(button_cb);
 	led_init();
-
-	time_info_init(NULL);
-
+	
+	/* Initializing the hardware timer */
+	hw_timer_init();
+	
+	/*Registration of timer callback*/
+	hw_timer_register_callback(timer_callback_handler);
+	
+	DBG_LOG("Time Profile Application");
+	
+	/* initialize the BLE chip  and Set the device mac address */
+	ble_device_init(NULL);
+	
+	time_info_init();
 	
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 									BLE_GATT_CLIENT_EVENT_TYPE,
 									tip_app_gatt_client_handle);
-	while (1) {
+	
+	while(1) {
 		ble_event_task();
-		if (button_pressed) {
+		if (button_pressed && completed_prev_read) {
+			//delay_ms(200);
+				/* code for pts */
+			#ifdef ENABLE_PTS
+			DBG_LOG("Press 1 for Service discovery");
+			DBG_LOG("Press 2 for Writing to time update control point");
+			DBG_LOG("Press 3 for Enable/Disable notification");
+			DBG_LOG("Press 4 for Read current time characteristics value");
+			DBG_LOG("And press enter");
+			int option = 0;
+			scanf("%d", &option);
+			DBG_LOG("Received %d",option);
+			switch (option) {
+			case 1 :
+				time_info_service_discovery();
+				break;
+			case 2 :
+				DBG_LOG("Enter time update control point value [1 - 2] and press enter");
+				scanf("%d", &option);
+				if (!(tis_rtu_update_write(ble_dev_info[0].conn_info.handle, 
+											rtu_handle.tp_control_char_handle,
+											(uint8_t)option) == AT_BLE_SUCCESS)) {
+					DBG_LOG("Fail to write Time Update control point");
+				}
+				break;
+			case 3 :
+				DBG_LOG("Enter 0 to disable both notification & indication");
+				DBG_LOG("Enter 1 to enable notification");
+				DBG_LOG("Enter 2 to enable indication");
+				DBG_LOG("Enter 3 to enable both notification and indication");
+				DBG_LOG("And press Enter");
+				scanf("%d", &option);
+				time_info_write_notification_handler((uint16_t)option);
+				break;
+			case 4 :
+				if (current_time_char_found) {
+					if (tis_current_time_read( ble_dev_info[0].conn_info.handle, 
+											cts_handle.curr_char_handle) 
+											== AT_BLE_SUCCESS) {
+						LED_Toggle(LED0);
+						DBG_LOG_DEV("CurrentTime info request success");
+						completed_prev_read = false;
+					}
+				}
+				break;
+			}
+			#else /* code for pts */		
 			if (current_time_char_found) {
-				if (tis_current_time_read( ble_dev_info[0].conn_info.handle,
-						cts_handle.curr_char_handle)
-						== AT_BLE_SUCCESS) {
+				if (tis_current_time_read( ble_dev_info[0].conn_info.handle, 
+										cts_handle.curr_char_handle) 
+										== AT_BLE_SUCCESS) {
 					LED_Toggle(LED0);
 					DBG_LOG_DEV("CurrentTime info request success");
+					completed_prev_read = false;
 				}
 			}
-
-			/* code for pts */
-			#if ENABLE_PTS
-			if (event) {
-				if (!(tis_rtu_update_write(ble_connected_dev_info[0].handle,
-						rtu_handle.tp_control_char_handle,
-						GET_REFERANCE_UPDATE)
-						== AT_BLE_SUCCESS)) {
-					DBG_LOG("Fail to write Time Update control point");
-				}
-
-				event = false;
-			} else {
-				if (!(tis_rtu_update_write(ble_connected_dev_info[0].handle,
-						rtu_handle.tp_control_char_handle,
-						CANCEL_REFERANCE_UPDATE)
-						== AT_BLE_SUCCESS)) {
-					DBG_LOG("Fail to write Time Update control point");
-				}
-
-				event = true;
-			}
-			#endif /* code for pts */
+			#endif
 			button_pressed = false;
 		}
 	}
 }
+	
