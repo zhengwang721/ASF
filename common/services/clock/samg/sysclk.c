@@ -292,16 +292,16 @@ void sysclk_init(void)
 #endif
 
 #if SAMG55
-/* Set the trim value when system run near 120M */
-if ((SystemCoreClock <= (CHIP_FREQ_CPU_MAX + (CHIP_FREQ_CPU_MAX >> 3))) &&
-(SystemCoreClock >= (CHIP_FREQ_CPU_MAX - (CHIP_FREQ_CPU_MAX >> 3)))) {
-	/* Get the trim value from unique ID area */
-	efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI,
-	unique_id, 32);
+	/* Set the trim value when system run near 120M */
+	if ((SystemCoreClock <= (CHIP_FREQ_CPU_MAX + (CHIP_FREQ_CPU_MAX >> 3))) &&
+	(SystemCoreClock >= (CHIP_FREQ_CPU_MAX - (CHIP_FREQ_CPU_MAX >> 3)))) {
+		/* Get the trim value from unique ID area */
+		efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI,
+		unique_id, 32);
 
-	trim_value = unique_id[16] & 0x0000FFFF;
-	supc_set_regulator_trim_user(SUPC, trim_value);
-}
+		trim_value = unique_id[16] & 0x0000FFFF;
+		supc_set_regulator_trim_user(SUPC, trim_value);
+	}
 #endif
 
 #if (defined CONFIG_SYSCLK_DEFAULT_RETURNS_SLOW_OSC)
