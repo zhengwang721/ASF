@@ -76,11 +76,13 @@ const t_monitor_if uart_if =
 { usart_putc, usart_getc, usart_is_rx_ready, usart_putdata, usart_getdata,
 		usart_putdata_xmd, usart_getdata_xmd };
 
+#ifdef CONF_USBCDC_INTERFACE_SUPPORT
 //Please note that USB doesn't use Xmodem protocol, since USB already includes flow control and data verification
 //Data are simply forwarded without further coding.
 const t_monitor_if usbcdc_if =
 { udi_cdc_putc, udi_cdc_getc, udi_cdc_is_rx_ready, udi_cdc_write_buf,
 		udi_cdc_read_no_polling, udi_cdc_write_buf, udi_cdc_read_buf };
+#endif
 
 /* The pointer to the interface object use by the monitor */
 t_monitor_if * ptr_monitor_if;
@@ -99,8 +101,10 @@ void sam_ba_monitor_init(uint8_t com_interface)
 	/* Selects the requested interface for future actions */
 	if (com_interface == SAM_BA_INTERFACE_USART)
 		ptr_monitor_if = (t_monitor_if*) &uart_if;
+#ifdef CONF_USBCDC_INTERFACE_SUPPORT
 	if (com_interface == SAM_BA_INTERFACE_USBCDC)
 		ptr_monitor_if = (t_monitor_if*) &usbcdc_if;
+#endif
 }
 
 

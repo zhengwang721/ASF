@@ -82,8 +82,9 @@
 
 static void check_start_application(void);
 
+#ifdef CONF_USBCDC_INTERFACE_SUPPORT
 static volatile bool main_b_cdc_enable = false;
-
+#endif
 /**
  * \brief Check the application startup condition
  *
@@ -156,15 +157,17 @@ int main(void)
 	/* System initialization */
 	system_init();
 
+#ifdef CONF_USBCDC_INTERFACE_SUPPORT
 	/* Start USB stack */
 	udc_start();
-
+#endif
 	/* UART is enabled in all cases */
 	usart_open();
 
 	DEBUG_PIN_LOW;
 	/* Wait for a complete enum on usb or a '#' char on serial line */
 	while (1) {
+#ifdef CONF_USBCDC_INTERFACE_SUPPORT
 		/* Check if a USB enumeration has succeeded and com port was opened */
 		if(main_b_cdc_enable) {
 			sam_ba_monitor_init(SAM_BA_INTERFACE_USBCDC);
@@ -173,6 +176,7 @@ int main(void)
 				sam_ba_monitor_run();
 			}
 		}
+#endif
 		/* Check if a '#' has been received */
 		if (usart_sharp_received()) {
 			sam_ba_monitor_init(SAM_BA_INTERFACE_USART);
@@ -184,6 +188,7 @@ int main(void)
 	}
 }
 
+#ifdef CONF_USBCDC_INTERFACE_SUPPORT
 #ifdef USB_DEVICE_LPM_SUPPORT
 void main_suspend_lpm_action(void)
 {
@@ -220,3 +225,4 @@ void main_cdc_rx_notify(uint8_t port)
 void main_cdc_set_coding(uint8_t port, usb_cdc_line_coding_t * cfg)
 {
 }
+#endif

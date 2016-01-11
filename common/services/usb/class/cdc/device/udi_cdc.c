@@ -959,17 +959,17 @@ udi_cdc_read_buf_loop_wait:
 	return 0;
 }
 
-iram_size_t udi_cdc_multi_read_no_polling(uint8_t port, void* buf, iram_size_t size)
+static iram_size_t udi_cdc_multi_read_no_polling(uint8_t port, void* buf, iram_size_t size)
 {
 	uint8_t *ptr_buf = (uint8_t *)buf;
 	iram_size_t nb_avail_data;
 	uint16_t pos;
 	uint8_t buf_sel;
 	irqflags_t flags;
-	
-	#if UDI_CDC_PORT_NB == 1 // To optimize code
+
+#if UDI_CDC_PORT_NB == 1 // To optimize code
 	port = 0;
-	#endif
+#endif
 
 	//Data interface not started... exit
 	if (!udi_cdc_data_running) {
