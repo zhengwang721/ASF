@@ -52,8 +52,8 @@ extern "C" {
  *
  * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
- * the various clock sources, bus clocks and generic clocks within the device,
- * with functions to manage the enabling, disabling, source selection and
+ * the various clock sources, bus clocks, and generic clocks within the device,
+ * with functions to manage the enabling, disabling, source selection, and
  * prescaling of clocks to various internal peripherals.
  *
  * The following peripherals are used by this module:
@@ -94,7 +94,7 @@ extern "C" {
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_clock_sources Clock Sources
  * The SAM devices have a number of master clock source modules, each of
- * which being capable of producing a stabilized output frequency which can then
+ * which being capable of producing a stabilized output frequency, which can then
  * be fed into the various peripherals and modules within the device.
  *
  * Possible clock source modules include internal R/C oscillators as well as external
@@ -107,7 +107,7 @@ extern "C" {
  * different clock speed.
  *
  * The general main clock tree for the CPU and associated buses is shown in
- * \ref asfdoc_sam0_system_clock_module_clock_tree "the figure below".
+ * the figure below.
  *
  * \anchor asfdoc_sam0_system_clock_module_clock_tree
  * \dot
@@ -142,7 +142,7 @@ extern "C" {
  * To save power, the input clock to one or more peripherals on the AHB and APBx
  * buses can be masked away - when masked, no clock is passed into the module.
  * Disabling of clocks of unused modules will prevent all access to the masked
- * module, but will reduce the overall device power consumption.
+ * module, and will reduce the overall device power consumption.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_gclk Generic Clocks
  * Within the SAM devices there are a number of Generic Clocks; these are used to
@@ -178,7 +178,7 @@ extern "C" {
  *
  * \subsubsection asfdoc_sam0_system_clock_module_chain_example Clock Chain Example
  * An example setup of a complete clock chain within the device is shown in
- * \ref asfdoc_sam0_system_clock_module_chain_example_fig "the figure below".
+ * the figure below.
  *
  * \anchor asfdoc_sam0_system_clock_module_chain_example_fig
  * \dot
@@ -212,7 +212,7 @@ extern "C" {
  * from one of the provided Source Clocks, and prescale the output for one or
  * more Generic Clock Channels in a one-to-many relationship. The generators
  * thus allow for several clocks to be generated of different frequencies,
- * power usages and accuracies, which can be turned on and off individually to
+ * power usages, and accuracies, which can be turned on and off individually to
  * disable the clocks to multiple peripherals as a group.
  *
  * \subsubsection asfdoc_sam0_system_clock_module_overview_gclk_channels Generic Clock Channels
@@ -253,9 +253,9 @@ extern "C" {
 
 
 /**
- * \brief Available start-up times for the XOSC32K.
+ * \brief Available startup times for the XOSC32K.
  *
- * Available external 32KHz oscillator start-up times, as a number of external
+ * Available external 32KHz oscillator startup times, as a number of external
  * clock cycles.
  */
 enum system_xosc32k_startup {
@@ -276,9 +276,9 @@ enum system_xosc32k_startup {
 };
 
 /**
- * \brief Available start-up times for the XOSC.
+ * \brief Available startup times for the XOSC.
  *
- * Available external oscillator start-up times, as a number of external clock
+ * Available external oscillator startup times, as a number of external clock
  * cycles.
  */
 enum system_xosc_startup {
@@ -317,9 +317,9 @@ enum system_xosc_startup {
 };
 
 /**
- * \brief Available start-up times for the OSC32K.
+ * \brief Available startup times for the OSC32K.
  *
- * Available internal 32KHz oscillator start-up times, as a number of internal
+ * Available internal 32KHz oscillator startup times, as a number of internal
  * OSC32K clock cycles.
  */
 enum system_osc32k_startup {
@@ -382,9 +382,9 @@ enum system_osc48m_div {
 };
 
 /**
- * \brief Available start-up times for the OSC48M.
+ * \brief Available startup times for the OSC48M.
  *
- * Available internal 48MHz oscillator start-up times, as a number of internal
+ * Available internal 48MHz oscillator startup times, as a number of internal
  * clock cycles.
  */
 enum system_osc48m_startup {
@@ -524,7 +524,7 @@ enum system_clock_apb_bus {
 struct system_clock_source_xosc_config {
 	/** External clock type */
 	enum system_clock_external external_clock;
-	/** Crystal oscillator start-up time */
+	/** Crystal oscillator startup time */
 	enum system_xosc_startup startup_time;
 	/** Enable automatic amplitude gain control */
 	bool auto_gain_control;
@@ -553,7 +553,7 @@ struct system_clock_source_xosc_config {
 struct system_clock_source_xosc32k_config {
 	/** External clock type */
 	enum system_clock_external external_clock;
-	/** Crystal oscillator start-up time */
+	/** Crystal oscillator startup time */
 	enum system_xosc32k_startup startup_time;
 	/** Enable 1KHz output */
 	bool enable_1khz_output;
@@ -566,8 +566,8 @@ struct system_clock_source_xosc32k_config {
 	/** Run On Demand. If this is set the XOSC32K won't run
 	 * until requested by a peripheral */
 	bool on_demand;
-	/** Lock configuration after it has been written,
-	 *  a device reset will release the lock */
+	/** Lock configuration after it has been written.
+	 *  A device reset will release the lock */
 	bool write_once;
 	/** Clock failure detector prescaler from OSCULP32K */
 	enum system_clock_xosc32k_failure_detector_prescaler clock_failure_detector_prescaler;
@@ -592,7 +592,7 @@ struct system_clock_source_osc48m_config {
 	/** Run On Demand. If this is set the OSC48M won't run
 	 * until requested by a peripheral */
 	bool on_demand;
-	/** Crystal oscillator start-up time */
+	/** Crystal oscillator startup time */
 	enum system_osc48m_startup startup_time;
 };
 
@@ -640,7 +640,7 @@ struct system_clock_source_osc32k_config {
  * Fills a configuration structure with the default configuration for an
  * external oscillator module:
  *   - External Crystal
- *   - Start-up time of 16384 external clock cycles
+ *   - Startup time of 16384 external clock cycles
  *   - Automatic crystal gain control mode enabled
  *   - Frequency of 12MHz
  *   - Don't run in STANDBY sleep mode
@@ -722,7 +722,7 @@ static inline bool system_clock_xosc_is_switched(void)
  * Fills a configuration structure with the default configuration for an
  * external 32KHz oscillator module:
  *   - External Crystal
- *   - Start-up time of 16384 external clock cycles
+ *   - Startup time of 16384 external clock cycles
  *   - Automatic crystal gain control mode disabled
  *   - Frequency of 32.768KHz
  *   - 1KHz clock output disabled
@@ -880,7 +880,7 @@ void system_clock_source_osculp32k_set_config(
  *   - Clock divider by 12 and output frequency 4MHz
  *   - Don't run in STANDBY sleep mode
  *   - Run only when requested by peripheral (on demand)
- *   - Start-up time of 8 clock cycles
+ *   - Startup time of eight clock cycles
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -972,7 +972,7 @@ static inline uint32_t system_cpu_clock_get_hz(void)
  * \brief Set bits in the clock mask for the AHB bus.
  *
  * This function will set bits in the clock mask for the AHB bus.
- * Any bits set to 1 will enable that clock, 0 bits in the mask
+ * Any bits set to 1 will enable that clock, zero bits in the mask
  * will be ignored
  *
  * \param[in] ahb_mask  AHB clock mask to enable
@@ -987,7 +987,7 @@ static inline void system_ahb_clock_set_mask(
  * \brief Clear bits in the clock mask for the AHB bus.
  *
  * This function will clear bits in the clock mask for the AHB bus.
- * Any bits set to 1 will disable that clock, 0 bits in the mask
+ * Any bits set to 1 will disable that clock, zero bits in the mask
  * will be ignored.
  *
  * \param[in] ahb_mask  AHB clock mask to disable
@@ -1336,7 +1336,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  *	- This driver implements workaround for errata 10558
  *
- *	  "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"
+ *	  "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)".
  *	  When system_init is called it will reset these interrupts flags before they are used.
 
  *	- This driver implements experimental workaround for errata 9905
@@ -1384,8 +1384,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>42647A</td>
- *		<td>12/2015</td>
- *		<td>Initial release</td>
+ *		<td>01/2016</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */

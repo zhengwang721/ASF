@@ -619,9 +619,9 @@ bool system_clock_source_is_ready(
  * application. All clock sources and GCLK generators are running when this function
  * returns.
  *
- * \note OSC48M is always enabled and if user selects other clocks for GCLK generators,
+ * \note OSC48M is always enabled and if the user selects other clocks for GCLK generators,
  * the OSC48M default enable can be disabled after system_clock_init. Make sure the
- * clock switch successfully before disabling OSC48M.
+ * clock switches successfully before disabling OSC48M.
  */
 void system_clock_init(void)
 {
