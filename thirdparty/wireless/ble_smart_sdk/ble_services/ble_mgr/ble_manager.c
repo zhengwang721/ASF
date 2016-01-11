@@ -1,49 +1,49 @@
 /**
- * \file
- *
- * \brief BLE Manager
- *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
-
+* \file
+*
+* \brief BLE Manager
+*
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
+*
+* \asf_license_start
+*
+* \page License
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* 3. The name of Atmel may not be used to endorse or promote products derived
+*    from this software without specific prior written permission.
+*
+* 4. This software may only be redistributed and used in connection with an
+*    Atmel microcontroller product.
+*
+* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+* \asf_license_stop
+*
+*/
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+*/
+
 
 #include <string.h>
 #include <stdlib.h>
@@ -54,9 +54,6 @@
 #include "platform.h"
 #include "console_serial.h"
 
-extern volatile bool init_done;
-
-//alex.shin
 #if BLE_DEVICE_ROLE == BLE_ROLE_ALL
 #ifndef ATT_DB_MEMORY
 #define ATT_DB_MEMORY
@@ -64,18 +61,17 @@ extern volatile bool init_done;
 #endif
 
 #if defined ATT_DB_MEMORY
-#define ATT_DB_MAX 1024
-uint8_t att_db_data[ATT_DB_MAX];
+uint32_t att_db_data[BLE_ATT_DB_MEMORY_SIZE/4] = {0};
 #endif
 
 
-volatile uint8_t ble_device_count; //connected client count
+volatile uint8_t ble_device_count;
 
-ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED]; //connected devices information 
+ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 
-static at_ble_addr_t ble_peripheral_dev_address;// server or not 
+static at_ble_addr_t ble_peripheral_dev_address;
 
-at_ble_connected_t connected_state_info;//current connected device info.
+at_ble_connected_t connected_state_info;
 
 const ble_event_callback_t *ble_mgr_gap_event_cb[MAX_GAP_EVENT_SUBSCRIBERS];
 const ble_event_callback_t *ble_mgr_gatt_client_event_cb[MAX_GATT_CLIENT_SUBSCRIBERS];
@@ -100,13 +96,14 @@ static const ble_event_callback_t ble_mgr_gap_handle[GAP_HANDLE_FUNC_MAX] = {
 	ble_pair_done_handler,
 	ble_pair_request_handler,
 	ble_slave_security_request_handler,
-	ble_pair_key_request_handler,
+	ble_pair_key_request_handler,	
 	ble_encryption_request_handler,
 	ble_encryption_status_change_handler,
 	ble_resolv_rand_addr_handler,
 	NULL,
 	NULL,
-	NULL};
+	NULL
+};
 
 static const ble_event_callback_t ble_mgr_gatt_server_handle[GATT_SERVER_HANDLER_FUNC_MAX] = {
 	NULL,
@@ -118,23 +115,21 @@ static const ble_event_callback_t ble_mgr_gatt_server_handle[GATT_SERVER_HANDLER
 	ble_mtu_changed_indication_handler,
 	ble_mtu_changed_cmd_complete_handler,
 	ble_characteristic_write_cmd_complete_handler,
-	NULL};
+	NULL
+};
 
 volatile uint8_t scan_response_count = 0;
 at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
 
-at_ble_LTK_t app_bond_info;
-bool app_device_bond;
-at_ble_auth_t auth_info;
 
 at_ble_events_t event;
-uint8_t evt_params[BLE_EVENT_PARAM_MAX_SIZE];
+uint8_t ble_event_params[BLE_EVENT_PARAM_MAX_SIZE];
 
 /** @brief initializes the platform */
 static void ble_init(at_ble_init_config_t * args);
 
 /** @brief Set BLE Address, If address is NULL then it will use BD public address */
-static void ble_set_address(at_ble_addr_t *addr);
+static void ble_set_dev_config(at_ble_addr_t *addr);
 
 static void init_global_var(void)
 {
@@ -144,41 +139,40 @@ static void init_global_var(void)
 	memset(&connected_state_info, 0, sizeof(at_ble_connected_t));
 		
 #if defined ATT_DB_MEMORY
-	memset(att_db_data, 0, sizeof(uint8_t) * ATT_DB_MAX);
+	memset(att_db_data, 0, sizeof(uint32_t) * BLE_ATT_DB_MEMORY_SIZE/4);
 #endif
 
 	scan_response_count = 0;
 	memset(scan_info, 0, sizeof(scan_info));
-	memset(&app_bond_info, 0, sizeof(at_ble_LTK_t));
-	
-	app_device_bond = false;
-	auth_info = AT_BLE_AUTH_NO_MITM_NO_BOND;
 
 	event = AT_BLE_UNDEFINED_EVENT;
-	memset(evt_params, 0, BLE_EVENT_PARAM_MAX_SIZE);
+	memset(ble_event_params, 0, BLE_EVENT_PARAM_MAX_SIZE);
 }
 
 /** @brief function to get event from stack */
 at_ble_status_t ble_event_task(void)
 {
-	if (at_ble_event_get(&event, evt_params, BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) {
-		ble_event_manager(event, evt_params);
-		return AT_BLE_SUCCESS;
-	}
-
-	return AT_BLE_FAILURE;
+    if (at_ble_event_get(&event, ble_event_params, BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) 
+    {
+            ble_event_manager(event, ble_event_params);
+            return AT_BLE_SUCCESS;
+    }
+    
+    return AT_BLE_FAILURE;
 }
+
+at_ble_init_config_t pf_cfg;
 
 /** @brief BLE device initialization */
 void ble_device_init(at_ble_addr_t *addr)
 {
-	uint8_t idx;
-	at_ble_init_config_t pf_cfg;
-
+	uint8_t idx;	
 	char *dev_name = NULL;
 	init_global_var();
 
 	memset(&pf_cfg, 0, sizeof(pf_cfg));
+
+	/* Initialize the BLE Event callbacks */
 	for (idx = 0; idx < MAX_GAP_EVENT_SUBSCRIBERS; idx++)
 	{
 		ble_mgr_gap_event_cb[idx] = NULL;
@@ -226,18 +220,16 @@ void ble_device_init(at_ble_addr_t *addr)
 	ble_device_count = 0; 
 	
 	
-
 #if defined ATT_DB_MEMORY
-	pf_cfg.memPool.memSize = ATT_DB_MAX;
-	pf_cfg.memPool.memStartAdd = att_db_data;
+	pf_cfg.memPool.memSize = BLE_ATT_DB_MEMORY_SIZE;
+	pf_cfg.memPool.memStartAdd = (uint8_t *)&att_db_data;
 #else
 	pf_cfg.memPool.memSize = 0;
 	pf_cfg.memPool.memStartAdd = NULL;
 #endif
+	
 	ble_init(&pf_cfg);
-	
-	//init_done = true;
-	
+
 	/* Register it in first index of callback handler */
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, 
 									BLE_GAP_EVENT_TYPE, 
@@ -246,90 +238,96 @@ void ble_device_init(at_ble_addr_t *addr)
 									BLE_GATT_SERVER_EVENT_TYPE,
 									ble_mgr_gatt_server_handle);
 									
-	
-	ble_set_address(addr);
-	
 	dev_name = (char *)BLE_DEVICE_NAME;
-	DBG_LOG("name : %s",BLE_DEVICE_NAME);
 	if (ble_set_device_name((uint8_t *)dev_name, strlen(dev_name)) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("Device name set failed");
 	}
+	
+	ble_set_dev_config(addr);	
 }
 
 /** @brief set device name to BLE Device*/
 at_ble_status_t ble_set_device_name(uint8_t *name, uint8_t name_len)
 {
-	if ((name == NULL) || (name_len < 1)) {
+	if ((name == NULL) || (name_len < 1))
+	{
 		return AT_BLE_INVALID_PARAM;
 	}
-
 	return at_ble_device_name_set(name, name_len);
 }
 
 /* Initialize the BLE */
-static void ble_init(at_ble_init_config_t *args)
+static void ble_init(at_ble_init_config_t * args)
 {
 	/* Initialize the platform */
 	DBG_LOG("Initializing SAMB11");
-
+	
 	/* Init BLE device */
-	if (at_ble_init(args) != AT_BLE_SUCCESS) {
+	if(at_ble_init(args) != AT_BLE_SUCCESS)
+	{
 		DBG_LOG("SAMB11 Initialization failed");
-		DBG_LOG("Please check the power and connection / hardware connector");
-		while (1) {
-		}
+		DBG_LOG("Please check the power and connection / hardware connector");	
+		while(1);
 	}
 }
 
-/* Set BLE Address, If address is NULL then it will use BD public address */
-static void ble_set_address(at_ble_addr_t *addr)
+
+/* Set BLE Address and device configuration, If address is NULL then it will use BD public address */
+static void ble_set_dev_config(at_ble_addr_t *addr)
 {
-	at_ble_att_cfg_t dev_att_cfg;
-	memset(&dev_att_cfg, 0, sizeof(at_ble_att_cfg_t));
-
-	if (addr == NULL) {
-		at_ble_addr_t address;
-
+	at_ble_dev_config_t stDevConfig;
+	at_ble_addr_t address = {AT_BLE_ADDRESS_PUBLIC, {0xAB, 0xCD, 0xEF, 0xAB, 0xCD, 0xEF}};
+	memset(&stDevConfig, 0, sizeof(at_ble_dev_config_t));
+	
+	if (addr == NULL)
+	{		
 		/* get BD address from BLE device */
-		if (at_ble_addr_get(&address) != AT_BLE_SUCCESS) {
+		if(at_ble_addr_get(&address) != AT_BLE_SUCCESS)
+		{
 			DBG_LOG("BD address get failed");
 		}
-
-		/* set the BD address */
-		if (at_ble_addr_set(&address) != AT_BLE_SUCCESS) {
-			DBG_LOG("BD address set failed");
-		}
-
-		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
-				address.addr[5],
-				address.addr[4],
-				address.addr[3],
-				address.addr[2],
-				address.addr[1],
-				address.addr[0], address.type);
-	} else {
-		/* set the given BD address */
-		if (at_ble_addr_set(addr) != AT_BLE_SUCCESS) {
-			DBG_LOG("BD address set failed");
-		}
-
-		DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
-				addr->addr[5],
-				addr->addr[4],
-				addr->addr[3],
-				addr->addr[2],
-				addr->addr[1],
-				addr->addr[0], addr->type);
+		
+		/* Copy the BD address into address pointer */
+		addr = &address;
 	}
-
-	dev_att_cfg.b1EnableServiceChanged = 1;
-	dev_att_cfg.b1EnableSpcs = 1;
-	dev_att_cfg.b2AppearancePerm = 2;
-	dev_att_cfg.b2NamePerm = 2;
-	dev_att_cfg.b2Rfu = 2;
-
-	at_ble_set_att_config(&dev_att_cfg);
+	
+	DBG_LOG("BD Address:0x%02X%02X%02X%02X%02X%02X, Address Type:%d",
+	addr->addr[5],
+	addr->addr[4],
+	addr->addr[3],
+	addr->addr[2],
+	addr->addr[1],
+	addr->addr[0], addr->type);
+	
+	/* Set device configuration */
+	/* Device role */
+	stDevConfig.role = (at_ble_dev_role_t)BLE_DEVICE_ROLE;
+	/* device renew duration */
+	stDevConfig.renew_dur = AT_RENEW_DUR_VAL_MIN;
+	/* device address type */
+	memcpy((uint8_t *)&stDevConfig.address, (uint8_t *)addr, sizeof(at_ble_addr_t));
+	/* Attributes */
+	stDevConfig.att_cfg.b2NamePerm = AT_BLE_WRITE_DISABLE;
+	stDevConfig.att_cfg.b2AppearancePerm = AT_BLE_WRITE_DISABLE;
+	stDevConfig.att_cfg.b1EnableSpcs = 0;
+	stDevConfig.att_cfg.b1EnableServiceChanged = 0;
+	stDevConfig.att_cfg.b2Rfu = AT_BLE_WRITE_DISABLE;
+	/* Handles */
+	stDevConfig.gap_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
+	stDevConfig.gatt_start_hdl = AT_BLE_AUTO_ALLOC_HANDLE;
+	/* MTU */
+	stDevConfig.max_mtu = AT_MTU_VAL_RECOMMENDED;
+	
+	if(at_ble_set_dev_config(&stDevConfig) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Set BLE Device configuration failed");
+	}
+	
+	if (at_ble_addr_set(addr) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Set BLE Device Address failed");
+	}
 }
 
 bool ble_mgr_events_callback_handler(ble_mgr_event_cb_t event_cb_type, 
@@ -467,7 +465,7 @@ at_ble_status_t gap_dev_scan(void)
 	DBG_LOG("Scanning...Please wait...");
 	/* make service discover counter to zero*/
 	scan_response_count = 0;
-	return(at_ble_scan_start(SCAN_INTERVAL, SCAN_WINDOW, SCAN_TIMEOUT, SCAN_TYPE, AT_BLE_SCAN_GEN_DISCOVERY, false, true));
+	return(at_ble_scan_start(SCAN_INTERVAL, SCAN_WINDOW, SCAN_TIMEOUT, SCAN_TYPE, AT_BLE_SCAN_GEN_DISCOVERY, false,true)) ;
 }
 
 /** @brief function handling scaned information */
@@ -475,26 +473,29 @@ at_ble_status_t ble_scan_info_handler(void *params)
 {
 	at_ble_scan_info_t *scan_param;
 	scan_param = (at_ble_scan_info_t *)params;
-	if (scan_response_count < MAX_SCAN_DEVICE) {
-		/* store the advertising report data into scan_info[] */
+	if(scan_response_count < MAX_SCAN_DEVICE)
+	{
+		// store the advertising report data into scan_info[]
 		memcpy((uint8_t *)&scan_info[scan_response_count], scan_param, sizeof(at_ble_scan_info_t));
 		DBG_LOG_DEV("Info:Device found address [%d]  0x%02X%02X%02X%02X%02X%02X ",
-				scan_response_count,
-				scan_param->dev_addr.addr[5],
-				scan_param->dev_addr.addr[4],
-				scan_param->dev_addr.addr[3],
-				scan_param->dev_addr.addr[2],
-				scan_param->dev_addr.addr[1],
-				scan_param->dev_addr.addr[0]);
+		scan_response_count,
+		scan_param->dev_addr.addr[5],
+		scan_param->dev_addr.addr[4],
+		scan_param->dev_addr.addr[3],
+		scan_param->dev_addr.addr[2],
+		scan_param->dev_addr.addr[1],
+		scan_param->dev_addr.addr[0]);
 		scan_response_count++;
 		return AT_BLE_SUCCESS;
-	} else {
+	}
+	else
+	{
 		DBG_LOG("Info:maximum no.of scan device reached...Stopping Scan");
-		/* Todo Stop Scanning */
 		if(at_ble_scan_stop() != AT_BLE_SUCCESS)
 		{
 			DBG_LOG("Failed to stop scanning");
 		}
+		
 		return AT_BLE_FAILURE;
 	}
 }
@@ -508,17 +509,17 @@ at_ble_status_t ble_scan_report_handler(void *params)
 	{
 		/* All scan data should be handled */
 		return AT_BLE_SUCCESS;
-		
-	} else {
+	}
+	else
+	{
 		DBG_LOG("Scanning  failed");
 	}
-
 	return AT_BLE_FAILURE;
 }
 
 /* Parse the received advertising data for service and local name */
 uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
-		at_ble_uuid_t *ble_service_uuid, uint8_t adv_type)
+				at_ble_uuid_t *ble_service_uuid, uint8_t adv_type)
 {
 	if (scan_info_data->adv_data_len) {
 		uint8_t adv_data_size;
@@ -531,9 +532,9 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 		while (adv_data_size) {
 			adv_element_data.len = scan_info_data->adv_data[index];
 			adv_element_data.type
-				= scan_info_data->adv_data[index + 1];
+			= scan_info_data->adv_data[index + 1];
 			adv_element_data.data
-				= &scan_info_data->adv_data[index + 2];
+			= &scan_info_data->adv_data[index + 2];
 			adv_element_p = &adv_element_data;
 
 			if (adv_element_p->type == adv_type) {
@@ -544,32 +545,32 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 				while (adv_type_size) {
 					volatile int cmp_status = -1;
 					if (ble_service_uuid->type ==
-							AT_BLE_UUID_16) {
+					AT_BLE_UUID_16) {
 						cmp_status = memcmp(
-								adv_element_p->data, ble_service_uuid->uuid,
-								AT_BLE_UUID_16_LEN);
+						adv_element_p->data, ble_service_uuid->uuid,
+						AT_BLE_UUID_16_LEN);
 						adv_element_p->data
-							+= AT_BLE_UUID_16_LEN;
+						+= AT_BLE_UUID_16_LEN;
 						adv_type_size
-							-= AT_BLE_UUID_16_LEN;
+						-= AT_BLE_UUID_16_LEN;
 					} else if (ble_service_uuid->type ==
-							AT_BLE_UUID_32) {
+					AT_BLE_UUID_32) {
 						cmp_status = memcmp(
-								adv_element_p->data, ble_service_uuid->uuid,
-								AT_BLE_UUID_32_LEN);
+						adv_element_p->data, ble_service_uuid->uuid,
+						AT_BLE_UUID_32_LEN);
 						adv_element_p->data
-							+= AT_BLE_UUID_32_LEN;
+						+= AT_BLE_UUID_32_LEN;
 						adv_type_size
-							-= AT_BLE_UUID_32_LEN;
+						-= AT_BLE_UUID_32_LEN;
 					} else if (ble_service_uuid->type ==
-							AT_BLE_UUID_128) {
+					AT_BLE_UUID_128) {
 						cmp_status = memcmp(
-								adv_element_p->data, ble_service_uuid->uuid,
-								AT_BLE_UUID_128_LEN);
+						adv_element_p->data, ble_service_uuid->uuid,
+						AT_BLE_UUID_128_LEN);
 						adv_element_p->data
-							+= AT_BLE_UUID_128_LEN;
+						+= AT_BLE_UUID_128_LEN;
 						adv_type_size
-							-= AT_BLE_UUID_32_LEN;
+						-= AT_BLE_UUID_32_LEN;
 					}
 
 					if (cmp_status == 0) {
@@ -591,18 +592,15 @@ uint8_t scan_info_parse(at_ble_scan_info_t *scan_info_data,
 at_ble_status_t ble_send_slave_sec_request(at_ble_handle_t conn_handle)
 {
 	#if BLE_PAIR_ENABLE
-	if (at_ble_send_slave_sec_request(conn_handle, BLE_MITM_REQ, BLE_BOND_REQ) == AT_BLE_SUCCESS) {
-		DBG_LOG_DEV("Slave security request successful");
-		return AT_BLE_SUCCESS;
-	} else {
-		DBG_LOG("Slave security request failed");
-	}
-
-	#else
-	//BLE_ADDITIONAL_PAIR_DONE_HANDLER(NULL);
-	//if (ble_paired_cb != NULL) {
-		///ble_paired_cb(conn_handle);
-	//}
+		if (at_ble_send_slave_sec_request(conn_handle, BLE_MITM_REQ, BLE_BOND_REQ) == AT_BLE_SUCCESS)
+		{
+			DBG_LOG_DEV("Slave security request successful");
+			return AT_BLE_SUCCESS;
+		}
+		else
+		{
+			DBG_LOG("Slave security request failed");
+		}
 	#endif
 	return AT_BLE_FAILURE;
 }
@@ -708,15 +706,17 @@ at_ble_status_t ble_connected_state_handler(void *params)
 	uint8_t idx = 0;
 	conn_params = (at_ble_connected_t *)params;
 	bool peripheral_device_added = false;
-	if (conn_params->conn_status == AT_BLE_SUCCESS) {
+	
+	if (conn_params->conn_status == AT_BLE_SUCCESS)
+	{
 		DBG_LOG("Connected to peer device with address 0x%02x%02x%02x%02x%02x%02x",
-				conn_params->peer_addr.addr[5],
-				conn_params->peer_addr.addr[4],
-				conn_params->peer_addr.addr[3],
-				conn_params->peer_addr.addr[2],
-				conn_params->peer_addr.addr[1],
-				conn_params->peer_addr.addr[0]);
-
+		conn_params->peer_addr.addr[5],
+		conn_params->peer_addr.addr[4],
+		conn_params->peer_addr.addr[3],
+		conn_params->peer_addr.addr[2],
+		conn_params->peer_addr.addr[1],
+		conn_params->peer_addr.addr[0]);
+		
 		DBG_LOG("Connection Handle %d", conn_params->handle);
 		
 		memcpy((uint8_t *)&connected_state_info, (uint8_t *)conn_params, sizeof(at_ble_connected_t));	
@@ -819,6 +819,7 @@ at_ble_status_t ble_connected_state_handler(void *params)
 	ALL_UNUSED(peripheral_device_added);
 	return AT_BLE_SUCCESS;
 }
+
 at_ble_status_t ble_resolv_rand_addr_handler(void *params)
 {
 	at_ble_resolv_rand_addr_status_t *ble_resolv_rand_addr_status;
@@ -931,7 +932,7 @@ at_ble_status_t ble_characteristic_write_cmd_complete_handler(void *params)
 
 /** @brief function handles disconnection event received from stack */
 at_ble_status_t ble_disconnected_state_handler(void *params)
-{	
+{
 	at_ble_disconnected_t *disconnect;
 	uint8_t idx;
 	disconnect = (at_ble_disconnected_t *)params;
@@ -1004,7 +1005,6 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 	
 	slave_sec_req = (at_ble_slave_sec_request_t*)params;	
 	memset(&features, 0x00, sizeof(at_ble_pair_features_t));
-	DBG_LOG("ble_slave_security_request_handler");
 	//if (slave_sec_req->status != AT_BLE_SUCCESS)
 	//{
 		//at_ble_disconnect(slave_sec_req->handle, AT_BLE_AUTH_FAILURE);		
@@ -1053,7 +1053,7 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 	
 	features.desired_auth =  BLE_AUTHENTICATION_LEVEL; 
 	features.bond = slave_sec_req->bond;
-	features.mitm_protection = slave_sec_req->mitm_protection;
+	features.mitm_protection = true;
 	/* Device capabilities is display only , key will be generated
 	and displayed */
 	features.io_cababilities = AT_BLE_IO_CAP_KB_DISPLAY;
@@ -1080,17 +1080,17 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 		/* Generate LTK */
 		for(i=0; i<8; i++)
 		{			
-			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
-			ble_dev_info[idx].bond_info.peer_ltk.nb[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.nb[i] = rand()&0x0f;
 		}
 				
 		for(i=8 ; i<16 ;i++)
 		{
-			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.key[i] = rand()&0x0f;
 		}
 		
-		ble_dev_info[idx].bond_info.peer_ltk.ediv = rand()&0xffff;
-		ble_dev_info[idx].bond_info.peer_ltk.key_size = 16;
+		ble_dev_info[idx].host_ltk.ediv = rand()&0xffff;
+		ble_dev_info[idx].host_ltk.key_size = 16;
 	}
 	else
 	{
@@ -1098,7 +1098,7 @@ at_ble_status_t ble_slave_security_request_handler(void* params)
 		
 	}
 
-	if(at_ble_authenticate(slave_sec_req->handle, &features, &ble_dev_info[idx].bond_info.peer_ltk, NULL) != AT_BLE_SUCCESS)
+	if(at_ble_authenticate(slave_sec_req->handle, &features, &ble_dev_info[idx].host_ltk, NULL) != AT_BLE_SUCCESS)
 	{
 		features.bond = false;
 		features.mitm_protection = false;
@@ -1155,22 +1155,22 @@ at_ble_status_t ble_pair_request_handler(void *params)
 		/* Generate LTK */
 		for(i=0; i<8; i++)
 		{						
-			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
-			ble_dev_info[idx].bond_info.peer_ltk.nb[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.nb[i] = rand()&0x0f;
 		}
 				
 		for(i=8 ; i<16 ;i++)
 		{
-			ble_dev_info[idx].bond_info.peer_ltk.key[i] = rand()&0x0f;
+			ble_dev_info[idx].host_ltk.key[i] = rand()&0x0f;
 		}
 		DBG_LOG_DEV("Generated LTK: ");
 		for (i = 0; i < 16; i++)
 		{
-			DBG_LOG_CONT("0x%02X ", ble_dev_info[idx].bond_info.peer_ltk.key[i]);
+			DBG_LOG_CONT_DEV("0x%02X ", ble_dev_info[idx].host_ltk.key[i]);
 		}
 		
-		ble_dev_info[idx].bond_info.peer_ltk.ediv = rand()&0xffff;
-		ble_dev_info[idx].bond_info.peer_ltk.key_size = 16;
+		ble_dev_info[idx].host_ltk.ediv = rand()&0xffff;
+		ble_dev_info[idx].host_ltk.key_size = 16;
 	}
 	else
 	{
@@ -1179,9 +1179,9 @@ at_ble_status_t ble_pair_request_handler(void *params)
 	}
 
 	/* Send pairing response */
-	DBG_LOG("Sending pairing response");
+	DBG_LOG_DEV("Sending pairing response");
 
-	if(at_ble_authenticate(pair_req->handle, &features, &ble_dev_info[idx].bond_info.peer_ltk, NULL) != AT_BLE_SUCCESS)
+	if(at_ble_authenticate(pair_req->handle, &features, &ble_dev_info[idx].host_ltk, NULL) != AT_BLE_SUCCESS)
 	{
 		features.bond = false;
 		features.mitm_protection = false;
@@ -1288,26 +1288,25 @@ at_ble_status_t ble_pair_done_handler(void *params)
 			ble_dev_info[idx].bond_info.status = pairing_params->status;
 			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_csrk, (uint8_t *)&pairing_params->peer_csrk, sizeof(at_ble_CSRK_t));
 			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_irk, (uint8_t *)&pairing_params->peer_irk, sizeof(at_ble_IRK_t));
-			if(ble_dev_info[idx].dev_role == AT_BLE_ROLE_CENTRAL)
-				memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_ltk, (uint8_t *)&pairing_params->peer_ltk, sizeof(at_ble_LTK_t));
+			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_ltk, (uint8_t *)&pairing_params->peer_ltk, sizeof(at_ble_LTK_t));
 			ble_dev_info->conn_state = BLE_DEVICE_PAIRED;
 			
 			DBG_LOG_DEV("LTK: ");
 			for (idx = 0; idx < 16; idx++)
 			{
-				DBG_LOG_CONT("0x%02X, ", pairing_params->peer_ltk.key[idx]);
+				DBG_LOG_CONT_DEV("0x%02X, ", pairing_params->peer_ltk.key[idx]);
 				
 			}
 			DBG_LOG_DEV("CSRK: ");
 			for (idx = 0; idx < 16; idx++)
 			{
-				DBG_LOG_CONT("0x%02X, ", pairing_params->peer_csrk.key[idx]);
+				DBG_LOG_CONT_DEV("0x%02X, ", pairing_params->peer_csrk.key[idx]);
 				
 			}
 			DBG_LOG_DEV("IRK:");
 			for (idx = 0; idx < 16; idx++)
 			{
-				DBG_LOG_CONT("0x%02X, ", pairing_params->peer_irk.key[idx]);
+				DBG_LOG_CONT_DEV("0x%02X, ", pairing_params->peer_irk.key[idx]);
 				
 			}
 		}
@@ -1395,8 +1394,12 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 	
 	if (device_found)
 	{
-		if((ble_dev_info[idx].bond_info.peer_ltk.ediv == enc_req->ediv)
-		&& !memcmp(&enc_req->nb[0],&ble_dev_info[idx].bond_info.peer_ltk.nb[0],8))
+		DBG_LOG_DEV("host device ediv %x",ble_dev_info[idx].host_ltk.ediv);
+		DBG_LOG_DEV("peer device ediv %x",ble_dev_info[idx].bond_info.peer_ltk.ediv);
+		DBG_LOG_DEV("enc_req ediv %x", enc_req->ediv);
+		DBG_LOG_DEV("The index is %d",idx);
+		if((ble_dev_info[idx].host_ltk.ediv == enc_req->ediv)
+		&& !memcmp(&enc_req->nb[0],&ble_dev_info[idx].host_ltk.nb[0],8))
 		{
 			key_found = true;
 			DBG_LOG_DEV("ENC-Req: Key Found");
@@ -1412,7 +1415,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 		return AT_BLE_FAILURE;
     }
 
-	if(!(at_ble_encryption_request_reply(enc_req->handle, ble_dev_info[idx].bond_info.auth, key_found, &ble_dev_info[idx].bond_info.peer_ltk) == AT_BLE_SUCCESS))
+	if(!(at_ble_encryption_request_reply(enc_req->handle, ble_dev_info[idx].bond_info.auth, key_found, &ble_dev_info[idx].host_ltk) == AT_BLE_SUCCESS))
 	{
 		DBG_LOG("Encryption Request Reply Failed");
 	}
@@ -1425,10 +1428,10 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
 {
-	DBG_LOG_DEV("\r\nEvent:%d", event);
-	switch (events) {
-	/* GAP events */
-	/** Undefined event received  */
+	DBG_LOG_DEV("BLE-Event:%d", events);
+	switch(events)
+	{		
+	 /* GAP events */
 	case AT_BLE_UNDEFINED_EVENT:
 	case AT_BLE_SCAN_INFO:
 	case AT_BLE_SCAN_REPORT:
@@ -1679,7 +1682,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add 16-bit UUIDs");
+		DBG_LOG_ADV("Failed to add 16-bit UUIDs");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -1728,7 +1731,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add List of 32-bit Service Class UUIDs");
+		DBG_LOG_ADV("Failed to add List of 32-bit Service Class UUIDs");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -1777,7 +1780,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add List of 128-bit Service Class UUIDs");
+		DBG_LOG_ADV("Failed to add List of 128-bit Service Class UUIDs");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -1794,7 +1797,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	if(false){}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Shortened Local Name");
+		DBG_LOG_ADV("Failed to add Shortened Local Name");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -1811,7 +1814,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	if(false){}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Complete local name");
+		DBG_LOG_ADV("Failed to add Complete local name");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -1828,7 +1831,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	if(false){}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Complete local name");
+		DBG_LOG_ADV("Failed to add Complete local name");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -1851,7 +1854,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Tx Power");
+		DBG_LOG_ADV("Failed to add Tx Power");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -1880,7 +1883,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to Slave connection interval range");
+		DBG_LOG_ADV("Failed to Slave connection interval range");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -1929,7 +1932,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add List of 16-bit Service Solicitation UUIDs");
+		DBG_LOG_ADV("Failed to add List of 16-bit Service Solicitation UUIDs");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -1978,7 +1981,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add List of 32-bit Service Solicitation UUIDs");
+		DBG_LOG_ADV("Failed to add List of 32-bit Service Solicitation UUIDs");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2027,7 +2030,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add List of 128-bit Service Solicitation UUIDs");
+		DBG_LOG_ADV("Failed to add List of 128-bit Service Solicitation UUIDs");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2056,7 +2059,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add service data of 16bits");
+		DBG_LOG_ADV("Failed to add service data of 16bits");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2085,7 +2088,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add service data of 32bits");
+		DBG_LOG_ADV("Failed to add service data of 32bits");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2114,7 +2117,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add service data of 128bits");
+		DBG_LOG_ADV("Failed to add service data of 128bits");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2163,7 +2166,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Public target addresses");
+		DBG_LOG_ADV("Failed to add Public target addresses");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2212,7 +2215,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Random target addresses");
+		DBG_LOG_ADV("Failed to add Random target addresses");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2237,7 +2240,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Appearance");
+		DBG_LOG_ADV("Failed to add Appearance");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2262,7 +2265,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Advertisement interval");
+		DBG_LOG_ADV("Failed to add Advertisement interval");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2287,7 +2290,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Bluetooth device addresses");
+		DBG_LOG_ADV("Failed to add Bluetooth device addresses");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2310,7 +2313,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add LE role");
+		DBG_LOG_ADV("Failed to add LE role");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
@@ -2335,7 +2338,7 @@ at_ble_status_t ble_advertisement_data_set(void)
 	}
 	#endif
 	else {
-		DBG_LOG_CONT("Failed to add Manufacturer specific data");
+		DBG_LOG_ADV("Failed to add Manufacturer specific data");
 		return AT_BLE_GAP_INVALID_PARAM;
 	}
 	#endif
