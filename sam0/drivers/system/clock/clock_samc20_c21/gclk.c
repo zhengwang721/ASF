@@ -302,7 +302,7 @@ uint32_t system_gclk_gen_get_hz(
  * Writes out a given configuration of a Generic Clock configuration to the
  * hardware module. If the clock is currently running, it will be stopped.
  *
- * \note Once called the clock will not be running; to start the clock,
+ * \note Once called the clock will not be running. To start the clock,
  *       call \ref system_gclk_chan_enable() after configuring a clock channel.
  *
  * \param[in] channel   Generic Clock channel to configure
