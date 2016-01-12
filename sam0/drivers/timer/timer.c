@@ -182,10 +182,7 @@ static void timer_isr_handler(void)
 void timer_init(const struct timer_config *config)
 {
 	/* Global reset */
-	LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg &=
-			~LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_COUNTER_0_RSTN;
-	LPMCU_MISC_REGS0->LPMCU_GLOBAL_RESET_0.reg |=
-			LPMCU_MISC_REGS_LPMCU_GLOBAL_RESET_0_COUNTER_0_RSTN;
+	system_peripheral_reset(PERIPHERAL_TIMER);
 
 	TIMER0->CTRL.reg = config->interrupt_enable << TIMER_CTRL_INTERRUPT_ENABLE_Pos;
 	TIMER0->RELOAD.reg = config->reload_value;
