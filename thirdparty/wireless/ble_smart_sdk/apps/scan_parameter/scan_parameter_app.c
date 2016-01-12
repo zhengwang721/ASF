@@ -80,7 +80,7 @@ uint8_t scan_refresh_value = 0;
 /**
 * \Timer callback handler called on timer expiry
 */
-static void timer_callback_handler(void)
+void timer_callback_handler(void)
 {
 	//Timer call back
 	timer_cb_done = true;
