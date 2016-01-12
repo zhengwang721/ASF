@@ -45,9 +45,11 @@
 */
 
 
+#include <asf.h>
 #include <string.h>
 #include <stdlib.h>
 #include "at_ble_api.h"
+#include "at_ble_trace.h"
 #include "ble_manager.h"
 #include "ble_utils.h"
 #include "timer.h"
