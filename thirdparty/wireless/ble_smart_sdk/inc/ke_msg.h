@@ -86,7 +86,7 @@ struct ke_msghdr
  * @return The pointer to the ke_msg
  ****************************************************************************************
  */
-static __inline struct ke_msg *ke_param2msg(void const *param_ptr)
+static inline struct ke_msg *ke_param2msg(void const *param_ptr)
 {
 	return (struct ke_msg *)((void *)(((uint8_t *)param_ptr) - offsetof(struct ke_msg, param)));
 }
@@ -100,7 +100,7 @@ static __inline struct ke_msg *ke_param2msg(void const *param_ptr)
  * @return The pointer to the param member
  ****************************************************************************************
  */
-static __inline void *ke_msg2param(struct ke_msg const *msg)
+static inline void *ke_msg2param(struct ke_msg const *msg)
 {
     return (void*) (((uint8_t*) msg) + offsetof(struct ke_msg, param));
 }

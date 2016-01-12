@@ -43,12 +43,24 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
+ *Support</a>
  */
 
 #ifndef __ANP_CLIENT_APP_H__
 #define __ANP_CLIENT_APP_H__
 
-#define EVENT_MAX_PARAM_LENGTH  (524)
+#define EVENT_MAX_PARAM_LENGTH	(524)
+
+/**
+* @brief app_connected_state blemanager notifies the application about state
+* @param[in] at_ble_connected_t
+*/
+static at_ble_status_t app_connected_event_handler(void *params);
+
+/**
+ * @brief app_connected_state ble manager notifies the application about state
+ * @param[in] connected
+ */
+static at_ble_status_t app_disconnected_event_handler(void *params);
 
 #endif
