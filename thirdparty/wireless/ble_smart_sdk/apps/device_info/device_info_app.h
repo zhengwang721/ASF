@@ -57,6 +57,6 @@
 #define APP_DIS_FAST_ADV				(1600) //1000 ms
 
 /** @brief APP_DIS_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
-#define APP_DIS_ADV_TIMEOUT				(1000) // 100 Secs
+#define APP_DIS_ADV_TIMEOUT				(655) // 10 min
 
 #endif /* __DEVICE_INFO_APP_H__ */

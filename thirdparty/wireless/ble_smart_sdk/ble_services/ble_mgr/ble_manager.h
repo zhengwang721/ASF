@@ -51,6 +51,7 @@
 #ifndef __BLE_MANAGER_H__
 #define __BLE_MANAGER_H__
 
+#include <asf.h>
 #include <string.h>
 #include <stddef.h>
 #include "at_ble_api.h"
@@ -126,7 +127,6 @@
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-ANS"
 #endif	/* BLE_DEVICE_NAME */
-//#define BLE_PAIR_ENABLE					(false)
 #endif /* ANP_SIG_CLIENT */
 
 #if defined PAS_CLIENT
@@ -927,6 +927,14 @@ typedef enum {
 #define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID13_ENABLE			true
 #endif
 #define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID13_VAL		PAS_SERVICE_UUID
+
+#ifndef HTPT_SERVICE
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID14_ENABLE			false
+#else
+#define BLE_GAP_ADV_SERVICE_SOLTN_16BIT_UUID14_ENABLE			true
+#endif
+#define  BLE_GAP_ADV_DATA_SERVICE_SOLTN_16BIT_UUID14_VAL		HTPT_SERVICE_UUID
+
 #endif
 
 #define BLE_GAP_ADV_SERVICE_SOLTN_32BIT_UUID_ENABLE				false

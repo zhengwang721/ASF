@@ -81,9 +81,6 @@
 
 volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
-at_ble_addr_t peer_addr
-= {AT_BLE_ADDRESS_PUBLIC, {0x03, 0x18, 0xf0, 0x05, 0xf0, 0xf8}};
-
 extern gatt_txps_char_handler_t txps_handle;
 extern gatt_lls_char_handler_t lls_handle;
 extern gatt_ias_char_handler_t ias_handle;
@@ -202,6 +199,9 @@ int main(void)
 
 	/* Initialize serial console */
 	serial_console_init();
+	
+	/* Initialize LED */
+	led_init();
 	
 	/* Initialize button */
 	button_init(button_cb);

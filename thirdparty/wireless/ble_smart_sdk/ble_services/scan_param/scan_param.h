@@ -1,3 +1,4 @@
+
 /**
  * \file
  *
@@ -40,13 +41,12 @@
  * \asf_license_stop
  *
  */
-
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-/* <<< Use Configuration Wizard in Context Menu >>> */
-/* <h> Scan Parameter Service Configuration */
-/* ======================= */
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Scan Parameter Service Configuration
+// =======================
 
 #ifndef __SCAN_PARAM_H__
 #define __SCAN_PARAM_H__
@@ -54,14 +54,15 @@
 #include "at_ble_api.h"
 #include "ble_manager.h"
 
-typedef struct sps_gatt_service_handler {
-	/* / service uuid */
-	at_ble_uuid_t serv_uuid;
-	/* / service handle */
-	at_ble_handle_t serv_handle;
-	/* / service characteristic */
-	at_ble_characteristic_t serv_chars[2];
-} sps_gatt_service_handler_t;
+typedef struct sps_gatt_service_handler
+{
+	/// service uuid
+	at_ble_uuid_t	serv_uuid;
+	/// service handle
+	at_ble_handle_t	serv_handle;
+	/// service characteristic
+	at_ble_characteristic_t	serv_chars[2];
+}sps_gatt_service_handler_t;
 
 /**@brief Function used to update the scan refresh characteristic value during connection
  *
@@ -83,7 +84,7 @@ at_ble_status_t sps_scan_refresh_char_update(sps_gatt_service_handler_t *sps_ser
  */
 void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_interval_window, uint8_t *scan_refresh);
 
-/**@brief defining a initialized service
+/**@brief defining a initialized service 
  *
  * @param[in] sps_service gatt service information
  *
@@ -92,18 +93,19 @@ void sps_init_service(sps_gatt_service_handler_t *sps_serv, uint16_t *scan_inter
  */
 at_ble_status_t sps_primary_service_define(sps_gatt_service_handler_t *sps_service);
 
-/**@brief function to check the client characteristic configuration value.
+/**@brief function to check the client characteristic configuration value. 
  *
  * @param[in] sps_service_handler scan parameters service instance
  * @param[in] char_handle characteristic changed @ref at_ble_characteristic_changed_t
- * @param[in] flag flag to track the notification sent
+ * @param[in] flag flag to track the notification sent 
  *
  * @return @ref AT_BLE_SUCCESS operation completed successfully
  * @return @ref AT_BLE_FAILURE Generic error.
  */
-at_ble_status_t sps_char_changed_event(sps_gatt_service_handler_t *sps_service_handler, at_ble_characteristic_changed_t *char_handle, bool volatile *flag);
+at_ble_status_t	sps_char_changed_event(sps_gatt_service_handler_t *sps_service_handler, at_ble_characteristic_changed_t *char_handle, bool volatile *flag);
 
 #endif /* __SCAN_PARAM_H__ */
-/* </h> */
+// </h>
 
-/* <<< end of configuration section >>> */
+// <<< end of configuration section >>>
+

@@ -4,10 +4,11 @@
 		Scan Parameter Application for BLE stack
 		</info>
 		<build type="include-path" value="."/>
-		<!--build type="header-file" value="scan_parameter_app.h"/-->
+		<build type="header-file" value="scan_parameter_app.h"/>
 		<build type="c-source" value="scan_parameter_app.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_PERIPHERAL"/>
 		<build type="define" name="ATT_DB_MEMORY" value=""/>
+		<build type="define" name="NENABLE_PTS" value=""/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.scan_param"/>
 		<build type="distribute" subtype="user-file" value="Atmel-42600-ATSAMB11-BluSDK-SMART-Scan-Parameters-Service-Application-Getting-Started-Guide_UserGuide.pdf"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>

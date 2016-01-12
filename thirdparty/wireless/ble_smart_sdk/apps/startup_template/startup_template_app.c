@@ -42,7 +42,8 @@
  */
 
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
+ * Support</a>
  */
 
 /**
@@ -52,12 +53,12 @@
  */
 /*- Includes ---------------------------------------------------------------*/
 #include <asf.h>
-#include "console_serial.h"
-#include "at_ble_api.h"
 #include "platform.h"
+#include "at_ble_api.h"
+#include "console_serial.h"
 #include "timer_hw.h"
-#include "ble_utils.h"
 #include "ble_manager.h"
+#include "ble_utils.h"
 #include "button.h"
 #include "startup_template_app.h"
 
@@ -168,9 +169,13 @@ int main(void)
 
 	/* Initialize serial console */
 	serial_console_init();
-
+	
 	/* Hardware timer */
 	hw_timer_init();
+	
+	/* button initialization */
+	button_init(button_cb);
+	
 	hw_timer_register_callback(timer_callback_fn);
 
 	DBG_LOG("Initializing BLE Application");
@@ -204,5 +209,5 @@ int main(void)
 		/* Write application task */
 	}
 
-	return 0;
 }
+
