@@ -178,7 +178,8 @@ at_ble_status_t fmp_target_char_changed_handler(void *params)
 	memcpy((uint8_t *)&change_params, char_handle,
 			sizeof(at_ble_characteristic_changed_t));
 
-	immediate_alert_value = ias_set_alert_value(&change_params, &ias_handle);
+	immediate_alert_value
+		= ias_set_alert_value(&change_params, &ias_handle);
 
 	if (immediate_alert_value != INVALID_IAS_PARAM) {
 		immediate_alert_cb(immediate_alert_value);
