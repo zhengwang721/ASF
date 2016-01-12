@@ -117,10 +117,6 @@ uint8_t battery_level = BATTERY_MIN_LEVEL;
 at_ble_handle_t battery_conn_handle = 0xFFFF;
 bool volatile battery_stop_simulation = true;
 
-static ble_peripheral_state_t peripheral_state;
-static ble_event_callback_t battery_app_gap_cb[19];
-static ble_event_callback_t battery_app_gatt_server_cb[10];
-
 static at_ble_status_t bas_paired_app_event(void *param);
 static at_ble_status_t bas_encryption_status_changed_app_event(void *param);
 static at_ble_status_t ble_disconnected_app_event(void *param);
@@ -130,15 +126,51 @@ static at_ble_status_t ble_char_changed_app_event(void *param);
 static at_ble_status_t ble_notification_confirmed_app_event(void *param);
 static at_ble_status_t battery_simulation_task(void *param);
 static at_ble_status_t ble_connected_app_event(void *param);
-static void multirole_multiconnect_app_var_init(void);
-static void button_cb(void);
+static ble_peripheral_state_t peripheral_state = PERIPHERAL_IDLE_STATE;
 
 static ble_peripheral_state_t peripheral_advertising_cb(void)
 {
 	return peripheral_state;
 }
 
-static void button_cb()
+static const ble_event_callback_t battery_app_gap_cb[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	ble_connected_app_event,
+	ble_disconnected_app_event,
+	NULL,
+	NULL,
+	bas_paired_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	bas_encryption_status_changed_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+static const ble_event_callback_t battery_app_gatt_server_cb[] = {
+	ble_notification_confirmed_app_event,
+	NULL,
+	ble_char_changed_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+void button_cb(void);
+
+void button_cb(void)
 {
 	button_pressed = true;
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
@@ -227,7 +259,7 @@ static void pxp_app_init(void)
 static void timer_callback_handler(void)
 {
 	/* Stop the timer */
-	//hw_timer_stop();
+	hw_timer_stop();
 
 	/* Enable the flag the serve the task */
 	app_timer_done = true;
@@ -282,7 +314,7 @@ static at_ble_status_t bas_paired_app_event(void *param)
 		battery_conn_handle = ble_pair_done->handle;
 		timer_cb_done = false;
 		bat_char_notification_confirmed = true;
-		/* hw_timer_start(BATTERY_UPDATE_INTERVAL); */
+		hw_timer_start(BATTERY_UPDATE_INTERVAL);
 		battery_stop_simulation = false;
 	}	
 	return AT_BLE_SUCCESS;
@@ -310,7 +342,7 @@ static at_ble_status_t bas_encryption_status_changed_app_event(void *param)
 		battery_conn_handle = ble_enc_status->handle;
 		timer_cb_done = false;
 		bat_char_notification_confirmed = true;
-		/* hw_timer_start(BATTERY_UPDATE_INTERVAL); */
+		hw_timer_start(BATTERY_UPDATE_INTERVAL);
 		battery_stop_simulation = false;
 	}	
 	return AT_BLE_SUCCESS;
@@ -328,7 +360,6 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 		{
 			battery_start_advertisement();
 			peripheral_state = PERIPHERAL_ADVERTISING_STATE;
-			battery_level = 0;
 		}
 		
 	}
@@ -407,17 +438,12 @@ static at_ble_status_t ble_char_changed_app_event(void *param)
 		return AT_BLE_FAILURE;
 	}	
 	return bat_char_changed_event(char_handle->conn_handle, &bas_service_handler, char_handle, &bat_char_notification_confirmed);
-
-	//	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
-		
-	//	return AT_BLE_SUCCESS;
-
 }
 
 static at_ble_status_t battery_simulation_task(void *param)
 {
 	if(battery_stop_simulation)
-	{		
+	{
 		return AT_BLE_FAILURE;
 	}
 	if (timer_cb_done)
@@ -452,61 +478,6 @@ static at_ble_status_t battery_simulation_task(void *param)
 	return AT_BLE_SUCCESS;
 }
 
-static void multirole_multiconnect_app_var_init()
-{
-	ble_event_callback_t battery_app_gap_tmp[] = {
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	ble_connected_app_event,
-	ble_disconnected_app_event,
-	NULL,
-	NULL,
-	bas_paired_app_event,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	bas_encryption_status_changed_app_event,
-	NULL,
-	NULL,
-	NULL,
-	NULL};
-
-	ble_event_callback_t battery_app_gatt_server_tmp[] = {
-	ble_notification_confirmed_app_event,
-	NULL,
-	ble_char_changed_app_event,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL,
-	NULL};
-	
-	memset(&bas_service_handler, 0 , sizeof(bat_gatt_service_handler_t));
-	
-	memcpy( battery_app_gap_cb, battery_app_gap_tmp , sizeof(ble_event_callback_t) * 19);
-	memcpy( battery_app_gatt_server_cb, battery_app_gatt_server_tmp , sizeof(ble_event_callback_t) * 10);
-	
-	app_timer_done = false;
-	alert_level = PXP_NO_ALERT;
-	
-	button_pressed = false;
-	timer_cb_done = false;
-	bat_char_notification_confirmed = false;
-	battery_flag = true;
-	
-	battery_level = BATTERY_MIN_LEVEL;
-	battery_conn_handle = 0xFFFF;
-	battery_stop_simulation = true;
-	
-	peripheral_state = PERIPHERAL_IDLE_STATE;	
-}
-
 int main(void)
 {	
 	uint8_t status;
@@ -520,8 +491,6 @@ int main(void)
 	#endif
 
 	//button_init();
-	
-	multirole_multiconnect_app_var_init();
 	
 	platform_driver_init();
 	acquire_sleep_lock();
@@ -607,6 +576,7 @@ int main(void)
 				at_ble_disconnected_t pxp_connect_request_fail;
 				pxp_connect_request_fail.reason
 					= AT_BLE_TERMINATED_BY_USER;
+				pxp_connect_request_fail.handle = ble_dev_info[0].conn_info.handle;
 				pxp_connect_request_flag = PXP_DEV_UNCONNECTED;
 				if (at_ble_connect_cancel() == AT_BLE_SUCCESS) {
 					DBG_LOG("Connection Timeout");
@@ -618,7 +588,7 @@ int main(void)
 				}
 			} else if (pxp_connect_request_flag == PXP_DEV_CONNECTED) {
 				rssi_update(ble_dev_info[0].conn_info.handle);
-				//hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
+				hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
 			}
 
 			app_timer_done = false;
