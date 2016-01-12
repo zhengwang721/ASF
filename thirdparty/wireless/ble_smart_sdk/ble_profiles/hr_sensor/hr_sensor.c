@@ -43,11 +43,11 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
+ *Support</a>
  */
 
 /****************************************************************************************
-*							        Includes
+*							        Includes	
 *                                       *
 ****************************************************************************************/
 #include <asf.h>
@@ -61,7 +61,7 @@
 #include "ble_utils.h"
 
 /****************************************************************************************
-*							        Globals
+*							        Globals		
 *                                       *
 ****************************************************************************************/
 /** @brief Scan response data*/
@@ -111,7 +111,7 @@ static const ble_event_callback_t hr_sensor_gatt_server_handle[] = {
 	hr_sensor_char_changed_handler,
 	NULL,
 	NULL,
-	NULL,
+	hr_sensor_char_write_request,
 	NULL,
 	NULL,
 	NULL,
@@ -122,7 +122,6 @@ static const ble_event_callback_t hr_sensor_gatt_server_handle[] = {
 *							        Implementations
 *                                       *
 ****************************************************************************************/
-
 /** @brief register_hr_notification_handler registers the notification handler
  *	passed by the application
  *  param[in] hr_notification_callback_t address of the notification handler
@@ -141,6 +140,34 @@ void register_hr_notification_handler(
 void register_hr_reset_handler(hr_reset_callback_t hr_reset_handler)
 {
 	reset_cb = hr_reset_handler;
+}
+
+/** @brief hr_sensor_char_write_request handles the write request for heart rate 
+ *  control point characteristic.
+ *  @param[in]	at_ble_characteristic_write_request_t parameters containing the value written
+ */
+at_ble_status_t hr_sensor_char_write_request(void * params)
+{
+	at_ble_characteristic_write_request_t request;
+	at_ble_status_t status;
+	
+	memcpy(&request,params,sizeof(at_ble_characteristic_write_request_t));
+	if (request.char_handle == hr_service_handler.serv_chars[2].char_val_handle) {
+			if (request.value[0] == HR_CONTROL_POINT_RESET_VAL) {
+				status = at_ble_write_authorize_reply(&request,AT_BLE_SUCCESS);
+				if (status != AT_BLE_SUCCESS) {
+					DBG_LOG("at_ble_write_authorize_reply failed");
+					} else  {
+					reset_cb();
+				}
+				
+			} else {
+				DBG_LOG_DEV("Sending an error code");
+				at_ble_write_authorize_reply(&request,AT_BLE_ATT_APP_ERROR);
+			}
+	}
+
+	return AT_BLE_SUCCESS;
 }
 
 /** @brief hr_notification_confirmation_handler called on notification confirmation
@@ -343,44 +370,44 @@ void hr_sensor_init(void *param)
 	}	
 	
 	/* Handles received */
-	DBG_LOG_DEV("\n\nThe handle for heart rate service 0x%04x",
+	DBG_LOG_PTS("\n\nThe handle for heart rate service 0x%04x",
 							hr_service_handler.serv_handle);
-	DBG_LOG_DEV("The characteristic handle for heart rate mm is 0x%04x",
+	DBG_LOG_PTS("The characteristic handle for heart rate mm is 0x%04x",
 							hr_service_handler.serv_chars[0].char_val_handle - 1);
-	DBG_LOG_DEV("The characteristic value handle for heart rate mm is 0x%04x",
+	DBG_LOG_PTS("The characteristic value handle for heart rate mm is 0x%04x",
 							hr_service_handler.serv_chars[0].char_val_handle);
-	DBG_LOG_DEV("The characteristic handle for body sensor location is 0x%04x",
+	DBG_LOG_PTS("The characteristic handle for body sensor location is 0x%04x",
 							hr_service_handler.serv_chars[1].char_val_handle - 1);
-	DBG_LOG_DEV("The characteristic value handle body sensor location is 0x%04x",
+	DBG_LOG_PTS("The characteristic value handle body sensor location is 0x%04x",
 							hr_service_handler.serv_chars[1].char_val_handle);
-	DBG_LOG_DEV("The characteristic handle for heart rate control point is 0x%04x",
+	DBG_LOG_PTS("The characteristic handle for heart rate control point is 0x%04x",
 							hr_service_handler.serv_chars[2].char_val_handle - 1);
-	DBG_LOG_DEV("The characteristic value handle for heart rate control point is 0x%04x",
+	DBG_LOG_PTS("The characteristic value handle for heart rate control point is 0x%04x",
 							hr_service_handler.serv_chars[2].char_val_handle);
-	DBG_LOG_DEV("The descriptor handle for heart rate mm is 0x%04x",
+	DBG_LOG_PTS("The descriptor handle for heart rate mm is 0x%04x",
 							hr_service_handler.serv_chars[0].client_config_handle);
 	
 	/* The handles received for Device information */
-	DBG_LOG_DEV("\r\nThe service handle for Device information service is 0x%04x",
+	DBG_LOG_PTS("\r\nThe service handle for Device information service is 0x%04x",
 						dis_service_handler.serv_handle);
-	DBG_LOG_DEV("The Handles for the characteristics of DIS are given below\n");
-	DBG_LOG_DEV("Characteristic 1 - 0x%04x",
+	DBG_LOG_PTS("The Handles for the characteristics of DIS are given below\n");
+	DBG_LOG_PTS("Characteristic 1 - 0x%04x",
 						dis_service_handler.serv_chars[0].char_val_handle - 1);
-	DBG_LOG_DEV("Characteristic 2 - 0x%04x",
+	DBG_LOG_PTS("Characteristic 2 - 0x%04x",
 						dis_service_handler.serv_chars[1].char_val_handle - 1);
-	DBG_LOG_DEV("Characteristic 3 - 0x%04x",
+	DBG_LOG_PTS("Characteristic 3 - 0x%04x",
 						dis_service_handler.serv_chars[2].char_val_handle - 1);
-	DBG_LOG_DEV("Characteristic 4 - 0x%04x",
+	DBG_LOG_PTS("Characteristic 4 - 0x%04x",
 						dis_service_handler.serv_chars[3].char_val_handle - 1);
-	DBG_LOG_DEV("Characteristic 5 - 0x%04x",
+	DBG_LOG_PTS("Characteristic 5 - 0x%04x",
 						dis_service_handler.serv_chars[4].char_val_handle - 1);
-	DBG_LOG_DEV("Characteristic 6 - 0x%04x",
+	DBG_LOG_PTS("Characteristic 6 - 0x%04x",
 						dis_service_handler.serv_chars[5].char_val_handle - 1);
-	DBG_LOG_DEV("Characteristic 7 - 0x%04x",
+	DBG_LOG_PTS("Characteristic 7 - 0x%04x",
 						dis_service_handler.serv_chars[6].char_val_handle - 1);
-	DBG_LOG_DEV("Characteristic 8 - 0x%04x",
+	DBG_LOG_PTS("Characteristic 8 - 0x%04x",
 						dis_service_handler.serv_chars[7].char_val_handle - 1);
-	DBG_LOG_DEV("Characteristic 9 - 0x%04x",
+	DBG_LOG_PTS("Characteristic 9 - 0x%04x",
 						dis_service_handler.serv_chars[8].char_val_handle - 1);
 											
     ALL_UNUSED(param);

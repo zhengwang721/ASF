@@ -43,11 +43,11 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
+ *Support</a>
  */
 
 /****************************************************************************************
-*							        Includes
+*							        Includes	
 *                                       *
 ****************************************************************************************/
 #include <asf.h>
@@ -264,11 +264,11 @@ static at_ble_status_t app_disconnected_event_handler(void *params)
 static void button_cb(void)
 {
 	if (app_state) {
-		DBG_LOG("Going to disconnect ");
+		DBG_LOG_DEV("Going to disconnect ");
 		disconnect_flag = true;
 	} else if (app_state == false && advertisement_flag == false) {
 		/* To check if the device is in advertisement */
-		DBG_LOG("Going to advertisement");
+		DBG_LOG_DEV("Going to advertisement");
 		start_advertisement = true;
 		advertisement_flag = true;	
 	}
