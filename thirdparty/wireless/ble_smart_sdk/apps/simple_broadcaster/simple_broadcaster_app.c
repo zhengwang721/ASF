@@ -83,13 +83,13 @@ static status_t brd_set_data_type(uint8_t type)
 	if (type == ADVERTISEMENT_DATA) {
 		data_type = ADVERTISEMENT_DATA;
 	} else if (type == SCAN_RESP_DATA &&
-			adv_type ==     ADV_TYPE_SCANNABLE_UNDIRECTED) {
+			adv_type == ADV_TYPE_SCANNABLE_UNDIRECTED) {
 		data_type = SCAN_RESP_DATA;
 	} else {
 		return STATUS_INVALID_PARAM;
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Starts advertising
@@ -101,6 +101,8 @@ static status_t brd_set_data_type(uint8_t type)
 static void brd_start_broadcast(void)
 {
 	at_ble_status_t status;
+	at_ble_adv_mode_t adv_mode;
+	adv_mode = AT_BLE_ADV_BROADCASTER_MODE;
 
 	if (at_ble_adv_data_set(adv_data, adv_length, scan_rsp_data, scan_length) != AT_BLE_SUCCESS) {
 		DBG_LOG("BLE Broadcast data set failed");
@@ -110,7 +112,7 @@ static void brd_start_broadcast(void)
 	}
 
 	if ((status     = at_ble_adv_start(adv_type,
-					AT_BLE_ADV_GEN_DISCOVERABLE,
+					adv_mode,
 					NULL, AT_BLE_ADV_FP_ANY,
 					APP_BROADCAST_FAST_ADV,
 					APP_BROADCAST_ADV_TIMEOUT,
@@ -129,7 +131,7 @@ static void brd_start_broadcast(void)
  *
  * @param[in] list_uuid16 list of service uuid of 16bits
  * @param[in] length length of the list
- * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_SUCCEEDED adding the list to advertisement data success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the list
  * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
@@ -161,14 +163,14 @@ static status_t brd_adv_comp_list_service_uuid16(uint8_t *list_uuid16, uint8_t l
 		}
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement data with incomplete list of service uuid of 16bits
  *
  * @param[in] list_uuid16 list of service uuid of 16bits
  * @param[in] length length of the list
- * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_SUCCEEDED adding the list to advertisement data success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the list
  * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
@@ -195,14 +197,14 @@ static status_t brd_adv_incomp_list_service_uuid16(uint8_t *list_uuid16, uint8_t
 		return STATUS_OPERATION_NOT_SUPPORTED;
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement data with complete list of service uuid of 32bits
  *
  * @param[in] list_uuid32 list of service uuid of 32bits
  * @param[in] length length of the list
- * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_SUCCEEDED adding the list to advertisement data success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the list
  * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
@@ -234,14 +236,14 @@ static status_t brd_adv_comp_list_service_uuid32(uint8_t *list_uuid32, uint8_t l
 		}
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement data with incomplete list of service uuid of 32bits
  *
  * @param[in] list_uuid32 list of service uuid of 32bits
  * @param[in] length length of the list
- * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_SUCCEEDED adding the list to advertisement data success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the list
  * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
@@ -268,14 +270,14 @@ static status_t brd_adv_incomp_list_service_uuid32(uint8_t *list_uuid32, uint8_t
 		return STATUS_OPERATION_NOT_SUPPORTED;
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement data with complete list of service uuid of 128bits
  *
  * @param[in] list_uuid128 list of service uuid of 128bits
  * @param[in] length length of the list
- * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_SUCCEEDED adding the list to advertisement data success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the list
  * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
@@ -309,14 +311,14 @@ static status_t brd_adv_comp_list_service_uuid128(uint8_t *list_uuid128, uint8_t
 		}
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement data with incomplete list of service uuid of 32bits
  *
  * @param[in] list_uuid128 list of service uuid of 128bits
  * @param[in] length length of the list
- * @return @ref STATUS_SUCCESS adding the list to advertisement data success
+ * @return @ref STATUS_SUCCEEDED adding the list to advertisement data success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the list
  * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
@@ -343,14 +345,14 @@ static status_t brd_adv_incomp_list_service_uuid128(uint8_t *list_uuid128, uint8
 		return STATUS_OPERATION_NOT_SUPPORTED;
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement data with complete local name
  *
  * @param[in] local_name local name of the device
  * @param[in] length length of the local name
- * @return @ref STATUS_SUCCESS adding the complete local name to advertisement
+ * @return @ref STATUS_SUCCEEDED adding the complete local name to advertisement
  * data success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the local name
@@ -383,14 +385,14 @@ static status_t brd_adv_comp_local_name(uint8_t *local_name, uint8_t length)
 		}
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement data with shortened local name
  *
  * @param[in] local_name local name of the device
  * @param[in] length length of the local name
- * @return @ref STATUS_SUCCESS adding the shortened local name to advertisement
+ * @return @ref STATUS_SUCCEEDED adding the shortened local name to advertisement
  * data success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the local name
@@ -418,14 +420,14 @@ static status_t brd_adv_shortened_local_name(uint8_t *local_name, uint8_t length
 		return STATUS_OPERATION_NOT_SUPPORTED;
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement type
  *
  * @param[in] type type can be ADV_TYPE_SCANNABLE_UNDIRECTED or
  * ADV_TYPE_NONCONN_UNDIRECTED
- * @return @ref STATUS_SUCCESS successfully set advertisement type
+ * @return @ref STATUS_SUCCEEDED successfully set advertisement type
  * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
  *
  */
@@ -434,21 +436,20 @@ static status_t brd_set_advertisement_type(uint8_t type)
 	if (type == ADV_TYPE_SCANNABLE_UNDIRECTED) {
 		adv_type = AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED;
 		DBG_LOG("Advertisement type set to scannable undirected");
-	} else if (type == ADV_TYPE_NONCONN_UNDIRECTED) {
+		} else if (type == ADV_TYPE_NONCONN_UNDIRECTED) {
 		adv_type = AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED;
 		DBG_LOG("Advertisement type set to nonconnectable undirected");
-	} else {
+		} else {
 		return STATUS_INVALID_PARAM;
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
-
 /** @brief Set advertisement data with appearance of the device
  *
  * @param[in] appearance appearance of the device
  * @param[in] length length of the local name
- * @return @ref STATUS_SUCCESS adding the appearance to advertisement data
+ * @return @ref STATUS_SUCCEEDED adding the appearance to advertisement data
  * success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the local name
@@ -481,14 +482,14 @@ static status_t brd_adv_appearance(uint8_t *appearance, uint8_t length)
 		}
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement data with manufacturer data
  *
  * @param[in] data manufacturer data of the device
  * @param[in] length length of the local name
- * @return @ref STATUS_SUCCESS adding the manufacturer data to advertisement
+ * @return @ref STATUS_SUCCEEDED adding the manufacturer data to advertisement
  * data success
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
  * enough space to hold the local name
@@ -521,7 +522,7 @@ static status_t brd_adv_manufacturer_data(uint8_t *data, uint8_t length)
 		}
 	}
 
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief Set advertisement data
@@ -529,7 +530,7 @@ static status_t brd_adv_manufacturer_data(uint8_t *data, uint8_t length)
  * @param[in] adv_data_type type of the advertisement data type
  * @param[in] adv_usr_data reference to a user data corresponding to the
  * advertisement data type
- * @return @ref STATUS_SUCCESS successfully added user data to the advertisement
+ * @return @ref STATUS_SUCCEEDED successfully added user data to the advertisement
  * data
  * @return @ref STATUS_INVALID_PARAM parameters passed are invalid
  * @return @ref STATUS_MAX_LENGTH_REACHED advertisement data does not have
@@ -545,7 +546,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 	switch (adv_data_type) {
 	case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID16:
 	{
-		if ((status = brd_adv_incomp_list_service_uuid16(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_incomp_list_service_uuid16(adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG( "adding incomplete list of service uuid16 failed");
 			return status;
 		}
@@ -556,7 +557,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID32:
 	{
-		if ((status = brd_adv_incomp_list_service_uuid32(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_incomp_list_service_uuid32(adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG("adding incomplete list of service uuid32 failed");
 			return status;
 		}
@@ -567,7 +568,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_INCOMPLETE_SERVICE_UUID128:
 	{
-		if ((status = brd_adv_incomp_list_service_uuid128( adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_incomp_list_service_uuid128( adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG(
 					"adding incomplete list of service uuid128 failed");
 			return status;
@@ -579,7 +580,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16:
 	{
-		if ((status = brd_adv_comp_list_service_uuid16( adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_comp_list_service_uuid16( adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG("adding complete list of service uuid16 failed");
 			return status;
 		}
@@ -591,7 +592,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 	case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID32:
 	{
 		DBG_LOG("name set");
-		if ((status = brd_adv_comp_list_service_uuid32( adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_comp_list_service_uuid32( adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG("adding complete list of service uuid32 failed");
 			return status;
 		}
@@ -602,7 +603,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_COMPLETE_SERVICE_UUID128:
 	{
-		if ((status = brd_adv_comp_list_service_uuid128(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_comp_list_service_uuid128(adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG("adding complete list of service uuid128 failed");
 			return status;
 		}
@@ -613,7 +614,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_COMPLETE_LOCAL_NAME:
 	{
-		if ((status = brd_adv_comp_local_name(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_comp_local_name(adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG("adding complete local name failed");
 			return status;
 		}
@@ -624,7 +625,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_SHORTENED_LOCAL_NAME:
 	{
-		if ((status = brd_adv_shortened_local_name( adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_shortened_local_name( adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG("adding shortened complete local name failed");
 			return status;
 		}
@@ -635,7 +636,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_MANUFACTURER_DATA:
 	{
-		if ((status = brd_adv_manufacturer_data(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_manufacturer_data(adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG("adding manufacturer data failed");
 			return status;
 		}
@@ -646,7 +647,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 
 	case ADV_DATA_TYPE_APPEARANCE:
 	{
-		if ((status = brd_adv_appearance(adv_usr_data, length)) != STATUS_SUCCESS_APP) {
+		if ((status = brd_adv_appearance(adv_usr_data, length)) != STATUS_SUCCEEDED) {
 			DBG_LOG("adding appearance failed");
 			return status;
 		}
@@ -662,7 +663,7 @@ static status_t brd_set_advertisement_data(adv_data_type_t adv_data_type, uint8_
 	}
 	break;
 	}
-	return STATUS_SUCCESS;
+	return STATUS_SUCCEEDED;
 }
 
 /** @brief initialize the broadcaster event
@@ -672,15 +673,15 @@ static status_t brd_adv_init(void)
 {
 	status_t status;
 
-	status = brd_set_advertisement_type(ADV_TYPE_NONCONN_UNDIRECTED);
-	if (status != STATUS_SUCCESS_APP) {
+	status = brd_set_advertisement_type(ADV_TYPE_SCANNABLE_UNDIRECTED);
+	if (status != STATUS_SUCCEEDED) {
 		DBG_LOG("Advertisement type set failed(%d)", status);
 		return STATUS_FAILED;
 	}
 
 	/*set advertisement data type */
 	status = brd_set_data_type(ADVERTISEMENT_DATA);
-	if (status != STATUS_SUCCESS_APP) {
+	if (status != STATUS_SUCCEEDED) {
 		DBG_LOG("Advertisement data type set failed(%d)", status);
 		return STATUS_FAILED;
 	}
@@ -696,8 +697,18 @@ static status_t brd_adv_init(void)
 	brd_set_advertisement_data(ADV_DATA_TYPE_COMPLETE_SERVICE_UUID16,
 			(uint8_t *)BRD_ADV_DATA_UUID_DATA,
 			BRD_ADV_DATA_UUID_LEN);
-
-	return STATUS_SUCCESS;
+	
+	/*set advertisement data type */
+	if ((status = brd_set_data_type(SCAN_RESP_DATA)) != STATUS_SUCCEEDED) {
+			DBG_LOG("Advertisement data type set failed(%d)", status);
+			return STATUS_FAILED;
+	}
+	/* set Scan response data with manufacturer specific data */
+	brd_set_advertisement_data(ADV_DATA_TYPE_MANUFACTURER_DATA,
+								(uint8_t *)BRD_ADV_DATA_MANUFACTURER_DATA,
+								BRD_ADV_DATA_MANUFACTURER_LEN);
+								
+	return STATUS_SUCCEEDED;
 }
 
 int main(void)

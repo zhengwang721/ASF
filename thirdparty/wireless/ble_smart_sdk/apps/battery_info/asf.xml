@@ -8,8 +8,9 @@
 		<build type="c-source" value="battery_info.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_PERIPHERAL"/>
 		<build type="define" name="ATT_DB_MEMORY" value=""/>
-			
+		<build type="define" name="NENABLE_PTS" value=""/>
 		<build type="distribute" subtype="user-file" value="Atmel-42596-ATSAMB11-BluSDK-SMART-Battery-Service-Application-Getting-Started-Guide_UserGuide.pdf"/>
+		
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.battery"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>

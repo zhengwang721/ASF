@@ -58,14 +58,14 @@
 #include "ble_manager.h"
 #include "ble_utils.h"
 
-/* 100 ms */
-#define APP_BROADCAST_FAST_ADV                  (160)
+/* 1000 ms */
+#define APP_BROADCAST_FAST_ADV                  (1600)
 
-/* 100 Secs */
-#define APP_BROADCAST_ADV_TIMEOUT               (1000)
+/* 10 min */
+#define APP_BROADCAST_ADV_TIMEOUT               (655)
 
 /* maximum length of advertisement data */
-#define MAX_ADV_LEN                                                             (28)
+#define MAX_ADV_LEN								(28)
 
 /* maximum length of scan response data */
 #define MAX_SCAN_LEN MAX_ADV_LEN
@@ -75,13 +75,13 @@
 #define ADV_TYPE_NONCONN_UNDIRECTED AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED
 
 /* /Advertisement data type length */
-#define ADV_TYPE_LEN                                                    (0x01)
+#define ADV_TYPE_LEN							(0x01)
 
 /** @brief Return status to app from the APIs provided
  */
 typedef enum {
 	/* /Success */
-	STATUS_SUCCESS_APP = 0,
+	STATUS_SUCCEEDED = 0,
 	/* /adv_data or scan_rsp_data have reached maximum length */
 	STATUS_MAX_LENGTH_REACHED,
 	/* /Input parameter invalid */
@@ -116,13 +116,16 @@ typedef enum {
 	ADV_DATA_TYPE_MANUFACTURER_DATA = 0xff
 } adv_data_type_t;
 
-#define BRD_ADV_DATA_UUID_LEN                           (2)
+#define BRD_ADV_DATA_UUID_LEN				(2)
 #define BRD_ADV_DATA_UUID_DATA              "\x00\x18"
 
-#define BRD_ADV_DATA_APPEARANCE_LEN                     (2)
-#define BRD_ADV_DATA_APPEARANCE_DATA            "\x80\x00"
+#define BRD_ADV_DATA_APPEARANCE_LEN			(2)
+#define BRD_ADV_DATA_APPEARANCE_DATA		"\x80\x00"
 
 #define BRD_ADV_DATA_NAME_LEN               (0x0b)
 #define BRD_ADV_DATA_NAME_DATA              "ATMEL-BROADCAST"
+
+#define BRD_ADV_DATA_MANUFACTURER_LEN		(0x08)
+#define BRD_ADV_DATA_MANUFACTURER_DATA		"\x00\x06\xd6\xb2\xf0\x05\xf0\xf8"
 
 #endif /* __SIMPLE_BROADCASTER_APP_H__ */
