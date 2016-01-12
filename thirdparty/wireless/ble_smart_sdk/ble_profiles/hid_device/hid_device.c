@@ -43,7 +43,7 @@
 
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel
- * Support</a>
+ *Support</a>
  */
 
 /**
@@ -80,8 +80,9 @@ static const ble_event_callback_t hid_gap_handle[] = {
 	NULL,
 	NULL,
 	NULL
-	};
-	static const ble_event_callback_t hid_gatt_server_handle[] = {
+};
+
+static const ble_event_callback_t hid_gatt_server_handle[] = {
 	NULL,
 	NULL,
 	hid_prf_char_changed_handler,
@@ -92,7 +93,7 @@ static const ble_event_callback_t hid_gap_handle[] = {
 	NULL,
 	NULL,
 	NULL
-	};
+};
 
 /* Notification callback function pointer */
 report_ntf_callback_t report_ntf_cb = NULL;
@@ -102,28 +103,21 @@ control_point_ntf_callback_t control_point_ntf_cb = NULL;
 
 /* Pointer to profile data reference */
 hid_prf_info_t *hid_prf_dataref[HID_MAX_SERV_INST];
-dis_gatt_service_handler_t device_info_serv;
 
-void hid_prf_var_init(void)
-{
-	uint8_t num = 0;
-	for (; num < HID_MAX_SERV_INST; num++) {
-		hid_prf_dataref[num] = NULL;
-	}
-	memset(&device_info_serv, 0, sizeof(dis_gatt_service_handler_t));
-	hid_serv_var_init();
-}
+/* Scan response data*/
+uint8_t scan_rsp_data[SCAN_RESP_LEN] = {0x09, 0xff, 0x00, 0x06, 0xd6, 0xb2, 0xf0, 0x05, 0xf0, 0xf8};
 
 /**
- * \HID device profile initialization function
- */
+* \HID device profile initialization function
+*/
 void hid_prf_init(void *param)
-{
+{   
 	uint8_t serv_num = 0;
 	uint16_t serv_handle = 0;
+	dis_gatt_service_handler_t device_info_serv;
 	
 	#ifdef ENABLE_PTS
-		DBG_LOG("Protocol Mode Characteristic Value 0x%02X", hid_prf_dataref[serv_num]->protocol_mode);
+		DBG_LOG_PTS("Protocol Mode Characteristic Value 0x%02X", hid_prf_dataref[serv_num]->protocol_mode);
 	#endif
 	for(serv_num = 0; serv_num<HID_MAX_SERV_INST; serv_num++)
 	{
@@ -153,6 +147,7 @@ void hid_prf_init(void *param)
 	}
 	/* Initialize the dis */
 	dis_init_service(&device_info_serv);
+	
 	/* Define the primary service in the GATT server database */
 	dis_primary_service_define(&device_info_serv);
 	
@@ -164,12 +159,13 @@ void hid_prf_init(void *param)
 	
 	/* Callback registering for BLE-GATT-Server Role */
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GATT_SERVER_EVENT_TYPE, hid_gatt_server_handle);
-	/* UNUSED(param); */
+	
+	UNUSED(param);
 }
 
 /**
- * \HID device profile configuration function
- */
+* \HID device profile configuration function
+*/
 uint8_t hid_prf_conf(hid_prf_info_t *ref)
 {
 	if(ref != NULL){
@@ -227,18 +223,17 @@ at_ble_status_t hid_prf_disconnect_event_handler(void *params)
 */
 at_ble_status_t hid_prf_char_changed_handler(void *params)
 {
+	at_ble_characteristic_changed_t *change_char;
+	change_char = (at_ble_characteristic_changed_t *)params;
+
 	hid_proto_mode_ntf_t protocol_mode;
 	hid_report_ntf_t reportinfo;
 	hid_boot_ntf_t boot_info;
 	hid_control_mode_ntf_t control_point;
+	at_ble_characteristic_changed_t change_params;
 	uint8_t ntf_op;
 	uint8_t serv_inst;
-		
-	at_ble_characteristic_changed_t change_params;
-	at_ble_characteristic_changed_t *change_char;
-	
-	change_char = (at_ble_characteristic_changed_t *)params;
-	memset(&change_params, 0, sizeof(at_ble_characteristic_changed_t));
+
 	memcpy((uint8_t *)&change_params, change_char, sizeof(at_ble_characteristic_changed_t));
 	serv_inst = hid_serv_get_instance(change_params.char_handle);
 	DBG_LOG_DEV("hid_prf_char_changed_handler : Service Instance %d", serv_inst);
@@ -293,56 +288,56 @@ at_ble_status_t hid_prf_char_changed_handler(void *params)
 }
 
 /**
- * \Notify to user about the new notification configuration set by HID host for report mode
- */
+* \Notify to user about the new notification configuration set by HID host for report mode
+*/
 void notify_report_ntf_handler(report_ntf_callback_t report_ntf_fn)
 {
 	report_ntf_cb = report_ntf_fn;
 }
 
 /**
- * \Notify to user about the new notification configuration set by HID host for boot mode
- */
+* \Notify to user about the new notification configuration set by HID host for boot mode
+*/
 void notify_boot_ntf_handler(boot_ntf_callback_t boot_ntf_fn)
 {
 	boot_ntf_cb = boot_ntf_fn;
 }
 
 /**
- * \Notify to user about the new protocol mode set by HID host for boot mode
- */
+* \Notify to user about the new protocol mode set by HID host for boot mode
+*/
 void notify_protocol_mode_handler(protocol_mode_ntf_callback_t proto_mode_ntf_fn)
 {
 	mode_ntf_cb = proto_mode_ntf_fn;
 }
 
 /**
- * \Notify to user about the control point set by HID host for boot mode
- */
+* \Notify to user about the control point set by HID host for boot mode
+*/
 void notify_control_point_handler(control_point_ntf_callback_t control_mode_ntf_fn)
 {
 	control_point_ntf_cb = control_mode_ntf_fn;
 }
 
 /**
- * \Notify report to HID host
- */
+* \Notify report to HID host 
+*/
 void hid_prf_report_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t reportid, uint8_t *report, uint16_t len)
 {
 	hid_serv_report_update(conn_handle, serv_inst, reportid, report, len);
 }
 
 /**
- * \Notify boot report for keyboard to HID host
- */
+* \Notify boot report for keyboard to HID host
+*/
 void hid_prf_boot_mousereport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len)
 {
 	hid_boot_mousereport_update(conn_handle, serv_inst, bootreport, len);
 }
 
 /**
- * \Notify boot report for keyboard to HID host
- */
+* \Notify boot report for keyboard to HID host
+*/
 void hid_prf_boot_keyboardreport_update(at_ble_handle_t conn_handle, uint8_t serv_inst, uint8_t *bootreport, uint16_t len)
 {
 	hid_boot_keyboardreport_update(conn_handle, serv_inst, bootreport, len);

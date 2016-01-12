@@ -51,28 +51,28 @@
 #include "stdio.h"
 
 /****************************************************************************************
-*							        Macros	                                                                                        *
+*							        Macros	                                     							*
 ****************************************************************************************/
 /** @brief Mouse movement position */
 #define MOUSE_MOVEMENT_POS 10
 
 /** @brief Keypad debounce time */
-#define KEY_PAD_DEBOUNCE_TIME   (200)
+#define KEY_PAD_DEBOUNCE_TIME	(200)
 
 /** @brief Mouse change direction after number of attempt */
-#define MOUSE_CHANGE_DIRECTION  (5)
+#define MOUSE_CHANGE_DIRECTION	(5)
 
 /****************************************************************************************
-*							        Enumerations	                                        *
+*							        Enumerations	                                   	*
 ****************************************************************************************/
-
 /**@brief Mouse movement
- */
-typedef enum {
+*/
+typedef enum
+{
 	MOUSE_RIGHT_MOVEMENT    = 1,
 	MOUSE_LEFT_MOVEMENT,
 	MOUSE_UP_MOVEMENT,
-	MOUSE_DOWN_MOVEMENT,
-} mouse_move;
+	MOUSE_DOWN_MOVEMENT,	
+}mouse_move;
 
 #endif /*__HID_DEVICE_APP_H__*/
