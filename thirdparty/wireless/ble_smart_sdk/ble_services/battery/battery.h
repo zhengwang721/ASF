@@ -40,14 +40,13 @@
  * \asf_license_stop
  *
  */
-
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-/* <<< Use Configuration Wizard in Context Menu >>> */
-/* <h> Battery Service Configuration */
-/* ======================= */
+// <<< Use Configuration Wizard in Context Menu >>>
+// <h> Battery Service Configuration
+// =======================
 
 #ifndef __BATTERY_H__
 #define __BATTERY_H__
@@ -70,21 +69,15 @@
 /**  @brief Characteristic presentation format descriptor */
 #define BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR 0x0000
 
-typedef struct bat_gatt_service_handler {
-	/* / service uuid */
-	at_ble_uuid_t serv_uuid;
-	/* / service handle */
-	at_ble_handle_t serv_handle;
-	/* / service characteristic */
-	at_ble_characteristic_t serv_chars;
-} bat_gatt_service_handler_t;
-
-/**@brief initial variables
- *
- * @param none
- * @return none
- */
-void bat_init_var(void);
+typedef struct bat_gatt_service_handler
+{
+	/// service uuid
+	at_ble_uuid_t	serv_uuid;
+	/// service handle
+	at_ble_handle_t	serv_handle;
+	/// service characteristic
+	at_ble_characteristic_t	serv_chars;
+}bat_gatt_service_handler_t;
 
 /**@brief Update the battery characteristic value after defining the services using bat_primary_service_define
  *

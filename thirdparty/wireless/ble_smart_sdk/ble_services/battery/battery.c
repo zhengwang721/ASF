@@ -40,19 +40,17 @@
  * \asf_license_stop
  *
  */
-
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-/**
+ /**
  * \mainpage
  * \section preface Preface
  * This is the reference manual for the Battery Service
  */
-
 /****************************************************************************************
-*							        Includes	                                        *
+*							        Includes	                                     	*
 ****************************************************************************************/
 
 #include "battery.h"
@@ -69,38 +67,28 @@ extern ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
 
 /**@brief Initialize the service with its included service, characteristics, and descriptors
  */
-
-void bat_init_var()
-{
-	battery_init_value = 10;
-	bat_notification_flag = false;
-	memset(&presentation_format, 0, sizeof(at_ble_char_presentation_t));
-}
-
 void bat_init_service(bat_gatt_service_handler_t *battery_serv, uint8_t *battery_value)
 {
-	bat_init_var();
-	
 	battery_serv->serv_handle = 0;
 	battery_serv->serv_uuid.type = AT_BLE_UUID_16;
-	battery_serv->serv_uuid.uuid[0] = (uint8_t)BAT_SERVICE_UUID;
-	battery_serv->serv_uuid.uuid[1] = (uint8_t)(BAT_SERVICE_UUID >> 8);
-
-	/* Battery service characteristic */
+	battery_serv->serv_uuid.uuid[0] = (uint8_t) BAT_SERVICE_UUID;
+	battery_serv->serv_uuid.uuid[1] = (uint8_t) (BAT_SERVICE_UUID >> 8);
+	
+	//Battery service characteristic
 	battery_serv->serv_chars.char_val_handle = 0;          /* handle stored here */
 	battery_serv->serv_chars.uuid.type = AT_BLE_UUID_16;
-	battery_serv->serv_chars.uuid.uuid[0] = (uint8_t)BAT_CHAR_BAT_LEVEL_UUID;           /* UUID : Manufacturer Name String */
-	battery_serv->serv_chars.uuid.uuid[1] = (uint8_t)(BAT_CHAR_BAT_LEVEL_UUID >> 8);           /* UUID : Manufacturer Name String */
+	battery_serv->serv_chars.uuid.uuid[0] = (uint8_t) BAT_CHAR_BAT_LEVEL_UUID;          /* UUID : Manufacturer Name String */
+	battery_serv->serv_chars.uuid.uuid[1] = (uint8_t) (BAT_CHAR_BAT_LEVEL_UUID >> 8);          /* UUID : Manufacturer Name String */
 	battery_serv->serv_chars.properties = (AT_BLE_CHAR_READ | AT_BLE_CHAR_NOTIFY); /* Properties */
 	battery_serv->serv_chars.init_value = &battery_init_value;             /* value */
 	battery_serv->serv_chars.value_init_len = sizeof(uint8_t);
 	battery_serv->serv_chars.value_max_len = sizeof(uint8_t);
 #if BLE_PAIR_ENABLE
 	battery_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR |
-			AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);                                                                            /* permissions */
+												 AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR);   /* permissions */
 #else
 	battery_serv->serv_chars.value_permissions = (AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR |
-			AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);                                                                            /* permissions */
+												 AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR);   /* permissions */
 #endif
 	battery_serv->serv_chars.user_desc = NULL;           /* user defined name */
 	battery_serv->serv_chars.user_desc_len = 0;
@@ -111,26 +99,27 @@ void bat_init_service(bat_gatt_service_handler_t *battery_serv, uint8_t *battery
 	battery_serv->serv_chars.user_desc_handle = 0;             /*user desc handles*/
 	battery_serv->serv_chars.client_config_handle = 0;         /*client config handles*/
 	battery_serv->serv_chars.server_config_handle = 0;         /*server config handles*/
-
+	
 	presentation_format.format = AT_BLE_PRES_FORMAT_UINT8;
 	presentation_format.exponent = BAT_CHAR_PRESENTATION_FORMAT_EXPONENT;
-	presentation_format.unit = (uint8_t)BAT_CHAR_PRESENTATION_FORMAT_UNIT;
-	presentation_format.unit = (uint8_t)(BAT_CHAR_PRESENTATION_FORMAT_UNIT >> 8);
+	presentation_format.unit = (uint8_t) BAT_CHAR_PRESENTATION_FORMAT_UNIT;
+	presentation_format.unit = (uint8_t) (BAT_CHAR_PRESENTATION_FORMAT_UNIT >> 8);
 	presentation_format.name_space = BAT_CHAR_PRESENTATION_FORMAT_NAMESPACE;
-	presentation_format.description = (uint8_t)BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR;
-	presentation_format.description = (uint8_t)(BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR >> 8);
-
+	presentation_format.description = (uint8_t) BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR;
+	presentation_format.description = (uint8_t) (BAT_CHAR_PRESENTATION_FORMAT_DESCRIPTOR >> 8);
+	
 	battery_serv->serv_chars.presentation_format = &presentation_format;       /* presentation format */
+	ALL_UNUSED(battery_value);
 }
 
-/**@brief defining a initialized service
+/**@brief defining a initialized service 
  */
 at_ble_status_t bat_primary_service_define(bat_gatt_service_handler_t *battery_service)
 {
 	return(at_ble_primary_service_define(&battery_service->serv_uuid,
-	       &battery_service->serv_handle,
-	       NULL, 0,
-	       &battery_service->serv_chars, 1));
+	&battery_service->serv_handle,
+	NULL, 0,
+	&battery_service->serv_chars, 1));
 }
 
 /**@brief Function used to update characteristic value
@@ -154,7 +143,7 @@ at_ble_status_t bat_update_char_value (at_ble_handle_t conn_handle, bat_gatt_ser
 		}
 		else {
 			DBG_LOG_DEV("sending notification successful");
-			//*flag = false;
+			*flag = false;
 			return status;
 		}
 	}
@@ -173,12 +162,21 @@ at_ble_status_t bat_char_changed_event(at_ble_handle_t conn_handle, bat_gatt_ser
 		if(change_params.char_new_value[0])
 		{
 			bat_notification_flag = true;
+			/* sending notification to the peer about change in the battery level */
+			if((status = at_ble_notification_send(conn_handle, battery_service->serv_chars.char_val_handle)) != AT_BLE_SUCCESS) {
+				DBG_LOG("sending notification failed%d",status);
+				return status;
+			}
+			else {
+				DBG_LOG_DEV("sending notification successful");
+				*flag = false;
+				return status;
+			}			
 		}
 		else
 		{
 			bat_notification_flag = false;			
 		}
 	}
-
 	return status;
 }
