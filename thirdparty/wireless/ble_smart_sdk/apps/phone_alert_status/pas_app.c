@@ -1,52 +1,51 @@
 /**
- * \file
- *
- * \brief Phone Alert Status Application
- *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
-
+* \file
+*
+* \brief Phone Alert Status Application
+*
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
+*
+* \asf_license_start
+*
+* \page License
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* 3. The name of Atmel may not be used to endorse or promote products derived
+*    from this software without specific prior written permission.
+*
+* 4. This software may only be redistributed and used in connection with an
+*    Atmel microcontroller product.
+*
+* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+* \asf_license_stop
+*
+*/
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+*/
 
 /****************************************************************************************
-*							        Includes	                                        *
+*							        Includes	                                     	*
 ****************************************************************************************/
 #include <asf.h>
 #include "console_serial.h"
@@ -62,9 +61,11 @@
 #include "pas_app.h"
 #include "button.h"
 
-static at_ble_status_t app_connected_event_handler(void *params);
-static at_ble_status_t app_disconnected_event_handler(void *params);
-static void button_cb(void);
+volatile uint8_t press_count = DEVICE_SILENT;		/*!< button press count*/
+
+volatile bool flag = false;					/*!< To send values once per button press*/
+
+volatile bool app_state;			/*!< state of the app,true for connected false for disconnected*/
 
 static const ble_event_callback_t app_gap_handle[] = {
 	NULL,
@@ -88,10 +89,7 @@ static const ble_event_callback_t app_gap_handle[] = {
 	NULL
 };
 
-volatile uint8_t press_count = DEVICE_SILENT;		/*!< button press count*/
-volatile bool flag = false;					/*!< To send values once per button press*/
-volatile bool app_state;			/*!< state of the app,true for connected false for disconnected*/
-
+void button_cb(void);
 /***********************************************************************************
  *									Implementations                               *
  **********************************************************************************/
@@ -209,10 +207,9 @@ static void app_ringer_setting_notify(uint8_t *data, uint8_t len)
 /**
  * @brief Button Press Callback 
  */
-static void button_cb()
+void button_cb(void)
 {
 	if (app_state && !flag) {
-		DBG_LOG("button Pressed");
 		flag = true;
 		send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
 	}
@@ -231,6 +228,9 @@ int main(void)
 	/* To keep the app executing */
 	bool app_exec = true;	
 	app_state = false;
+	#ifdef ENABLE_PTS
+	uint8_t function_selector;
+	#endif
 		
 	platform_driver_init();
 	acquire_sleep_lock();
@@ -273,14 +273,14 @@ int main(void)
 		ble_event_task();
 		if (flag) {
 			flag = false;
-			#if PTS
-			DBG_LOG("To choose the functionality enter the index of the functionality displayed");
-			DBG_LOG("\t 1.Set Device to Silent");
-			DBG_LOG("\t 2.Set Device to Mute Once");
-			DBG_LOG("\t 3.Set Device to Cancel Mute");
-			DBG_LOG("\t 4.Read Alert Status");
-			DBG_LOG("\t 5.Read Ringer Setting");
-			DBG_LOG("\t 6.Start Service Discovery");
+			#ifdef ENABLE_PTS
+			DBG_LOG_PTS("To choose the functionality enter the index of the functionality displayed");
+			DBG_LOG_PTS("\t 1.Set Device to Silent");
+			DBG_LOG_PTS("\t 2.Set Device to Mute Once");
+			DBG_LOG_PTS("\t 3.Set Device to Cancel Mute");
+			DBG_LOG_PTS("\t 4.Read Alert Status");
+			DBG_LOG_PTS("\t 5.Read Ringer Setting");
+			DBG_LOG_PTS("\t 6.Start Service Discovery");
 			function_selector = getchar();
 			function_selector = function_selector - 48;
 			DBG_LOG("The option chosen is %d",function_selector);

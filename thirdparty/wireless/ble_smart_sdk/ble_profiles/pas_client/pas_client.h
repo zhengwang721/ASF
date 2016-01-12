@@ -1,46 +1,46 @@
-/**
- * \file
- *
- * \brief Phone Alert Status Profile declarations
- *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel micro controller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
 
+/**
+* \file
+*
+* \brief Phone Alert Status Profile declarations
+*
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
+*
+* \asf_license_start
+*
+* \page License
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* 3. The name of Atmel may not be used to endorse or promote products derived
+*    from this software without specific prior written permission.
+*
+* 4. This software may only be redistributed and used in connection with an
+*    Atmel micro controller product.
+*
+* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+* \asf_license_stop
+*
+*/
 /*
 * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
 */
@@ -55,7 +55,6 @@
 // =======================
 #ifndef __PAS_CLIENT_H__
 #define __PAS_CLIENT_H__
-
 /***********************************************************************************
  *									Macros			                               *
  **********************************************************************************/
@@ -64,14 +63,15 @@
 //	<i> Defines inteval of Fast advertisement in ms.
 //	<i> Default: 100
 //	<id> pas_fast_adv
-#define APP_PAS_FAST_ADV						(100) //1000 ms
+#define APP_PAS_FAST_ADV						(1600) //1000 ms
 
-/**@brief Advertisement Timeout*/
-//	<o> Advertisement Timeout <1000-10000:50>
-//	<i> Defines inteval at which advertisement timout in ms.
-//	<i> Default: 1000
+/** @brief APP_PAS_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x028F in 
+ *seconds, 0x0000 disables time-out.*/
+//	<o> Advertisement Timeout <1-655>
+//	<i> Defines interval at which advertisement timeout in sec.
+//	<i> Default: 655
 //	<id> pas_adv_timeout
-#define APP_PAS_ADV_TIMEOUT						(1000) // 100 Secs
+#define APP_PAS_ADV_TIMEOUT						(655) // 10 min
 
 /**@brief Scan Response length*/
 //	<o> Scan Response Buffer <1-20>
@@ -135,45 +135,50 @@
 /***********************************************************************************
  *									types			                               *
  **********************************************************************************/
-typedef struct serv_info {
+typedef struct serv_info
+{
 	bool discovery;
 	at_ble_handle_t start_handle;
-	at_ble_handle_t end_handle;
-} serv_info_t;
+	at_ble_handle_t end_handle;	
+}serv_info_t;
 
-typedef struct char_info {
+typedef struct char_info
+{
 	bool discovery;
 	at_ble_handle_t char_handle;
 	at_ble_handle_t value_handle;
 	uint8_t properties;
-} char_info_t;
+}char_info_t;
 
-typedef struct desc_info {
+typedef struct desc_info 
+{
 	bool discovery;
-	at_ble_handle_t desc_handle;
-} desc_info_t;
+	at_ble_handle_t desc_handle;	
+}desc_info_t;
 
-typedef struct pas_service_handler {
+typedef struct pas_service_handler
+{
 	at_ble_handle_t conn_handle;
-
+	
 	/* Primary Service info */
 	serv_info_t pas_service_info;
-
+	
 	/*characteristic info for alert status*/
 	char_info_t alert_status_char;
-
+	
 	/*descriptor info for alert status*/
 	desc_info_t alert_status_desc;
-
+	
 	/*characteristic info for ringer setting*/
 	char_info_t ringer_setting_char;
-
+	
 	/*descriptor info for ringer setting*/
 	desc_info_t ringer_setting_desc;
-
+	
 	/*characteristic info for ringer control point*/
 	char_info_t ringer_control_point_char;
-} pas_service_handler_t;
+		
+}pas_service_handler_t;
 
 typedef void (*read_callback_t) (uint8_t *,uint8_t);
 typedef void (*notification_callback_t) (uint8_t *,uint8_t);
@@ -205,8 +210,8 @@ void pas_data_init(void);
 void pas_client_adv(void);
 
 /**
- * @brief starts the service discovery
- * @param[in] connection parameters
+ * @brief to perform the service discovery
+ * @param[in] connection parameters 
  * @return AT_BLE_SUCCESS for success and AT_BLE_FAILURE for failure
  * @pre Called after connection by the ble manager
  */

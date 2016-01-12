@@ -1,49 +1,48 @@
 /**
- * \file
- *
- * \brief Phone Alert Status Profile Client
- *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel micro controller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
-
+* \file
+*
+* \brief Phone Alert Status Profile
+*
+* Copyright (c) 2015 Atmel Corporation. All rights reserved.
+*
+* \asf_license_start
+*
+* \page License
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* 1. Redistributions of source code must retain the above copyright notice,
+*    this list of conditions and the following disclaimer.
+*
+* 2. Redistributions in binary form must reproduce the above copyright notice,
+*    this list of conditions and the following disclaimer in the documentation
+*    and/or other materials provided with the distribution.
+*
+* 3. The name of Atmel may not be used to endorse or promote products derived
+*    from this software without specific prior written permission.
+*
+* 4. This software may only be redistributed and used in connection with an
+*    Atmel micro controller product.
+*
+* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+* POSSIBILITY OF SUCH DAMAGE.
+*
+* \asf_license_stop
+*
+*/
 /*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+* Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+*/
 
 /**
 * \mainpage
@@ -93,7 +92,7 @@ static const ble_event_callback_t pas_gap_handle[] = {
 	NULL,
 	NULL
 };
-	
+
 static const ble_event_callback_t pas_gatt_client_handle[] = {
 	pas_client_service_found_handler,
 	NULL,
@@ -110,7 +109,6 @@ static const ble_event_callback_t pas_gatt_client_handle[] = {
 /***********************************************************************************
  *									Implementation	                               *
  **********************************************************************************/
-
 /*
  *@brief initializes the profile data to the default values
  *@param[in] none
@@ -118,13 +116,7 @@ static const ble_event_callback_t pas_gatt_client_handle[] = {
  */
 void pas_data_init(void)
 {
-	alert_status_read_cb = NULL;
-	ringer_setting_read_cb = NULL;
-
-	alert_status_notification_cb = NULL;
-	ringer_setting_notification_cb = NULL;
-
-	memset(&pas_service_data, 0, sizeof(pas_service_data));
+	memset(&pas_service_data,0,sizeof(pas_service_data));
 }
 
 /**
@@ -262,17 +254,13 @@ at_ble_status_t pas_client_discovery_complete_handler(void *params)
 					pas_service_data.ringer_control_point_char.discovery = 0;
 				}
 			} else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR) {
-				#if BLE_PAIR_ENABLE
-				DBG_LOG_DEV("Sending slave request");
-				if(ble_send_slave_sec_request(pas_service_data.conn_handle) != AT_BLE_SUCCESS) {
-					DBG_LOG_DEV("Pairing disabled");
-				}
-				#else
-				pas_client_write_notifications(NULL);
+				DBG_LOG_DEV("Descriptor discovery successfull");
+				#if !BLE_PAIR_ENABLE
+					pas_client_write_notifications(NULL);
 				#endif
 			}	
 		} else {
-			DBG_LOG("discovery operation not successfull");
+			DBG_LOG("discovery operation not successfully");
 		}
 			return AT_BLE_SUCCESS;
 }
@@ -288,7 +276,7 @@ at_ble_status_t pas_client_discovery_complete_handler(void *params)
 	uint16_t uuid;
 	pas_service_uuid = &primary_service_params->service_uuid;
 	memcpy(&uuid,&primary_service_params->service_uuid.uuid,2);
-	DBG_LOG_DEV("service found with uuidtype %d %x",primary_service_params->service_uuid.type,uuid);
+	DBG_LOG_PTS("service found with uuidtype %d %x",primary_service_params->service_uuid.type,uuid);
 	if	(pas_service_uuid->type == AT_BLE_UUID_16) {
 		uint16_t service_uuid = (uint16_t)((primary_service_params->service_uuid.uuid[0]) |	\
 		(primary_service_params->service_uuid.uuid[1] << 8));
@@ -298,7 +286,7 @@ at_ble_status_t pas_client_discovery_complete_handler(void *params)
 			pas_service_data.pas_service_info.start_handle = primary_service_params->start_handle;
 			pas_service_data.pas_service_info.end_handle   = primary_service_params->end_handle;
 		
-			DBG_LOG_DEV("Phone Alert Status Service Discovered  %04X %04X", pas_service_data.pas_service_info.start_handle,
+			DBG_LOG_PTS("Phone Alert Status Service Discovered  %04X %04X", pas_service_data.pas_service_info.start_handle,
 			 pas_service_data.pas_service_info.end_handle);
 			DBG_LOG("Phone Alert Status Service discovered in the remote device");
 			pas_service_data.pas_service_info.discovery = true;
@@ -330,13 +318,13 @@ at_ble_status_t pas_client_characteristic_found_handler(void *params)
 			pas_service_data.alert_status_char.value_handle = characteristic_found->value_handle;
 			pas_service_data.alert_status_char.properties = characteristic_found->properties;
 			
-			DBG_LOG_DEV("Supported Alert Status characteristics %04X",pas_service_data.alert_status_char.char_handle);
-			DBG_LOG_DEV("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
+			DBG_LOG_PTS("Supported Alert Status characteristics %04X",pas_service_data.alert_status_char.char_handle);
+			DBG_LOG_PTS("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
 			characteristic_found->conn_handle,
 			characteristic_found->char_handle,
 			characteristic_found->value_handle,
 			characteristic_found->properties);
-			DBG_LOG_DEV("UUID : 0x%02x%02x",characteristic_found->char_uuid.uuid[1],characteristic_found->char_uuid.uuid[0]);
+			DBG_LOG_PTS("UUID : 0x%02x%02x",characteristic_found->char_uuid.uuid[1],characteristic_found->char_uuid.uuid[0]);
 			
 			pas_service_data.alert_status_char.discovery = true;
 		}
@@ -349,13 +337,13 @@ at_ble_status_t pas_client_characteristic_found_handler(void *params)
 			pas_service_data.ringer_setting_char.value_handle = characteristic_found->value_handle;
 			pas_service_data.ringer_setting_char.properties = characteristic_found->properties;
 			
-			DBG_LOG_DEV("Ringer Setting Characteristics %04X",pas_service_data.ringer_setting_char.char_handle);
-			DBG_LOG_DEV("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
+			DBG_LOG_PTS("Ringer Setting Characteristics %04X",pas_service_data.ringer_setting_char.char_handle);
+			DBG_LOG_PTS("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
 			characteristic_found->conn_handle,
 			characteristic_found->char_handle,
 			characteristic_found->value_handle,
 			characteristic_found->properties);
-			DBG_LOG_DEV("UUID : 0x%02x%02x",characteristic_found->char_uuid.uuid[1],characteristic_found->char_uuid.uuid[0]);
+			DBG_LOG_PTS("UUID : 0x%02x%02x",characteristic_found->char_uuid.uuid[1],characteristic_found->char_uuid.uuid[0]);
 			
 			pas_service_data.ringer_setting_char.discovery = true;
 		}
@@ -368,13 +356,13 @@ at_ble_status_t pas_client_characteristic_found_handler(void *params)
 			pas_service_data.ringer_control_point_char.value_handle = characteristic_found->value_handle;
 			pas_service_data.ringer_control_point_char.properties = characteristic_found->properties;
 			
-			DBG_LOG_DEV("Ringer Control Point characteristics %04X",pas_service_data.ringer_control_point_char.char_handle);
-			DBG_LOG_DEV("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
+			DBG_LOG_PTS("Ringer Control Point characteristics %04X",pas_service_data.ringer_control_point_char.char_handle);
+			DBG_LOG_PTS("Characteristic Info ConnHandle 0x%02x : Char handle 0x%02x : Value handle : 0x%02x : Properties : 0x%02x",
 			characteristic_found->conn_handle,
 			characteristic_found->char_handle,
 			characteristic_found->value_handle,
 			characteristic_found->properties);
-			DBG_LOG_DEV("UUID : 0x%02x%02x",characteristic_found->char_uuid.uuid[1],characteristic_found->char_uuid.uuid[0]);
+			DBG_LOG_PTS("UUID : 0x%02x%02x",characteristic_found->char_uuid.uuid[1],characteristic_found->char_uuid.uuid[0]);
 			pas_service_data.ringer_control_point_char.discovery = true;
 		}
 		break;	
@@ -401,14 +389,14 @@ at_ble_status_t pas_client_descriptor_found_handler(void *param)
 					params->desc_handle < pas_service_data.ringer_setting_char.char_handle) {
 					pas_service_data.alert_status_desc.desc_handle = params->desc_handle;
 					pas_service_data.alert_status_desc.discovery = true;		
-					DBG_LOG_DEV("The alert status desc handle is %x",pas_service_data.alert_status_desc.desc_handle);
-					DBG_LOG_DEV("The descriptor uuid is %x",desc_uuid);
+					DBG_LOG_PTS("The alert status desc handle is %x",pas_service_data.alert_status_desc.desc_handle);
+					DBG_LOG_PTS("The descriptor uuid is %x",desc_uuid);
 				} else if (params->desc_handle > pas_service_data.ringer_setting_char.char_handle &&
 							params->desc_handle < pas_service_data.ringer_control_point_char.char_handle) {
 					pas_service_data.ringer_setting_desc.desc_handle = params->desc_handle;
 					pas_service_data.ringer_setting_desc.discovery = true;
-					DBG_LOG_DEV("The ringer setting desc handle is %x",pas_service_data.ringer_setting_desc.desc_handle);
-					DBG_LOG_DEV("The descriptor uuid is %x",desc_uuid);
+					DBG_LOG_PTS("The ringer setting desc handle is %x",pas_service_data.ringer_setting_desc.desc_handle);
+					DBG_LOG_PTS("The descriptor uuid is %x",desc_uuid);
 				}
 			}
 		}		
