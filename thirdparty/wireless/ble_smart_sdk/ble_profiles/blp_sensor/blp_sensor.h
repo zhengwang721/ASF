@@ -65,12 +65,13 @@
 //	<id> blp_sensor_fast_adv
 #define BLP_SENSOR_FAST_ADV								(100) //100 ms
 
-/** @brief APP_HR_SENSOR_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
-//	<o> Advertisement Timeout <1000-10000:50>
-//	<i> Defines inteval at which advertisement timout in ms.
-//	<i> Default: 1000
+/** @brief BLP_SENSOR_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x028F in 
+ *seconds, 0x0000 disables time-out.*/
+//	<o> Advertisement Timeout <1-655>
+//	<i> Defines interval at which advertisement timeout in sec.
+//	<i> Default: 655
 //	<id> blp_sensor_adv_timeout
-#define BLP_SENSOR_ADV_TIMEOUT							(0) // 100 Secs
+#define BLP_SENSOR_ADV_TIMEOUT							(655) // 10 min
 
 /** @brief scan_resp_len is the length of the scan response data */
 //	<o> Scan Response Buffer <1-20>
