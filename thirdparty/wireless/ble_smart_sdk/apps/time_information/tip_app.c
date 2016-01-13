@@ -218,8 +218,8 @@ int main (void)
 			DBG_LOG("Press 3 for Enable/Disable notification");
 			DBG_LOG("Press 4 for Read current time characteristics value");
 			DBG_LOG("And press enter");
-			int option = 0;
-			scanf("%d", &option);
+			uint8_t option = 0;
+			option = getchar_b11();
 			DBG_LOG("Received %d",option);
 			switch (option) {
 			case 1 :
@@ -227,7 +227,7 @@ int main (void)
 				break;
 			case 2 :
 				DBG_LOG("Enter time update control point value [1 - 2] and press enter");
-				scanf("%d", &option);
+				option = getchar_b11();
 				if (!(tis_rtu_update_write(ble_dev_info[0].conn_info.handle, 
 											rtu_handle.tp_control_char_handle,
 											(uint8_t)option) == AT_BLE_SUCCESS)) {
@@ -240,7 +240,7 @@ int main (void)
 				DBG_LOG("Enter 2 to enable indication");
 				DBG_LOG("Enter 3 to enable both notification and indication");
 				DBG_LOG("And press Enter");
-				scanf("%d", &option);
+				option = getchar_b11();
 				time_info_write_notification_handler((uint16_t)option);
 				break;
 			case 4 :
