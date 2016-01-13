@@ -412,7 +412,7 @@ static at_ble_status_t  app_htpt_cfg_indntf_ind_handler(void *params)
 	memcpy((uint8_t *)&htpt_cfg_indntf_ind_params, params, sizeof(at_ble_htpt_cfg_indntf_ind_t));
 	if (htpt_cfg_indntf_ind_params.ntf_ind_cfg == 1)
 	{
-		DBG_LOG("Started HTP Temperature Notification");
+		DBG_LOG("Started HTP Temperature Indications");
 		temp_send_notification = true;
 		htp_temperature_send(&htp_data);
 	}
