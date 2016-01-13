@@ -346,6 +346,7 @@ at_ble_status_t pxp_disconnect_event_handler(void *params)
 	
 	if(!ble_check_disconnected_iscentral(disconnect->handle))
 	{
+		pxp_monitor_start_scan();
 		return AT_BLE_FAILURE;
 	}
 	else if(peripheral_state_callback != NULL)
