@@ -151,8 +151,8 @@ int main(void)
 			DBG_LOG("Press 4 for write to alert notification control point");
 			DBG_LOG("And press Enter");
 			uint8_t ncp_data[2] = {0};
-			int option = 0;
-			scanf("%d", &option);
+			uint8_t option = 0;
+			option = getchar_b11();
 			DBG_LOG("Received %d",option);
 			switch (option) {
 			case 1 :
@@ -165,17 +165,17 @@ int main(void)
 				anp_client_disable_notification();
 				break;
  			case 4 :
-				DBG_LOG("Enter alert catagory[email/news/..] and press Enter");
-				scanf("%d",&option);
+				DBG_LOG("Enter alert category[email/news/..] and press Enter");
+				option = getchar_b11();
 				if (option > 255) {
 					DBG_LOG("Entered a wrong value[0-255]");
 					break;
 				} else {
 					ncp_data[1] = (uint8_t) option;
-					DBG_LOG("Alert catogory is %d",ncp_data[1]);
+					DBG_LOG("Alert category is %d",ncp_data[1]);
 				}
  				DBG_LOG("Enter the command ID[0 - 5] and press Enter");
-				scanf("%d", &option);
+				option = getchar_b11();
 				if (option > 255) {
 					DBG_LOG("Entered a wrong value[0-255]");
 					break;

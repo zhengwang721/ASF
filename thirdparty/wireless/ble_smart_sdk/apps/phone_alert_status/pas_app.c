@@ -300,7 +300,7 @@ int main(void)
 			
 			case READ_ALERT_STATUS:
 				DBG_LOG("reading the alert status ");
-				if ((status = pas_client_read_alert_status_char()) != AT_BLE_SUCCESS) {
+				if (pas_client_read_alert_status_char() != AT_BLE_SUCCESS) {
 					DBG_LOG("reading alert status invocation failed");
 				}
 				
@@ -308,13 +308,12 @@ int main(void)
 			
 			case READ_RINGER_SETTING:
 				DBG_LOG("reading the ringer setting ");				
-				if ((status = pas_client_read_ringer_setting_char()) != AT_BLE_SUCCESS) {
+				if (pas_client_read_ringer_setting_char() != AT_BLE_SUCCESS) {
 					DBG_LOG("reading ringer control point invocation failed");
 				}
 			case DISCOVER_ATTRIBUTES:
 				DBG_LOG("Starting Service discovery");
-				status = pas_client_start_service_discovery();
-				if (status == AT_BLE_SUCCESS) {
+				if (pas_client_start_service_discovery() == AT_BLE_SUCCESS) {
 					DBG_LOG("Started the service discovery successfully");
 				} else {
 					DBG_LOG("Service discovery failed");
