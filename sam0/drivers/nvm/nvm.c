@@ -84,7 +84,7 @@ static struct _nvm_module _nvm_dev;
 /**
  * \brief Sets the up the NVM hardware module based on the configuration.
  *
- * Writes a given configuration of a NVM controller configuration to the
+ * Writes a given configuration of an NVM controller configuration to the
  * hardware module, and initializes the internal device struct.
  *
  * \param[in] config    Configuration settings for the NVM controller
@@ -166,7 +166,7 @@ enum status_code nvm_set_config(
  * \brief Executes a command on the NVM controller.
  *
  * Executes an asynchronous command on the NVM controller, to perform a requested
- * action such as a NVM page read or write operation.
+ * action such as an NVM page read or write operation.
  *
  * \note The function will return before the execution of the given command is
  *       completed.
@@ -295,7 +295,7 @@ enum status_code nvm_execute_command(
  * Writes from a buffer to a given page in the NVM memory, retaining any
  * unmodified data already stored in the page.
  *
- * \note If manual write mode is enable, write command must be executed after
+ * \note If manual write mode is enable, the write command must be executed after
  * this function, otherwise the data will not write to NVM from page buffer.
  *
  * \warning This routine is unsafe if data integrity is critical; a system reset
@@ -455,7 +455,7 @@ enum status_code nvm_write_buffer(
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
-	/* Check if the write length is longer than a NVM page */
+	/* Check if the write length is longer than an NVM page */
 	if (length > _nvm_dev.page_size) {
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -561,7 +561,7 @@ enum status_code nvm_read_buffer(
 		return STATUS_ERR_BAD_ADDRESS;
 	}
 
-	/* Check if the write length is longer than a NVM page */
+	/* Check if the write length is longer than an NVM page */
 	if (length > _nvm_dev.page_size) {
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -815,7 +815,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[1] & FUSES_BOD33_HYST_Msk)
 			>> FUSES_BOD33_HYST_Pos);
 
-#elif (SAMD20) || (SAMD21) || (SAMR21)|| (SAMDA1) || (SAMD09)
+#elif (SAMD20) || (SAMD21) || (SAMR21)|| (SAMDA1) || (SAMD09) || (SAMD10)
 	fusebits->bod33_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
 			>> FUSES_BOD33USERLEVEL_Pos);
@@ -1017,7 +1017,7 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 	fusebits[1] &= (~FUSES_BOD33_HYST_Msk);
 	fusebits[1] |= fb->bod33_hysteresis << FUSES_BOD33_HYST_Pos;
 
-#elif (SAMD20) || (SAMD21) || (SAMR21) || (SAMDA1) || (SAMD09)
+#elif (SAMD20) || (SAMD21) || (SAMR21) || (SAMDA1) || (SAMD09) || (SAMD10)
 	fusebits[0] &= (~FUSES_BOD33USERLEVEL_Msk);
 	fusebits[0] |= FUSES_BOD33USERLEVEL(fb->bod33_level);
 

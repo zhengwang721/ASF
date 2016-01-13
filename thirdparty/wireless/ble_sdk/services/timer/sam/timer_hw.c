@@ -47,21 +47,22 @@
 #include "conf_timer.h"
 
 /* === TYPES =============================================================== */
-uint32_t timeout_count;
+uint32_t timeout_count, bus_timeout_count;
 hw_timer_callback_t timer_callback;
+hw_timer_callback_t bus_timer_callback;
 /* === MACROS ============================================================== */
 
 void hw_timer_init(void)
 {
-	sysclk_enable_peripheral_clock(ID_TC);
+	sysclk_enable_peripheral_clock(ID_TC0);
 	// Init timer counter  channel.
-	tc_init(TIMER, TIMER_CHANNEL_ID,						
-			TC_CMR_TCCLKS_TIMER_CLOCK1 | TC_CMR_WAVE |
+	tc_init(BLE_APP_TIMER, BLE_APP_TIMER_CHANNEL_ID,						
+			TC_CMR_TCCLKS_TIMER_CLOCK4 |
 			TC_CMR_WAVSEL_UP);				
 	
-	tc_write_rc(TIMER, TIMER_CHANNEL_ID, UINT16_MAX);
-	tc_get_status(TIMER, TIMER_CHANNEL_ID);
-	tc_enable_interrupt(TIMER, TIMER_CHANNEL_ID, TC_IER_COVFS);		
+	tc_write_rc(BLE_APP_TIMER, BLE_APP_TIMER_CHANNEL_ID, UINT16_MAX);
+	tc_get_status(BLE_APP_TIMER, BLE_APP_TIMER_CHANNEL_ID);
+	tc_enable_interrupt(BLE_APP_TIMER, BLE_APP_TIMER_CHANNEL_ID, TC_IER_COVFS);		
 	NVIC_EnableIRQ(TC0_IRQn);
 }
 
@@ -74,10 +75,9 @@ void TC0_Handler(void)
 {
 	uint32_t ul_status;
 	static uint16_t tc_count;
-	uint8_t flags = cpu_irq_save();
 	
-	ul_status = tc_get_status(TIMER, TIMER_CHANNEL_ID);
-	ul_status &= tc_get_interrupt_mask(TIMER, TIMER_CHANNEL_ID);
+	ul_status = tc_get_status(BLE_APP_TIMER, BLE_APP_TIMER_CHANNEL_ID);
+	ul_status &= tc_get_interrupt_mask(BLE_APP_TIMER, BLE_APP_TIMER_CHANNEL_ID);
 	
 	/* ovf callback */
 	if (TC_SR_COVFS == (ul_status & TC_SR_COVFS)) 
@@ -92,21 +92,66 @@ void TC0_Handler(void)
 				timer_callback();
 			}
 		}
-	}
-	
-	cpu_irq_restore(flags);
+	}	
 }
 
 void hw_timer_start(uint32_t timer_val)
 {
 	timeout_count = (timer_val*TIMER_OVF_COUNT_1SEC);
-	tc_start(TIMER, TIMER_CHANNEL_ID);
+	tc_start(BLE_APP_TIMER, BLE_APP_TIMER_CHANNEL_ID);
 }
 
 void hw_timer_stop(void)
 {
-	tc_stop(TIMER, TIMER_CHANNEL_ID);
+	tc_stop(BLE_APP_TIMER, BLE_APP_TIMER_CHANNEL_ID);
 }
 
+void platform_configure_timer(hw_timer_callback_t bus_tc_cb_ptr)
+{
+	bus_timer_callback = bus_tc_cb_ptr;
+	sysclk_enable_peripheral_clock(BUS_TIMER_ID);
+	// Init timer counter  channel.
+	tc_init(BUS_TIMER, BUS_TIMER_CHANNEL_ID,
+	TC_CMR_TCCLKS_TIMER_CLOCK4 |
+	TC_CMR_WAVSEL_UP);
+		
+	tc_write_rc(BUS_TIMER, BUS_TIMER_CHANNEL_ID, UINT16_MAX);
+	tc_get_status(BUS_TIMER, BUS_TIMER_CHANNEL_ID);
+	tc_enable_interrupt(BUS_TIMER, BUS_TIMER_CHANNEL_ID, TC_IER_CPCS);
+	NVIC_EnableIRQ(TC1_IRQn);
+	Platform_stop_bus_timer();
+}
 
+void TC1_Handler(void)
+{
+	uint32_t ul_status;
+	
+	ul_status = tc_get_status(BUS_TIMER, BUS_TIMER_CHANNEL_ID);
+	ul_status &= tc_get_interrupt_mask(BUS_TIMER, BUS_TIMER_CHANNEL_ID);
+	
+	/* ovf callback */
+	if (TC_SR_CPCS == (ul_status & TC_SR_CPCS))
+	{
+		Platform_stop_bus_timer();
+		bus_timer_callback();		
+	}
+}
+
+void Platform_start_bus_timer(uint32_t timeout)
+{
+	bus_timeout_count = (timeout*TIMER_OVF_COUNT_1MSEC) + tc_read_cv(BUS_TIMER, BUS_TIMER_CHANNEL_ID);
+	tc_write_rc(BUS_TIMER, BUS_TIMER_CHANNEL_ID, bus_timeout_count);
+	tc_start(BUS_TIMER, BUS_TIMER_CHANNEL_ID);	
+}
+
+void Platform_stop_bus_timer(void)
+{
+	tc_stop(BUS_TIMER, BUS_TIMER_CHANNEL_ID);
+}
+
+void platform_reset_bus_timer(void)
+{
+	Platform_stop_bus_timer();
+	Platform_start_bus_timer(5);
+}
 /* EOF */

@@ -50,7 +50,7 @@
 
 /* System clock bus configuration */
 #  define CONF_CLOCK_FLASH_WAIT_STATES            2
-#  define CONF_CLOCK_CPU_DIVIDER                  SYSTEM_MAIN_CLOCK_DIV_1
+#  define CONF_CLOCK_CPU_DIVIDER                  SYSTEM_MAIN_CLOCK_DIV_2
 #  define CONF_CLOCK_BACKUP_DIVIDER               SYSTEM_MAIN_CLOCK_DIV_1
 
 /* SYSTEM_CLOCK_SOURCE_OSC16M configuration - Internal 16MHz oscillator */
@@ -93,7 +93,7 @@
 #  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          false
 
 /* DFLL open loop mode configuration */
-#  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
+#  define CONF_CLOCK_DFLL_FINE_VALUE              (512)
 
 /* DFLL closed loop mode configuration */
 #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1

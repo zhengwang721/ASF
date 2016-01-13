@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.ble_sdk.ble_services.hid" caption="BLE HID Over GATT Services">
+		<info type="description" value="summary">
+		</info>
+		<build type="include-path"  value="./"/>
+  		<build type="header-file"   value="hid.h"/>
+  		<build type="c-source"      value="hid.c"/>
+  		<require idref="thirdparty.wireless.ble_sdk.ble_services.ble_manager"/>
+  		<build type="define" name="HID_SERVICE" value=""/>
+
+		<build type="doxygen-entry-point" value="ble_stack_group"/>
+		<device-support-alias value="ble_stack_lib_support"/>
+		
+	</module>
+ 
+</asf>
