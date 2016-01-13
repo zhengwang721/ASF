@@ -378,7 +378,7 @@ sint8 hif_send(uint8 u8Gid,uint8 u8Opcode,uint8 *pu8CtrlBuf,uint16 u16CtrlBufSiz
 		}
 		else
 		{
-			M2M_DBG("Failed to alloc rx size\r");
+			M2M_DBG("Failed to alloc rx size\n");
 			ret =  M2M_ERR_MEM_ALLOC;
 			goto ERR1;
 		}

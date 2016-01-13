@@ -306,6 +306,10 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #include "bsp/include/nm_bsp_samg55.h"
 #endif
 
+#ifdef __SAMV71Q21__
+#include "bsp/include/nm_bsp_samv71.h"
+#endif
+
 #ifdef CORTUS_APP
 #include "crt_iface.h"
 #endif
