@@ -123,7 +123,7 @@ extern "C" {
 # define GPNVM_NUM_MAX        3
 #elif (SAMG)
 /* The max GPNVM number SAMG. */
-# define GPNVM_NUM_MAX        7
+# define GPNVM_NUM_MAX        8
 #else
 /* The max GPNVM number. */
 # define GPNVM_NUM_MAX        2
