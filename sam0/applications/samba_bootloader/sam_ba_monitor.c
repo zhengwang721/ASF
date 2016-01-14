@@ -171,9 +171,6 @@ void call_applet(uint32_t address)
 	/* Rebase the Stack Pointer */
 	__set_MSP(*(uint32_t *) address);
 
-	/* Rebase the vector table base address */
-//	SCB->VTOR = ((uint32_t) address & SCB_VTOR_TBLOFF_Msk);
-
 	/* Load the Reset Handler address of the application */
 	app_start_address = *(uint32_t *)(address + 4);
 
