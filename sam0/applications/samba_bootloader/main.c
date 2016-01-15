@@ -49,14 +49,15 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM D21/L21/DA1 xplained pro.
+ * This package can be used with SAM C21/D21/DA1/L21/L22/R21 xplained pro.
  *
  * \section Description
  *
  * The bootloader code will be located at 0x0 and executed before any applicative code.
- * Applications compiled to be executed along with the bootloader will start at 0x2000.
+ * Applications compiled to be executed along with the bootloader will start at 0x2000
+ * (not support USBCDC interface) or 0x6000 (supoort USBCDC interface).
  * Before jumping to the application, the bootloader changes the VTOR register
- * to use the interrupt vectors of the application @0x2000.
+ * to use the interrupt vectors of the application.
  *
  * \section Usage
  *
