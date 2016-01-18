@@ -83,8 +83,18 @@ void usart_open()
 
 	config.baudrate     = BOOT_USART_BAUDRATE;
 	config.mux_setting = BOOT_USART_MUX_SETTINGS;
+#ifdef BOOT_USART_PAD0
 	config.pinmux_pad0  = BOOT_USART_PAD0;
+#endif
+#ifdef BOOT_USART_PAD1
 	config.pinmux_pad1  = BOOT_USART_PAD1;
+#endif
+#ifdef BOOT_USART_PAD2
+	config.pinmux_pad2  = BOOT_USART_PAD2;
+#endif
+#ifdef BOOT_USART_PAD3
+	config.pinmux_pad3  = BOOT_USART_PAD3;
+#endif
 	config.generator_source = BOOT_USART_GCLK_SOURCE;
 
 	while (usart_init(&usart_sam_ba, BOOT_USART_MODULE, &config)
