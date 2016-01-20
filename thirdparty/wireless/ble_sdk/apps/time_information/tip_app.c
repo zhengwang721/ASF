@@ -111,6 +111,11 @@ static at_ble_status_t app_read_response_cb(void *param)
 {
 	at_ble_characteristic_read_response_t *char_read_resp;
 	char_read_resp = (at_ble_characteristic_read_response_t *)param;
+
+	if(char_read_resp ->status != AT_BLE_SUCCESS) {
+		completed_prev_read = true;
+		return AT_BLE_FAILURE;
+	}
 	if (char_read_resp->char_handle == cts_handle.curr_char_handle) {
 		if (local_time_char_found) {
 			if (tis_current_time_read( char_read_resp->conn_handle,
