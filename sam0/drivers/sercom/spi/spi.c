@@ -992,7 +992,7 @@ enum status_code spi_write_buffer_wait(
 			/* Start timeout period for slave */
 			if (module->mode == SPI_MODE_SLAVE) {
 				for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
-					if (spi_is_ready_to_write(module)) {
+					if (length && spi_is_ready_to_write(module)) {
 						data_to_send = tx_data[tx_pos++];
 						/* If 9-bit data, get next byte to send from the buffer */
 						if (module->character_size == SPI_CHARACTER_SIZE_9BIT) {
