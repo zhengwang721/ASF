@@ -186,7 +186,7 @@ void spi_flash_init(void)
  *
  * Reads SPI Flash Chip ID
  */
-uint32_t spi_flash_read_id(void)
+uint32_t spi_flash_rdid(void)
 {
 	volatile uint32_t register_value;
 
@@ -319,7 +319,7 @@ int8_t spi_flash_write(void *write_buf, uint32_t flash_addr, uint32_t size)
  * Erases SPI Flash Sector
  * \param[in]  flash_addr  Flash memory address within the sector to erase
  */
-static void spi_flash_sector_erase(uint32_t flash_addr)
+void spi_flash_sector_erase(uint32_t flash_addr)
 {
 	uint8_t cmd[8] = {0,};
 	uint32_t  i=0;
@@ -432,6 +432,20 @@ void spi_flash_leave_low_power_mode(void)
 			SPI_FLASH_IRQ_STATUS_FLASH_TRANS_DONE) {
 		/* Wait for current flash transaction done. */
 	}
+}
+
+/**
+ * \brief Initializes the SPI Flash module
+ */
+void spi_flash_clock_init(void)
+{	
+	/* Reset SPI_Flash */
+	system_peripheral_reset(PERIPHERAL_SPI_FLASH);
+	system_peripheral_reset(PERIPHERAL_SPI_FLASH_IF);
+	/* SPI_Flash core clock enable */
+	system_clock_peripheral_enable(PERIPHERAL_SPI_FLASH);
+	/* change clock speed */
+	system_clock_peripheral_freq_config(PERIPHERAL_SPI_FLASH, CLOCK_FREQ_13_MHZ);
 }
 
 /**
