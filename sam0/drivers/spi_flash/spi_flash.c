@@ -441,7 +441,7 @@ void spi_flash_leave_low_power_mode(void)
  * Since SPI_Flash won't be used on every wakeup it is safe to disable
  * the power to SPI_Flash core and enable it when required.
  *
-*/
+ */
 void spi_flash_turn_off(void)
 {
 	LPMCU_MISC_REGS0->PULL_ENABLE.reg |= LPMCU_MISC_REGS_PULL_ENABLE_LP_SIP__Msk;
@@ -454,7 +454,7 @@ void spi_flash_turn_off(void)
  *
  * This functions turns on the supply to SPI_Flash core.
  *
-*/
+ */
 void spi_flash_turn_on(void)
 {
 	LPMCU_MISC_REGS0->PULL_ENABLE.reg &= ~LPMCU_MISC_REGS_PULL_ENABLE_LP_SIP__Msk;
