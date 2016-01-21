@@ -174,7 +174,7 @@ static inline enum status_code system_set_sleepmode(
 	const enum system_sleepmode sleep_mode)
 {
 #if (SAMD20)
-	/* Errata 13114: Make sure that the Flash does not power all the way down
+	/* Errata 13140: Make sure that the Flash does not power all the way down
 	 * when in sleep mode. This errata has been fixed as of revision D of SAMD21 */
 	NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
 #endif
