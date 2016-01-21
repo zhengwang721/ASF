@@ -3,7 +3,7 @@
  *
  * \brief Bootloader specific configuration.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,13 +43,13 @@
  /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
- 
+
 #ifndef CONF_BOOTLOADER_H_INCLUDED
 #define CONF_BOOTLOADER_H_INCLUDED
 
 #include "conf_board.h"
 
-#define APP_START_ADDRESS          0x00002000
+#define APP_START_ADDRESS          0x00006000
 #define BOOT_LED                   LED0_PIN
 #define BOOT_LOAD_PIN              SW0_PIN
 #define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
