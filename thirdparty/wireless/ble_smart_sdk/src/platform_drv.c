@@ -136,6 +136,7 @@ void init_port_list(void)
 
 void init_clock(void)
 {
+	/*
 	uint32_t regval;
 	regval = REG_PL_RD(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0);
 	//disable SPI-FLASH core clock
@@ -178,6 +179,7 @@ void init_clock(void)
 	//ARM debugger
 	
 	//store default values
+	*/
 	
 }
 

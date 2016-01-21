@@ -347,6 +347,7 @@ at_ble_status_t pxp_disconnect_event_handler(void *params)
 	
 	if(!ble_check_disconnected_iscentral(disconnect->handle))
 	{
+		pxp_monitor_start_scan();
 		return AT_BLE_FAILURE;
 	}
 	else if(peripheral_state_callback != NULL)
@@ -407,9 +408,12 @@ at_ble_status_t pxp_monitor_pair_done_handler(void *params)
 	{
 		return AT_BLE_FAILURE;
 	}
-	
+	hw_timer_stop_func_cb();
 	if (pair_done_val->status == AT_BLE_SUCCESS) {
 		discovery_status = pxp_monitor_service_discover(pair_done_val->handle);
+	} else {
+			pxp_monitor_start_scan();
+			return AT_BLE_FAILURE;
 	}
 	return discovery_status;
 }
@@ -424,7 +428,7 @@ at_ble_status_t pxp_monitor_encryption_change_handler(void *params)
 	{
 		return AT_BLE_FAILURE;
 	}
-	
+	hw_timer_stop_func_cb();
 	if (encryption_status->status == AT_BLE_SUCCESS) {
 		discovery_status = pxp_monitor_service_discover(encryption_status->handle);
 	}
@@ -452,7 +456,6 @@ at_ble_status_t pxp_monitor_connected_state_handler(void *params)
 		return AT_BLE_FAILURE;
 	}
 
-	hw_timer_stop_func_cb();
 	pxp_connect_request_flag = PXP_DEV_CONNECTED;
 		
 	return conn_params->conn_status;

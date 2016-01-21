@@ -7,6 +7,7 @@
   <build type="header-file"   value="at_ble_trace.h"/>
   <build type="header-file"   value="at_ble_errno.h"/>
   <build type="header-file"   value="platform.h"/>
+  <build type="header-file"   value="profiles.h"/>
   <build type="header-file"   value="common.h"/>
   <build type="header-file"   value="event_handler.h"/>
   <build type="header-file"   value="ke_msg.h"/>
