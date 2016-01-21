@@ -188,7 +188,7 @@ void tcc_disable_callback(
 	Assert(module->hw);
 
 	/* Disable interrupts for this TCC module */
-	system_interrupt_enable(_tcc_interrupt_get_interrupt_vector(
+	system_interrupt_disable(_tcc_interrupt_get_interrupt_vector(
 			_tcc_get_inst_index(module->hw)));
 
 	/* Disable channel or other callbacks */
