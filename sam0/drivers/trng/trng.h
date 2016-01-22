@@ -3,7 +3,7 @@
  *
  * \brief SAM True Random Number Generator (TRNG) Driver
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -272,7 +272,7 @@ static inline void trng_disable(
  * \brief Enables a TRNG event output.
  *
  *  Enables output events from the True Random Number Generator
- *  module. See \ref trng_events "here" for a list of events this module
+ *  module. See \ref Section Struct trng_events for a list of events this module
  *  supports.
  *
  *  \note Events cannot be altered while the module is enabled.
@@ -300,8 +300,8 @@ static inline void trng_enable_events(
  * \brief Disables a TRNG event output.
  *
  *  Disables output events from the True Random Number Generator
- *  module. See \ref trng_events "here" for a list of events this module
- *  supports.
+ *  module. See \ref Section Struct trng_events for a list of events
+ *  this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
  *
@@ -375,8 +375,6 @@ static inline enum status_code trng_read(
  * \page asfdoc_sam0_trng_extra Extra Information for TRNG Driver
  *
  * \section asfdoc_sam0_trng_extra_acronyms Acronyms
- * Below is a table listing the acronyms used in this module, along with their
- * intended meanings.
  *
  * <table>
  *	<tr>
@@ -443,7 +441,7 @@ static inline enum status_code trng_read(
  *	</tr>
  *	<tr>
  *		<td>42444A</td>
- *		<td>06/2015</td>
+ *		<td>01/2016</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
