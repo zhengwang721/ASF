@@ -229,7 +229,7 @@ static inline void qspi_write_spi(Qspi *qspi, uint16_t w_data)
  * \return status QSPI set config result.
  *
  */
-enum status_code qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
+static enum status_code qspi_set_config(Qspi *qspi, struct qspi_config_t *qspi_config)
 {
 	enum status_code status = STATUS_OK;
 	if(qspi_config->serial_memory_mode == mem_mode) {
