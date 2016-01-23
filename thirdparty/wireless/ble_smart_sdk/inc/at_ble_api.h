@@ -2399,9 +2399,9 @@ at_ble_status_t at_ble_event_user_defined_post(void *params);
  * @param[in] address       peer device address
  *
  * @note This command can be used at any time except when:
- *       • the advertising filter policy uses the white list and advertising is enabled.
- *       • the scanning filter policy uses the white list and scanning is enabled.
- *       • the initiator filter policy uses the white list and a create connection command
+ *       the advertising filter policy uses the white list and advertising is enabled.
+ *       the scanning filter policy uses the white list and scanning is enabled.
+ *       the initiator filter policy uses the white list and a create connection command
  *         is outstanding.
  *
  * @note The only addresses that should be added to the white-list is Public device address or random static device address
@@ -2425,9 +2425,9 @@ at_ble_status_t at_ble_whitelist_add(at_ble_addr_t *address);
  * @param[in] address       peer device address
  *
  * @note This command can be used at any time except when:
- *       • the advertising filter policy uses the white list and advertising is enabled.
- *       • the scanning filter policy uses the white list and scanning is enabled.
- *       • the initiator filter policy uses the white list and a create connection command
+ *       the advertising filter policy uses the white list and advertising is enabled.
+ *       the scanning filter policy uses the white list and scanning is enabled.
+ *       the initiator filter policy uses the white list and a create connection command
  *         is outstanding.
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
