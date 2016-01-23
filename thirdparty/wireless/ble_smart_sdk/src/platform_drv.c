@@ -102,6 +102,7 @@ static void (*ke_msg_send)(void const *param_ptr);
 static void* (*ke_msg_alloc)(ke_msg_id_t const id, ke_task_id_t const dest_id,
 	ke_task_id_t const src_id, uint16_t const param_len);
 static int (*os_sem_up)(void* pstrSem);
+static int (*os_sem_down)(void* pstrSem);
 static int (*NMI_MsgQueueRecv)(void* pHandle,void ** pvRecvBuffer);
 static void (*ke_free)(void* mem_ptr);
 static ke_task_id_t (* gapm_get_task_from_id)(ke_msg_id_t id);
@@ -350,7 +351,7 @@ static void at_ke_msg_send(void const * param_ptr)
 	else
 	{
 		/*  */
-		 os_sem_up(gstrFwSem);
+		os_sem_up(gstrFwSem);
 	}
 }
 
@@ -374,8 +375,8 @@ void platform_interface_send(uint8_t* data, uint32_t len)
 	//no params
 	if (p_msg_hdr->param_len == 0)
 	{
-			// Send message directly
-			at_ke_msg_send(params);
+		// Send message directly
+		at_ke_msg_send(params);
 	}
 	else
 	{
@@ -407,16 +408,133 @@ void send_plf_int_msg_ind(uint8_t intr_index, uint8_t callback_id, void *data, u
 	}
 }
 
+///Debug KE Timer Command parameters
+struct dbg_ke_timer
+{
+    ///Timer period, resolution of 10 ms     
+    uint32_t	period;
+    ///Status of Timer, 1-> Start, 0-> Stop
+    uint8_t		status;
+};
+#if 0
+static int NMI_MsgQueueNoMsgs(NMI_MsgQueueHandle* pHandle)
+{	
+	int MsgQueueNoMsgs = 0;
+	os_sem_down(&pHandle->strCriticalSection);
+	while(pHandle->pstrMessageList != NULL)
+	{
+		Message * pstrMessge = pHandle->pstrMessageList->pstrNext;
+		pHandle->pstrMessageList = pstrMessge;	
+		MsgQueueNoMsgs++;
+	}
+	os_sem_up(&pHandle->strCriticalSection);
+	return MsgQueueNoMsgs;
+}
+#endif 
+static int NMI_MsgQueueDestroyOnKeID(NMI_MsgQueueHandle* pHandle, ke_msg_id_t u16KeMsgId)
+{
+	int num_of_freed=0;
+	Message * current , *prev = NULL;
+	if((NULL == pHandle) && (NULL == pHandle->pstrMessageList))
+	{
+		return num_of_freed;
+	}
+
+	current = pHandle->pstrMessageList;
+	os_sem_down(&pHandle->strCriticalSection);
+	while(NULL != current)
+	{
+		if(u16KeMsgId == ((struct ke_msg*)current->pvBuffer)->id)
+		{
+			num_of_freed++;
+			if(NULL != prev)
+			{
+				prev->pstrNext = current->pstrNext;
+				ke_free(current);
+				current = prev->pstrNext;
+			}
+			else
+			{
+				pHandle->pstrMessageList = current->pstrNext;
+				ke_free(current);
+				current = pHandle->pstrMessageList;
+			}
+		}
+		else
+		{
+			prev = current;
+			current = current ->pstrNext;
+		}
+	}
+	os_sem_up(&pHandle->strCriticalSection);
+	return num_of_freed;
+}
+
 //Waits on InternalAppMsgQHandle Queue
 // This function won't busy wait if nothing on queue but will down the semaphore and go to a blocking state
 // The OS then will move control to other higher priority tasks and will only return if these tasks finish processing AND the queue has received 
 //a msg
+static void platform_start_event_timeout(uint32_t timeout)
+{
+	uint8_t msg[8+5] = {0};
+	uint8_t u16TxLen = 0;
+
+	msg[u16TxLen++] = ((DBG_KE_TIMER_REQ) & 0x00FF );
+	msg[u16TxLen++] = (((DBG_KE_TIMER_REQ)>>8) & 0x00FF );
+	msg[u16TxLen++] = ((TASK_DBG) & 0x00FF );
+	msg[u16TxLen++] = (((TASK_DBG)>>8) & 0x00FF );	
+	msg[u16TxLen++] = ((TASK_INTERNAL_APP) & 0x00FF );
+	msg[u16TxLen++] = (((TASK_INTERNAL_APP)>>8) & 0x00FF );
+	msg[u16TxLen++] = ((5) & 0x00FF );
+	msg[u16TxLen++] = (((5)>>8) & 0x00FF );
+	
+	msg[u16TxLen++] = (uint8_t)((timeout) & 0x00FF );
+	msg[u16TxLen++] = (uint8_t)(( (timeout) >> 8) & 0x00FF) ;
+	msg[u16TxLen++] = (uint8_t)(( (timeout) >> 16) & 0x00FF);
+	msg[u16TxLen++] = (uint8_t)(( (timeout) >> 24) & 0x00FF);
+	
+	msg[u16TxLen++] = ((1) & 0x00FF );
+	
+	platform_interface_send(msg, u16TxLen);
+}
+
+static void platform_stop_event_timeout(void)
+{
+	uint8_t msg[8+5] = {0};
+	uint8_t u16TxLen = 0;
+
+	msg[u16TxLen++] = ((DBG_KE_TIMER_REQ) & 0x00FF );
+	msg[u16TxLen++] = (((DBG_KE_TIMER_REQ)>>8) & 0x00FF );
+	msg[u16TxLen++] = ((TASK_DBG) & 0x00FF );
+	msg[u16TxLen++] = (((TASK_DBG)>>8) & 0x00FF );	
+	msg[u16TxLen++] = ((TASK_INTERNAL_APP) & 0x00FF );
+	msg[u16TxLen++] = (((TASK_INTERNAL_APP)>>8) & 0x00FF );
+	msg[u16TxLen++] = ((5) & 0x00FF );
+	msg[u16TxLen++] = (((5)>>8) & 0x00FF );
+	
+	msg[u16TxLen++] = (uint8_t)((0) & 0x00FF );
+	msg[u16TxLen++] = (uint8_t)(( (0) >> 8) & 0x00FF) ;
+	msg[u16TxLen++] = (uint8_t)(( (0) >> 16) & 0x00FF);
+	msg[u16TxLen++] = (uint8_t)(( (0) >> 24) & 0x00FF);
+	
+	msg[u16TxLen++] = ((0) & 0x00FF );
+	
+	platform_interface_send(msg, u16TxLen);
+}
+
 plf_drv_status platform_event_wait(uint32_t timeout)
 {
 	static struct ke_msg* rcv_msg;
 	static struct ke_msghdr	*ke_msg_hdr;
 	plf_drv_status status = STATUS_SUCCESS;
-	
+	uint8_t bEventTimeoutFlag = 0;
+	uint8_t bLoopAgain = 0;
+	if(((uint32_t)-1 != timeout) && ((uint32_t)0 < timeout))
+	{			
+		platform_start_event_timeout(timeout-1);
+		bEventTimeoutFlag = 1;
+	}
+
 	do {
 		if(NMI_MsgQueueRecv(InternalAppMsgQHandle, (void**)&rcv_msg) == STATUS_SUCCESS)
 		{
@@ -424,7 +542,14 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 			uint16_t src_id = rcv_msg->src_id;
 			uint8_t* data = (uint8_t*)rcv_msg->param;
 			uint16_t len = rcv_msg->param_len;
-
+			bLoopAgain = 0;
+			
+			if((rcv_msg->id != DBG_KE_TIMER_RESP) && (bEventTimeoutFlag))
+			{
+				//Stop timer if it is still running
+				platform_stop_event_timeout();
+			}
+				
 			if(msg_id == PERIPHERAL_INTERRUPT_EVENT)
 			{
 				if(plf_event_buff_index+len > MAX_EVT_BUFF_LEN)
@@ -435,37 +560,53 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 				status = STATUS_RECEIVED_PLF_EVENT_MSG;
 			}
 			else
-			{
+			{	
 				// BLE stack messages
 				if(ble_stack_message_handler) {
-					ke_msg_hdr = (struct ke_msghdr *)((void *)(rx_buffer+BLE_EVENT_BUFFER_START_INDEX));
-					ke_msg_hdr->id = rcv_msg->id;
+					if(rcv_msg->id == DBG_KE_TIMER_RESP)
+					{
+						if(bEventTimeoutFlag)
+						{
+							status = STATUS_TIMEOUT;	
+						}
+						else
+						{
+							bLoopAgain = 1;
+						}
+					}
+					else
+					{
+						ke_msg_hdr = (struct ke_msghdr *)((void *)(rx_buffer+BLE_EVENT_BUFFER_START_INDEX));
+						ke_msg_hdr->id = rcv_msg->id;
 //#if (CHIPVERSION_A3 || CHIPVERSION_A4)
 					//ke_msg_hdr->src_id = rcv_msg->src_id;
 //#else
 					ke_msg_hdr->src_id = gapm_get_id_from_task(rcv_msg->src_id);
 //#endif  /* (CHIPVERSION_A3 || CHIPVERSION_A4) */
-					ke_msg_hdr->dest_id = rcv_msg->dest_id;
-					ke_msg_hdr->param_len = rcv_msg->param_len;
-					ke_msg_hdr++;
-					if(rcv_msg->param_len > 0) {
-						memcpy((void *)ke_msg_hdr,rcv_msg->param,rcv_msg->param_len);
+						ke_msg_hdr->dest_id = rcv_msg->dest_id;
+						ke_msg_hdr->param_len = rcv_msg->param_len;
+						ke_msg_hdr++;
+						if(rcv_msg->param_len > 0) {
+							memcpy((void *)ke_msg_hdr,rcv_msg->param,rcv_msg->param_len);
+						}
+						ble_stack_message_handler(rx_buffer,(rcv_msg->param_len + sizeof(struct ke_msghdr)));
+						status = STATUS_RECEIVED_BLE_MSG;
 					}
-					ble_stack_message_handler(rx_buffer,(rcv_msg->param_len + sizeof(struct ke_msghdr)));
-					status = STATUS_RECEIVED_BLE_MSG;
 				}
-
 			}
 			ke_free(rcv_msg);
 		}
 		else
-
 		{
 			status = STATUS_FAILURE;
-			break;
 		}
-	}while(0);
-
+	}while(bLoopAgain);
+	
+	if(bEventTimeoutFlag)
+	{
+		//CleanUp if there is any remaining DBG_KE_TIMER_RESP message in queue
+		NMI_MsgQueueDestroyOnKeID(InternalAppMsgQHandle, DBG_KE_TIMER_RESP);
+	}
 	return status;
 }
 
@@ -521,7 +662,7 @@ void spi_flash_turn_off(void)
 
 void samb11_plf_resume_callback(void)
 {
-	spi_flash_turn_off();
+	//spi_flash_turn_off();
 	REG_PL_WR(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0,default_samb11_clock_init[0]);
 	REG_PL_WR(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_1,default_samb11_clock_init[1]);
 	if(samb11_app_resume_cb != NULL)
@@ -535,12 +676,12 @@ plf_drv_status register_resume_callback(resume_callback cb)
 	plf_drv_status status = STATUS_SUCCESS;
 	if(cb == NULL)
 	{
-			status = STATUS_INVALID_ARGUMENT;
+		status = STATUS_INVALID_ARGUMENT;
 	}
 	else 
 	{
-			samb11_app_resume_cb = cb;
-			//*apps_resume_cb = (uint32_t)cb;
+		samb11_app_resume_cb = cb;
+		//*apps_resume_cb = (uint32_t)cb;
 	}
 	return status;
 }
