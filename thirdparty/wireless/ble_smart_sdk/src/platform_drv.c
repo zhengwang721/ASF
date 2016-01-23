@@ -61,7 +61,6 @@
 #include "reg_common.h"
 
 void init_clock(void);
-void spi_flash_turn_off(void);
 
 uint8_t (*platform_register_isr)(uint8_t isr_index,void *fp);
 uint8_t (*platform_unregister_isr)(uint8_t isr_index);
@@ -643,22 +642,6 @@ plf_drv_status release_sleep_lock()
 	rwip_prevent_sleep_clear(APP_PREVENT_SLEEP);
 	return status;
 }
-
-
-void spi_flash_turn_off(void)
-{
-	volatile uint32_t regval = 0;
-	regval = REG_RD(0x4000B050);
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_0));
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_1));
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_2));
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_3));
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_4));
-	regval |= (0xF8000000);
-	REG_WR(0x4000B050,regval);
-	REG_WR(0x4000B0A0,0x0);
-}
-
 
 void samb11_plf_resume_callback(void)
 {
