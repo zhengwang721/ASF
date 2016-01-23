@@ -145,6 +145,7 @@ static at_ble_status_t app_init(void)
 			{
 				break;
 			}
+
 			// Set TX Power level
 			//status = at_ble_tx_power_set(AT_BLE_TX_PWR_LVL_ZERO_DB);
 			
@@ -180,54 +181,61 @@ int main(void)
 	register_resume_callback(resume_cb);
 	release_sleep_lock();
 	
-	while((status = at_ble_event_get(&event, params, (uint32_t)-1)) == AT_BLE_SUCCESS)
-	{
-		acquire_sleep_lock();
-		switch(event)
+	while(1) {
+		while((status = at_ble_event_get(&event, params, (uint32_t)200)) == AT_BLE_SUCCESS)
 		{
-			case AT_BLE_CONNECTED:
+			acquire_sleep_lock();
+			switch(event)
 			{
-				volatile at_ble_connected_t *conn_params = (at_ble_connected_t *)((void *)params);
-				PRINT_H1("AT_BLE_CONNECTED:\r\n");
-				if (AT_BLE_SUCCESS == conn_params->conn_status)
+				case AT_BLE_CONNECTED:
 				{
-					PRINT_H2("Device connected:\r\n");
-					PRINT_H3("Conn. handle : 0x%04X\r\n", conn_params->handle);
-					PRINT_H3("Address      : 0x%02X%02X%02X%02X%02X%02X\r\n",
-						conn_params->peer_addr.addr[5],
-						conn_params->peer_addr.addr[4],
-						conn_params->peer_addr.addr[3],
-						conn_params->peer_addr.addr[2],
-						conn_params->peer_addr.addr[1],
-						conn_params->peer_addr.addr[0]
-					);
+					volatile at_ble_connected_t *conn_params = (at_ble_connected_t *)((void *)params);
+					PRINT_H1("AT_BLE_CONNECTED:\r\n");
+					if (AT_BLE_SUCCESS == conn_params->conn_status)
+					{
+						PRINT_H2("Device connected:\r\n");
+						PRINT_H3("Conn. handle : 0x%04X\r\n", conn_params->handle);
+						PRINT_H3("Address      : 0x%02X%02X%02X%02X%02X%02X\r\n",
+							conn_params->peer_addr.addr[5],
+							conn_params->peer_addr.addr[4],
+							conn_params->peer_addr.addr[3],
+							conn_params->peer_addr.addr[2],
+							conn_params->peer_addr.addr[1],
+							conn_params->peer_addr.addr[0]
+						);
+					}
+					else
+					{
+						PRINT_H2("Unable to connect to device:\r\n");
+						PRINT_H3("Status : %d\r\n", conn_params->conn_status);
+					}
 				}
-				else
+				break;
+
+				case AT_BLE_DISCONNECTED:
 				{
-					PRINT_H2("Unable to connect to device:\r\n");
-					PRINT_H3("Status : %d\r\n", conn_params->conn_status);
+					at_ble_disconnected_t *disconn_params = (at_ble_disconnected_t *)((void *)params);
+					PRINT_H1("AT_BLE_DISCONNECTED:\r\n");
+					PRINT_H2("Device disconnected:\r\n");
+					PRINT_H3("Conn. handle : 0x%04X\r\n", disconn_params->handle);
+					PRINT_H3("Reason       : 0x%02X\r\n", disconn_params->reason);
+					PRINT_H2("Start Advertising again\r\n");
+					status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 1600, 0, 0);
+					PRINT_H3("Status : %d\r\n", status);
 				}
+				break;
+
+				default:
+				break;
+
 			}
-			break;
-
-			case AT_BLE_DISCONNECTED:
-			{
-				at_ble_disconnected_t *disconn_params = (at_ble_disconnected_t *)((void *)params);
-				PRINT_H1("AT_BLE_DISCONNECTED:\r\n");
-				PRINT_H2("Device disconnected:\r\n");
-				PRINT_H3("Conn. handle : 0x%04X\r\n", disconn_params->handle);
-				PRINT_H3("Reason       : 0x%02X\r\n", disconn_params->reason);
-				PRINT_H2("Start Advertising again\r\n");
-				status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 1600, 0, 0);
-				PRINT_H3("Status : %d\r\n", status);
-			}
-			break;
-
-			default:
-			break;
-
+			release_sleep_lock();
 		}
-		release_sleep_lock();
+		
+		if(status == 0xD0)
+			PRINT_H1("at_ble_event_get timeout.\r\n");
+		else
+			PRINT_H1("at_ble_event_get returns 0x%x\r\n", status);
 	}
 
 __EXIT:
