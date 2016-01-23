@@ -244,6 +244,7 @@ plf_drv_status platform_driver_init()
 		ke_msg_alloc 	= (void* (*)(ke_msg_id_t const id, ke_task_id_t const dest_id,
 										ke_task_id_t const src_id, uint16_t const param_len) )0x00019fe9;
 		os_sem_up 		= (int (*)(void*))0x0001dbdd;
+		os_sem_down		= (int (*)(void*))0x0001dc5b;
 		gstrFwSem 		= (void*)0x100405ec;
 		NMI_MsgQueueRecv = (int(*)(void*, void ** ))0x0001d5e3;
 		InternalAppMsgQHandle = (void*)0x10040c20;
