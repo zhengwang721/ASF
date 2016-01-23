@@ -28,7 +28,7 @@
 #include <stddef.h>          // standard definition
 #include <stdint.h>          // standard integer
 #include <stdbool.h>         // standard boolean
-#include "at_ble_api.h"
+//#include "at_ble_api.h"
 
 #define KE_MSG_HDR_LENGTH 8
 
@@ -86,7 +86,7 @@ struct ke_msghdr
  * @return The pointer to the ke_msg
  ****************************************************************************************
  */
-static inline struct ke_msg *ke_param2msg(void const *param_ptr)
+static __inline struct ke_msg *ke_param2msg(void const *param_ptr)
 {
 	return (struct ke_msg *)((void *)(((uint8_t *)param_ptr) - offsetof(struct ke_msg, param)));
 }
@@ -100,7 +100,7 @@ static inline struct ke_msg *ke_param2msg(void const *param_ptr)
  * @return The pointer to the param member
  ****************************************************************************************
  */
-static inline void *ke_msg2param(struct ke_msg const *msg)
+static __inline void *ke_msg2param(struct ke_msg const *msg)
 {
     return (void*) (((uint8_t*) msg) + offsetof(struct ke_msg, param));
 }

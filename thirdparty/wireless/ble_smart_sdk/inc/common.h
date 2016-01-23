@@ -25,6 +25,118 @@ enum INTC_STATUS
 #define APP_FIRST_MSG(event_index)	((event_index << 8))
 #endif
 
+#define TASK_DBG			0x03
+
+/// Message API of the DBG task
+enum dbg_msg_id
+{
+    // Debug commands description.
+    DBG_MSG_ID_CMD_FIRST = ((uint16_t)(TASK_DBG << 8)),
+    DBG_RD_MEM_REQ = DBG_MSG_ID_CMD_FIRST,
+    DBG_WR_MEM_REQ,
+    DBG_DEL_PARAM_REQ,
+    DBG_RD_PARAM_REQ,
+    DBG_WR_PARAM_REQ,
+    DBG_PLF_RESET_REQ,
+    DBG_FLASH_IDENT_REQ,
+    DBG_FLASH_ERASE_REQ,
+    DBG_FLASH_WRITE_REQ,
+    DBG_FLASH_READ_REQ,
+
+    DBG_RD_KE_STATS_REQ,
+    DBG_RF_REG_RD_REQ,
+    DBG_RF_REG_WR_REQ,
+    DBG_HW_REG_RD_REQ,
+    DBG_HW_REG_WR_REQ,
+
+    DBG_LE_SET_BD_ADDR_REQ,
+    DBG_LE_SET_TYPE_PUB_REQ,
+    DBG_LE_SET_TYPE_RAND_REQ,
+    DBG_LE_SET_CRC_REQ,
+    DBG_LE_LLCP_DISCARD_REQ,
+    DBG_LE_RESET_RX_CNT_REQ,
+    DBG_LE_RESET_TX_CNT_REQ,
+    DBG_SET_TX_PW_REQ,
+
+    DBG_WLAN_COEX_REQ,
+
+    DBG_RD_MEM_INFO_REQ,
+    DBG_KE_TIMER_REQ,
+    
+    DBG_MSG_ID_EVT_FIRST,
+
+    /// Debug events description.
+    DBG_RD_MEM_CMP_EVT = DBG_MSG_ID_EVT_FIRST,
+    DBG_WR_MEM_CMP_EVT,
+    DBG_DEL_PARAM_CMP_EVT,
+    DBG_RD_PARAM_CMP_EVT,
+    DBG_WR_PARAM_CMP_EVT,
+    DBG_FLASH_IDENT_CMP_EVT,
+    DBG_FLASH_ERASE_CMP_EVT,
+    DBG_FLASH_WRITE_CMP_EVT,
+    DBG_FLASH_READ_CMP_EVT,
+
+    DBG_RD_KE_STATS_CMP_EVT,
+    DBG_TRACE_WARNING_EVT,
+    DBG_RF_REG_RD_CMP_EVT,
+    DBG_RF_REG_WR_CMP_EVT,
+    DBG_PLF_RESET_CMP_EVT,
+    DBG_HW_REG_RD_CMP_EVT,
+    DBG_HW_REG_WR_CMP_EVT,
+
+    DBG_LE_SET_BD_ADDR_CMP_EVT,
+    DBG_LE_SET_TYPE_PUB_CMP_EVT,
+    DBG_LE_SET_TYPE_RAND_CMP_EVT,
+    DBG_LE_SET_CRC_CMP_EVT,
+    DBG_LE_LLCP_DISCARD_CMP_EVT,
+    DBG_LE_RESET_RX_CNT_CMP_EVT,
+    DBG_LE_RESET_TX_CNT_CMP_EVT,
+    DBG_SET_TX_PW_CMP_EVT,
+
+
+    DBG_WLAN_COEX_CMP_EVT,
+
+    DBG_RD_MEM_INFO_CMP_EVT,
+	DBG_KE_TIMER_RESP,
+	
+    DBG_MSG_ID_EVT_LAST
+};
+
+typedef struct _tstrOsTask{
+	unsigned long 	u32Sp;						/*!< Task stack pointer */
+	void			(*pvTaskEntryFn)(void*);	/*!< Task entry function */
+	unsigned char	u8State;					/*!< Task state */
+	unsigned short	u8Priority;					/*!< Task Priority. 254 is the lowest priority and 0 is the highest */
+	unsigned short	u16StackSize;				/*!< Task stack size */
+	unsigned char	*pu8Stack;					/*!< Pointer to task stack memory start */
+	unsigned char	u8MarkForRemoval;			/*!< When set, this task will not be added to any queue */
+	unsigned long	u64SleepTime;				/*!< Sleep time of the task in case of it was sleeping */
+	char*			cName;						/*!< Task Name */
+	struct _tstrOsTask *pstrNext;				/*!< Pointer to the next object at the list */
+} tstrOsTask;
+
+typedef struct _tstrOsSemaphore{
+	unsigned long 	u32Count;					/*!< Semaphore Count */
+	char*			cName;						/*!< Semaphore Name */
+	tstrOsTask 		*pstrWaitingLst;			/*!< Waiting tasks list */
+} tstrOsSemaphore;
+
+typedef struct __Message_struct
+{
+	void* pvBuffer;
+	unsigned int u32Length;
+	struct __Message_struct *pstrNext;
+} Message;
+
+typedef struct __MessageQueue_struct
+{	
+	tstrOsSemaphore hSem;
+	char bExiting;
+	unsigned int u32ReceiversCount;
+	tstrOsSemaphore strCriticalSection;
+	Message * pstrMessageList;
+} NMI_MsgQueueHandle;
+
 #define BUILD_INTR_SRCID(callback_index,intr_index)	((callback_index << 8)|(intr_index))
 
 enum internal_app_msg_id

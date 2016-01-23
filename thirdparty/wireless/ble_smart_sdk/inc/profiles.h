@@ -42,24 +42,21 @@
  */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-
-#ifndef __PROFILES_H__
-#define __PROFILES_H__
+#ifndef PRF_DEFS_H_
+#define PRF_DEFS_H_
 
 /// Message structure used to inform APP that an error has occurred in the profile server role task
-typedef struct prf_server_error_ind
+struct prf_server_error_ind
 {
     /// Connection Handle
-	uint16_t conhdl;
+    uint16_t conhdl;
     /// Message ID
-	uint16_t msg_id;
+    uint16_t msg_id;
     /// Status
-	uint8_t status;
-}prf_server_error_ind_t;
-
+    uint8_t status;
+};
 /// Time profile information
-typedef struct prf_date_time
+struct prf_date_time
 {
     /// year time element
     uint16_t year;
@@ -73,7 +70,14 @@ typedef struct prf_date_time
     uint8_t min;
     /// second time element
     uint8_t sec;
-}prf_date_time_t;
+};
+/// Connection type
+enum prf_con_type
+{
+    ///Discovery type connection
+    PRF_CON_DISCOVERY = 0x00,
+    /// Normal type connection
+    PRF_CON_NORMAL    = 0x01
+};
 
-
-#endif /* __PROFILES_H__ */
+#endif */ /* PRF_DEFS_H_ */

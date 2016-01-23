@@ -9,7 +9,7 @@
  * required for SAMB11 Application Developers for using platform driver like GPIO,SPI,I2C etc.
  *
  *
- *  Copyright (c) 2016 Atmel Corporation. All rights reserved.
+ *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *
@@ -71,9 +71,9 @@ typedef enum PLATFORM_STATUS
 	/** Failed to initialize the platform */
 	STATUS_NOT_INITIALIZED,
 	/** Timeout failure */
-	STATUS_TIMEOUT,
+	STATUS_TIMEOUT = 0xD0,
 	/** Status Failure */
-	STATUS_FAILURE,
+	STATUS_FAILURE = 7,
 	/** Status Busy */
 	STATUS_RESOURCE_BUSY,
 	/** Invalid arugment */

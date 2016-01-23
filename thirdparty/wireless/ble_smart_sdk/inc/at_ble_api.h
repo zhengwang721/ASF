@@ -9,7 +9,7 @@
  * BLE Application Developers using Atmel BLE SDK
  *
  *
- *  Copyright (c) 2016 Atmel Corporation. All rights reserved.
+ *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions are met:
  *
@@ -2241,6 +2241,17 @@ AT_BLE_API
 at_ble_status_t at_ble_ll_reset(void);
 
 /** @ingroup gap_dev_config_group
+  * @brief Reset BLE Chip.
+  * @note This function will reset whole SoC, All running tasks including current will be terminated 
+  * @warning This function should be called in BLE Context [event get loop] ONLY. 
+  *          If you want to post is as separate event, use @ref at_ble_event_user_defined_post.
+  */
+///@cond IGNORE_DOXYGEN
+AT_BLE_API
+///@endcond
+void at_ble_chip_reset(void);
+
+/** @ingroup gap_dev_config_group
   * @brief Set GAP attribute data base (Appearance , slave preferred connection parameters ,
   * device name write permissions)
   *
@@ -2253,7 +2264,6 @@ at_ble_status_t at_ble_ll_reset(void);
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
-
 at_ble_status_t at_ble_set_gap_deviceinfo(at_ble_gap_deviceinfo_t  *gap_deviceinfo);
 
 /** @ingroup gap_dev_config_group
@@ -2357,6 +2367,9 @@ at_ble_status_t at_ble_addr_get(at_ble_addr_t *address);
  * in this case, if the user wishes to unblock the function @ref at_ble_event_user_defined_post can be used
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
+ *
+ * @note BTLC uses timer resolution 1 ms, while SAMB uses it with 10 ms resolution.
+ *
  */
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
