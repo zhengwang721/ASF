@@ -6,6 +6,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="startup_template_app.h"/>
 		<build type="c-source" value="startup_template_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_ALL"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.ble_manager"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>
 		
