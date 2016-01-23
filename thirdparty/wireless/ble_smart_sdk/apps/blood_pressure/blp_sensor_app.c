@@ -121,7 +121,7 @@ uint16_t map_val_kpa = MAP_MIN_KPA;
 uint16_t pulse_rate_val = PULSE_RATE_MIN;
 
 /** Current time stamp */
-prf_date_time_t time_stamp;
+at_ble_prf_date_time_t time_stamp;
 
 /* Intermediate Cuff Pressure Values for notification */
 uint16_t interim_diastolic_mmhg = DIASTOLIC_MIN_MMHG;
@@ -287,7 +287,7 @@ static void update_time_stamp(void)
  */
 static void time_stamp_init(void)
 {
-	memset((uint8_t *)&time_stamp, 0, sizeof(prf_date_time_t));
+	memset((uint8_t *)&time_stamp, 0, sizeof(at_ble_prf_date_time_t));
 	time_stamp.year = 2015;
 	time_stamp.day = 1;
 	time_stamp.month = 1;
