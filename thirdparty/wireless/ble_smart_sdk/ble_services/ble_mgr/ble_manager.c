@@ -152,15 +152,16 @@ static void init_global_var(void)
 }
 
 /** @brief function to get event from stack */
-at_ble_status_t ble_event_task(void)
+at_ble_status_t ble_event_task(uint32_t timeout)
 {
-    if (at_ble_event_get(&event, ble_event_params, BLE_EVENT_TIMEOUT) == AT_BLE_SUCCESS) 
+	at_ble_status_t status = at_ble_event_get(&event, ble_event_params, timeout);
+    if (status == AT_BLE_SUCCESS) 
     {
             ble_event_manager(event, ble_event_params);
             return AT_BLE_SUCCESS;
     }
     
-    return AT_BLE_FAILURE;
+    return status;
 }
 
 at_ble_init_config_t pf_cfg;

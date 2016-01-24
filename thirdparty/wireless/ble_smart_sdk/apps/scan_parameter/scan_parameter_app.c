@@ -252,7 +252,7 @@ int main(void)
 	/* Capturing the events  */ 
 	while (app_exec) {
 		/* BLE Event Task */
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 		if (timer_cb_done)
 		{
 			timer_cb_done = false;

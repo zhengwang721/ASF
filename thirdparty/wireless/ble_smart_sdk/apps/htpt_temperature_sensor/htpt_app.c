@@ -667,7 +667,7 @@ int main (void)
 		
 	while(app_exec) {
 		/* BLE Event Task */
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 	}
 
 	return true;

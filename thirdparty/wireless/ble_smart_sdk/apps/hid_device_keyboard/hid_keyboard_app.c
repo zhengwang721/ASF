@@ -326,7 +326,7 @@ int main(void )
 	/* Capturing the events  */
 	while(app_exec)
 	{
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 				
 		/* Check for key status */
 		if(key_status && conn_status){

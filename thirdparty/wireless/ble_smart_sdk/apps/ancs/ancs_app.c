@@ -127,7 +127,7 @@ int main(void)
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GAP_EVENT_TYPE, app_gap_handle);
 	/* Capturing the events  */
 	while (1) {
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 	}
 	
 	return 0;

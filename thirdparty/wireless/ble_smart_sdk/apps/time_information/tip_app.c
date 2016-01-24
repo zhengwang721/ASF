@@ -208,7 +208,7 @@ int main (void)
 									tip_app_gatt_client_handle);
 	
 	while(1) {
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 		if (button_pressed && completed_prev_read) {
 			//delay_ms(200);
 				/* code for pts */

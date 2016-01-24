@@ -1564,13 +1564,13 @@ void ble_characteristic_found_handler(at_ble_characteristic_found_t *characteris
 
 /** @brief function to handle the BLE event task.
   *
-  * @param[in] none.
+  * @param[in] timeout Time with 10 ms resolution this function will block waiting of an event (0xFFFFFFFF to block indefinitely)
   *
   * @return @ref AT_BLE_SUCCESS operation completed successfully
   * @return @ref AT_BLE_FAILURE Generic error.
   *
   */
-at_ble_status_t ble_event_task(void);
+at_ble_status_t ble_event_task(uint32_t timeout);
 
 /** @brief function sets both device address and device name which are exposed to all other devices.
   *

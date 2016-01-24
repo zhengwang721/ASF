@@ -166,6 +166,6 @@ int main(void)
 	/* Capturing the events  */
 	while (1) {
 		/* BLE Event Task */
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 	}
 }

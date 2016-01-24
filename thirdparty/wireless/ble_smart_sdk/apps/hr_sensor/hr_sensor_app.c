@@ -443,7 +443,7 @@ int main(void)
 
 	/* Capturing the events  */
 	while (app_exec) {
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 
 		if (start_advertisement == true || disconnect_flag == true) {
 			/* button debounce delay*/

@@ -528,6 +528,6 @@ int main(void )
 	
 	/* Receiving events */
 	while (1) {
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 	}
 }

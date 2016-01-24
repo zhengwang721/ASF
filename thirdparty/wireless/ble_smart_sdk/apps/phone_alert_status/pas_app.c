@@ -270,7 +270,7 @@ int main(void)
 	/* Capturing the events  */
 	while(app_exec) {
 		/* BLE Event Task */
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 		if (flag) {
 			flag = false;
 			#ifdef ENABLE_PTS

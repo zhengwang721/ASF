@@ -204,7 +204,7 @@ int main(void)
 	while(true)
 	{
 		/* BLE Event task */
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 		
 		/* Write application task */
 	}

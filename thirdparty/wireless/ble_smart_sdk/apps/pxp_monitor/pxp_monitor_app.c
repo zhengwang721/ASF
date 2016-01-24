@@ -226,7 +226,7 @@ int main(void)
 
 	while (1) {
 		/* BLE Event Task */
-		ble_event_task();
+		ble_event_task(BLE_EVENT_TIMEOUT);
 
 		#ifdef ENABLE_PTS
 			if (button_pressed) {
