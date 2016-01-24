@@ -589,6 +589,12 @@ int main(void)
 			} else if (pxp_connect_request_flag == PXP_DEV_CONNECTED) {
 				rssi_update(ble_dev_info[0].conn_info.handle);
 				hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
+			} else if (pxp_connect_request_flag == PXP_DEV_UNCONNECTED) {
+				if(	peripheral_state == PERIPHERAL_ENCRYPTION_STATE 
+					||peripheral_state == PERIPHERAL_PAIRED_STATE) {
+					hw_timer_start(BATTERY_UPDATE_INTERVAL);
+					DBG_LOG("BATTERY_UPDATE_INTERVAL TIMER");
+				}
 			}
 
 			app_timer_done = false;
