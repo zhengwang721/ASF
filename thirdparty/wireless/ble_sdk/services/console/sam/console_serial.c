@@ -94,21 +94,14 @@ void serial_console_init(void)
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
-uint8_t is_timer_set = 1;
-void timer_cb(void);
-void timer_cb(void)
-{
-	is_timer_set = 0;
-}
-
 uint8_t getchar_timeout(uint32_t timeout)
 {
 	uint32_t temp = NULL;
-	is_timer_set = 1;
-
-	hw_timer_register_callback(timer_cb);
-	hw_timer_start(timeout);
-	while((STATUS_OK != usart_read((Usart *)CONF_UART, &temp)) && is_timer_set);
+	
+	while((STATUS_OK != usart_read((Usart *)CONF_UART, &temp)) && timeout){
+		timeout--;
+		delay_ms(1);
+	}
 
 	return ((uint8_t)(temp & 0xFF));
 }

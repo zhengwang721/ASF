@@ -73,21 +73,14 @@ void serial_console_init(void)
 	usart_enable(&cdc_uart_module);
 }
 
-uint8_t is_timer_set = 1;
-void timer_cb(void);
-void timer_cb(void)
-{
-	is_timer_set = 0;
-}
-
 uint8_t getchar_timeout(uint32_t timeout)
 {
 	uint16_t temp = NULL;
-	is_timer_set = 1;
 
-	hw_timer_register_callback(timer_cb);
-	hw_timer_start(timeout);
-	while((STATUS_OK != usart_read_wait(&cdc_uart_module, &temp)) && is_timer_set);
+	while((STATUS_OK != usart_read_wait(&cdc_uart_module, &temp)) && timeout){
+		timeout--;
+		delay_ms(1);
+	}
 
 	return ((uint8_t)temp);	
 }
