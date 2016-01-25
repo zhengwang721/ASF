@@ -3,7 +3,7 @@
  *
  * \brief SAM B11 Xplained Pro board configuration.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,9 +46,5 @@
 
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
-
-/* master i2c module setting */
-#define CONF_I2C_MASTER_MODULE    I2C0
-
 
 #endif /* CONF_BOARD_H_INCLUDED */
