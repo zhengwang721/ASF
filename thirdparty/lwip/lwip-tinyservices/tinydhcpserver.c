@@ -561,7 +561,9 @@ static void lwip_dhcp_server_fn(void *arg, struct udp_pcb * dhcp_pcb_recv, struc
 	}
 
 free1_and_return:
-	pbuf_free(pbuf_out);
+	if (pbuf_out) {
+		pbuf_free(pbuf_out);
+	}
 	pbuf_free(pbuf_in);
 }
 

@@ -334,7 +334,7 @@ void sta_task(void *argument)
 				tmp += len;
 				tot_len += len;
 			} 
-			while(netbuf_next(rx_buf) >= 0);
+			while(netbuf_next(rx_buf) >= 0 && tot_len < 2048);
 			parse_response(server_response, tot_len);
 
 			netbuf_delete(rx_buf);
