@@ -242,6 +242,11 @@ struct gpio_config {
 	 *  \note All other configurations will be ignored, the pin will be disabled
 	 */
 	bool powersave;
+	/** Enable AON_GPIOs to wakeup MCU from ULP mode 
+	 *
+	 *  \note Only AON_GPIO_0, AON_GPIO_1, and AON_GPIO_2 could enable this function
+	 */
+	bool aon_wakeup;
 };
 
 /**
