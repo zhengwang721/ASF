@@ -43,40 +43,29 @@
  */
 #include <asf.h>
 #include "conf_uart_serial.h"
-#include "gpio_from_sdk.h"
-#include "platform.h"
 
 //! [module_inst]
 struct uart_module uart_instance;
-static void configure_uart(void);
-static void configure_gpio(void);
 //! [module_inst]
 
 //! [callback_func]
-static void aon0_gpio_wakeup_callback(void)
+static void aon_gpio_0_callback(void)
 {
-	configure_gpio();
-	configure_uart();
-	puts("AON0 wake up callback\r\n");
-	send_plf_int_msg_ind(GPIO1_COMBINED_VECTOR_TABLE_INDEX,1,NULL,0);  
+	puts("AO_GPIO_0 callback\r\n"); 
 }
-static void aon1_gpio_wakeup_callback(void)
+
+static void aon_gpio_1_callback(void)
 {
-	configure_gpio();
-	configure_uart();
-	puts("AON1 wake up callback\r\n");
-	send_plf_int_msg_ind(GPIO1_COMBINED_VECTOR_TABLE_INDEX,1,NULL,0);  
+	puts("AO_GPIO_1 callback\r\n");
 }
-static void aon2_gpio_wakeup_callback(void)
+
+static void aon_gpio_2_callback(void)
 {
-	configure_gpio();
-	configure_uart();
-	puts("AON2 wake up callback\r\n");
-	send_plf_int_msg_ind(GPIO1_COMBINED_VECTOR_TABLE_INDEX,1,NULL,0);  
+	puts("AO_GPIO_2 callback\r\n");
 }
 //! [callback_func]
 
-//! [initialize_uart]
+//! [setup]
 static void configure_uart(void)
 {
 	//! [setup_uart_1]
@@ -101,91 +90,64 @@ static void configure_uart(void)
 	stdio_serial_init(&uart_instance, CONF_STDIO_USART_MODULE, &config_uart);
 	//! [setup_uart_4]
 }
-//! [initialize_uart]
 
-//! [initialize_gpio]
 static void configure_gpio(void)
 {
-	//! [setup_1]
+	//! [setup_gpio_1]
 	struct gpio_config config_gpio_pin;
 	gpio_get_config_defaults(&config_gpio_pin);
-	//! [setup_1]
+	//! [setup_gpio_1]
 	
-	//! [setup_2]
+	//! [setup_gpio_2]
 	config_gpio_pin.direction  = GPIO_PIN_DIR_INPUT;
-	config_gpio_pin.input_pull = GPIO_PIN_PULL_UP;
+	config_gpio_pin.input_pull = GPIO_PIN_PULL_NONE;
 	config_gpio_pin.aon_wakeup = true;
-	//! [setup_2]
-	//! [setup_3]
+	//! [setup_gpio_2]
+	//! [setup_gpio_3]
 	gpio_pin_set_config(PIN_AO_GPIO_0, &config_gpio_pin);
 	gpio_pin_set_config(PIN_AO_GPIO_1, &config_gpio_pin);
-	//gpio_pin_set_config(PIN_AO_GPIO_2, &config_gpio_pin);
-	//! [setup_3]
-	//! [setup_4]
-	//gpio_init();
-	//! [setup_4]
+	gpio_pin_set_config(PIN_AO_GPIO_2, &config_gpio_pin);
+	//! [setup_gpio_3]
 }
-//! [initialize_gpio]
 
-//! [setup_callback]
 static void configure_gpio_callbacks(void)
 {
 	/* Register callback function. */
+//! [callback_init]
+	gpio_init();
+//! [callback_init]
 	//! [callback_reg]
-	gpio_register_callback(PIN_AO_GPIO_0, aon0_gpio_wakeup_callback,
+	gpio_register_callback(PIN_AO_GPIO_0, aon_gpio_0_callback,
 			GPIO_CALLBACK_RISING);
-	gpio_register_callback(PIN_AO_GPIO_1, aon1_gpio_wakeup_callback,
+	gpio_register_callback(PIN_AO_GPIO_1, aon_gpio_1_callback,
 			GPIO_CALLBACK_RISING);
-	//gpio_register_callback(PIN_AO_GPIO_2, aon2_gpio_wakeup_callback,
-			//GPIO_CALLBACK_RISING);
+	gpio_register_callback(PIN_AO_GPIO_2, aon_gpio_2_callback,
+			GPIO_CALLBACK_RISING);
 	//! [callback_reg]
 	//! [callback_en]
 	gpio_enable_callback(PIN_AO_GPIO_0);
 	gpio_enable_callback(PIN_AO_GPIO_1);
-	//gpio_enable_callback(PIN_AO_GPIO_2);
+	gpio_enable_callback(PIN_AO_GPIO_2);
 	//! [callback_en]
 }
-//! [setup_callback]
-void cb(void)
-{
-	configure_gpio();
-	configure_uart();
-	puts("cb\r\n");
-}
+//! [setup]
+
 int main(void)
 {
-	uint16_t plf_event_type;
-	uint8_t plf_event_data[16];
-	uint16_t plf_event_data_len;
-	platform_driver_init();
-
 	//! [run_initialize_i2c]
-	//system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
-	//! [config_uart]
-	configure_uart();
-	//! [config_uart]
-	//! [config_gpio]
-	configure_gpio();
-	//! [config_gpio]
+	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
-	//! [config_callback]
-	//configure_gpio_callbacks();
-	//! [config_callback]
-	
-	register_resume_callback (cb);
-	 
-	release_sleep_lock();
-	while (1);
-	
-	////! [main]
-	while(platform_event_get(&plf_event_type,plf_event_data,&plf_event_data_len)) {
-		acquire_sleep_lock();
-		puts("main context\r\n");
-		if(plf_event_type == ((1 << 8)| GPIO1_COMBINED_VECTOR_TABLE_INDEX)) {
-			//Do what you wanted to do on button press event can be handled here.
-			puts("plf event\r\n");
-		}
-		release_sleep_lock();
+	//! [setup_init]
+	configure_uart();
+
+	configure_gpio();
+
+	configure_gpio_callbacks();
+	//! [setup_init]
+
+	//! [main]
+	while (true){
+		
 	}
 	//! [main]
 }

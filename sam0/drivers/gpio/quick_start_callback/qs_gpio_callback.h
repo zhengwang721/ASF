@@ -46,89 +46,64 @@
  *  \li One pin in input mode, with pull-up enabled
  *  \li One pin in output mode
  *
- * This use case sets up the AON GPIO to wakeup the MCU in low power sleep mode.
- *
- * \section asfdoc_samb_gpio_callback_use_case_setup Setup
+ * This use case sets up the AON GPIO to wakeup the MCU in low power sleep mode, if user
+ * want to use in the ULP mode, must add platform driver related API: acquire_sleep_lock(),
+ * release_sleep_lock(), register_resume_callback(cb).
  *
  * \subsection asfdoc_samb_gpio_callback_use_case_setup_code Code
- * The following must be added to the user application:
+ * Copy-paste the following setup code to your user application:
+ * \snippet qs_gpio_callback.c setup
  *
- * A sample buffer to write from, a reversed buffer to write from and length of
- * buffers.
- * \snippet qs_i2c_master_callback.c packet_data
+ * Add to user application initialization (typically the start of \c main()):
+ * \snippet qs_gpio_callback.c setup_init
  *
- * Address of slave:
- * \snippet qs_i2c_master_callback.c address
+ * \subsection asfdoc_samb_gpio_callback_use_case_setup_flow Workflow
+ * -# Create a UART module configuration struct.
+ *    \snippet qs_gpio_callback.c setup_uart_1
+ * -# Initialize the config_uart configuration struct with the module's default values.
+ *    \snippet qs_gpio_callback.c setup_uart_2 
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
  *
- * Globally accessible module structure:
- * \snippet qs_i2c_master_callback.c dev_inst
+ * -# Adjust the configuration struct to request setting.
+ *    \snippet qs_gpio_callback.c setup_uart_3
  *
- * Globally accessible packet:
- * \snippet qs_i2c_master_callback.c packet_glob
+ * -# Configure UART with the initialized configuration struct, to enable
+ *    the driver.
+ *    \snippet qs_gpio_callback.c setup_uart_4
  *
- * Function for setting up module:
- * \snippet qs_i2c_master_callback.c initialize_i2c
+ * -# Create a GPIO module pin configuration struct. Initialize the pin configuration
+ *    struct with the module's default values.
+ *    \snippet qs_gpio_callback.c setup_gpio_1
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
  *
- * Callback function for write complete:
- * \snippet qs_i2c_master_callback.c callback_func
+ * -# Adjust the configuration struct to request an input pin and enable AON wakeup.
+ *    \snippet qs_gpio_callback.c setup_gpio_2
  *
- * Function for setting up the callback functionality of the driver:
- * \snippet qs_i2c_master_callback.c setup_callback
+ * -# Configure AON GPIO pin with the initialized pin configuration struct.
+ *    \snippet qs_gpio_callback.c setup_gpio_3
  *
- * Add to user application \c main():
- * \snippet qs_i2c_master_callback.c run_initialize_i2c
+ * -# Ini AON GPIO pin with the initialized pin configuration struct.
+ *    \snippet qs_gpio_callback.c setup_gpio_3
  *
- * \subsection asfdoc_samb_i2c_master_callback_use_case_setup_workflow Workflow
- *  -# Create and initialize configuration structure.
- *     \snippet qs_i2c_master_callback.c setup_1
- *  -# Change GPIO direction and pull mode settings in the configuration.
- *     \snippet qs_i2c_master_callback.c setup_2
- *  -# Initialize the module with the set configurations.
- *     \snippet qs_i2c_master_callback.c setup_3
- *  -# Create and initialize configuration structure.
- *     \snippet qs_i2c_master_callback.c setup_4
- *  -# Initialize the module with the set configurations.
- *     \snippet qs_i2c_master_callback.c setup_5
- *  -# Enable the module.
- *     \snippet qs_i2c_master_callback.c setup_6
- * -# Configure callback functionality.
- *    \snippet qs_i2c_master_callback.c config_callback
- *  -# Register write complete callback.
- *     \snippet qs_i2c_master_callback.c callback_reg
- *  -# Enable write complete callback.
- *     \snippet qs_i2c_master_callback.c callback_en
- *  -# Enable NVIC IRQ.
- *     \snippet qs_i2c_master_callback.c nvic_en
- * -# Create a packet to send to slave.
- *    \snippet qs_i2c_master_callback.c write_packet
+ * -# Initialize callback function.
+ *    \snippet qs_gpio_callback.c callback_init
  *
- * \section asfdoc_samb_i2c_master_callback_use_case_implementation Implementation
- * \subsection asfdoc_samb_i2c_master_callback_use_case_code Code
- * Add to user application \c main():
- * \snippet qs_i2c_master_callback.c while
- * \subsection asfdoc_samb_i2c_master_callback_use_case_implementation_workflow Workflow
- * -# Write packet to slave.
- *    \snippet qs_i2c_master_callback.c write_packet
- * -# Read packet from slave.
- *    \snippet qs_i2c_master_callback.c read_packet
- * -# Infinite while loop, while waiting for interaction with slave.
- *    \snippet qs_i2c_master_callback.c while
+ * -# Register callback function.
+ *    \snippet qs_gpio_callback.c callback_reg
+ * -# Enable callback function.
+ *    \snippet qs_gpio_callback.c callback_en 
+ * 
+ * \section asfdoc_samb_gpio_callback_use_case_use_main Use Case
  *
- * \section asfdoc_samb_i2c_master_callback_use_case_callback Callback
- * Each time a packet is sent, the callback function will be called.
+ * \subsection asfdoc_samb_gpio_callback_use_case_code Code
+ * Copy-paste the following code to your user application:
+ * \snippet qs_gpio_callback.c main
  *
- * \subsection asfdoc_samb_i2c_master_callback_use_case_callback_workflow Workflow
- * -# Write complete callback:
- *  -# Send every other packet in reversed order.
- *     \snippet qs_i2c_master_callback.c revert_order
- *  -# Write new packet to slave.
- *     \snippet qs_i2c_master_callback.c write_packet
- *
+ * \subsection asfdoc_samb_gpio_callback_use_case_flow Workflow
+ * -# Infinit loop.
+ *    \snippet qs_gpio_callback.c main
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-
-#include <asf.h>
-#include <conf_clocks.h>
-
