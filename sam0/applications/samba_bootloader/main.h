@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Monitor functions for SAM-BA on SAM0
+ * \brief Main functions
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,43 +40,54 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+
+#ifndef _MAIN_H_
+#define _MAIN_H_
+
+#include "usb_protocol_cdc.h"
+
+#ifdef USB_DEVICE_LPM_SUPPORT
+/*! \brief Enters the application in low power mode
+ * Callback called when USB host sets LPM suspend state
  */
+void main_suspend_lpm_action(void);
 
-#ifndef _MONITOR_SAM_BA_H_
-#define _MONITOR_SAM_BA_H_
+/*! \brief Called by UDC when USB Host request to enable LPM remote wakeup
+ */
+void main_remotewakeup_lpm_enable(void);
 
-#define SAM_BA_VERSION              "2.16"
+/*! \brief Called by UDC when USB Host request to disable LPM remote wakeup
+ */
+void main_remotewakeup_lpm_disable(void);
+#endif
 
-/* Selects USART as the communication interface of the monitor */
-#define SAM_BA_INTERFACE_USART      1
-/* Selects USB as the communication interface of the monitor */
-#define SAM_BA_INTERFACE_USBCDC     0
-
-/* Selects USB as the communication interface of the monitor */
-#define SIZEBUFMAX                  64
-
-/**
- * \brief Initialize the monitor
+/*! \brief Opens the communication port
+ * This is called by CDC interface when USB Host enable it.
  *
+ * \retval true if cdc startup is successfully done
  */
-void sam_ba_monitor_init(uint8_t com_interface);
+bool main_cdc_enable(uint8_t port);
 
-/**
- * \brief Main function of the SAM-BA Monitor
+/*! \brief Closes the communication port
+ * This is called by CDC interface when USB Host disable it.
+ */
+void main_cdc_disable(uint8_t port);
+
+/*! \brief Save new DTR state to change led behavior.
+ * The DTR notify that the terminal have open or close the communication port.
+ */
+void main_cdc_set_dtr(uint8_t port, bool b_enable);
+
+/*! \brief Called by CDC interface
+ * Callback running when CDC device have received data
+ */
+
+void main_cdc_rx_notify(uint8_t port);
+
+/*! \brief Configures communication line
  *
+ * \param cfg      line configuration
  */
-void sam_ba_monitor_run(void);
+void main_cdc_set_coding(uint8_t port, usb_cdc_line_coding_t * cfg);
 
-/**
- * \brief
- */
-void sam_ba_putdata_term(uint8_t* data, uint32_t length);
-
-/**
- * \brief
- */
-void call_applet(uint32_t address);
-
-#endif // _MONITOR_SAM_BA_H_
+#endif // _MAIN_H_
