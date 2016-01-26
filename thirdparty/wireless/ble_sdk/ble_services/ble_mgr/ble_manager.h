@@ -1535,7 +1535,7 @@ void ble_characteristic_found_handler(at_ble_characteristic_found_t *characteris
   * @return @ref AT_BLE_FAILURE Generic error.
   *
   */
-at_ble_status_t ble_event_task(uint32_t timeout);
+at_ble_status_t ble_event_task(void);
 
 /** @brief function sets both device address and device name which are exposed to all other devices.
   *
