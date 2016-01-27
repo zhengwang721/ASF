@@ -363,8 +363,7 @@ typedef enum
      */
     AT_BLE_CONNECTED,
     /** peer device connection terminated. \n
-     *  Refer to @ref at_ble_disconnected_t and @ref at_ble_disconnect_reason_t for reason of disconnection.
-     *  If returned reason is not one of @ref at_ble_disconnect_reason_t, so check for error code @ref at_ble_status_t
+     *  Refer to @ref at_ble_disconnected_t , for reason of disconnection (see Bluetooth error code in Bluetooth core spec)
      */
     AT_BLE_DISCONNECTED,
     /** connection parameters updated. It is requires to call @ref at_ble_conn_update_reply function to send response back if needed.\n
@@ -501,7 +500,7 @@ typedef enum
      */
     AT_BLE_CHARACTERISTIC_WRITE_CMD_CMP,
     /** The peer asks for a read Authorization. \n
-     * Refer to @ref at_ble_read_authorize_request_t
+     * Refer to @ref at_ble_characteristic_read_req_t 
      */
     AT_BLE_READ_AUTHORIZE_REQUEST,
 
@@ -609,12 +608,20 @@ typedef enum
 */
 typedef enum
 {
+    /** indicates that pairing or authentication failed due to incorrect results in the pairing or authentication procedure.
+    This could be due to an incorrect PIN or link key. */
     AT_BLE_AUTH_FAILURE = 0x05,
+    /** indicates that the user on the remote device terminated the connection. */
     AT_BLE_TERMINATED_BY_USER = 0x13,
+    /** indicates that the remote device terminated the connection because of low resources. */
     AT_BLE_REMOTE_DEV_TERM_LOW_RESOURCES,
+    /** indicates that the remote device terminated the connection because the device is about to power off. */
     AT_BLE_REMOTE_DEV_POWER_OFF,
+    /** indicates that the remote device does not support the feature associated with the issue command. */
     AT_BLE_UNSUPPORTED_REMOTE_FEATURE = 0x1A,
+    /** indicates that it was not possible to pair as a unit key was requested and it is not supported. */
     AT_BLE_PAIRING_WITH_UNIT_KEY_NOT_SUP = 0x29,
+    /** indicates that the remote device terminated the connection because of an unacceptable connection interval. */
     AT_BLE_UNACCEPTABLE_INTERVAL = 0x3B,
 } at_ble_disconnect_reason_t;
 
@@ -763,15 +770,42 @@ typedef enum
 
 typedef uint8_t at_ble_attr_permissions_t;
 
+/* bit[0-1] : read permission (0 = disable , 1 = enable , 2= UNAUTH , 3 = AUTH)
+   bit[3] : read authorization required
+   bit[4-5]: write permission (0 = disable , 1 = enable , 2= UNAUTH , 3 = AUTH)
+   bit[6] : encryption key size must be 16
+   bit[7]: write authorization required
+*/
+
 #define AT_BLE_ATTR_NO_PERMISSIONS               0x00
+/** @brief Read enable. */
 #define AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR   0x01
-#define AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR  0x02
-#define AT_BLE_ATTR_READABLE_NO_AUTHN_REQ_AUTHR  0x03
-#define AT_BLE_ATTR_READABLE_REQ_AUTHN_REQ_AUTHR 0x04
+/** @brief	Read operation require MITM protected encrypted link & no authorization. */
+#define AT_BLE_ATTR_READABLE_REQ_AUTHN_NO_AUTHR  0x03
+/** @brief	Read operation require Authorization & no encryption. */
+#define AT_BLE_ATTR_READABLE_NO_AUTHN_REQ_AUTHR  0x09
+/** @brief  Read operation require MITM protected encrypted link & authorization. */
+#define AT_BLE_ATTR_READABLE_REQ_AUTHN_REQ_AUTHR 0x0B
+/** @brief Read operation require encrypted link , MITM protection not necessary & No authorization. */
+#define AT_BLE_ATTR_READABLE_REQ_ENC_NO_AUTHN_NO_AUTHR  0x02
+/** @brief Read operation require encrypted link, MITM protection not necessary & authorization. */
+#define AT_BLE_ATTR_READABLE_REQ_ENC_NO_AUTHN_REQ_AUTHR  0x0A
+
+/** @brief Write enable. */
 #define AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR   0x10
-#define AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR  0x20
-#define AT_BLE_ATTR_WRITABLE_NO_AUTHN_REQ_AUTHR  0x30
-#define AT_BLE_ATTR_WRITABLE_REQ_AUTHN_REQ_AUTHR 0x40
+/** @brief	Write operation require MITM protected encrypted link & no authorization. */
+#define AT_BLE_ATTR_WRITABLE_REQ_AUTHN_NO_AUTHR  0x30
+/** @brief	Write operation require Authorization & no encryption. */
+#define AT_BLE_ATTR_WRITABLE_NO_AUTHN_REQ_AUTHR  0x90
+/** @brief  Write operation require MITM protected encrypted link & authorization. */
+#define AT_BLE_ATTR_WRITABLE_REQ_AUTHN_REQ_AUTHR 0xB0
+/** @brief Write operation require encrypted link , MITM protection not necessary & No authorization. */
+#define AT_BLE_ATTR_WRITABLE_REQ_ENC_NO_AUTHN_NO_AUTHR 0x20
+/** @brief Write operation require encrypted link, MITM protection not necessary & authorization. */
+#define AT_BLE_ATTR_WRITABLE_REQ_ENC_NO_AUTHN_REQ_AUTHR 0xA0
+/** @brief  Encryption key Size must be 16 bytes. */
+#define AT_BLE_ENC_KEY_SIZE_PERM 0X40
+
 
 typedef enum
 {
@@ -1288,17 +1322,17 @@ typedef struct
 */
 typedef struct
 {
-    /// Minimum of connection interval
+    /// Minimum connection interval N (Value Time = N *1.25 ms)
     uint16_t             con_intv_min;
-    /// Maximum of connection interval
+    /// Maximum connection interval N (Value Time = N *1.25 ms)
     uint16_t             con_intv_max;
-    /// Connection latency
+    /// Connection latency (number of events)
     uint16_t             con_latency;
-    /// Link supervision time-out
+    /// Link supervision time-out N (Value Time = N * 10 ms)
     uint16_t             superv_to;
-    /// Minimum CE length
+    /// Minimum CE length N (Value Time = N * 0.625 ms)
     uint16_t             ce_len_min;
-    /// Maximum CE length
+    /// Maximum CE length N (Value Time = N * 0.625 ms)
     uint16_t             ce_len_max;
 
 } at_ble_connection_params_t;
@@ -1617,7 +1651,9 @@ typedef struct
 {
     ///connection handle
     at_ble_handle_t handle;
-    ///disconnection reason, refer to @ref at_ble_disconnect_reason_t
+   /// status of the operation
+    at_ble_status_t status;
+    ///disconnection reason (see Bluetooth error code in Bluetooth core spec)
     uint8_t reason;
 } at_ble_disconnected_t;
 
@@ -2738,8 +2774,7 @@ at_ble_status_t at_ble_set_channel_map(at_ble_channel_map_t *map);
  * @param[in] reason disconnection reason, more info at @ref at_ble_disconnect_reason_t
  *
  * @note
- * - At @ref AT_BLE_DISCONNECTED event, if returned reason is not one of @ref at_ble_disconnect_reason_t,
- *   so check the reason against error codes @ref at_ble_status_t because this means something wrong was happened
+ * - At @ref AT_BLE_DISCONNECTED event, for reason of disconnection see Bluetooth error code at Bluetooth core specification
  *
  * @return Upon successful completion the function shall return @ref AT_BLE_SUCCESS, Otherwise the function shall return @ref at_ble_status_t
  */
@@ -3817,7 +3852,7 @@ at_ble_status_t at_ble_calib_get_voltage(float *voltage);
 ///@cond IGNORE_DOXYGEN
 AT_BLE_API
 ///@endcond
-at_ble_status_t at_ble_calib_get_temp(int *temp);
+at_ble_status_t at_ble_calib_get_temp(int *temperature);
 #ifdef __cplusplus
 }
 #endif  //__cplusplus
