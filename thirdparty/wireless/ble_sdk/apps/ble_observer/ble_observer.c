@@ -471,7 +471,7 @@ at_ble_status_t ble_observer_scan_info_handler(void * param)
 			break;
 
 			default:
-				DBG_LOG("Unknown ad type");
+				DBG_LOG_DEV("Unknown ad type");
 			}
 			index += (adv_element_data.len + 1);
 			adv_element_data.len += 1;
