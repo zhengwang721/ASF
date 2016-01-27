@@ -50,6 +50,7 @@
  * Internal driver device instance struct.
  */
 struct gpio_module _gpio_instances[2];
+static void (*aon_handle_ext_wakeup_isr)(void) = (void (*)(void))0x1bc51;
 
 /**
  *  \brief Initializes a gpio pin/group configuration structure to defaults.
@@ -474,6 +475,7 @@ static void gpio_port0_isr_handler(void)
 			break;
 		}
 	}
+	NVIC_ClearPendingIRQ(GPIO0_IRQn);
 }
 
 /**
@@ -487,6 +489,11 @@ static void gpio_port1_isr_handler(void)
 	uint32_t flag = _gpio_instances[1].hw->INTSTATUSCLEAR.reg;
 
 	for (uint8_t i = 0; i < 16; i++){
+		/* For AON wakeup pin clear interrupt */
+		if (flag & ((1<<15) | (1<<14) | (1<<13))) {
+			aon_handle_ext_wakeup_isr();
+		}
+
 		if (flag & (1 << i)) {
 			/* Clear interrupt flag */
 			_gpio_instances[1].hw->INTSTATUSCLEAR.reg |= (1 << i);
@@ -497,6 +504,7 @@ static void gpio_port1_isr_handler(void)
 			}
 		}
 	}
+	NVIC_ClearPendingIRQ(GPIO1_IRQn);
 }
 
 /**
