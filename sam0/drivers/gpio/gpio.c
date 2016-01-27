@@ -487,7 +487,7 @@ static void gpio_port0_isr_handler(void)
 static void gpio_port1_isr_handler(void)
 {
 	uint32_t flag = _gpio_instances[1].hw->INTSTATUSCLEAR.reg;
-printf("1:%x\r\n",flag);
+//printf("1:%x\r\n",flag);
 	for (uint8_t i = 0; i < 16; i++){
 		/* For AON wakeup pin clear interrupt */
 		if (flag & ((1<<15) | (1<<14) | (1<<13))) {
