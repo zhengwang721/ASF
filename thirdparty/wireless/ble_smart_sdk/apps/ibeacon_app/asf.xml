@@ -1,0 +1,13 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="ibeacon Application" id="thirdparty.wireless.ble_smart_sdk.apps.ibeacon_app">
+		<info type="description" value="summary">
+		iBEACON APPLICATION for SAMB11 BLE SMART 
+		</info>	
+		<build type="include-path" value="."/>
+		<build type="c-source" value="app.c"/>
+		
+		<build type="distribute" subtype="user-file" value="Atmel-42599-ATSAMB11-BluSDK-SMART-iBeacon-Getting-Started-Guide_UserGuide.pdf"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>
