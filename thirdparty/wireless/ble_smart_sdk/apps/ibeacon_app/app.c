@@ -182,7 +182,7 @@ int main(void)
 	release_sleep_lock();
 	
 	while(1) {
-		while((status = at_ble_event_get(&event, params, (uint32_t)200)) == AT_BLE_SUCCESS)
+		while((status = at_ble_event_get(&event, params, (uint32_t)-1)) == AT_BLE_SUCCESS)
 		{
 			acquire_sleep_lock();
 			switch(event)
@@ -231,11 +231,6 @@ int main(void)
 			}
 			release_sleep_lock();
 		}
-		
-		if(status == 0xD0)
-			PRINT_H1("at_ble_event_get timeout.\r\n");
-		else
-			PRINT_H1("at_ble_event_get returns 0x%x\r\n", status);
 	}
 
 __EXIT:
