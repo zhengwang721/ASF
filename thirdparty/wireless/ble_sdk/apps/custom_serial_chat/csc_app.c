@@ -148,9 +148,18 @@ static void csc_app_send_buf(void)
 	if (len){
 		for (ind = 0; ind < len; ind++){
 			if(buff != ENTER_BUTTON_PRESS){
-				sio2host_putchar(buff);  
+				sio2host_putchar(buff);
+				if (buff == BACKSPACE_BUTTON_PRESS)
+				{
+					sio2host_putchar(SPACE_BAR);
+					sio2host_putchar(buff);
+					if(send_length)
+						send_length--;
+				}
+				  
 				if(send_length < APP_TX_BUF_SIZE){
-					send_data[send_length++] = buff;
+					if(buff != BACKSPACE_BUTTON_PRESS)
+						send_data[send_length++] = buff;
 				}else{
 					csc_prf_send_data(&send_data[0], send_length);
 					send_length = 0;
