@@ -43,7 +43,6 @@ void time_start(uint32_t sec)
 	uint32_t main_clk = system_clock_get_value();
 
 	tick = (((double)(main_clk)) * ((double)0.0000493)) * (sec * 1000);
-	printf ( "tick count : %u %u", tick, main_clk);
 }
 
 uint32_t time_done()
