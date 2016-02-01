@@ -65,6 +65,7 @@ static volatile bool platform_timer_used = false;
 
 at_ble_status_t platform_init(uint8_t bus_type, uint8_t bus_flow_control_enabled)
 {	
+        (void)bus_flow_control_enabled;
 	platform_bus_type = bus_type;
 	if (platform_bus_type == AT_BLE_UART)
 	{
