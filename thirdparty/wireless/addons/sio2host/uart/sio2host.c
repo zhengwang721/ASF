@@ -114,8 +114,6 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 {
 #if SAMD || SAMR21 || SAML21
 	status_code_genare_t status;
-#elif SAM4S
-	uint32_t status;
 #else
 	status_code_t status;
 #endif /*SAMD || SAMR21 || SAML21 */
@@ -125,8 +123,6 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 		status
 			= usart_serial_write_packet(&host_uart_module,
 				(const uint8_t *)data, length);
-#elif SAM4S
-	   status =  uart_write(USART_HOST,(*data));
 #else
 		status = usart_serial_write_packet(USART_HOST,
 				(const uint8_t *)data,
@@ -234,8 +230,6 @@ int sio2host_getchar_nowait(void)
 
 #if SAMD || SAMR21 || SAML21
 void USART_HOST_ISR_VECT(uint8_t instance)
-#elif SAM4S
-void USART_HOST_ISR_VECT(void)
 #else
 USART_HOST_ISR_VECT()
 #endif
@@ -243,8 +237,6 @@ USART_HOST_ISR_VECT()
 	uint8_t temp;
 #if SAMD || SAMR21 || SAML21
 	usart_serial_read_packet(&host_uart_module, &temp, 1);
-#elif SAM4S
-	uart_read(USART_HOST, &temp);
 #else
 	usart_serial_read_packet(USART_HOST, &temp, 1);
 #endif

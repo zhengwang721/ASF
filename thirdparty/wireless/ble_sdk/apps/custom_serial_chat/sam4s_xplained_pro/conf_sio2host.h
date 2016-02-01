@@ -55,7 +55,7 @@
 /** Stop bits setting */
 #define USART_HOST_STOP_BITS       US_MR_NBSTOP_1_BIT
 
-#define USART_HOST_ISR_VECT       UART1_Handler
+#define USART_HOST_ISR_VECT()      ISR(UART1_Handler)
 
 #define USART_HOST_IRQn			   UART1_IRQn
 
