@@ -586,7 +586,7 @@ int main(void)
 					DBG_LOG(
 							"Unable to connect with device");
 				}
-			} else if (pxp_connect_request_flag == PXP_DEV_CONNECTED) {
+			} else if (pxp_connect_request_flag == PXP_DEV_SERVICE_FOUND) {
 				rssi_update(ble_dev_info[0].conn_info.handle);
 				hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
 			} else if (pxp_connect_request_flag == PXP_DEV_UNCONNECTED) {
