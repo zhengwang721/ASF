@@ -123,7 +123,6 @@ static void ble_init(void)
 	platform_init(pf_cfg.bus_info.bus_type, pf_cfg.bus_info.bus_flow_control_enabled);
 	
 	/*Trace Logs*/
-	trace_register_printFn((void *)&printf);
 	trace_set_level(TRACE_LVL_DISABLE);
 	
 	/* Initialize BLE device */
