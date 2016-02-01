@@ -415,6 +415,9 @@ at_ble_status_t pxp_monitor_pair_done_handler(void *params)
 			pxp_monitor_start_scan();
 			return AT_BLE_FAILURE;
 	}
+	
+	pxp_connect_request_flag = PXP_DEV_PAIRED;
+	
 	return discovery_status;
 }
 
@@ -482,6 +485,8 @@ at_ble_status_t pxp_monitor_service_found_handler(void *params)
 	{
 		return AT_BLE_FAILURE;
 	}
+	
+	pxp_connect_request_flag = PXP_DEV_SERVICE_FOUND;
 	
 	pxp_service_uuid = &primary_service_params->service_uuid;
 	if (pxp_service_uuid->type == AT_BLE_UUID_16) {

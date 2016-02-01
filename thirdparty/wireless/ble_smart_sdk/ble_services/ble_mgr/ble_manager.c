@@ -66,7 +66,7 @@
 uint32_t att_db_data[BLE_ATT_DB_MEMORY_SIZE/4] = {0};
 #endif
 
-#define CHECK_PAIRING_KEY_TIME_OUT (10)		// 30 second
+#define CHECK_PAIRING_KEY_TIME_OUT (30)		// 30 second
 volatile uint8_t ble_device_count;
 
 ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
@@ -1277,7 +1277,6 @@ at_ble_status_t ble_pair_done_handler(void *params)
 	{
 		if((ble_dev_info[idx].conn_info.handle == pairing_params->handle) && (ble_dev_info[idx].conn_state == BLE_DEVICE_PAIRING))
 		{
-			ble_dev_info[idx].conn_state = BLE_DEVICE_PAIRED;
 			device_found = true;
 			break;
 		}
@@ -1290,10 +1289,11 @@ at_ble_status_t ble_pair_done_handler(void *params)
 		{
 			ble_dev_info[idx].bond_info.auth = pairing_params->auth;
 			ble_dev_info[idx].bond_info.status = pairing_params->status;
+			ble_dev_info[idx].conn_state = BLE_DEVICE_PAIRED;
+			
 			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_csrk, (uint8_t *)&pairing_params->peer_csrk, sizeof(at_ble_CSRK_t));
 			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_irk, (uint8_t *)&pairing_params->peer_irk, sizeof(at_ble_IRK_t));
 			memcpy((uint8_t *)&ble_dev_info[idx].bond_info.peer_ltk, (uint8_t *)&pairing_params->peer_ltk, sizeof(at_ble_LTK_t));
-			ble_dev_info->conn_state = BLE_DEVICE_PAIRED;
 			
 			DBG_LOG_DEV("LTK: ");
 			for (idx = 0; idx < 16; idx++)
@@ -1322,11 +1322,13 @@ at_ble_status_t ble_pair_done_handler(void *params)
 	}
 	else
 	{
-		DBG_LOG("Pairing failed...Disconnecting");
-		if(!(at_ble_disconnect(pairing_params->handle, AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS))
-		{
-			DBG_LOG("Disconnect Request Failed");
-			return AT_BLE_FAILURE;
+		if(ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED) {
+			DBG_LOG("Pairing failed...Disconnecting");
+			if(!(at_ble_disconnect(pairing_params->handle, AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS))
+			{
+				DBG_LOG("Disconnect Request Failed");
+				return AT_BLE_FAILURE;
+			}
 		}
 	}
 	return AT_BLE_SUCCESS;

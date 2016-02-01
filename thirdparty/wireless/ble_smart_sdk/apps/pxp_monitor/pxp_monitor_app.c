@@ -239,7 +239,7 @@ int main(void)
 				DBG_LOG("Press 7 for send HIGH ALERT on Link Loss Service");
 				DBG_LOG("Press 8 for send NO ALERT on Link Loss Service");
 				DBG_LOG("Press 9 for disconnection");
-				uint8_t option = getchar();
+				uint8_t option = getchar_b11();
 				switch (option) {
 				case '1':
 					pxp_monitor_service_discover(ble_dev_info[0].conn_info.handle);
@@ -311,7 +311,7 @@ int main(void)
 						ble_device_init(NULL);
 						pxp_app_init();
 					}
-				} else if (pxp_connect_request_flag == PXP_DEV_CONNECTED) {
+				} else if (pxp_connect_request_flag == PXP_DEV_SERVICE_FOUND) {
 					rssi_update(ble_dev_info[0].conn_info.handle);
 					hw_timer_start(PXP_RSSI_UPDATE_INTERVAL);
 				}
