@@ -408,11 +408,12 @@ at_ble_status_t pxp_monitor_pair_done_handler(void *params)
 	{
 		return AT_BLE_FAILURE;
 	}
+	
 	hw_timer_stop_func_cb();
+	
 	if (pair_done_val->status == AT_BLE_SUCCESS) {
 		discovery_status = pxp_monitor_service_discover(pair_done_val->handle);
 	} else {
-			pxp_monitor_start_scan();
 			return AT_BLE_FAILURE;
 	}
 	
