@@ -66,7 +66,7 @@
 uint32_t att_db_data[BLE_ATT_DB_MEMORY_SIZE/4] = {0};
 #endif
 
-
+#define CHECK_PAIRING_KEY_TIME_OUT (10)		// 30 second
 volatile uint8_t ble_device_count;
 
 ble_connected_dev_info_t ble_dev_info[BLE_MAX_DEVICE_CONNECTED];
