@@ -133,7 +133,6 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 				/* Enable AON_GPIO_x to wake up the BLE domain from sleep mode */
 				AON_PWR_SEQ0->GPIO_WAKEUP_CTRL.bit.BLE_ENABLE = 1;
 			}
-			//aon_handle_ext_wakeup_isr = 
 		} else {
 			if(config->direction == GPIO_PIN_DIR_INPUT) {
 				if(gpio_pin < 16) {
@@ -476,6 +475,7 @@ static void gpio_port0_isr_handler(void)
 			break;
 		}
 	}
+	NVIC_ClearPendingIRQ(GPIO0_IRQn);
 }
 
 /**
@@ -487,7 +487,7 @@ static void gpio_port0_isr_handler(void)
 static void gpio_port1_isr_handler(void)
 {
 	uint32_t flag = _gpio_instances[1].hw->INTSTATUSCLEAR.reg;
-//printf("1:%x\r\n",flag);
+
 	for (uint8_t i = 0; i < 16; i++){
 		/* For AON wakeup pin clear interrupt */
 		if (flag & ((1<<15) | (1<<14) | (1<<13))) {
@@ -497,7 +497,6 @@ static void gpio_port1_isr_handler(void)
 		if (flag & (1 << i)) {
 			/* Clear interrupt flag */
 			_gpio_instances[1].hw->INTSTATUSCLEAR.reg |= (1 << i);
-			//_gpio_instances[1].hw->INTSTATUSCLEAR.bit.VALUE |= (1 << i);
 			if ((_gpio_instances[1].callback_enable_mask & (1 << i)) && \
 			(_gpio_instances[1].callback_reg_mask & (1 << i))) {
 				_gpio_instances[1].callback[i]();
@@ -506,7 +505,6 @@ static void gpio_port1_isr_handler(void)
 		}
 	}
 	NVIC_ClearPendingIRQ(GPIO1_IRQn);
-	printf("2:%x\r\n",_gpio_instances[1].hw->INTSTATUSCLEAR.reg);
 }
 
 /**
