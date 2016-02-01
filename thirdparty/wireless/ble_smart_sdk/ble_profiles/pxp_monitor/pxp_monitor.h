@@ -63,7 +63,9 @@ typedef enum {
 typedef enum {
 	PXP_DEV_UNCONNECTED,
 	PXP_DEV_CONNECTING,
-	PXP_DEV_CONNECTED
+	PXP_DEV_CONNECTED,
+	PXP_DEV_PAIRED,
+	PXP_DEV_SERVICE_FOUND
 } PXP_DEV;
 
 //   <o> Rssi Prameter Update Interval <1-10>

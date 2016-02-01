@@ -281,7 +281,7 @@ int main(void)
 			DBG_LOG_PTS("\t 4.Read Alert Status");
 			DBG_LOG_PTS("\t 5.Read Ringer Setting");
 			DBG_LOG_PTS("\t 6.Start Service Discovery");
-			function_selector = getchar();
+			function_selector = getchar_b11();
 			function_selector = function_selector - 48;
 			DBG_LOG("The option chosen is %d",function_selector);
 			switch(function_selector) {
