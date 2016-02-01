@@ -1322,7 +1322,7 @@ at_ble_status_t ble_pair_done_handler(void *params)
 	}
 	else
 	{
-		if(ble_dev_info[idx].conn_state == BLE_DEVICE_CONNECTED) {
+		if(ble_dev_info[idx].conn_state != BLE_DEVICE_DEFAULT_IDLE && ble_dev_info[idx].conn_state != BLE_DEVICE_DISCONNECTED) {
 			DBG_LOG("Pairing failed...Disconnecting");
 			if(!(at_ble_disconnect(pairing_params->handle, AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS))
 			{
