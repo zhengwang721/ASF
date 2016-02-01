@@ -1209,23 +1209,24 @@ at_ble_status_t ble_pair_key_request_handler (void *params)
 	memcpy((uint8_t *)&pair_key_request, pair_key, sizeof(at_ble_pair_key_request_t));
 	
 	if (pair_key_request.passkey_type == AT_BLE_PAIR_PASSKEY_ENTRY) {
-	  DBG_LOG("Enter the Passkey(6-Digit) in Terminal:");
-	  for (idx = 0; idx < 6;) {          
-			pin = getchar_b11();
-			//GET_CHAR(&pin);
-		if (!pin) {
+		DBG_LOG("Enter the Passkey(6-Digit) in Terminal:");
+		for (idx = 0; idx < 6;) {          
+			pin = getchar_b11_timeout(CHECK_PAIRING_KEY_TIME_OUT);
+
+			if (!pin) {
 			DBG_LOG("Pin Timeout");
-			DBG_LOG("Disconnecting ...");
-			if (!(at_ble_disconnect(pair_key->handle,
-						AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS)) {
-				DBG_LOG("Disconnect Request Failed");
+				DBG_LOG("Disconnecting ...");
+				if (!(at_ble_disconnect(pair_key->handle,
+							AT_BLE_TERMINATED_BY_USER) == AT_BLE_SUCCESS)) {
+					DBG_LOG("Disconnect Request Failed");
+				}
+				return AT_BLE_FAILURE;
 			}
-			return AT_BLE_FAILURE;
-		}
-		if ((pin >= '0') && ( pin <= '9')) {
-		  passkey[idx++] = pin;
-		  DBG_LOG_CONT("%c", pin);
-		} 
+			
+			if ((pin >= '0') && ( pin <= '9')) {
+			  passkey[idx++] = pin;
+			  DBG_LOG_CONT("%c", pin);
+			} 
 	  }
 	}	
 	
