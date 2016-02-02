@@ -242,6 +242,11 @@ static void ble_init(void)
 		DBG_LOG("Please check the power and connection / hardware connector");
 		while(1);
 	}
+	if (at_ble_calib_config(0, 2, 2) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Auto-Calibration Disable cmd Failed");
+	}
+	
 }
 
 /* Define service, advertisement data set and start advertisement */
@@ -263,7 +268,7 @@ static void beacon_init(void)
 	}
 	
 	/* BLE start advertisement */
-	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 
+	if(at_ble_adv_start(AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 
 	   BEACON_ADV_INTERVAL, BEACON_ADV_TIMEOUT, BEACON_ABSOLUTE_INTERVAL_ADV) != AT_BLE_SUCCESS)
 	{
 		DBG_LOG("BLE Beacon advertisement failed");
