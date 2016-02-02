@@ -43,6 +43,36 @@
 
 #ifndef CONF_SERIALDRV_H_INCLUDED
 #define CONF_SERIALDRV_H_INCLUDED
+#if SAM4S
+	/* In order to fix compilation during jenkins validation job added the following dummy macros*/
+	#ifndef EXT1_PIN_4
+	#define EXT1_PIN_4
+	#endif
+	
+	#ifndef EXT1_PIN_10
+	#define EXT1_PIN_10
+	#endif
+	
+	#ifndef EXT1_PIN_6
+	#define EXT1_PIN_6
+	#endif
+	
+	#ifndef EXT1_PIN_13
+	#define EXT1_PIN_13
+	#endif
+	
+	#ifndef EXT1_PIN_14
+	#define EXT1_PIN_14
+	#endif
+	
+	#ifndef EXT1_PIN_5
+	#define EXT1_PIN_5
+	#endif
+	
+	#ifndef EXT1_UART_MODULE
+	#define EXT1_UART_MODULE
+	#endif
+#endif	
 
 #if (UART_FLOWCONTROL_6WIRE_MODE == true)
 #error "This mode is not supported in SAM4S, due to insufficient of UART's in SAM4S XPro Extension Headers"

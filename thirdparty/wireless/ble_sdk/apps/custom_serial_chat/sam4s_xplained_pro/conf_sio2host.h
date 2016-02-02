@@ -45,7 +45,7 @@
 #define SERIAL_RX_BUF_SIZE_HOST    156
 
 /** USART Interface */
-#define USART_HOST                 CONSOLE_UART
+#define USART_HOST                 (Usart *)CONSOLE_UART
 /** Baudrate setting */
 #define USART_HOST_BAUDRATE        115200
 /** Character length setting */
@@ -59,7 +59,7 @@
 
 #define USART_HOST_IRQn			   UART1_IRQn
 
-#define USART_HOST_RX_ISR_ENABLE() uart_enable_interrupt(USART_HOST, \
+#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, \
 US_IER_RXRDY); \
 NVIC_EnableIRQ(USART_HOST_IRQn);
 

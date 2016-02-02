@@ -44,11 +44,21 @@
 #ifndef __CONF_SERIALBRIDGE__
 #define __CONF_SERIALBRIDGE__
 
-#define SB_UART				USART7
-#define SB_UART_ID		    ID_FLEXCOM7
-#define SB_USART_FLEXCOM	FLEXCOM7
-#define SB_UART_IRQn		FLEXCOM7_IRQn
-/* Configuration for console uart IRQ handler */
-#define SB_UART_Handler    FLEXCOM7_Handler
+#if SAMG55
+	#define SB_UART				USART7
+	#define SB_UART_ID		    ID_FLEXCOM7
+	#define SB_USART_FLEXCOM	FLEXCOM7
+	#define SB_UART_IRQn		FLEXCOM7_IRQn
+	/* Configuration for console uart IRQ handler */
+	#define SB_UART_Handler    FLEXCOM7_Handler
+#endif
+
+#if SAM4S
+	#define SB_UART				UART1
+	#define SB_UART_ID		    ID_UART1
+	#define SB_UART_IRQn		UART1_IRQn
+	/* Configuration for console uart IRQ handler */
+	#define SB_UART_Handler    UART1_Handler
+#endif
 
 #endif /* __CONF_SERIALBRIDGE__ */
