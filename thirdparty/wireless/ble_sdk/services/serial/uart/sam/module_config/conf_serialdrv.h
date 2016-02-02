@@ -74,31 +74,35 @@
 	#endif
 
 	#ifndef EXT1_PIN_4
-	#define EXT1_PIN_4 
+	#define EXT1_PIN_4 		PIO_PA18_IDX
 	#endif
 	
 	#ifndef EXT1_PIN_10
-	#define EXT1_PIN_10
+	#define EXT1_PIN_10		PIO_PA6_IDX
 	#endif
 	
 	#ifndef EXT1_PIN_6
-	#define EXT1_PIN_6 
+	#define EXT1_PIN_6 		PIO_PA24_IDX
 	#endif
 	
-	#ifndef EXT1_PIN_13
-	#define EXT1_PIN_13 
+	#ifndef EXT1_PIN_13	
+	#define EXT1_PIN_13 	PIO_PA21_IDX
 	#endif
 	
 	#ifndef EXT1_PIN_14
-	#define EXT1_PIN_14
+	#define EXT1_PIN_14		PIO_PA22_IDX
 	#endif
 	
 	#ifndef EXT1_PIN_5
-	#define EXT1_PIN_5 
+	#define EXT1_PIN_5 		PIO_PA25_IDX
 	#endif
 	
 	#ifndef EXT1_UART_MODULE
-	#define EXT1_UART_MODULE
+	#define EXT1_UART_MODULE	USART1
+	#endif
+	
+	#ifndef LED0
+	#define LED0			LED0_GPIO
 	#endif
 		
 	#if (UART_FLOWCONTROL_4WIRE_MODE == true)
