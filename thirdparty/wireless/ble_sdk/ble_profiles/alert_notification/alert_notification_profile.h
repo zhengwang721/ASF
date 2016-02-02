@@ -112,6 +112,13 @@
 #define AT_BLE_DISCOVERY_SUCCESS					(10)
 //#define AT_BLE_INSUFF_RESOURCE						AT_BLE_ATT_INSUFF_RESOURCE
 
+/* Missing definition to be added here */
+#if SAM4S
+#ifndef LED0
+#define LED0 LED0_GPIO
+#endif
+#endif
+
 /***********************************************************************************
  *									types			                               *
  **********************************************************************************/
