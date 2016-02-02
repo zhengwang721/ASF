@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief MEGA LED Example
+ * \brief Atmega324pb Xplained Pro Example
  *
- * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,64 +40,27 @@
  * \asf_license_stop
  *
  */
-
-/**
- * \mainpage MEGA LED Example
- * See \ref appdoc_main "here" for project documentation.
- * \copydetails appdoc_preface
- *
- *
- * \page appdoc_preface Overview
- * This application demonstrates a simple example to turn on and off the board LED.
- */
-
-/**
- * \page appdoc_main MEGA LED Example
- *
- * Overview:
- * - \ref appdoc_mega_led_app_intro
- * - \ref appdoc_mega_led_app_usage
- * - \ref appdoc_mega_led_app_compinfo
- * - \ref appdoc_mega_led_app_contactinfo
- *
- * \section appdoc_mega_led_app_intro Introduction
- * This application demonstrates a simple example turn on and off the board LED.
- *
- * This application has been tested on following boards:
- * - ATmega328p Xplained Mini
- * - ATmega328pb Xplained Mini
- * - ATmega168pb Xplained Mini
- * - ATmega324pb Xplained PRO
- *
- * \section appdoc_mega_led_app_usage Usage
- * The application uses button to control the LED, 
- * once the button is pressed, LED0 will turn on
- * once the button is released, LED0 will turn off
- *
- * \section appdoc_mega_led_app_compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for MEGA.
- * Other compilers may or may not work.
- *
- * \section appdoc_mega_led_app_contactinfo Contact Information
- * For further information, visit
- * <a href="http://www.atmel.com">http://www.atmel.com</a>.
- */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-#include <asf.h>
-int main (void)
-{
-	/* set board io port */
-	board_init();
-	bool button_state;
-	while(1){
-		button_state = ioport_get_pin_level(GPIO_PUSH_BUTTON_0);
-		if(button_state){
-			LED_Off(LED0);
-		}else{
-			LED_On(LED0);
-		}
-	}	
-}
+/* ===== System Clock Source Options */
+#define BOARD_EXTERNAL_CLK    16000000UL
+
+/* ===== System Clock Source Options */
+#define SYSCLK_SRC_RC16MHZ    0
+#define SYSCLK_SRC_RC128KHZ   1
+#define SYSCLK_SRC_TRS16MHZ   2
+#define SYSCLK_SRC_RC32KHZ    3
+#define SYSCLK_SRC_XOC16MHZ   4
+#define SYSCLK_SRC_EXTERNAL   5
+
+#define SYSCLK_SOURCE         SYSCLK_SRC_EXTERNAL
+
+/* ===== System Clock Bus Division Options */
+
+#define CONFIG_SYSCLK_PSDIV   SYSCLK_PSDIV_1
+
+#endif /* CONF_CLOCK_H_INCLUDED */
