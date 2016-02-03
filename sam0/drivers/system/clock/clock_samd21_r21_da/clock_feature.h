@@ -103,7 +103,7 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_SYSTEM_CLOCK_DPLL</td>
- *		<td>SAMD21, SAMR21, SAMD10, SAMD11, SAMDAx</td>
+ *		<td>SAM D21, SAM R21, SAM D10, SAM D11, SAM DA1</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
