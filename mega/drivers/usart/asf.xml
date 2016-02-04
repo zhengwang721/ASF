@@ -35,8 +35,24 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="mega.utils"/>
 			<require idref="mega.drivers.ioport"/>
-			<generator value="doxygen-module" default-mcu="unspecified-megax8"/>
-			
+			<generator value="doxygen-module" default-mcu="unspecified-megax8"/>			
+		</module>
+		<module type="driver" id="mega.drivers.usart#mega324pb" caption="USART - Universal Synchronous/Asynchronous Receiver/Transmitter">
+			<info type="description" value="summary">
+			Mega Driver for the Universal Synchronous and Asynchronous Serial Receiver and Transmitter (USART).
+			Provides functions for configuring and using the USART in RS232 and SPI mode.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Communication" />
+			</info>
+			<build type="c-source" value="usart_mega.c"/>
+			<build type="header-file" subtype="api" value="usart_mega.h"/>
+			<build type="include-path" value="."/>
+
+			<device-support value="atmega324pb"/>
+			<require idref="common.services.basic.clock"/>
+			<require idref="mega.utils"/>
+			<require idref="mega.drivers.ioport"/>	
 		</module>
 	</select-by-device>
 </asf>
