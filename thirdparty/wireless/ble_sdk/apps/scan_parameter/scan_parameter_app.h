@@ -3,7 +3,7 @@
  *
  * \brief Scan Parameters Service Declarations
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,7 +55,7 @@
 #define APP_SCP_FAST_ADV				(100) //100 ms
 
 /** @brief APP_BAS_ADV_TIMEOUT Advertising time-out between 0x0001 and 0x3FFF in seconds, 0x0000 disables time-out.*/
-#define APP_SCP_ADV_TIMEOUT				(1000) // 100 Secs
+#define APP_SCP_ADV_TIMEOUT				(655) // 10 min
 
 /**
 * \Timer callback handler called on timer expiry
