@@ -33,6 +33,7 @@
 				<build type="module-config" subtype="required-header-file" value="conf_timer.h"/>
 				<build type="module-config" subtype="path" value="sam/module_config"/>
 				<device-support value="samg55"/>
+				<device-support value="sam4sd32"/>
 			</module>
 		</select-by-device>
 	</select-by-config>

@@ -3,7 +3,7 @@
 *
 * \brief ANCS Profile
 *
-* Copyright (c) 2015 Atmel Corporation. All rights reserved.
+* Copyright (c) 2016 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -122,25 +122,6 @@ void anp_info_init(void)
  */
 void anp_client_adv(void)
 {
-	//uint8_t idx = 0;
-	//uint8_t adv_data[ANP_ADV_DATA_NAME_LEN + ANP_SOLICITATION_LEN + 2*2];
-	//
-	//// Prepare ADV Data
-	//adv_data[idx++] = ANP_ADV_DATA_NAME_LEN + ADV_TYPE_LEN;
-	//adv_data[idx++] = ANP_ADV_DATA_NAME_TYPE;
-	//memcpy(&adv_data[idx], ANP_ADV_DATA_NAME_DATA, ANP_ADV_DATA_NAME_LEN);
-	//idx += ANP_ADV_DATA_NAME_LEN;
-	//
-	//adv_data[idx++] = ANP_SOLICITATION_LEN + ADV_TYPE_LEN;
-	//adv_data[idx++] = ANP_ADV_DATA_SERVSOLICITATION_128UUID_TYPE;
-	//memcpy(&adv_data[idx], ANP_ANCS_SERVICE_UUID, ANP_SOLICITATION_LEN);
-	//idx += ANP_SOLICITATION_LEN;
-	//
-	//if (at_ble_adv_data_set(adv_data, idx, scan_rsp_data, SCAN_RESP_LEN) != AT_BLE_SUCCESS) 
-	//{
-		//DBG_LOG("adv set data not successful");
-	//}
-	
 	if(at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY,
 	APP_ANP_FAST_ADV, APP_ANP_ADV_TIMEOUT, 0) != AT_BLE_SUCCESS)
 	{
@@ -202,9 +183,6 @@ at_ble_status_t anp_client_discovery_complete_handler(void *params)
 				}
 			} else if(discover_status.operation == AT_BLE_DISC_DESC_CHAR) {
 				app_anp_info.devicedb = TRUE;
-				if(ble_send_slave_sec_request(app_anp_info.conn_params.handle) != AT_BLE_SUCCESS) {
-					DBG_LOG("Fail to start security procedure");
-				}
 				
 			}
 		}
@@ -250,7 +228,7 @@ at_ble_status_t anp_client_characteristic_found_handler(void *params)
 		memcpy((uint8_t *)&ancs_data.data_source_char, &app_anp_info.char_info, sizeof(at_ble_characteristic_found_t));
 	}
 	
-	DBG_LOG("Characteristic Info:\r\n -->ConnHandle: 0x%02x\r\n -->Char handle: "
+	DBG_LOG_DEV("Characteristic Info:\r\n -->ConnHandle: 0x%02x\r\n -->Char handle: "
 			"0x%02x\r\n -->Value handle: 0x%02x\r\n -->Properties: 0x%02x",
 			app_anp_info.char_info.conn_handle,
 			app_anp_info.char_info.char_handle,

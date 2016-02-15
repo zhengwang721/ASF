@@ -3,7 +3,7 @@
  *
  * \brief Morse Code Encoder/Decorder example
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -66,6 +66,7 @@
  * - ATmega328p Xplained Mini
  * - ATmega328pb Xplained Mini
  * - ATmega168pb Xplained Mini
+ * - ATmega324pb Xplained Pro
  *
  * \section appdoc_mega_remorse_app_usage Usage
  * The application uses usart to receive input and output remorse result, 
@@ -266,7 +267,11 @@ int main (void)
 		.paritytype = CONF_PARITY,
 		.stopbits   = CONF_STOPBITS
 	};
+#if AVR8_PART_IS_DEFINED(ATmega324PB)
+	usart_init_rs232(&USART1, &options);
+#else
 	usart_init_rs232(&USART0, &options);
+#endif
 
 	/* set up the system 100Hz timer */
 	/* Set CTC compare value to 10ms @ 8Mhz Clock (Mode 4) */
@@ -351,12 +356,21 @@ static int bsp_tty_putchar(char c, FILE *stream)
 		bsp_tty_putchar('\r', stream);
 	}
 	
+#if AVR8_PART_IS_DEFINED(ATmega324PB)
+	while (!usart_data_register_is_empty(&USART1)) {
+		// Do nothing until UDR is ready for more data to be written to it
+	};
+
+	// transmit character
+	usart_put(&USART1, c);
+#else
 	while (!usart_data_register_is_empty(&USART0)) {
 		// Do nothing until UDR is ready for more data to be written to it
 	};
 
 	// transmit character
 	usart_put(&USART0, c);
+#endif
 	// transmit success
 	return (0);
 }
@@ -370,7 +384,8 @@ static int bsp_tty_putchar(char c, FILE *stream)
 
 static int bsp_tty_getchar(FILE *stream)
 {
-	if (!usart_rx_is_complete(&USART0)) {
+#if AVR8_PART_IS_DEFINED(ATmega324PB)
+	if (!usart_rx_is_complete(&USART1)) {
 		// No character available, so we return error
 		return (_FDEV_ERR);
 	}	
@@ -378,7 +393,18 @@ static int bsp_tty_getchar(FILE *stream)
 	// Record the fact that we have received input
 	user_input = true;
 	// Return the received character
+	return usart_get(&USART1);
+#else
+	if (!usart_rx_is_complete(&USART0)) {
+		// No character available, so we return error
+		return (_FDEV_ERR);
+	}
+
+	// Record the fact that we have received input
+	user_input = true;
+	// Return the received character
 	return usart_get(&USART0);
+#endif
 }
 
 /**
@@ -501,7 +527,7 @@ static void remorse_instructions (void)
 	if (!user_input) {
 		printf_P (PSTR("\n"));
 		printf_P (PSTR("Morse Encoder/Decoder\n"));
-		printf_P (PSTR("Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.\n"));
+		printf_P (PSTR("Copyright (c) 2015 - 2016 Atmel Corporation. All rights reserved.\n"));
 		printf_P (PSTR("\n"));
 		printf_P (PSTR("Characters received from the serial port will be be echoed back in morse code.\n"));
 		printf_P (PSTR("Morse code tapped into button will be converted to ASCII.\n"));
