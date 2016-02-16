@@ -7,7 +7,6 @@
 		<require idref="thirdparty.wireless.ble_smart_sdk.apps.config.samb11"/>		
 		<build type="include-path" value="../../config/samb11/"/>
 		<build type="header-file" value="../../config/samb11/conf_board.h"/>
-		<build type="header-file" value="../../config/samb11/conf_timer.h"/>
 		<build type="header-file" value="../../config/samb11/conf_dualtimer.h"/>
 		<build type="header-file" value="../../config/samb11/conf_uart_serial.h"/>
 		<require idref="board.samb11_xplained_pro"/>
