@@ -6,10 +6,7 @@
 		<build type="include-path"  value="./"/>
 		<build type="header-file"   value="timer_hw.h"/> 
 		<build type="c-source" value="timer_hw.c"/>
-
-		<build type="header-file" value="conf_timer.h"/>
-		<build type="header-file" value="conf_dualtimer.h"/>
-
+		
 		<build type="module-config" subtype="required-header-file" value="conf_uart_serial.h"/>
 		<build type="module-config" subtype="required-header-file" value="conf_dualtimer.h"/>
 		<build type="module-config" subtype="path" value="module_config"/> 
