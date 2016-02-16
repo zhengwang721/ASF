@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief SAMB11 UART configuration.
  *
- * Copyright (c) 2016 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,20 +40,21 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
+
+#ifndef CONF_UART_SERIAL_H
+#define CONF_UART_SERIAL_H
 
 #include <board.h>
-
-#define AT30TSE_I2C_MODULE  I2C0
-
-#define AT30TSE_PIN_PAD0 PIN_LP_GPIO_8_MUX2_I2C0_SDA
-#define AT30TSE_PIN_PAD1 PIN_LP_GPIO_9_MUX2_I2C0_SCL
-
-#define AT30TSE_MUX_PAD0 MUX_LP_GPIO_8_MUX2_I2C0_SDA
-#define AT30TSE_MUX_PAD1 MUX_LP_GPIO_9_MUX2_I2C0_SCL
-
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+/* ! [conf_uart_serial_settings] */
+#define CONF_STDIO_USART_MODULE  EDBG_CDC_MODULE
+#define CONF_STDIO_PINMUX_PAD0   EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1   EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2   EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE      38400
+/* ! [conf_uart_serial_settings] */
+#endif /* CONF_UART_SERIAL_H */

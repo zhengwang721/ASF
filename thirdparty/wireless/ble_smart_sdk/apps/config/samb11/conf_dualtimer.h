@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief AT30TSE75X Temperature sensor driver configuration file.
+ * \brief DUALTIMER Quick Start configuration
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -40,20 +40,11 @@
  * \asf_license_stop
  *
  */
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-#ifndef CONF_AT30TSE75X_H_INCLUDED
-#define CONF_AT30TSE75X_H_INCLUDED
 
-#include <board.h>
+#ifndef CONF_QUICK_START_H_INCLUDED
+#define CONF_QUICK_START_H_INCLUDED
 
-#define AT30TSE_I2C_MODULE  I2C0
+#define CONF_DUALTIMER_TIMER1_LOAD    26000000
+#define CONF_DUALTIMER_TIMER2_LOAD    (2*CONF_DUALTIMER_TIMER1_LOAD)
 
-#define AT30TSE_PIN_PAD0 PIN_LP_GPIO_8_MUX2_I2C0_SDA
-#define AT30TSE_PIN_PAD1 PIN_LP_GPIO_9_MUX2_I2C0_SCL
-
-#define AT30TSE_MUX_PAD0 MUX_LP_GPIO_8_MUX2_I2C0_SDA
-#define AT30TSE_MUX_PAD1 MUX_LP_GPIO_9_MUX2_I2C0_SCL
-
-#endif /* CONF_AT30TSE75X_H_INCLUDED */
+#endif /* CONF_QUICK_START_H_INCLUDED */
