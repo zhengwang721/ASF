@@ -7,7 +7,7 @@
 		<build type="header-file"   value="console_serial.h"/> 
 		<build type="c-source" value="console_serial.c"/>
 
-		<build type="module-config" subtype="required-header-file" value="conf_uart_serial.h"/>
+		<build type="module-config" subtype="required-header-file" value="conf_console_serial.h"/>
 		<build type="module-config" subtype="path" value="module_config"/> 
 
 		<require idref="sam0.utils"/>

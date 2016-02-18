@@ -1,5 +1,5 @@
 #include <asf.h>
-#include <conf_uart_serial.h>
+#include <conf_console_serial.h>
 #include <string.h>
 #include <stdarg.h>
 
@@ -26,7 +26,7 @@ void serial_console_init(void)
 
 	uart_get_config_defaults(&config_uart);
 
-	config_uart.baud_rate = 115200;
+	config_uart.baud_rate = CONF_STDIO_BAUDRATE;
 	config_uart.pin_number_pad[0] = EDBG_CDC_SERCOM_PIN_PAD0;
 	config_uart.pin_number_pad[1] = EDBG_CDC_SERCOM_PIN_PAD1;
 	config_uart.pin_number_pad[2] = EDBG_CDC_SERCOM_PIN_PAD2;

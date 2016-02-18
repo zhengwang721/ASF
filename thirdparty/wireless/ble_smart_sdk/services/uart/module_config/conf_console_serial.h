@@ -45,16 +45,23 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_UART_SERIAL_H
-#define CONF_UART_SERIAL_H
+#ifndef CONF_CONSOLE_SERIAL_H
+#define CONF_CONSOLE_SERIAL_H
 
 #include <board.h>
-/* ! [conf_uart_serial_settings] */
+/* ! [conf_console_serial_settings] */
 #define CONF_STDIO_USART_MODULE  EDBG_CDC_MODULE
-#define CONF_STDIO_PINMUX_PAD0   EDBG_CDC_SERCOM_PINMUX_PAD0
-#define CONF_STDIO_PINMUX_PAD1   EDBG_CDC_SERCOM_PINMUX_PAD1
-#define CONF_STDIO_PINMUX_PAD2   EDBG_CDC_SERCOM_PINMUX_PAD2
-#define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
-#define CONF_STDIO_BAUDRATE      38400
-/* ! [conf_uart_serial_settings] */
-#endif /* CONF_UART_SERIAL_H */
+
+#define CONF_STDIO_PIN_PAD0   EDBG_CDC_SERCOM_PIN_PAD0
+#define CONF_STDIO_PIN_PAD1   EDBG_CDC_SERCOM_PIN_PAD1
+#define CONF_STDIO_PIN_PAD2   EDBG_CDC_SERCOM_PIN_PAD2
+#define CONF_STDIO_PIN_PAD3   EDBG_CDC_SERCOM_PIN_PAD3
+
+#define CONF_STDIO_MUX_PAD0   EDBG_CDC_SERCOM_MUX_PAD0
+#define CONF_STDIO_MUX_PAD1   EDBG_CDC_SERCOM_MUX_PAD1
+#define CONF_STDIO_MUX_PAD2   EDBG_CDC_SERCOM_MUX_PAD2
+#define CONF_STDIO_MUX_PAD3   EDBG_CDC_SERCOM_MUX_PAD3
+#define CONF_STDIO_BAUDRATE   115200
+
+/* ! [conf_console_serial_settings] */
+#endif /* CONF_CONSOLE_SERIAL_H */
