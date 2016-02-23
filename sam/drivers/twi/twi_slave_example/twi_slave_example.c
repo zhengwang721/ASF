@@ -192,6 +192,7 @@ void BOARD_TWI_Handler(void)
 					&& ((status & TWI_SR_GACC) == 0)
 					&& (emulate_driver.uc_acquire_address == 3)
 					&& ((status & TWI_SR_SVREAD) == TWI_SR_SVREAD)
+					&& ((status & TWI_SR_TXRDY) == TWI_SR_TXRDY)
 					&& ((status & TWI_SR_NACK) == 0)) {
 				/* Write one byte of data from slave to master device */
 				twi_write_byte(BOARD_BASE_TWI_SLAVE,
