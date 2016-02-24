@@ -131,7 +131,7 @@ void init_port_list(void)
 	port_list[0].bit.available = 0;
 	port_list[1].bit.available = 0;
 	//GPIO 14 is used for Coex and controlled by Firmware
-	port_list[14].bit.available = 0;
+	//port_list[14].bit.available = 0;
 }
 
 void init_clock(void)
@@ -330,25 +330,30 @@ plf_drv_status platform_register_ble_msg_handler(platform_interface_callback fp)
 
 static void at_ke_msg_send(void const * param_ptr)
 {
+	struct ke_msg *kemsg;
 	uint8_t osc_en = REG_PL_RD(0x4000B1EC)&0x01;
 	ke_msg_send(param_ptr);
-	if(osc_en == 0)
-	{
-		/* BLE Core is off, issue a wakeup request*/
-		/* First, make sure PD4 is powered up and out of reset */
-		pwr_enable_arm_wakeup(1<<1);
-		pwr_arm_wakeup_req();
-		while (pwr_wait_BLE_out_of_reset(3));
-		pwr_disable_arm_wakeup(1<<1);
-		REG_PL_WR(0x4000B020, 1);
-		#ifndef CHIPVERSION_B0
-		while(REG_PL_RD(0x4000B020));
-		#endif	//CHIPVERSION_B0
-	}
-	else
-	{
-		/*  */
-		os_sem_up(gstrFwSem);
+	kemsg = ke_param2msg(param_ptr);
+
+	if((kemsg != NULL) && (kemsg->dest_id != TASK_INTERNAL_APP)) {
+		if(osc_en == 0)
+		{
+			/* BLE Core is off, issue a wakeup request*/
+			/* First, make sure PD4 is powered up and out of reset */
+			pwr_enable_arm_wakeup(1<<1);
+			pwr_arm_wakeup_req();
+			while (pwr_wait_BLE_out_of_reset(3));
+			pwr_disable_arm_wakeup(1<<1);
+			REG_PL_WR(0x4000B020, 1);
+#ifndef CHIPVERSION_B0
+			while(REG_PL_RD(0x4000B020));
+#endif	//CHIPVERSION_B0
+		}
+		else
+		{
+			/*  */
+			os_sem_up(gstrFwSem);
+		}
 	}
 }
 
@@ -388,7 +393,7 @@ void send_plf_int_msg_ind(uint8_t intr_index, uint8_t callback_id, void *data, u
 {
 	void* params;
 //#if (CHIPVERSION_A4)	
-	os_sem_up(gstrFwSem);
+	//os_sem_up(gstrFwSem);
 //#endif
 	// Allocate the kernel message
 	params = ke_msg_alloc(PERIPHERAL_INTERRUPT_EVENT, TASK_INTERNAL_APP, BUILD_INTR_SRCID(callback_id,intr_index), data_len);
@@ -467,10 +472,6 @@ static int NMI_MsgQueueDestroyOnKeID(NMI_MsgQueueHandle* pHandle, ke_msg_id_t u1
 	return num_of_freed;
 }
 
-//Waits on InternalAppMsgQHandle Queue
-// This function won't busy wait if nothing on queue but will down the semaphore and go to a blocking state
-// The OS then will move control to other higher priority tasks and will only return if these tasks finish processing AND the queue has received 
-//a msg
 static void platform_start_event_timeout(uint32_t timeout)
 {
 	uint8_t msg[8+5] = {0};
@@ -519,6 +520,10 @@ static void platform_stop_event_timeout(void)
 	platform_interface_send(msg, u16TxLen);
 }
 
+//Waits on InternalAppMsgQHandle Queue
+// This function won't busy wait if nothing on queue but will down the semaphore and go to a blocking state
+// The OS then will move control to other higher priority tasks and will only return if these tasks finish processing AND the queue has received 
+//a msg
 plf_drv_status platform_event_wait(uint32_t timeout)
 {
 	static struct ke_msg* rcv_msg;
@@ -613,6 +618,7 @@ plf_drv_status acquire_sleep_lock()
 	uint8_t osc_en = REG_PL_RD(0x4000B1EC)&0x01;
 	
 	rwip_prevent_sleep_set(APP_PREVENT_SLEEP);
+#if 0
 	if(osc_en == 0)
 	{
 		/* BLE Core is off, issue a wakeup request*/
@@ -629,14 +635,23 @@ plf_drv_status acquire_sleep_lock()
 	else
 	{
 		/*  */
-		 os_sem_up(gstrFwSem);
+		os_sem_up(gstrFwSem);
 	}
+#endif	//0
+	return status;
+}
+
+plf_drv_status release_message_lock()
+{
+	plf_drv_status status = STATUS_SUCCESS;
+	rwip_prevent_sleep_clear(MSG_PREVENT_SLEEP);
 	return status;
 }
 
 plf_drv_status release_sleep_lock()
 {
 	plf_drv_status status = STATUS_SUCCESS;
+	rwip_prevent_sleep_clear(MSG_PREVENT_SLEEP);
 	rwip_prevent_sleep_clear(APP_PREVENT_SLEEP);
 	return status;
 }
@@ -665,4 +680,33 @@ plf_drv_status register_resume_callback(resume_callback cb)
 		//*apps_resume_cb = (uint32_t)cb;
 	}
 	return status;
+}
+
+void platform_chip_reset(void)
+{
+	volatile uint32_t loop=0;
+#ifdef SAMB11
+	//Coldboot registers
+	*((uint32_t *)0x4000F040) = 0x00;
+	*((uint32_t *)0x4000F044) = 0x78;
+	//Make sure to reset all peripherals
+	//lpmcu_global_reset_1
+	*((uint32_t *)0x4000B008) = 0x00;
+	//lpmcu_wakeup_ctrl; open PD7
+	*((uint32_t *)0x4000E010) = 0x0200;
+	//arm_sleep_wakeup_ctrl[16] //by Mohamed AbdelMoneem, includes 543210 delay below them
+	*((uint32_t *)0x4000B190) = (*((uint32_t *)0x4000B190) & ~(0x00010000));
+	*((uint32_t *)0x4000B190) = (*((uint32_t *)0x4000B190) |  (0x00010000));
+	*((uint32_t *)0x4000B190) = (*((uint32_t *)0x4000B190) & ~(0x00010000));
+	//dummy loop
+	for(loop=0; loop<543210;loop++);
+	//efuse_global_reset
+	*((uint32_t *)0x4000A000) = 0x0;
+	//dummy loop
+	for(loop=0; loop<43210;loop++);
+	//lpmcu_global_reset_0
+	*((uint32_t *)0x4000B004) = 0x00;
+#else
+#endif
+	return;
 }

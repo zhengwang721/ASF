@@ -54,7 +54,9 @@ typedef void (*platform_interface_callback) (uint8_t *, uint32_t );
 /** callback function type for handling resume from sleep */
 typedef void (*resume_callback) (void);
 	
+#define MSG_PREVENT_SLEEP	(0x4000)
 #define APP_PREVENT_SLEEP	(0x8000)
+
 /** enumerated status values for this platform driver */
 typedef enum PLATFORM_STATUS
 {
@@ -222,6 +224,7 @@ plf_drv_status acquire_sleep_lock(void);
  *
  */
 plf_drv_status release_sleep_lock(void);
+plf_drv_status release_message_lock(void);
 
 /**
  * \brief API to register a callback function when system resumes from sleep(ULP).
@@ -246,6 +249,14 @@ plf_drv_status register_resume_callback(resume_callback cb);
  *
  */
 void init_port_list(void);
+
+/** @ingroup platform-drv
+  * @brief Reset BLE Chip.
+  * @note This function will reset whole SoC, All running tasks including current will be terminated 
+  * @warning This function should be called in BLE Context [event get loop] ONLY. 
+  *          If you want to post is as separate event, use @ref at_ble_event_user_defined_post.
+  */
+void platform_chip_reset(void);
 /** @} */
 
 /** @} */

@@ -60,10 +60,10 @@ enum {
 typedef union {
 	uint16_t val;
 	struct {
-		uint8_t muxval : 8;
-		uint8_t pinnum : 8;
-	} bit_pinumx;
-} pinumx;
+		uint8_t	muxval:8;
+		uint8_t	pinnum:8;
+	}bit;
+}pinumx;
 
 typedef union {
 	uint16_t port_info;

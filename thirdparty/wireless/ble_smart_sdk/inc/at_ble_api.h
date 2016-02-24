@@ -53,10 +53,10 @@
 #else  //AT_BLE_EXPORTS
 #define AT_BLE_API __declspec(dllimport)
 #endif  //AT_BLE_EXPORTS
-///@endcond
 #else //WIN32
 #define AT_BLE_API
 #endif //WIN32
+///@endcond
 
 #ifdef __cplusplus
 extern "C" {
@@ -2185,15 +2185,6 @@ typedef struct
 /** @}*/
 
 
-// Platform APIs
-/**
-* @defgroup platform_group Platform APIs
-* @brief    This group includes all platform specific data types and APIs
-* @{
-*/
-/** @}*/
-
-
 // Error Codes
 /**
 * @defgroup error_codes_group Error codes
@@ -2239,17 +2230,6 @@ at_ble_status_t at_ble_init(at_ble_init_config_t *args);
 AT_BLE_API
 ///@endcond
 at_ble_status_t at_ble_ll_reset(void);
-
-/** @ingroup gap_dev_config_group
-  * @brief Reset BLE Chip.
-  * @note This function will reset whole SoC, All running tasks including current will be terminated 
-  * @warning This function should be called in BLE Context [event get loop] ONLY. 
-  *          If you want to post is as separate event, use @ref at_ble_event_user_defined_post.
-  */
-///@cond IGNORE_DOXYGEN
-AT_BLE_API
-///@endcond
-void at_ble_chip_reset(void);
 
 /** @ingroup gap_dev_config_group
   * @brief Set GAP attribute data base (Appearance , slave preferred connection parameters ,
@@ -2943,7 +2923,7 @@ at_ble_status_t read_32_from_BTLC1000(uint32_t address, uint32_t *value);
 /** @ingroup gap_misc_group
  *@brief Gets BTLC1000 Firmware version
  *
- * @param[out] chip_id BTLC1000 firmware version
+ * @param[out] fw_version BTLC1000 firmware version
  *
  * @warning Not Supported before release version 2.5
  *

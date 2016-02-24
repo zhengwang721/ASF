@@ -61,7 +61,6 @@ enum dbg_msg_id
     DBG_WLAN_COEX_REQ,
 
     DBG_RD_MEM_INFO_REQ,
-    DBG_KE_TIMER_REQ,
     
     DBG_MSG_ID_EVT_FIRST,
 
@@ -97,9 +96,22 @@ enum dbg_msg_id
     DBG_WLAN_COEX_CMP_EVT,
 
     DBG_RD_MEM_INFO_CMP_EVT,
-	DBG_KE_TIMER_RESP,
 	
-    DBG_MSG_ID_EVT_LAST
+    DBG_MSG_ID_EVT_LAST_FIRST
+};
+
+enum 
+{
+	//CMDs
+	DBG_MSG_ID_CMD_SECOND = DBG_MSG_ID_EVT_LAST_FIRST,
+	DBG_KE_TIMER_REQ = DBG_MSG_ID_CMD_SECOND,
+	
+	//EVTs
+	DBG_MSG_ID_EVT_SECOND,
+	DBG_KE_TIMER_RESP = DBG_MSG_ID_EVT_SECOND,
+	
+	//EndOfDbgEnum
+	DBG_MSG_ID_EVT_LAST
 };
 
 typedef struct _tstrOsTask{
