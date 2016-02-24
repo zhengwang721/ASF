@@ -615,7 +615,7 @@ plf_drv_status platform_event_wait(uint32_t timeout)
 plf_drv_status acquire_sleep_lock()
 {
 	plf_drv_status status = STATUS_RESOURCE_BUSY;
-	uint8_t osc_en = REG_PL_RD(0x4000B1EC)&0x01;
+	//uint8_t osc_en = REG_PL_RD(0x4000B1EC)&0x01;
 	
 	rwip_prevent_sleep_set(APP_PREVENT_SLEEP);
 #if 0
