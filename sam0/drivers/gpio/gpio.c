@@ -104,10 +104,10 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 	/* Following GPIO's should never be modified by user.
 	* GPIO_0 & GPIO_1 are used for SWD
 	* GPIO_14 is used by firmware for coex.
+	* GPIO_14 is not coex signal anymore, it is now free
 	*/
 	if ((gpio_pin == PIN_LP_GPIO_0) || \
-		(gpio_pin == PIN_LP_GPIO_1) || \
-		(gpio_pin == PIN_LP_GPIO_14))
+		(gpio_pin == PIN_LP_GPIO_1))
 	{
 		status = STATUS_ERR_INVALID_ARG;
 	} else {
