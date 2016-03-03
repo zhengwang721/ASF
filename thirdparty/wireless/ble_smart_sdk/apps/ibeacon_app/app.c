@@ -54,7 +54,7 @@
 #include "at_ble_api.h"
 #include <asf.h>
 #include <string.h>
-#include <conf_uart_serial.h>
+#include <conf_console_serial.h>
 #include "platform.h"
 #ifndef NULL
 #define NULL ((void *)0)

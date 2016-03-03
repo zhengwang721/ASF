@@ -1,14 +1,12 @@
 #include <asf.h>
-#include "console_serial.h"
 #include "timer_hw.h"
-#include "conf_timer.h"
 #include "conf_dualtimer.h"
 
 extern struct uart_module uart_instance;
 
 void dualtimer_callback2(void)
 {
-	puts("Timer2 trigger\r\n");
+	//puts("Timer2 trigger\r\n");
 }
 
 void hw_timer_init(void)
