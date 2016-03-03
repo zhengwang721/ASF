@@ -222,7 +222,7 @@ uint32_t twi_probe(Twi *p_twi, uint8_t uc_slave_addr)
  *
  * Please see the device datasheet for details on this.
  */
-static uint32_t twi_mk_addr(const uint8_t *addr, int len)
+uint32_t twi_mk_addr(const uint8_t *addr, int len)
 {
 	uint32_t val;
 

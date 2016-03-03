@@ -135,6 +135,7 @@ void twi_set_slave_addr(Twi *p_twi, uint32_t ul_device_addr);
 uint32_t twi_slave_read(Twi *p_twi, uint8_t *p_data);
 uint32_t twi_slave_write(Twi *p_twi, uint8_t *p_data);
 void twi_reset(Twi *p_twi);
+uint32_t twi_mk_addr(const uint8_t *addr, int len);
 Pdc *twi_get_pdc_base(Twi *p_twi);
 #if (SAM4E || SAM4C || SAMG || SAM4CP || SAM4CM)
 void twi_set_write_protection(Twi *p_twi, bool flag);
