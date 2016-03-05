@@ -5,8 +5,9 @@
 /***************************
 INCLUDES
 ***************************/
-#include "uart_config.h"
-
+//#include "uart_config.h"
+#include <asf.h>
+#include <string.h>
 
 /***************************
 DEFINES

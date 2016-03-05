@@ -61,6 +61,21 @@
 #define NULL ((void *)0)
 #endif
 
+//from uart.h keil project
+#define UART_CONFIG_ISR_CHR_LEN		1
+#ifdef CHIPVERSION_B0
+#define UART0_RX_VECTOR_TABLE_INDEX		16
+#define UART0_TX_VECTOR_TABLE_INDEX		17
+#define UART1_RX_VECTOR_TABLE_INDEX		18
+#define UART1_TX_VECTOR_TABLE_INDEX		19
+#else
+#define UART0_RX_VECTOR_TABLE_INDEX		16
+#define UART0_TX_VECTOR_TABLE_INDEX		17
+#define UART1_RX_VECTOR_TABLE_INDEX		18
+#define UART1_TX_VECTOR_TABLE_INDEX		19
+#endif	//CHIPVERSION_B0
+//from uart.h keil project
+
 uint8_t gau8UartRxBuffer[UART_CONFIG_ISR_CHR_LEN+1]; //+1 for NULL terminator
 static tstrAt_cmd_content	gstrAt_cmdContent;	
 static strAtCMD_Handler		gastrAtCMD_Handler[AT_MAX_COMMANDS_COUNT];

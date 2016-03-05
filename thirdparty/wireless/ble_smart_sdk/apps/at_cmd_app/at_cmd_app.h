@@ -5,8 +5,8 @@
 INCLUDES
 ***************************/
 #include "at_ble_api.h"
-#include "uart_config.h"
-#include "gpio_config.h"
+//#include "uart_config.h"
+//#include "gpio_config.h"
 #include "at_cmd.h"
 
 
