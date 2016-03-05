@@ -220,7 +220,7 @@ static void parse_response(char *buffer, uint32_t len)
 		pcIndxPtr = pcIndxPtr + strlen("temperature value") + 2;
 		pcEndPtr = strstr(pcIndxPtr, "\"");
 		pcEndPtr2 = strstr(pcIndxPtr, ".");
-		if (pcEndPtr2 < pcEndPtr) {
+		if (pcEndPtr2 && pcEndPtr2 < pcEndPtr) {
 			pcEndPtr = pcEndPtr2;
 		}
 		if (NULL != pcEndPtr) {

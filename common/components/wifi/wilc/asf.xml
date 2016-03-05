@@ -266,7 +266,7 @@
 			<device-support value="samv71"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>
-			<require idref="sam.drivers.pdc"/>
+			<require idref="sam.drivers.xdmac"/>
 			<require idref="sam.drivers.spi"/>
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.delay"/>

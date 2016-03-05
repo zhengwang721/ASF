@@ -54,6 +54,12 @@
 #define TIMEOUT				(2000)
 #define M2M_DISABLE_PS        0xD0UL
 
+#if (defined CONF_WILC_USE_1000_REV_A || defined CONF_WILC_USE_1000_REV_B)
+#ifndef CONF_WILC_USE_SDIO
+static uint32 WILC_CLK_STATUS_REG = 0xf; /* Assume initially it is B0 chip */
+#endif
+#endif
+
 /**
 *	@fn		nm_clkless_wake
 *	@brief	Wakeup the chip using clockless registers
