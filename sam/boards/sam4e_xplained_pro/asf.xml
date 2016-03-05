@@ -18,7 +18,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.sam4e_xplained_pro" vendor="Atmel" caption="SAM4E-XPRO">
+	<board id="board.sam4e_xplained_pro" vendor="Atmel" caption="SAM4E Xplained Pro">
 		<build type="define" name="BOARD" value="SAM4E_XPLAINED_PRO"/>
 		<build type="define" name="__SAM4E16E__" value=""/>
 		<build type="header-file" value="sam4e_xplained_pro.h"/>

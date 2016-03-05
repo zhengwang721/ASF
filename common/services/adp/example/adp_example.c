@@ -62,6 +62,7 @@
  * This example has been tested with the following setup:
  * - SAM D21 Xplained Pro
  * - SAM L21 Xplained Pro
+ * - SAM 4S Xplained Pro
  *
  * \section asfdoc_common_adp_example_setup Setup
  * To run the test:

@@ -11,11 +11,12 @@
         </module>
 			<module type="meta" id="thirdparty.wireless.ble_sdk.lib#2" caption="BLE SDK library for CM4F">
             <info type="description" value="summary">
-            BLE SDK library for CM4F
+            BLE SDK library for CM4
             </info>
             <build type="library" subtype="user" value="cm4f/iar/libble_sdk.a" toolchain="iarewarm"/>
             <build type="library" subtype="user" value="cm4f/gcc/libble_sdk.a" toolchain="armgcc"/>
             <device-support value="samg55"/>
+			<device-support value="sam4sd32"/>
         </module>
     </select-by-device>
 </asf>

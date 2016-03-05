@@ -36,6 +36,8 @@
 		<build type="header-file" value="tc3.h"/>
 		<build type="header-file" value="tc4.h"/>
 		<build type="header-file" value="tcc0.h"/>
+		<build type="header-file" value="tcc1.h"/>
+		<build type="header-file" value="tcc2.h"/>
 		<build type="header-file" value="wdt.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="samc20"/>

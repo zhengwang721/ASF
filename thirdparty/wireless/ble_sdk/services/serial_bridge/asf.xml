@@ -34,6 +34,7 @@
 				<build type="module-config" subtype="required-header-file" value="conf_serialbridge.h"/>
 				<build type="module-config" subtype="path" value="uart/sam/module_config"/>
 				<device-support value="samg55"/>
+				<device-support value="sam4sd32"/>
 			</module>
 		</select-by-device>
 </asf>
