@@ -404,7 +404,10 @@ static void http_client_callback(struct http_client_module *module_inst, int typ
 			add_state(CANCELED);
 			return;
 		}
-
+		if (data->recv_response.content_length <= MAIN_BUFFER_MAX_SIZE) {
+			store_file_packet(data->recv_response.content, data->recv_response.content_length);
+			add_state(COMPLETED);
+		}
 		break;
 
 	case HTTP_CLIENT_CALLBACK_RECV_CHUNKED_DATA:
