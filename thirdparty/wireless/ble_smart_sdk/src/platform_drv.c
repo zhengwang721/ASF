@@ -704,8 +704,8 @@ void platform_chip_reset(void)
 	*((uint32_t *)0x4000A000) = 0x0;
 	//dummy loop
 	for(loop=0; loop<43210;loop++);
-	//lpmcu_global_reset_0
-	*((uint32_t *)0x4000B004) = 0x00;
+	//AOn_global_reset
+	*((uint32_t *)0x4000F010) = 0x00;
 #else
 #endif
 	return;
