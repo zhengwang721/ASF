@@ -139,11 +139,11 @@ uint32_t twi_master_init(Twi *p_twi, const twi_options_t *p_opt)
 		/* The desired speed setting is rejected */
 		status = TWI_INVALID_ARGUMENT;
 	}
-#if SAMG55
+
 	if (p_opt->smbus == 1) {
 		p_twi->TWI_CR = TWI_CR_QUICK;
 	}
-#endif
+
 	return status;
 }
 
