@@ -171,7 +171,7 @@ void BOARD_TWI_Handler(void)
 				emulate_driver.uc_memory[emulate_driver.us_page_address +
 					emulate_driver.us_offset_memory] =
 						(twi_read_byte(BOARD_BASE_TWI_SLAVE) & 0xFF);
-				
+
 				emulate_driver.us_offset_memory++;
 			}
 		}
