@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI EEPROM Example for SAM.
+ * \brief TWI EEPROM PDC Example for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,10 +52,7 @@
  * \section Requirements
  *
  * This package can be used with the following setup:
- *  - SAM3X evaluation kit
  *  - SAMG53 Xplained Pro kit
- *  - SAM4N Xplained Pro kit
- *  - SAMG55 Xplained Pro kit
  *
  * \section files Main files:
  *  - twi.c SAM Two-Wire Interface driver implementation.
@@ -109,8 +106,8 @@ extern "C" {
 
 /** EEPROM Wait Time */
 #define WAIT_TIME   10
-/** TWI Bus Clock 400kHz */
-#define TWI_CLK     400000
+/** TWI Bus Clock 100kHz */
+#define TWI_CLK     100000
 /** Address of AT24C chips */
 #define AT24C_ADDRESS           0x50
 #define EEPROM_MEM_ADDR         0
@@ -170,6 +167,13 @@ static uint8_t gs_uc_test_data_rx[TEST_DATA_LENGTH] = { 0 };
 /** Global timestamp in milliseconds since start of application */
 volatile uint32_t g_ul_ms_ticks = 0;
 
+/** Define TX and RX packet */
+twi_packet_t packet_tx, packet_rx;
+
+/** Define interrupt flag */
+volatile uint32_t Write_Interrupt_Flag = 0;
+volatile uint32_t Read_Interrupt_Flag = 0;
+
 /**
  *  \brief Handler for System Tick interrupt.
  *
@@ -228,10 +232,10 @@ static inline uint32_t twi_read_status(Twi *p_twi)
 }
 
 /**
- * \brief Perform TWI master pdc write.
+ * \brief Write multiple bytes to a TWI compatible slave device.
  *
- * \param pbuf Pointer to buffer to transfer.
- * \param size Size of the buffer. 
+ * \param p_twi Pointer to a TWI instance.
+ * \param p_packet Packet information and data (see \ref twi_packet_t).
  */
 static void twi_master_pdc_write(Twi *p_twi, twi_packet_t *p_packet)
 {
@@ -239,6 +243,7 @@ static void twi_master_pdc_write(Twi *p_twi, twi_packet_t *p_packet)
 	uint8_t *buffer = p_packet->buffer;
 
 	pdc_disable_transfer(g_p_twim_pdc, PERIPH_PTCR_TXTDIS | PERIPH_PTCR_RXTDIS);
+	
 	pdc_twi_packet.ul_addr = (uint32_t )buffer;
 	pdc_twi_packet.ul_size = (p_packet->length - 1);
 	pdc_tx_init(g_p_twim_pdc, &pdc_twi_packet, NULL);
@@ -253,32 +258,42 @@ static void twi_master_pdc_write(Twi *p_twi, twi_packet_t *p_packet)
 	p_twi->TWI_IADR = 0;
 	p_twi->TWI_IADR = twi_mk_addr(p_packet->addr, p_packet->addr_length);
 	
+	Write_Interrupt_Flag = 1;
+	
+	twi_enable_interrupt(BOARD_BASE_TWI_EEPROM, TWI_SR_TXCOMP);
+		
 	/* Enable the TX PDC transfer requests */
 	pdc_enable_transfer(g_p_twim_pdc, PERIPH_PTCR_TXTEN);
 
 	/* Waiting transfer done*/
 	while((twi_read_status(BOARD_BASE_TWI_EEPROM) & TWI_SR_ENDTX) == 0);
-	
+
 	/* Disable the RX and TX PDC transfer requests */
 	pdc_disable_transfer(g_p_twim_pdc, PERIPH_PTCR_TXTDIS | PERIPH_PTCR_RXTDIS);
 
-	/* Waiting transfer done*/
 	while((twi_read_status(BOARD_BASE_TWI_EEPROM) & TWI_SR_TXRDY) == 0);
 
 	p_twi->TWI_CR = TWI_CR_STOP;
 	
-	p_twi->TWI_THR = *(buffer + p_packet->length);
-	
+	p_twi->TWI_THR = *(buffer + p_packet->length - 1);
+
 	while (!(p_twi->TWI_SR & TWI_SR_TXCOMP)) {
 	}
 }
 
+/**
+ * \brief Read multiple bytes from a TWI compatible slave device.
+ *
+ * \param p_twi Pointer to a TWI instance.
+ * \param p_packet Packet information and data (see \ref twi_packet_t).
+ */
 static void twi_master_pdc_read(Twi *p_twi, twi_packet_t *p_packet)
 {
 	pdc_packet_t pdc_twi_packet;
 	uint8_t *buffer = p_packet->buffer;
-unsigned int i;
+	
 	pdc_disable_transfer(g_p_twim_pdc, PERIPH_PTCR_TXTDIS | PERIPH_PTCR_RXTDIS);
+	
 	pdc_twi_packet.ul_addr = (uint32_t )buffer;
 	pdc_twi_packet.ul_size = (p_packet->length - 2);
 	pdc_rx_init(g_p_twim_pdc, &pdc_twi_packet, NULL);
@@ -293,6 +308,10 @@ unsigned int i;
 	p_twi->TWI_IADR = 0;
 	p_twi->TWI_IADR = twi_mk_addr(p_packet->addr, p_packet->addr_length);
 
+    Read_Interrupt_Flag = 1;
+
+	twi_enable_interrupt(BOARD_BASE_TWI_EEPROM, TWI_SR_TXCOMP);
+	
 	/* Enable the RX PDC transfer requests */
 	pdc_enable_transfer(g_p_twim_pdc, PERIPH_PTCR_RXTEN);
 	
@@ -304,22 +323,36 @@ unsigned int i;
 	/* Disable the RX and TX PDC transfer requests */
 	pdc_disable_transfer(g_p_twim_pdc, PERIPH_PTCR_RXTDIS);
 
-	/* Waiting transfer done*/
-	while((twi_read_status(BOARD_BASE_TWI_EEPROM) & TWI_SR_RXRDY) == 0);
-
-	p_twi->TWI_CR = TWI_CR_STOP;
-	for (i = 0; i < (p_packet->length - 2); i++) {
-		printf("%c",gs_uc_test_data_rx[i]);
-	}
-	printf("\n");
-	 *(buffer + p_packet->length - 1) = p_twi->TWI_RHR;
-	printf("%c\n",*(buffer + p_packet->length - 1));
-    /* Waiting transfer done*/
 	while((twi_read_status(BOARD_BASE_TWI_EEPROM) & TWI_SR_RXRDY) == 0);
 	
-	*(buffer + p_packet->length) = p_twi->TWI_RHR;
-	printf("%c\n",*(buffer + p_packet->length));
+	p_twi->TWI_CR = TWI_CR_STOP;
+	
+	*(buffer + p_packet->length - 2) = p_twi->TWI_RHR;
+	
+	while((twi_read_status(BOARD_BASE_TWI_EEPROM) & TWI_SR_RXRDY) == 0);
+	
+	*(buffer + p_packet->length - 1) = p_twi->TWI_RHR;
+
 	while (!(p_twi->TWI_SR & TWI_SR_TXCOMP)) {
+	}
+}
+
+void BOARD_TWI_Handler(void)
+{
+	uint32_t status;
+	
+	status = twi_get_interrupt_mask(BOARD_BASE_TWI_EEPROM);
+	
+	if(((status & TWI_IMR_TXCOMP) == TWI_IMR_TXCOMP)
+	    && (Write_Interrupt_Flag == 1)) {
+		printf("PDC Write transfer:\tOK!\n\r");
+		Write_Interrupt_Flag = 0;
+		twi_disable_interrupt(BOARD_BASE_TWI_EEPROM, TWI_SR_TXCOMP);	
+	} else if(((status & TWI_IMR_TXCOMP) == TWI_IMR_TXCOMP)
+		&&(Read_Interrupt_Flag == 1)) {			
+	    printf("PDC Read transfer:\tOK!\n\r");
+		Read_Interrupt_Flag = 0;
+		twi_disable_interrupt(BOARD_BASE_TWI_EEPROM, TWI_IMR_TXCOMP);
 	}
 }
 
@@ -332,7 +365,6 @@ int main(void)
 {
 	uint32_t i;
 	twi_options_t opt;
-	twi_packet_t packet_tx, packet_rx;
 
 	/* Initialize the SAM system */
 	sysclk_init();
@@ -402,7 +434,11 @@ int main(void)
 		}
 	}
 
-	
+    /* Configure TWI interrupts */
+	NVIC_DisableIRQ(BOARD_TWI_IRQn);
+	NVIC_ClearPendingIRQ(BOARD_TWI_IRQn);
+	NVIC_SetPriority(BOARD_TWI_IRQn, 0);
+	NVIC_EnableIRQ(BOARD_TWI_IRQn);
 	
 	/* Get pointer to TWI master PDC register base */	
 	g_p_twim_pdc = twi_get_pdc_base(BOARD_BASE_TWI_EEPROM);
@@ -412,51 +448,24 @@ int main(void)
 #endif	
 	twi_master_pdc_write(BOARD_BASE_TWI_EEPROM, &packet_tx);
 
-	/* Send test pattern to EEPROM */
-	//if (twi_master_write(BOARD_BASE_TWI_EEPROM, &packet_tx) != TWI_SUCCESS) {
-		//puts("-E-\tTWI master write packet failed.\r");
-//#if SAM3XA
-		//LED_On(LED0_GPIO);
-		//LED_On(LED1_GPIO);
-//#endif
-		//while (1) {
-			///* Capture error */
-		//}
-	//}
-	printf("Write:\tOK!\n\r");
-
 	/* Wait at least 10 ms */
 	mdelay(WAIT_TIME);
 
 	twi_master_pdc_read(BOARD_BASE_TWI_EEPROM, &packet_rx);
 
-	/* Get memory from EEPROM */
-	//if (twi_master_read(BOARD_BASE_TWI_EEPROM, &packet_rx) != TWI_SUCCESS) {
-		//puts("-E-\tTWI master read packet failed.\r");
-//#if SAM3XA
-		//LED_On(LED0_GPIO);
-		//LED_On(LED1_GPIO);
-//#endif
-		//while (1) {
-			///* Capture error */
-		//}
-	//}
-	//puts("Read:\tOK!\r");
-//
 	/* Compare the sent and the received */
-	//for (i = 0; i < TEST_DATA_LENGTH; i++) {
-		//printf("%c",gs_uc_test_data_rx[i]);
-		//if (test_data_tx[i] != gs_uc_test_data_rx[i]) {
-			///* No match */
-			//puts("Data comparison:\tUnmatched!\r");
-//#if SAM3XA
-			//LED_On(LED0_GPIO);
-//#endif
-			//while (1) {
-				///* Capture error */
-			//}
-		//}
-	//}
+	for (i = 0; i < (TEST_DATA_LENGTH); i++) {
+		if (test_data_tx[i] != gs_uc_test_data_rx[i]) {
+			/* No match */
+			puts("Data comparison:\tUnmatched!\r");
+#if SAM3XA
+			LED_On(LED0_GPIO);
+#endif
+			while (1) {
+				/* Capture error */
+			}
+		}
+	}
 	/* Match */
 	puts("Data comparison:\tMatched!\r");
 #if SAM3XA

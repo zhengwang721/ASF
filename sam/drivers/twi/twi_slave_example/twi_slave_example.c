@@ -171,8 +171,6 @@ void BOARD_TWI_Handler(void)
 				emulate_driver.uc_memory[emulate_driver.us_page_address +
 					emulate_driver.us_offset_memory] =
 						(twi_read_byte(BOARD_BASE_TWI_SLAVE) & 0xFF);
-				printf("%c", emulate_driver.uc_memory[emulate_driver.us_page_address +
-					emulate_driver.us_offset_memory]);
 				emulate_driver.us_offset_memory++;
 			}
 		}
@@ -180,7 +178,6 @@ void BOARD_TWI_Handler(void)
 		if (((status & TWI_SR_TXRDY) == TWI_SR_TXRDY)
 				&& ((status & TWI_SR_TXCOMP) == TWI_SR_TXCOMP)
 				&& ((status & TWI_SR_EOSACC) == TWI_SR_EOSACC)) {
-					printf("\n");
 			/* End of transfer, end of slave access */
 			emulate_driver.us_offset_memory = 0;
 			emulate_driver.uc_acquire_address = 0;
@@ -199,8 +196,6 @@ void BOARD_TWI_Handler(void)
 				/* Write one byte of data from slave to master device */
 				twi_write_byte(BOARD_BASE_TWI_SLAVE,
 						emulate_driver.uc_memory[emulate_driver.us_page_address
-						+ emulate_driver.us_offset_memory]);
-						printf("%c", emulate_driver.uc_memory[emulate_driver.us_page_address
 						+ emulate_driver.us_offset_memory]);
 				emulate_driver.us_offset_memory++;
 			}
