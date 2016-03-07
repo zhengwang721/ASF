@@ -3,7 +3,7 @@
  *
  * \brief SAM ADC functionality
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -300,10 +300,17 @@ enum adc_negative_input {
 	ADC_NEGATIVE_INPUT_PIN6          = ADC_INPUTCTRL_MUXNEG_PIN6,
 	/** ADC7 pin */
 	ADC_NEGATIVE_INPUT_PIN7          = ADC_INPUTCTRL_MUXNEG_PIN7,
+#ifdef  SAMD10 
 	/** Internal ground */
-	ADC_NEGATIVE_INPUT_GND           = ADC_INPUTCTRL_MUXNEG_GND,
+	ADC_NEGATIVE_INPUT_GND           = (0x02  << ADC_INPUTCTRL_MUXNEG_Pos),
 	/** I/O ground */
-	ADC_NEGATIVE_INPUT_IOGND         = ADC_INPUTCTRL_MUXNEG_IOGND,
+	ADC_NEGATIVE_INPUT_IOGND         = (0x03 << ADC_INPUTCTRL_MUXNEG_Pos),
+#else
+   	/** Internal ground */
+   	ADC_NEGATIVE_INPUT_GND           = ADC_INPUTCTRL_MUXNEG_GND,
+   	/** I/O ground */
+   	ADC_NEGATIVE_INPUT_IOGND         = ADC_INPUTCTRL_MUXNEG_IOGND,
+#endif // 
 };
 
 /**
