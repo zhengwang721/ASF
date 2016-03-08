@@ -46,7 +46,7 @@
  *
  * \section intro Introduction
  *
- * The application demonstrates how to use the SAM TWI driver to access an
+ * The application demonstrates how to use the SAM TWI PDC driver to access an
  * external serial EEPROM chip.
  *
  * \section Requirements
@@ -62,7 +62,7 @@
  * \section exampledescription Description of the Example
  * Upon startup, the program configures PIOs for console UART, LEDs and TWI
  * connected to EEPROM on board. Then it configures the TWI driver and data
- * package. The clock of I2C bus is set as 400kHz.
+ * package. The clock of I2C bus is set as 100kHz.
  * After initializing the master mode, the example sends test pattern to the
  * EEPROM. When sending is complete, TWI driver reads the memory and saves the
  * content in the reception buffer. Then the program compares the content
