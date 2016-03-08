@@ -79,7 +79,11 @@ extern "C" {
 
 #define I2C_FAST_MODE_SPEED  400000
 #define TWI_CLK_DIVIDER      2
+#ifdef SAMG55
+#define TWI_CLK_CALC_ARGU    3
+#else
 #define TWI_CLK_CALC_ARGU    4
+#endif	
 #define TWI_CLK_DIV_MAX      0xFF
 #define TWI_CLK_DIV_MIN      7
 
