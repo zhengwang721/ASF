@@ -57,6 +57,11 @@
 #include <string.h>
 #include <conf_console_serial.h>
 #include "platform.h"
+
+#include "console_serial.h"
+#include "led.h"
+#include "button.h"
+
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
@@ -74,9 +79,61 @@
 #define UART1_RX_VECTOR_TABLE_INDEX		18
 #define UART1_TX_VECTOR_TABLE_INDEX		19
 #endif	//CHIPVERSION_B0
+
+#define UART_READ(buff)	uart_read_buffer_wait(UART_CONFIG_MODULE,buff, UART_CONFIG_ISR_CHR_LEN);
+
+#define UART_CONFIG_MODULE			UART_HW_MODULE_UART1	
+enum uart_hw_module{
+	UART_HW_MODULE_UART1 = 1,
+	UART_HW_MODULE_UART2
+};
+
+enum uart_rx_callback {
+	/** Callback for Receive FiFo not empty */
+	UART_CALLBACK_RX_FIFO_NOT_EMPTY,
+	/** Callback for Receive FiFo Quarter full */
+	UART_CALLBACK_RX_FIFO_QUARTER_FULL,
+	/** Callback for Receive FiFo Half full */
+	UART_CALLBACK_RX_FIFO_HALF_FULL,
+	/** Callback for Receive FiFo Three Quarter full */
+	UART_CALLBACK_RX_FIFO_THREE_QUARTER_FULL,
+	#  if !defined(__DOXYGEN__)
+	/** Number of available callbacks. */
+	UART_RX_CALLBACK_N,
+	#  endif
+};
+
+/** Type definition for an GPIO/PORT pin interrupt module callback function. */
+typedef void (*portint_callback_t)(void);
+
+#ifdef CHIPVERSION_B0
+	#define GPIO0_COMBINED_VECTOR_TABLE_INDEX		39
+	#define GPIO1_COMBINED_VECTOR_TABLE_INDEX		40
+	#define GPIO2_COMBINED_VECTOR_TABLE_INDEX		41
+#else
+	#define GPIO0_COMBINED_VECTOR_TABLE_INDEX		23
+	#define GPIO1_COMBINED_VECTOR_TABLE_INDEX		24
+#endif	//CHIPVERSION_B0
+
+/** Enum for the possible callback types for the GPIO/PORT pin interrupt module. */
+enum portint_callback_type
+{
+	/** Callback type for when an external interrupt detects the configured
+	 *  channel criteria (i.e. edge or level detection)
+	 */
+	PORTINT_CALLBACK_TYPE_DETECT = 1,
+};
+
+
 //from uart.h keil project
 
-uint8_t gau8UartRxBuffer[UART_CONFIG_ISR_CHR_LEN+1]; //+1 for NULL terminator
+void callback_uart_rx(void);
+void callback_btn(void);
+void callback_resume(void);
+void init_globals(void);
+
+//uint8_t gau8UartRxBuffer[UART_CONFIG_ISR_CHR_LEN+1]; //+1 for NULL terminator
+uint8_t gau8UartRxBuffer;
 static tstrAt_cmd_content	gstrAt_cmdContent;	
 static strAtCMD_Handler		gastrAtCMD_Handler[AT_MAX_COMMANDS_COUNT];
 
@@ -88,11 +145,11 @@ volatile static uint8_t 	gu8InvalidPrinted   = 1;
 volatile static int8_t 		gs8CmdIndex			= -1;
 volatile static uint8_t 	carriage_return 	= 0;
 
-void callback_uart_rx()
+void callback_uart_rx(void)
 {
-	UART_READ(gau8UartRxBuffer);
+	//UART_READ(gau8UartRxBuffer);
 	send_plf_int_msg_ind(UART0_RX_VECTOR_TABLE_INDEX,UART_CALLBACK_RX_FIFO_HALF_FULL,NULL,0);
-	gau8UartRxBuffer[UART_CONFIG_ISR_CHR_LEN] = 0;
+	//gau8UartRxBuffer[UART_CONFIG_ISR_CHR_LEN] = 0;
 	switch(gu8CmdStatus)
 	{
 		case AT_CMD_STATUS_IDLE:
@@ -101,7 +158,7 @@ void callback_uart_rx()
 			{
 				case 0:
 				{
-					if('A' != gau8UartRxBuffer[0])
+					if('A' != gau8UartRxBuffer)
 					{
 						goto INVALID_CH;
 					}
@@ -109,7 +166,7 @@ void callback_uart_rx()
 				break;
 				case 1:
 				{
-					if('T' != gau8UartRxBuffer[0]) 
+					if('T' != gau8UartRxBuffer) 
 					{
 						goto INVALID_CH;
 					}
@@ -117,14 +174,14 @@ void callback_uart_rx()
 				break;
 				case 2:
 				{
-					if('+' != gau8UartRxBuffer[0])
+					if('+' != gau8UartRxBuffer)
 					{
 						goto INVALID_CH;
 					}	
 				}//End case 2 of strlen(gau8DataBuffer)
 				break;
 			}
-			switch(gau8UartRxBuffer[0])
+			switch(gau8UartRxBuffer)
 			{
 				case '\r':
 					carriage_return = true;
@@ -145,13 +202,13 @@ void callback_uart_rx()
 					} 
 					else
 					{
-						gau8DataBuffer[gau8DataBufferIndex++] = gau8UartRxBuffer[0];	
+						gau8DataBuffer[gau8DataBufferIndex++] = gau8UartRxBuffer;	
 					}
 					goto EXIT;
 				}
 				default:
 				{
-					gau8DataBuffer[gau8DataBufferIndex++] = gau8UartRxBuffer[0];
+					gau8DataBuffer[gau8DataBufferIndex++] = gau8UartRxBuffer;
 					goto EXIT;
 				}	
 			}
@@ -165,19 +222,24 @@ void callback_uart_rx()
 INVALID_CH:
 	gu8InvalidPrinted = 0;
 EXIT:
+	getchar_aysnc((uart_callback_t)callback_uart_rx,&gau8UartRxBuffer);
 	return;
 }
 
-void callback_btn()
+void callback_btn(void)
 {
 	send_plf_int_msg_ind(GPIO1_COMBINED_VECTOR_TABLE_INDEX,PORTINT_CALLBACK_TYPE_DETECT,NULL,0);
 }
 
 void callback_resume(void)
 {
-	uart_config_init(UART_CONFIG_BAUD_RATE);
-	gpio_config_led_init();
-	gpio_config_btn_init(callback_btn);
+	//uart_config_init(UART_CONFIG_BAUD_RATE);
+	//gpio_config_led_init();
+	//gpio_config_btn_init(callback_btn);
+	serial_console_init();
+	led_init();
+	button_init(callback_btn);
+	
 }
 
 void init_globals(void)
@@ -230,12 +292,17 @@ int main(void)
 	platform_driver_init();
 	register_resume_callback(callback_resume);
 	
-	uart_config_init(UART_CONFIG_BAUD_RATE);
-	uart_config_callback(callback_uart_rx, gau8UartRxBuffer, UART_CONFIG_ISR_CHR_LEN); 
+	//uart_config_init(UART_CONFIG_BAUD_RATE);
+	//uart_config_callback(callback_uart_rx, gau8UartRxBuffer, UART_CONFIG_ISR_CHR_LEN); 
+	serial_console_init();
+	getchar_aysnc((uart_callback_t)callback_uart_rx,&gau8UartRxBuffer);
+
 	printf("UART Initialized\r\n");
 	
-	gpio_config_btn_init(callback_btn);
-	gpio_config_led_init();
+	//gpio_config_btn_init(callback_btn);
+	//gpio_config_led_init();
+	button_init(callback_btn);
+	led_init();
 	
 	if(AT_BLE_SUCCESS != init_ble_stack())
 	{
@@ -290,7 +357,7 @@ int main(void)
 				}
 			}
 		}
-		printf("Timedout #%05d\r\n",++loopCntr);
+		printf("Timedout #%05lu\r\n",++loopCntr);
 	}
 }	
 
@@ -300,13 +367,14 @@ uint8_t platform_event_handler(uint16_t type, uint8_t *data, uint16_t len)
 	if(type == ((PORTINT_CALLBACK_TYPE_DETECT << 8)| GPIO1_COMBINED_VECTOR_TABLE_INDEX))
 	{
 		printf(">>btn\r\n");
-		GPIO_CONFIG_LED_STATE(LED_TOGGLE);
+		LED_Toggle(LED0);
+		//GPIO_CONFIG_LED_STATE(LED_TOGGLE);
 	}
 	else if(type == ((UART_CALLBACK_RX_FIFO_HALF_FULL << 8)| UART0_RX_VECTOR_TABLE_INDEX))
 	{
-		#if ECHO
-			printf("%c",gau8UartRxBuffer[0]);
-		#endif		
+//		#if ECHO
+			printf("%c",gau8UartRxBuffer);
+//		#endif		
 		switch(gu8CmdStatus)
 		{
 			case AT_CMD_STATUS_IDLE:
@@ -335,7 +403,8 @@ uint8_t platform_event_handler(uint16_t type, uint8_t *data, uint16_t len)
 				}
 				else
 				{
-					printf("Invalid command\r\n", strlen(AT_HEADER));
+					//printf("Invalid command\r\n", strlen(AT_HEADER));
+					printf("Invalid command\r\n");
 					memset((void *)gau8DataBuffer,0,sizeof(gau8DataBuffer));
 					gu8CmdStatus = AT_CMD_STATUS_IDLE;
 					break;

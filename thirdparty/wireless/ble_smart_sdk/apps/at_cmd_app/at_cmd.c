@@ -118,11 +118,11 @@ int8_t atCmd_Scan_Handler(tstrAt_cmd_content data, void* moreData, uint8_t useSt
 #define AT_BLE_INQ_SCAN_INTV    (0x0140)
 #define AT_BLE_INQ_SCAN_WIND    (0x0050)
 	printf("Scan Handler\r\n");
-	return (int8_t)at_ble_scan_start(AT_BLE_INQ_SCAN_INTV, AT_BLE_INQ_SCAN_WIND, 0, AT_BLE_SCAN_ACTIVE, AT_BLE_SCAN_OBSERVER_MODE, false, true);
+	return (at_ble_status_t)at_ble_scan_start(AT_BLE_INQ_SCAN_INTV, AT_BLE_INQ_SCAN_WIND, 0, AT_BLE_SCAN_ACTIVE, AT_BLE_SCAN_OBSERVER_MODE, false, true);
 }
 
 int8_t atCmd_Stop_Handler(tstrAt_cmd_content data, void* moreData, uint8_t useStoredValue)
 {
 	printf("Stop Handler\r\n");
-	return (int8_t)at_ble_scan_stop();
+	return (at_ble_status_t)at_ble_scan_stop();
 }
