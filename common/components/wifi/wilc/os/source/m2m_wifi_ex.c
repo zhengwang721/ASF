@@ -761,18 +761,6 @@ sint8 os_m2m_wifi_send_ethernet_pkt(uint8* pu8Packet, uint16 u16PacketSize)
 	return params.dispatch.retval;
 }
 
-
-sint8 os_m2m_wifi_enable_sntp(uint8 bEnable)
-{
-	struct uint_params params;
-	params.dispatch.retval = M2M_ERR_TIME_OUT;
-	params.arg = bEnable;
-	params.fn = m2m_wifi_enable_sntp;
-	OS_WIFI_DISPATCH_WAIT(func_uint_imp, &params);
-	return params.dispatch.retval;
-}
-
-
 struct wifi_set_sytem_time_params {
 	struct params_dispatch dispatch;
 	uint32 u32UTCSeconds;
