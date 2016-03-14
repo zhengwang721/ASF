@@ -93,7 +93,6 @@ void gpio_get_config_defaults(struct gpio_config *const config)
  *  \retval STATUS_ERR_INVALID_ARG          Invalid gpio number, Certain gpios
  *                                          are used by FW and not allowed to change.
  *  \retval STATUS_RESOURCE_NOT_AVAILABLE   Requested gpio is already in use.
- *  \retval STATUS_ERR_INVALID_ARG          Invalid pull-up/pull-down configuration.
  *
  */
 enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
