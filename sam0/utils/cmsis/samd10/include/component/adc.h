@@ -370,7 +370,7 @@ typedef union {
 #define   ADC_INPUTCTRL_MUXNEG_PIN5_Val   0x5ul  /**< \brief (ADC_INPUTCTRL) ADC AIN5 Pin */
 #define   ADC_INPUTCTRL_MUXNEG_PIN6_Val   0x6ul  /**< \brief (ADC_INPUTCTRL) ADC AIN6 Pin */
 #define   ADC_INPUTCTRL_MUXNEG_PIN7_Val   0x7ul  /**< \brief (ADC_INPUTCTRL) ADC AIN7 Pin */
-#ifdef  SAMD10 
+#if  SAMD10 
 #define   ADC_INPUTCTRL_MUXNEG_GND_Val    0x02ul  /**< \brief (ADC_INPUTCTRL) Internal Ground */
 #define   ADC_INPUTCTRL_MUXNEG_IOGND_Val  0x03ul  /**< \brief (ADC_INPUTCTRL) I/O Ground */
 #else
