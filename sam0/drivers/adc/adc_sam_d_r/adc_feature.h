@@ -304,7 +304,6 @@ enum adc_negative_input {
    	ADC_NEGATIVE_INPUT_GND           = ADC_INPUTCTRL_MUXNEG_GND,
    	/** I/O ground */
    	ADC_NEGATIVE_INPUT_IOGND         = ADC_INPUTCTRL_MUXNEG_IOGND,
-
 };
 
 /**
