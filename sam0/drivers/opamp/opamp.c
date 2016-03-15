@@ -250,7 +250,7 @@ void opamp_disable(const enum opamp_id number)
 
 	/* Disable the OPAMP */
 	if (number == OPAMP_0) {
-		OPAMP->OPAMPCTRL[1].reg &= ~OPAMP_OPAMPCTRL_ENABLE;
+		OPAMP->OPAMPCTRL[0].reg &= ~OPAMP_OPAMPCTRL_ENABLE;
 	} else if (number == OPAMP_1) {
 		OPAMP->OPAMPCTRL[1].reg &= ~OPAMP_OPAMPCTRL_ENABLE;
 	} else if (number == OPAMP_2) {
