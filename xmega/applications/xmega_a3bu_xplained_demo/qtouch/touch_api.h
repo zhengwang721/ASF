@@ -4,7 +4,7 @@
 ******************************************************************************/
 /**
  *
- * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,7 +50,19 @@
 #define TOUCH_API_H
 
 bool check_touch_key_pressed(void);
-void touch_init(void);
+
+#ifdef __cplusplus
+extern "C"
+{ 
+#endif 
+
+ void touch_init(void);
+
+#ifdef __cplusplus 
+}
+#endif
+
+
 
 
 /*----------------------------------------------------------------------------
