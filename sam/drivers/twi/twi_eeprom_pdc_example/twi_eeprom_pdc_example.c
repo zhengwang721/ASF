@@ -53,13 +53,14 @@
  *
  * This package can be used with the following setup:
  *  - SAMG53 Xplained Pro kit
+ *  - SAM3X evaluation kit
  *
  * \section files Main files:
  *  - twi.c SAM Two-Wire Interface driver implementation.
  *  - twi.h SAM Two-Wire Interface driver definitions.
  *  - twi_eeprom_example.c Example application.
  *
- * \section exampledescription Description of the Example
+ * \section example description Description of the Example
  * Upon startup, the program configures PIOs for console UART, LEDs and TWI
  * connected to EEPROM on board. Then it configures the TWI driver and data
  * package. The clock of I2C bus is set as 100kHz.
@@ -109,7 +110,7 @@ extern "C" {
 /** TWI Bus Clock 100kHz */
 #define TWI_CLK     100000
 /** Address of AT24C chips */
-#define AT24C_ADDRESS           0x50
+#define AT24C_ADDRESS           0x40
 #define EEPROM_MEM_ADDR         0
 #define EEPROM_MEM_ADDR_LENGTH  2
 
@@ -151,7 +152,7 @@ extern "C" {
 #define AT24C_ADDRESS        0x40
 #endif
 
-static const uint8_t test_data_tx[] = {
+static const volatile uint8_t test_data_tx[] = {
 	/** SAM TWI EEPROM EXAMPLE */
 	'S', 'A', 'M', ' ', 'T', 'W', 'I', ' ',
 	'E', 'E', 'P', 'R', 'O', 'M', ' ',
@@ -240,12 +241,16 @@ static inline uint32_t twi_read_status(Twi *p_twi)
 static void twi_master_pdc_write(Twi *p_twi, twi_packet_t *p_packet)
 {
 	pdc_packet_t pdc_twi_packet;
-	uint8_t *buffer = p_packet->buffer;
+    uint8_t *buffer = p_packet->buffer;
 
 	pdc_disable_transfer(g_p_twim_pdc, PERIPH_PTCR_TXTDIS | PERIPH_PTCR_RXTDIS);
 	
-	pdc_twi_packet.ul_addr = (uint32_t )buffer;
+	pdc_twi_packet.ul_addr = (uint32_t)buffer;
+#if SAMG53
 	pdc_twi_packet.ul_size = (p_packet->length - 1);
+#else
+    pdc_twi_packet.ul_size = (p_packet->length);
+#endif
 	pdc_tx_init(g_p_twim_pdc, &pdc_twi_packet, NULL);
 
 	/* Set write mode, slave address and 3 internal address byte lengths */
@@ -274,9 +279,9 @@ static void twi_master_pdc_write(Twi *p_twi, twi_packet_t *p_packet)
 	while((twi_read_status(BOARD_BASE_TWI_EEPROM) & TWI_SR_TXRDY) == 0);
 
 	p_twi->TWI_CR = TWI_CR_STOP;
-	
+#if SAMG53	
 	p_twi->TWI_THR = *(buffer + p_packet->length - 1);
-
+#endif
 	while (!(p_twi->TWI_SR & TWI_SR_TXCOMP)) {
 	}
 }
@@ -294,8 +299,12 @@ static void twi_master_pdc_read(Twi *p_twi, twi_packet_t *p_packet)
 	
 	pdc_disable_transfer(g_p_twim_pdc, PERIPH_PTCR_TXTDIS | PERIPH_PTCR_RXTDIS);
 	
-	pdc_twi_packet.ul_addr = (uint32_t )buffer;
+	pdc_twi_packet.ul_addr = (uint32_t)buffer;
+#if SAMG53
 	pdc_twi_packet.ul_size = (p_packet->length - 2);
+#else
+    pdc_twi_packet.ul_size = (p_packet->length);
+#endif
 	pdc_rx_init(g_p_twim_pdc, &pdc_twi_packet, NULL);
 
 	/* Set write mode, slave address and 2 internal address byte lengths */
@@ -320,19 +329,19 @@ static void twi_master_pdc_read(Twi *p_twi, twi_packet_t *p_packet)
 	/* Waiting transfer done*/
 	while((twi_read_status(BOARD_BASE_TWI_EEPROM) & TWI_SR_ENDRX) == 0);
 	
-	/* Disable the RX and TX PDC transfer requests */
+	/* Disable the RX PDC transfer requests */
 	pdc_disable_transfer(g_p_twim_pdc, PERIPH_PTCR_RXTDIS);
 
 	while((twi_read_status(BOARD_BASE_TWI_EEPROM) & TWI_SR_RXRDY) == 0);
 	
 	p_twi->TWI_CR = TWI_CR_STOP;
-	
+#if SAMG53	
 	*(buffer + p_packet->length - 2) = p_twi->TWI_RHR;
 	
 	while((twi_read_status(BOARD_BASE_TWI_EEPROM) & TWI_SR_RXRDY) == 0);
-	
-	*(buffer + p_packet->length - 1) = p_twi->TWI_RHR;
 
+	*(buffer + p_packet->length - 1) = p_twi->TWI_RHR;
+#endif
 	while (!(p_twi->TWI_SR & TWI_SR_TXCOMP)) {
 	}
 }
@@ -394,7 +403,7 @@ int main(void)
 		}
 	}
 
-#if (SAMG55)
+#if SAMG55
 	/* Enable the peripheral and set TWI mode. */
 	flexcom_enable(BOARD_FLEXCOM_TWI);
 	flexcom_set_opmode(BOARD_FLEXCOM_TWI, FLEXCOM_TWI);
