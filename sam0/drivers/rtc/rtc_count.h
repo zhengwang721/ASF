@@ -778,7 +778,7 @@ static inline void rtc_count_get_config_defaults(
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config->continuously_update = false;
 #endif
-#if (SAML22)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
 	config->enable_read_sync    = true;
 #endif
 
