@@ -397,8 +397,8 @@ static inline void bodvdd_clear_detected(void)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
- *		<td>06/2015</td>
+ *		<td>42701A</td>
+ *		<td>03/2016</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
