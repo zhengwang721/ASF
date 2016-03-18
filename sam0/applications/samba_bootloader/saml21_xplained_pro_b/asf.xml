@@ -5,8 +5,12 @@
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_bootloader.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_extint.h"/>
+		<build type="header-file" value="conf_usb.h"/>
 		<require idref="board.saml21_xplained_pro_b"/>
 		<require idref="sam0.applications.samba_bootloader"/>
+		<config name="config.common.services.usb.class.device" value="cdc"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
