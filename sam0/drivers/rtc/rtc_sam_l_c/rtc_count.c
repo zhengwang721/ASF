@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Driver (Count Mode)
  *
- * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -208,7 +208,14 @@ static enum status_code _rtc_count_set_config(
 
 	Rtc *const rtc_module = module->hw;
 
-#if (SAMC20) || (SAMC21) || (SAML22) || (SAML21)
+#if SAML21
+	rtc_module->MODE0.CTRLA.reg = RTC_MODE0_CTRLA_MODE(0)
+#if (SAML21XXXB)
+				    | (config->enable_read_sync << RTC_MODE0_CTRLA_COUNTSYNC_Pos)
+#endif
+				    | config->prescaler;
+#endif
+#if (SAMC20) || (SAMC21) || (SAML22)
 	rtc_module->MODE0.CTRLA.reg = RTC_MODE0_CTRLA_MODE(0) | config->prescaler
 			| (config->enable_read_sync << RTC_MODE0_CTRLA_COUNTSYNC_Pos);
 #endif
