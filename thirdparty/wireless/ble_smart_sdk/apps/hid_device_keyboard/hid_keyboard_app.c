@@ -300,6 +300,11 @@ int main(void )
 	serial_console_init();
 
 	DBG_LOG("Initializing HID Keyboard Application");
+
+	/* Initialize button*/
+	gpio_init();
+	button_init();
+	button_register_callback(button_cb);
 	
 	/* Initialize the profile based on user input */
 	hid_keyboard_app_init();
@@ -307,8 +312,6 @@ int main(void )
 	/* initialize the ble chip  and Set the device mac address */
 	ble_device_init(NULL);
 
-	/* Initialize button*/
-	button_init(button_cb);
 	hid_prf_init(NULL);
 	
 	/* Register the notification handler */
