@@ -164,11 +164,11 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 				}
 			} else if(config->direction == GPIO_PIN_DIR_OUTPUT) {
 				if (gpio_pin < 16) {
-					GPIO0->OUTENSET.reg |= (1 << gpio_pin);
+					GPIO0->OUTENSET.reg = (1 << gpio_pin);
 				} else if (gpio_pin < 32) {
-					GPIO1->OUTENSET.reg |= (1 << (gpio_pin % 16));
+					GPIO1->OUTENSET.reg = (1 << (gpio_pin % 16));
 				} else {
-					GPIO2->OUTENSET.reg |= (1 << (gpio_pin % 16));
+					GPIO2->OUTENSET.reg = (1 << (gpio_pin % 16));
 				}
 			}
 		}
@@ -366,28 +366,28 @@ void gpio_register_callback(uint8_t gpio_pin, gpio_callback_t callback_func,
 		gpio_port = 2;
 	}
 	switch (callback_type) {
-		case GPIO_CALLBACK_LOW:
-			_gpio_instances[gpio_port].hw->INTTYPECLR.reg |= 1 << (gpio_pin % 16);
-			_gpio_instances[gpio_port].hw->INTPOLCLR.reg |= 1 << (gpio_pin % 16);
-			break;
+	case GPIO_CALLBACK_LOW:
+		_gpio_instances[gpio_port].hw->INTTYPECLR.reg = 1 << (gpio_pin % 16);
+		_gpio_instances[gpio_port].hw->INTPOLCLR.reg = 1 << (gpio_pin % 16);
+		break;
 
-		case GPIO_CALLBACK_HIGH:
-			_gpio_instances[gpio_port].hw->INTTYPECLR.reg |= 1 << (gpio_pin % 16);
-			_gpio_instances[gpio_port].hw->INTPOLSET.reg |= 1 << (gpio_pin % 16);
-			break;
+	case GPIO_CALLBACK_HIGH:
+		_gpio_instances[gpio_port].hw->INTTYPECLR.reg = 1 << (gpio_pin % 16);
+		_gpio_instances[gpio_port].hw->INTPOLSET.reg = 1 << (gpio_pin % 16);
+		break;
 
-		case GPIO_CALLBACK_RISING:
-			_gpio_instances[gpio_port].hw->INTTYPESET.reg |= 1 << (gpio_pin % 16);
-			_gpio_instances[gpio_port].hw->INTPOLSET.reg |= 1 << (gpio_pin % 16);
-			break;
+	case GPIO_CALLBACK_RISING:
+		_gpio_instances[gpio_port].hw->INTTYPESET.reg = 1 << (gpio_pin % 16);
+		_gpio_instances[gpio_port].hw->INTPOLSET.reg = 1 << (gpio_pin % 16);
+		break;
 
-		case GPIO_CALLBACK_FALLING:
-			_gpio_instances[gpio_port].hw->INTTYPESET.reg |= 1 << (gpio_pin % 16);
-			_gpio_instances[gpio_port].hw->INTPOLCLR.reg |= (1 << (gpio_pin % 16));
-			break;
+	case GPIO_CALLBACK_FALLING:
+		_gpio_instances[gpio_port].hw->INTTYPESET.reg = 1 << (gpio_pin % 16);
+		_gpio_instances[gpio_port].hw->INTPOLCLR.reg = (1 << (gpio_pin % 16));
+		break;
 
-		case GPIO_CALLBACK_N:
-			break;
+	case GPIO_CALLBACK_N:
+		break;
 	}
 	/* Register callback function */
 	_gpio_instances[gpio_port].callback[gpio_pin % 16] = callback_func;
@@ -456,7 +456,7 @@ void gpio_enable_callback(uint8_t gpio_pin)
 
 	/* Enable callback */
 	_gpio_instances[gpio_port].callback_enable_mask |= (1 << (gpio_pin % 16));
-	_gpio_instances[gpio_port].hw->INTENSET.reg |= (1 << (gpio_pin % 16));
+	_gpio_instances[gpio_port].hw->INTENSET.reg = (1 << (gpio_pin % 16));
 }
 
 /**
@@ -483,7 +483,7 @@ void gpio_disable_callback(uint8_t gpio_pin)
 
 	/* Enable callback */
 	_gpio_instances[gpio_port].callback_enable_mask &= ~(1 << (gpio_pin % 16));
-	_gpio_instances[gpio_port].hw->INTENCLR.reg |= (1 << (gpio_pin % 16));
+	_gpio_instances[gpio_port].hw->INTENCLR.reg = (1 << (gpio_pin % 16));
 }
 
 /**
@@ -499,10 +499,10 @@ static void gpio_port0_isr_handler(void)
 	for (uint8_t i = 0; i < 16; i++){
 		if (flag & (1 << i)) {
 			/* Clear interrupt flag */
-			_gpio_instances[0].hw->INTSTATUSCLEAR.reg |= (1 << i);
+			_gpio_instances[0].hw->INTSTATUSCLEAR.reg = (1 << i);
 			if ((_gpio_instances[0].callback_enable_mask & (1 << i)) && \
-			(_gpio_instances[0].callback_reg_mask & (1 << i)))
-			_gpio_instances[0].callback[i]();
+                    (_gpio_instances[0].callback_reg_mask & (1 << i)))
+                _gpio_instances[0].callback[i]();
 			break;
 		}
 	}
@@ -527,7 +527,7 @@ static void gpio_port1_isr_handler(void)
 
 		if (flag & (1 << i)) {
 			/* Clear interrupt flag */
-			_gpio_instances[1].hw->INTSTATUSCLEAR.reg |= (1 << i);
+			_gpio_instances[1].hw->INTSTATUSCLEAR.reg = (1 << i);
 			if ((_gpio_instances[1].callback_enable_mask & (1 << i)) && \
 			(_gpio_instances[1].callback_reg_mask & (1 << i))) {
 				_gpio_instances[1].callback[i]();
@@ -551,10 +551,10 @@ static void gpio_port2_isr_handler(void)
 	for (uint8_t i = 12; i < 16; i++){
 		if (flag & (1 << i)) {
 			/* Clear interrupt flag */
-			_gpio_instances[2].hw->INTSTATUSCLEAR.reg |= (1 << i);
+			_gpio_instances[2].hw->INTSTATUSCLEAR.reg = (1 << i);
 			if ((_gpio_instances[2].callback_enable_mask & (1 << i)) && \
-			(_gpio_instances[2].callback_reg_mask & (1 << i)))
-			_gpio_instances[2].callback[i]();
+                    (_gpio_instances[2].callback_reg_mask & (1 << i)))
+                _gpio_instances[2].callback[i]();
 			break;
 		}
 	}
