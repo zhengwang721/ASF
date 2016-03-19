@@ -672,11 +672,11 @@ uint32 spi_flash_get_size(void)
 			u32FlashPwr = ((u32FlashId>>16)&0xff) - 0x11; /*2MBIT is the min*/
 			/*That number power 2 to get the flash size*/
 			gu32InernalFlashSize = 1<<u32FlashPwr;
-			M2M_INFO("Flash Size %lu Mb\n",gu32InernalFlashSize);
+			M2M_PRINT("Flash Size %lu Mb\n",gu32InernalFlashSize);
 		}
 		else
 		{
-			M2M_ERR("Cann't Detect Flash size\n");
+			M2M_ERR("Can't detect flash size!\n");
 		}
 	}
 

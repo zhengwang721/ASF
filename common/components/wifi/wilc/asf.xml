@@ -14,7 +14,6 @@
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
 			</info>
-			<build type="define" name="CONF_WILC_USE_SPI" value=""/>
 			<require idref="common.components.wifi.wilc1000.spi"/>
 			<device-support value="sam4s"/>
 			<device-support value="samv71"/>
@@ -29,7 +28,6 @@
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
 			</info>
-			<build type="define" name="CONF_WILC_USE_SDIO" value=""/>
 			<require idref="common.components.wifi.wilc1000.sdio"/>
 			<device-support value="sam4s"/>
 			<device-support value="samv71"/>
@@ -471,7 +469,7 @@
 	
 
 
-	<select-by-config id="common.components.wifi.wilc3000" name="config.common.components.wifi.wilc3000" caption="WILC3000 (Wi-Fi & BT4.0) RTOS Host Driver v3.4.0" default="spi">
+	<select-by-config id="common.components.wifi.wilc3000" name="config.common.components.wifi.wilc3000" caption="WILC3000 (Wi-Fi and BT4.0) RTOS Host Driver v3.4.0" default="spi">
 		<info type="description" value="summary">
 			The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi (via SPI or SDIO) and Bluetooth (via UART) connectivity.
 		</info>
@@ -479,27 +477,25 @@
 			<keyword value="Wireless"/>
 		</info>
 		
-		<module type="service" id="common.components.wifi.wilc3000#spi" caption="WILC3000 (Wi-Fi & BT4.0) SPI RTOS Host Driver v3.4.0">
+		<module type="service" id="common.components.wifi.wilc3000#spi" caption="WILC3000 (Wi-Fi and BT4.0) SPI RTOS Host Driver v3.4.0">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi via SPI and Bluetooth via UART.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
 			</info>
-			<build type="define" name="CONF_WILC_USE_SPI" value=""/>
 			<require idref="common.components.wifi.wilc3000.spi"/>
 			<device-support value="sam4s"/>
 			<device-support value="samv71"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
 		</module>
-		<module type="service" id="common.components.wifi.wilc3000#sdio" caption="WILC3000 (Wi-Fi & BT4.0) SDIO RTOS Host Driver v3.4.0">
+		<module type="service" id="common.components.wifi.wilc3000#sdio" caption="WILC3000 (Wi-Fi and BT4.0) SDIO RTOS Host Driver v3.4.0">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi via SDIO and Bluetooth via UART.
 			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Wireless"/>
 			</info>
-			<build type="define" name="CONF_WILC_USE_SDIO" value=""/>
 			<require idref="common.components.wifi.wilc3000.sdio"/>
 			<device-support value="sam4s"/>
 			<device-support value="samv71"/>
@@ -507,14 +503,14 @@
 		</module>
 	</select-by-config>
 
-	<select-by-device id="common.components.wifi.wilc3000.spi" caption="WILC3000 (Wi-Fi & BT4.0) SPI RTOS Host Driver v3.4.0">
+	<select-by-device id="common.components.wifi.wilc3000.spi" caption="WILC3000 (Wi-Fi and BT4.0) SPI RTOS Host Driver v3.4.0">
 		<info type="description" value="summary">
 			The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi via SPI and Bluetooth via UART.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>
 		</info>
-		<module type="service" id="common.components.wifi.wilc3000.spi#0" caption="WILC3000 (Wi-Fi & BT4.0) SPI RTOS Host Driver v3.4.0 - SAM4S implementation">
+		<module type="service" id="common.components.wifi.wilc3000.spi#0" caption="WILC3000 (Wi-Fi and BT4.0) SPI RTOS Host Driver v3.4.0 - SAM4S implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi via SPI and Bluetooth via UART.
 			</info>
@@ -591,7 +587,7 @@
 
 			<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
 		</module>
-		<module type="service" id="common.components.wifi.wilc3000.spi#1" caption="WILC3000 (Wi-Fi & BT4.0) SPI RTOS Host Driver v3.4.0 - SAMV71 implementation">
+		<module type="service" id="common.components.wifi.wilc3000.spi#1" caption="WILC3000 (Wi-Fi and BT4.0) SPI RTOS Host Driver v3.4.0 - SAMV71 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi via SPI and Bluetooth via UART.
 			</info>
@@ -670,14 +666,14 @@
 		</module>
 	</select-by-device>
 
-	<select-by-device id="common.components.wifi.wilc3000.sdio" caption="WILC3000 (Wi-Fi & BT4.0) SDIO RTOS Host Driver v3.4.0">
+	<select-by-device id="common.components.wifi.wilc3000.sdio" caption="WILC3000 (Wi-Fi and BT4.0) SDIO RTOS Host Driver v3.4.0">
 		<info type="description" value="summary">
 			The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi via SDIO and Bluetooth via UART.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>
 		</info>
-		<module type="service" id="common.components.wifi.wilc3000.sdio#0" caption="WILC3000 (Wi-Fi & BT4.0) SDIO RTOS Host Driver v3.4.0 - SAM4S implementation">
+		<module type="service" id="common.components.wifi.wilc3000.sdio#0" caption="WILC3000 (Wi-Fi and BT4.0) SDIO RTOS Host Driver v3.4.0 - SAM4S implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi via SDIO and Bluetooth via UART.
 			</info>
@@ -754,7 +750,7 @@
 
 			<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
 		</module>
-		<module type="service" id="common.components.wifi.wilc3000.sdio#1" caption="WILC3000 (Wi-Fi & BT4.0) SDIO RTOS Host Driver v3.4.0 - SAMV71 implementation">
+		<module type="service" id="common.components.wifi.wilc3000.sdio#1" caption="WILC3000 (Wi-Fi and BT4.0) SDIO RTOS Host Driver v3.4.0 - SAMV71 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WILC3000 is a single chip IEEE 802.11 b/g/n RF/Baseband/MAC link controller and Bluetooth 4.0. It is the ideal add-on to existing MCU solutions bringing WiFi via SDIO and Bluetooth via UART.
 			</info>

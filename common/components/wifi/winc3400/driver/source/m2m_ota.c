@@ -251,6 +251,24 @@ NMI_API sint8 m2m_ota_rollback(void)
 
 /*!
 @fn	\
+	NMI_API sint8 m2m_ota_abort(void);
+
+@brief
+	Request OTA Abort
+
+@return
+	The function SHALL return 0 for success and a negative value otherwise.
+*/
+NMI_API sint8 m2m_ota_abort(void)
+{
+	sint8 ret = M2M_SUCCESS;
+	ret = hif_send(M2M_REQ_GRP_OTA,M2M_OTA_REQ_ABORT,NULL,0,NULL,0,0);
+	return ret;
+}
+
+
+/*!
+@fn	\
 	NMI_API sint8 m2m_ota_switch_firmware(void);
 
 @brief
