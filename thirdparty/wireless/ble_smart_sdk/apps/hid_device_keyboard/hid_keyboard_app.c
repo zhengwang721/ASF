@@ -291,7 +291,7 @@ static void hid_keyboard_app_init(void)
 	}
 }
 
-#ifdef ULP
+#ifdef ENABLE_ULP
 static void resume_cb(void)
 {
 	init_port_list();
@@ -354,7 +354,7 @@ int main(void )
 	/* Callback registering for BLE-GATT-Server Role */
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK, BLE_GATT_SERVER_EVENT_TYPE, hid_app_gatt_server_handle);
 
-#ifdef ULP
+#ifdef ENABLE_ULP
 	register_resume_callback(resume_cb);
 	configure_aon_gpio_callbacks();
 #endif
@@ -362,7 +362,7 @@ int main(void )
 	/* Capturing the events  */
 	while(app_exec)
 	{
-#ifdef ULP
+#ifdef ENABLE_ULP
 		release_sleep_lock();
 		ble_event_task(BLE_EVENT_TIMEOUT);
 		acquire_sleep_lock();
