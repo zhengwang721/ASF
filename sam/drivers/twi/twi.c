@@ -3,7 +3,7 @@
  *
  * \brief Two-Wire Interface (TWI) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,7 +79,11 @@ extern "C" {
 
 #define I2C_FAST_MODE_SPEED  400000
 #define TWI_CLK_DIVIDER      2
+#if SAMG55
+#define TWI_CLK_CALC_ARGU    3
+#else
 #define TWI_CLK_CALC_ARGU    4
+#endif	
 #define TWI_CLK_DIV_MAX      0xFF
 #define TWI_CLK_DIV_MIN      7
 
