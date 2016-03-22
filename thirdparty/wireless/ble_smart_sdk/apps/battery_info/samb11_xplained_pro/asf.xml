@@ -13,6 +13,7 @@
 
 
 		<require idref="board.samb11_xplained_pro"/>
+		<require idref="sam0.drivers.aon_sleep_timer"/>
 		
 		<!--generator value="iarewarm"/-->
 		<generator value="armgcc" />
