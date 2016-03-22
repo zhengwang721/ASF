@@ -687,7 +687,6 @@ sint8 nm_sdio_write_reg(uint32 u32Addr, uint32 u32Val)
 sint8 nm_sdio_read_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 {
 	sint8 s8Ret;
-	uint32 i;
 	sint8 rem = 4 - (((uint32)puBuf) %4);
 	if(rem == 4){
 		s8Ret = sdio_read(u32Addr, puBuf, u16Sz);	

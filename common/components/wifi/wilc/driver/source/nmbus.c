@@ -76,7 +76,7 @@ sint8 nm_bus_iface_init(void *pvInitVal)
 */ 
 sint8 nm_bus_iface_deinit(void)
 {
-	sint8 ret = M2M_SUCCESS;
+	sint8 ret;
 	ret = nm_bus_deinit();
 
 	return ret;
