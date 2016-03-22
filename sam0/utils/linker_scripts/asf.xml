@@ -1226,6 +1226,7 @@
 			<build type="linker-config" subtype="script" value="samb11/iar/samb11g18a_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="samb11/iar/samb11g18a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamb11g18a"/>
+			<device-support value="atbtlc1000wlcsp"/>
 		</module>
 	</select-by-device>
 </asf>

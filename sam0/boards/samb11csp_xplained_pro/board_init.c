@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Top header file for SAMB11
+ * \brief SAM B11 CSP Xplained Pro board initialization
  *
- * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,24 +40,34 @@
  * \asf_license_stop
  *
  */
-
-#ifndef _SAMB11_
-#define _SAMB11_
-
-/**
- * \defgroup SAMB11_definitions SAMB11 Device Definitions
- * \brief SAMB11 CMSIS Definitions.
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#if   defined(__BTLC1000WLCSP__) || defined(__ATBTLC1000WLCSP__)
-  #include "btlc1000wlcsp.h"
-#elif defined(__SAMB11G18A__) || defined(__ATSAMB11G18A__)
-  #include "samb11g18a.h"
-#elif defined(__SAMB11ZR__) || defined(__ATSAMB11ZR__)
-  #include "samb11zr.h"
-#else
-  #error Library does not support the specified device
+#include <compiler.h>
+#include <board.h>
+#include <conf_board.h>
+
+#if defined(__GNUC__)
+void board_init(void) WEAK __attribute__((alias("system_board_init")));
+#elif defined(__ICCARM__)
+void board_init(void);
+#  pragma weak board_init=system_board_init
 #endif
 
+void system_board_init(void)
+{
+//	struct port_config pin_conf;
+//	port_get_config_defaults(&pin_conf);
 
-#endif /* _SAMB11_ */
+	/* Configure LEDs as outputs, turn them off */
+//	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+//	port_pin_set_config(LED_0_PIN, &pin_conf);
+//	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+
+	/* Set buttons as inputs */
+//	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+//	pin_conf.input_pull = PORT_PIN_PULL_UP;
+//	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
+	
+}
