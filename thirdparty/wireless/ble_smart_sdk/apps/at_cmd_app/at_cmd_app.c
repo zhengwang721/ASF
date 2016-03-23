@@ -127,7 +127,7 @@ enum portint_callback_type
 
 //from uart.h keil project
 
-void callback_uart_rx(void);
+void callback_uart_rx(uint8_t input);
 void callback_btn(void);
 void callback_resume(void);
 void init_globals(void);
@@ -145,7 +145,7 @@ volatile static uint8_t 	gu8InvalidPrinted   = 1;
 volatile static int8_t 		gs8CmdIndex			= -1;
 volatile static uint8_t 	carriage_return 	= 0;
 
-void callback_uart_rx(void)
+void callback_uart_rx(uint8_t input)
 {
 	//UART_READ(gau8UartRxBuffer);
 	send_plf_int_msg_ind(UART0_RX_VECTOR_TABLE_INDEX,UART_CALLBACK_RX_FIFO_HALF_FULL,NULL,0);
@@ -158,7 +158,7 @@ void callback_uart_rx(void)
 			{
 				case 0:
 				{
-					if('A' != gau8UartRxBuffer)
+					if('A' != input)
 					{
 						goto INVALID_CH;
 					}
@@ -166,7 +166,7 @@ void callback_uart_rx(void)
 				break;
 				case 1:
 				{
-					if('T' != gau8UartRxBuffer) 
+					if('T' != input) 
 					{
 						goto INVALID_CH;
 					}
@@ -174,14 +174,14 @@ void callback_uart_rx(void)
 				break;
 				case 2:
 				{
-					if('+' != gau8UartRxBuffer)
+					if('+' != input)
 					{
 						goto INVALID_CH;
 					}	
 				}//End case 2 of strlen(gau8DataBuffer)
 				break;
 			}
-			switch(gau8UartRxBuffer)
+			switch(input)
 			{
 				case '\r':
 					carriage_return = true;
@@ -202,13 +202,13 @@ void callback_uart_rx(void)
 					} 
 					else
 					{
-						gau8DataBuffer[gau8DataBufferIndex++] = gau8UartRxBuffer;	
+						gau8DataBuffer[gau8DataBufferIndex++] = input;	
 					}
 					goto EXIT;
 				}
 				default:
 				{
-					gau8DataBuffer[gau8DataBufferIndex++] = gau8UartRxBuffer;
+					gau8DataBuffer[gau8DataBufferIndex++] = input;
 					goto EXIT;
 				}	
 			}
@@ -222,7 +222,8 @@ void callback_uart_rx(void)
 INVALID_CH:
 	gu8InvalidPrinted = 0;
 EXIT:
-	getchar_aysnc((uart_callback_t)callback_uart_rx,&gau8UartRxBuffer);
+	gau8UartRxBuffer = input;
+	register_uart_callback(callback_uart_rx);
 	return;
 }
 
@@ -237,9 +238,10 @@ void callback_resume(void)
 	//gpio_config_led_init();
 	//gpio_config_btn_init(callback_btn);
 	serial_console_init();
+	gpio_init();
+	button_init();
+	button_register_callback(callback_btn);
 	led_init();
-	button_init(callback_btn);
-	
 }
 
 void init_globals(void)
@@ -295,13 +297,15 @@ int main(void)
 	//uart_config_init(UART_CONFIG_BAUD_RATE);
 	//uart_config_callback(callback_uart_rx, gau8UartRxBuffer, UART_CONFIG_ISR_CHR_LEN); 
 	serial_console_init();
-	getchar_aysnc((uart_callback_t)callback_uart_rx,&gau8UartRxBuffer);
+	register_uart_callback(callback_uart_rx);
 
 	printf("UART Initialized\r\n");
 	
 	//gpio_config_btn_init(callback_btn);
 	//gpio_config_led_init();
-	button_init(callback_btn);
+	gpio_init();
+	button_init();
+	button_register_callback(callback_btn);
 	led_init();
 	
 	if(AT_BLE_SUCCESS != init_ble_stack())
