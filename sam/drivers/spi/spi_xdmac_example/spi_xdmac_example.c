@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface (SPI) XDMAC example for SAMV71/SAME70.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
