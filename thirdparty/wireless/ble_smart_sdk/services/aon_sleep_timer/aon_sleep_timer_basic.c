@@ -58,7 +58,7 @@ bool aon_sleep_timer_service_init(uint32_t _sec)
 	#define CONF_AON_SLEEP_COUNTER      32768    /* About 1s */
 	struct aon_sleep_timer_config config;
 	
-	if(_sec < 1)
+	if(_sec <= 0)
 		_sec = 1;
 
 	aon_sleep_timer_get_config_defaults(&config);
