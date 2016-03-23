@@ -56,6 +56,7 @@
 #include "ble_utils.h"
 #include "battery_info.h"
 #include "ble_manager.h"
+#include "aon_sleep_timer_basic.h"
 
 #define _AON_TIMER_
 
@@ -63,12 +64,6 @@
 #define BATTERY_UPDATE_INTERVAL	(1) //1 second
 #define BATTERY_MAX_LEVEL		(100)
 #define BATTERY_MIN_LEVEL		(0)
-
-typedef enum
-{
-	AON_TIMER_IDLE,
-	AON_TIMER_ACTIVE
-}aon_timer_status;
 
 uint8_t db_mem[1024] = {0};
 bat_gatt_service_handler_t bas_service_handler;
@@ -78,10 +73,6 @@ bool volatile flag = true;
 bool volatile battery_flag = true;
 at_ble_handle_t bat_connection_handle;
 
-
-aon_timer_status aon_status = AON_TIMER_IDLE;
-static void aon_sleep_timer_stop(void);
-static bool aon_sleep_timer_start(uint32_t _sec);
 void resume_cb(void);
 
 /**
@@ -91,44 +82,6 @@ static void aon_sleep_timer_callback(void)
 {
 	timer_cb_done = true;
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
-}
-
-/**
- * \aon timemr init & start function
- */
-
-static bool aon_sleep_timer_start(uint32_t _sec)
-{
-	#define CONF_AON_SLEEP_COUNTER      32768    /* About 1s */
-	struct aon_sleep_timer_config config;
-
-	aon_sleep_timer_get_config_defaults(&config);
-	config.wakeup = AON_SLEEP_TIMER_WAKEUP_ARM_BLE;
-	config.mode = AON_SLEEP_TIMER_RELOAD_MODE;//AON_SLEEP_TIMER_SINGLE_MODE
-	config.counter = _sec * CONF_AON_SLEEP_COUNTER;
-	aon_sleep_timer_init(&config);
-	
-	aon_sleep_timer_register_callback(aon_sleep_timer_callback);
-	NVIC_EnableIRQ(AON_SLEEP_TIMER_IRQn);
-	
-	while(!aon_sleep_timer_sleep_timer_active());
-	
-	aon_status = AON_TIMER_ACTIVE;
-	return true;
-}
-
-/**
- * \aon timemr stop
- */
-static void aon_sleep_timer_stop()
-{	
-	if( aon_status != AON_TIMER_ACTIVE )
-		return ;
-	
-	aon_status = AON_TIMER_IDLE;
-	
-	aon_sleep_timer_disable();
-	NVIC_DisableIRQ(AON_SLEEP_TIMER_IRQn);
 }
 
 /* Advertisement data set and Advertisement start */
@@ -169,7 +122,7 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 	timer_cb_done = false;
 	flag = true;
 	
-	aon_sleep_timer_stop();
+	aon_sleep_timer_service_stop();
 	battery_service_advertise();
 	ALL_UNUSED(param);
 	return AT_BLE_SUCCESS;
@@ -210,11 +163,12 @@ static at_ble_status_t ble_char_changed_app_event(void *param)
 		device_listening = char_handle->char_new_value[1]<<8| char_handle->char_new_value[0];
 		if(!device_listening)
 		{		
-			aon_sleep_timer_stop();			
+			aon_sleep_timer_service_stop();			
 		}
 		else
 		{
-			aon_sleep_timer_start(1);
+			aon_sleep_timer_service_init(1);
+			aon_sleep_timer_service_start(aon_sleep_timer_callback);
 		}			
 	}	
 	return bat_char_changed_event(char_handle->conn_handle,&bas_service_handler, char_handle, &flag);	
