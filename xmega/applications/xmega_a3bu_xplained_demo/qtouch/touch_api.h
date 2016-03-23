@@ -49,22 +49,11 @@
 #ifndef TOUCH_API_H
 #define TOUCH_API_H
 
-bool check_touch_key_pressed(void);
-
 #ifdef __cplusplus
-extern "C"
-{ 
-#endif 
-
- void touch_init(void);
-
-#ifdef __cplusplus 
-}
+extern "C" {
 #endif
-
-
-
-
+bool check_touch_key_pressed(void);
+void touch_init(void);
 /*----------------------------------------------------------------------------
                             nested include files
 ----------------------------------------------------------------------------*/
@@ -1082,6 +1071,9 @@ extern void qt_enable_slider(    channel_t from_channel,
 
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TOUCH_API_H */
 
