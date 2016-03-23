@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS Peripheral Control API For the SPI
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,7 +46,9 @@
 
 #ifndef FREERTOS_SPI_MASTER_INCLUDED
 #define FREERTOS_SPI_MASTER_INCLUDED
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -653,5 +655,8 @@ status_code_t freertos_spi_full_duplex_packet_async(freertos_spi_if p_spi,
 	  }
 \endcode
  */
+#ifdef __cplusplus
+}
+#endif
 
  #endif /* FREERTOS_SPI_MASTER_INCLUDED */

@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS Peripheral Control API For the USART
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,6 +45,10 @@
  */
 #ifndef FREERTOS_USART_SERIAL_INCLUDED
 #define FREERTOS_USART_SERIAL_INCLUDED
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
@@ -143,6 +147,9 @@ uint32_t freertos_usart_serial_read_packet(freertos_usart_if p_usart,
  *     PDC was successfully configured to perform the USART write operation.
  */
 #define freertos_usart_write_packet(p_usart, data, len, block_time_ticks) freertos_usart_write_packet_async((p_usart), (data), (len), (block_time_ticks), (NULL))
+#ifdef __cplusplus
+}
+#endif 
 
 #endif  /* FREERTOS_USART_SERIAL_INCLUDED */
 

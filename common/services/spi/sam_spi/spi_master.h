@@ -3,7 +3,7 @@
  *
  * \brief SPI master common service for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,6 +46,9 @@
 
 #ifndef _SPI_MASTER_H_
 #define _SPI_MASTER_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "compiler.h"
 #include "sysclk.h"
@@ -233,4 +236,7 @@ extern status_code_t spi_read_packet(Spi *p_spi, uint8_t *data, size_t len);
  */
 extern status_code_t spi_transceive_packet(Spi *p_spi, uint8_t *tx_data, uint8_t *rx_data, size_t len);
 
+#ifdef __cplusplus
+}
+#endif
 #endif // _SPI_MASTER_H_
