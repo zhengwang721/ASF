@@ -362,10 +362,10 @@ typedef union {
 #define ADC_INPUTCTRL_MUXNEG_Pos    8            /**< \brief (ADC_INPUTCTRL) Negative Mux Input Selection */
 #define ADC_INPUTCTRL_MUXNEG_Msk    (0x1Ful << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG(value) (ADC_INPUTCTRL_MUXNEG_Msk & ((value) << ADC_INPUTCTRL_MUXNEG_Pos))
-#define ADC_INPUTCTRL_MUXNEG_PIN0_Val   0x0ul  /**< \brief (ADC_INPUTCTRL) ADC AIN0 Pin */
-#define ADC_INPUTCTRL_MUXNEG_PIN1_Val   0x1ul  /**< \brief (ADC_INPUTCTRL) ADC AIN1 Pin */
-#define ADC_INPUTCTRL_MUXNEG_GND_Val    0x02ul  /**< \brief (ADC_INPUTCTRL) Internal Ground */
-#define ADC_INPUTCTRL_MUXNEG_IOGND_Val  0x03ul  /**< \brief (ADC_INPUTCTRL) I/O Ground */
+#define   ADC_INPUTCTRL_MUXNEG_PIN0_Val   0x0ul  /**< \brief (ADC_INPUTCTRL) ADC AIN0 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN1_Val   0x1ul  /**< \brief (ADC_INPUTCTRL) ADC AIN1 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_GND_Val    0x02ul  /**< \brief (ADC_INPUTCTRL) Internal Ground */
+#define   ADC_INPUTCTRL_MUXNEG_IOGND_Val  0x03ul  /**< \brief (ADC_INPUTCTRL) I/O Ground */
 #define ADC_INPUTCTRL_MUXNEG_PIN0   (ADC_INPUTCTRL_MUXNEG_PIN0_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_PIN1   (ADC_INPUTCTRL_MUXNEG_PIN1_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_GND    (ADC_INPUTCTRL_MUXNEG_GND_Val  << ADC_INPUTCTRL_MUXNEG_Pos)
