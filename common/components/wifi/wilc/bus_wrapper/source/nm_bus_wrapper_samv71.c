@@ -135,7 +135,7 @@ static sint8 spi_rw(uint8 *pu8Mosi, uint8 *pu8Miso, uint16 u16Sz)
 */
 sint8 nm_bus_init(void *pvinit)
 {
-	sint8 result;
+	sint8 result = M2M_SUCCESS;
 #ifdef CONF_WILC_USE_I2C
 	/* TODO: implement I2C. */
 	result = M2M_ERR;
@@ -174,8 +174,6 @@ sint8 nm_bus_init(void *pvinit)
 	SPI_DEASSERT_CS();
 #elif defined CONF_WILC_USE_SDIO
 	result = sam4s_sdio_init();
-#else
-	result = M2M_ERR;
 #endif
 	return result;
 }

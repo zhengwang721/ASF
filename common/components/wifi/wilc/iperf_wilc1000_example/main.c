@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief Main application file.
+ * \brief iperf.
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -40,6 +40,56 @@
  *
  * \asf_license_stop
  *
+ */
+
+/** \mainpage
+ * \section intro Introduction
+ * This example implements an iperf server compatible with iperf client v2.0.5.
+ * WILC device is connected to a local Wi-Fi network using Station mode. Connect
+ * a laptop to the router using an ethernet cable, then run the iperf command tool
+ * to measure the WILC bandwidth.
+ *
+ * To test WILC bandwidth for TCP throughput, run the following command from the
+ * laptop:
+ * iperf -c WILC_IP_ADDRESS -i 5 -r<br>
+ *
+ * To test WILC bandwidth for UDP throughput, run the following command from the
+ * laptop:
+ * iperf -c WILC_IP_ADDRESS -u -i 5 -r -b 10mbps<br>
+ *
+ * It uses the following hardware:
+ * - the SAM Xplained Pro.
+ * - the WILC on EXT1.
+ *
+ * \section files Main Files
+ * - main.c : Initialize the FreeRTOS scheduler.
+ * - iperf.c : Implements the iperf server logic.
+ *
+ * \section usage Usage
+ * -# Configure below defines in sta.h to specify AP to connect to.
+ * \code
+ *    #define MAIN_WLAN_SSID         "DEMO_AP"
+ *    #define MAIN_WLAN_AUTH         M2M_WIFI_SEC_WPA_PSK
+ *    #define MAIN_WLAN_PSK          "12345678"
+ * \endcode
+ * -# Build the program and download it into the board.
+ * -# On the computer, open and configure a terminal application as the follows.
+ * \code
+ *    Baud Rate : 115200
+ *    Data : 8bit
+ *    Parity bit : none
+ *    Stop bit : 1bit
+ *    Flow control : none
+ * \endcode
+ * -# Start the application.
+ *
+ * \section compinfo Compilation Information
+ * This software was written for the GNU GCC compiler using Atmel Studio 6.2
+ * Other compilers may or may not work.
+ *
+ * \section contactinfo Contact Information
+ * For further information, visit
+ * <A href="http://www.atmel.com">Atmel</A>.\n
  */
 
 #include "asf.h"

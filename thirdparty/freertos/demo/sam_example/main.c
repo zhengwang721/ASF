@@ -104,6 +104,7 @@ extern void vApplicationTickHook(void);
 extern void vApplicationMallocFailedHook(void);
 extern void xPortSysTickHandler(void);
 
+#ifndef __SAMV71Q21__
 /**
  * \brief Handler for Sytem Tick interrupt.
  */
@@ -111,6 +112,7 @@ void SysTick_Handler(void)
 {
 	xPortSysTickHandler();
 }
+#endif
 
 /**
  * \brief Called if stack overflow during execution
