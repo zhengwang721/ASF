@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief Board configuration.
  *
- * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,64 +44,20 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "twi.h"
-#include "sysclk.h"
+/** Usart Hw ID used by the console (UART). */
+#define CONSOLE_UART_ID          ID_UART
 
-typedef Twi *twi_master_t;
-typedef twi_options_t twi_master_options_t;
-typedef twi_packet_t twi_package_t;
+/** Definition of TWI interrupt ID on board. */
+#define BOARD_TWI_IRQn          TWI0_IRQn
+#define BOARD_TWI_Handler	    TWI0_Handler
 
-static inline uint32_t twi_master_setup(twi_master_t p_twi,
-		twi_master_options_t *p_opt)
-{
-	p_opt->master_clk = sysclk_get_cpu_hz();
-	p_opt->smbus      = 0;
-#if SAMG55
-	if (p_twi == TWI0) {
-		sysclk_enable_peripheral_clock(ID_FLEXCOM0);
-	} else if (p_twi == TWI1) {
-		sysclk_enable_peripheral_clock(ID_FLEXCOM1);
-	} else if (p_twi == TWI2) {
-		sysclk_enable_peripheral_clock(ID_FLEXCOM2);
-	} else if (p_twi == TWI3) {
-		sysclk_enable_peripheral_clock(ID_FLEXCOM3);
-	} else if (p_twi == TWI4) {
-		sysclk_enable_peripheral_clock(ID_FLEXCOM4);
-	} else if (p_twi == TWI5) {
-		sysclk_enable_peripheral_clock(ID_FLEXCOM5);
-	} else if (p_twi == TWI6) {
-		sysclk_enable_peripheral_clock(ID_FLEXCOM6);
-#ifdef _SAMG55_FLEXCOM7_INSTANCE_
-	} else if (p_twi == TWI7) {
-		sysclk_enable_peripheral_clock(ID_FLEXCOM7);
-#endif /* _SAMG55_FLEXCOM7_INSTANCE_*/
-	} else {
-		// Do Nothing
-	}
-#else
-#if (!(SAMG51 || SAMG53 || SAMG54))
-	if (p_twi == TWI0) {
-		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else
-#endif
-	if (p_twi == TWI1) {
-		sysclk_enable_peripheral_clock(ID_TWI1);
-#if (SAM4N || SAMG)
-	} else if (p_twi == TWI2) {
-		sysclk_enable_peripheral_clock(ID_TWI2);
-#endif
-	} else {
-		// Do Nothing
-	}
-#endif
+/** Configure TWI0 pins */
+#define CONF_BOARD_TWI0
 
-	return (twi_master_init(p_twi, p_opt));
-}
+/** Configure UART pins */
+#define CONF_BOARD_UART_CONSOLE
 
-#define twi_master_enable(p_twi)   twi_enable_master_mode(p_twi)
-#define twi_master_disable(p_twi)  twi_disable_master_mode(p_twi)
-
-#endif // _TWI_MASTER_H_
+#endif /* CONF_BOARD_H_INCLUDED */
