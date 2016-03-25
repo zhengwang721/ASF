@@ -3,7 +3,7 @@
  *
  * \brief S25FL1xx QSPI flash example for SAMV71.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
