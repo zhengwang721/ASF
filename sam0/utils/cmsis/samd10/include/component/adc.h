@@ -364,12 +364,12 @@ typedef union {
 #define ADC_INPUTCTRL_MUXNEG(value) (ADC_INPUTCTRL_MUXNEG_Msk & ((value) << ADC_INPUTCTRL_MUXNEG_Pos))
 #define   ADC_INPUTCTRL_MUXNEG_PIN0_Val   0x0ul  /**< \brief (ADC_INPUTCTRL) ADC AIN0 Pin */
 #define   ADC_INPUTCTRL_MUXNEG_PIN1_Val   0x1ul  /**< \brief (ADC_INPUTCTRL) ADC AIN1 Pin */
-#define   ADC_INPUTCTRL_MUXNEG_PIN2_Val   0x2ul  /**< \brief (ADC_INPUTCTRL) ADC AIN0 Pin */
-#define   ADC_INPUTCTRL_MUXNEG_PIN3_Val   0x3ul  /**< \brief (ADC_INPUTCTRL) ADC AIN1 Pin */
-#define   ADC_INPUTCTRL_MUXNEG_PIN4_Val   0x4ul  /**< \brief (ADC_INPUTCTRL) ADC AIN0 Pin */
-#define   ADC_INPUTCTRL_MUXNEG_PIN5_Val   0x5ul  /**< \brief (ADC_INPUTCTRL) ADC AIN1 Pin */
-#define   ADC_INPUTCTRL_MUXNEG_PIN6_Val   0x6ul  /**< \brief (ADC_INPUTCTRL) ADC AIN0 Pin */
-#define   ADC_INPUTCTRL_MUXNEG_PIN7_Val   0x7ul  /**< \brief (ADC_INPUTCTRL) ADC AIN1 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN2_Val   0x2ul  /**< \brief (ADC_INPUTCTRL) ADC AIN2 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN3_Val   0x3ul  /**< \brief (ADC_INPUTCTRL) ADC AIN3 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN4_Val   0x4ul  /**< \brief (ADC_INPUTCTRL) ADC AIN4 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN5_Val   0x5ul  /**< \brief (ADC_INPUTCTRL) ADC AIN5 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN6_Val   0x6ul  /**< \brief (ADC_INPUTCTRL) ADC AIN6 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN7_Val   0x7ul  /**< \brief (ADC_INPUTCTRL) ADC AIN7 Pin */
 #define   ADC_INPUTCTRL_MUXNEG_GND_Val    0x02ul  /**< \brief (ADC_INPUTCTRL) Internal Ground */
 #define   ADC_INPUTCTRL_MUXNEG_IOGND_Val  0x03ul  /**< \brief (ADC_INPUTCTRL) I/O Ground */
 #define ADC_INPUTCTRL_MUXNEG_PIN0   (ADC_INPUTCTRL_MUXNEG_PIN0_Val << ADC_INPUTCTRL_MUXNEG_Pos)
