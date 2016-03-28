@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS Real Time Kernel example.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -104,7 +104,7 @@ extern void vApplicationTickHook(void);
 extern void vApplicationMallocFailedHook(void);
 extern void xPortSysTickHandler(void);
 
-#ifndef __SAMV71Q21__
+#if !(defined(SAMV71) || defined(SAME70))
 /**
  * \brief Handler for Sytem Tick interrupt.
  */

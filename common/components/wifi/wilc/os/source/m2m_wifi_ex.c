@@ -128,6 +128,10 @@ sint8 os_m2m_wifi_init(tstrWifiInitParam *param)
     /* Initialize the netif thread. */
 	os_hook_init();
 	os_hook_send_start(os_m2m_wifi_init_imp, &params.dispatch, &params);
+	
+	/* Give enough time to ensure FW is ready. */
+	vTaskDelay(50);
+	
 	return params.dispatch.retval;
 }
 
