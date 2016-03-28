@@ -225,7 +225,7 @@ void ble_device_init(at_ble_addr_t *addr)
 	
 #if defined ATT_DB_MEMORY
 	pf_cfg.memPool.memSize = BLE_ATT_DB_MEMORY_SIZE;
-	pf_cfg.memPool.memStartAdd = (uint8_t *)&att_db_data;
+	pf_cfg.memPool.memStartAdd = (uint8_t *)att_db_data;
 #else
 	pf_cfg.memPool.memSize = 0;
 	pf_cfg.memPool.memStartAdd = NULL;
