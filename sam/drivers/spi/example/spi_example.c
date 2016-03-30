@@ -444,7 +444,7 @@ static void spi_master_initialize(void)
 			SPI_CSR_BITS_8_BIT);
 	spi_set_baudrate_div(SPI_MASTER_BASE, SPI_CHIP_SEL,
 			(
-#ifdef SAM4L
+#if (SAM4L)
 			sysclk_get_pba_hz()
 #else
 			sysclk_get_peripheral_hz()
