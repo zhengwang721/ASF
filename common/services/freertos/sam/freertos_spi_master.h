@@ -46,6 +46,7 @@
 
 #ifndef FREERTOS_SPI_MASTER_INCLUDED
 #define FREERTOS_SPI_MASTER_INCLUDED
+ 
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"

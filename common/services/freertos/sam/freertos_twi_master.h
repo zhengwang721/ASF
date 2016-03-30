@@ -47,7 +47,6 @@
 #ifndef FREERTOS_TWI_MASTER_INCLUDED
 #define FREERTOS_TWI_MASTER_INCLUDED
 
-
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
