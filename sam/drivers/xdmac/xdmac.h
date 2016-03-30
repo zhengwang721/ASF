@@ -3,7 +3,7 @@
  *
  * \brief SAM XDMA Controller (DMAC) driver.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -308,24 +308,24 @@ static inline uint32_t xdmac_get_arbiter(Xdmac *xdmac)
  * \brief Enables XDMAC global interrupt.
  *
  * \param[out] xdmac Module hardware register base address pointer.
- * \param[in] mask A bitmask of channels to be enabled interrupt.
+ * \param[in] channel_num Channel number of which the interrupt is to be enabled.
  */
-static inline void xdmac_enable_interrupt(Xdmac *xdmac, uint32_t mask)
+static inline void xdmac_enable_interrupt(Xdmac *xdmac, uint32_t channel_num)
 {
 	Assert(xdmac);
-	xdmac->XDMAC_GIE = ( XDMAC_GIE_IE0 << mask) ;
+	xdmac->XDMAC_GIE = ( XDMAC_GIE_IE0 << channel_num) ;
 }
 
 /**
  * \brief Disables XDMAC global interrupt
  *
  * \param[out] xdmac Module hardware register base address pointer.
- * \param[in] mask A bitmask of channels to be disabled interrupt.
+ * \param[in] channel_num Channel number of which the interrupt is to be disabled.
  */
-static inline void xdmac_disable_interrupt(Xdmac *xdmac, uint32_t mask)
+static inline void xdmac_disable_interrupt(Xdmac *xdmac, uint32_t channel_num)
 {
 	Assert(xdmac);
-	xdmac->XDMAC_GID = (XDMAC_GID_ID0 << mask);
+	xdmac->XDMAC_GID = (XDMAC_GID_ID0 << channel_num);
 }
 
 /**
@@ -470,13 +470,13 @@ static inline uint32_t xdmac_get_software_request_status(Xdmac *xdmac)
  *
  * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
- * \param[in] mask Interrupt mask.
+ * \param[in] interrupt_sel The kind of XDMA interrupt which is selected is to be enabled.
  */
-static inline void xdmac_channel_enable_interrupt(Xdmac *xdmac, uint32_t channel_num, uint32_t mask)
+static inline void xdmac_channel_enable_interrupt(Xdmac *xdmac, uint32_t channel_num, uint32_t interrupt_sel)
 {
 	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	xdmac->XDMAC_CHID[channel_num].XDMAC_CIE = mask;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CIE = interrupt_sel;
 }
 
 /**
@@ -484,13 +484,13 @@ static inline void xdmac_channel_enable_interrupt(Xdmac *xdmac, uint32_t channel
  *
  * \param[out] xdmac Module hardware register base address pointer.
  * \param[in] channel_num  XDMA Channel number (range 0 to 23).
- * \param[in] mask Interrupt mask.
+ * \param[in] interrupt_sel The kind of XDMA interrupt which is selected is to be disabled.
  */
-static inline void xdmac_channel_disable_interrupt(Xdmac *xdmac, uint32_t channel_num, uint32_t mask)
+static inline void xdmac_channel_disable_interrupt(Xdmac *xdmac, uint32_t channel_num, uint32_t interrupt_sel)
 {
 	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
-	xdmac->XDMAC_CHID[channel_num].XDMAC_CID = mask;
+	xdmac->XDMAC_CHID[channel_num].XDMAC_CID = interrupt_sel;
 }
 
 /**
