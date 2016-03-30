@@ -46,9 +46,6 @@
 
 #ifndef FREERTOS_SPI_MASTER_INCLUDED
 #define FREERTOS_SPI_MASTER_INCLUDED
-#ifdef __cplusplus
-extern "C" {
-#endif
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -57,6 +54,10 @@ extern "C" {
 /* ASF includes. */
 #include "spi_master.h"
 #include "freertos_peripheral_control.h"
+ 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if XMEGA
 # error Unsupported chip type

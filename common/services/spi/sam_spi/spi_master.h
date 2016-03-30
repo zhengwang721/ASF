@@ -46,9 +46,6 @@
 
 #ifndef _SPI_MASTER_H_
 #define _SPI_MASTER_H_
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include "compiler.h"
 #include "sysclk.h"
@@ -58,6 +55,10 @@ extern "C" {
 /*! \name SPI Master Management Configuration */
 //! @{
 #include "conf_spi_master.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //! Default Configuration of SPI Master Delay BCS
 #ifndef CONFIG_SPI_MASTER_DELAY_BCS

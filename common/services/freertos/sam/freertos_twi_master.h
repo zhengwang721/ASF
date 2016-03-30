@@ -47,9 +47,7 @@
 #ifndef FREERTOS_TWI_MASTER_INCLUDED
 #define FREERTOS_TWI_MASTER_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -59,6 +57,10 @@ extern "C" {
 #include "twi_master.h"
 #include "freertos_peripheral_control.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 #if XMEGA
 # error Unsupported chip type
 #elif UC3

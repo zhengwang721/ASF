@@ -46,10 +46,6 @@
 #ifndef FREERTOS_UART_SERIAL_INCLUDED
 #define FREERTOS_UART_SERIAL_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -58,6 +54,10 @@ extern "C" {
 /* ASF includes. */
 #include "freertos_peripheral_control.h"
 #include "uart.h"
+ 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if XMEGA
 # error Unsupported chip type
