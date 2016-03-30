@@ -369,7 +369,7 @@ void spi_set_bits_per_transfer(Spi *p_spi, uint32_t ul_pcs_ch,
  *   \retval > 0  Success.
  *   \retval < 0  Error.
  */
-int32_t spi_calc_baudrate_div(const uint32_t baudrate, uint32_t mck)
+int16_t spi_calc_baudrate_div(const uint32_t baudrate, uint32_t mck)
 {
 	int baud_div = div_ceil(mck, baudrate);
 
