@@ -1,9 +1,9 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief Common Hardware Timer configuration
+ * \brief Board configuration
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,64 +38,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+#define CONF_BOARD_AT86RFX
 
-/* ! \name Configuration for XMEGA */
-/* ! @{ */
-#if (XMEGA)
-#define TIMER     (&TCC0)
-#endif /* XMEGA */
-/* ! @} */
+#define EXT2_CONFIG
 
-/* ! \name Configuration for UC3 */
-/* ! @{ */
-#if (UC3)
-#define TIMER                (&AVR32_TC0)
-#define TIMER_CHANNEL_ID     0
-#endif /* UC3 */
-/* ! @} */
+/** \name 802.15.4 TRX Interface definitions for EXT2
+ * @{
+ */
+#define AT86RFX_SPI                  EXT2_SPI_MODULE
+#define AT86RFX_RST_PIN              EXT2_PIN_7
+#define AT86RFX_MISC_PIN             EXT2_PIN_12
+#define AT86RFX_IRQ_PIN              EXT2_PIN_9
+#define AT86RFX_SLP_PIN              EXT2_PIN_10
+#define AT86RFX_SPI_CS               EXT2_PIN_15
+#define AT86RFX_SPI_MOSI             EXT2_PIN_16
+#define AT86RFX_SPI_MISO             EXT2_PIN_17
+#define AT86RFX_SPI_SCK              EXT2_PIN_18
+#define AT86RFX_CSD                  EXT2_PIN_5
+#define AT86RFX_CPS                  EXT2_PIN_8
+#define AT86RFX_SPI_SERCOM_MUX_SETTING   EXT2_SPI_SERCOM_MUX_SETTING
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD0   EXT2_SPI_SERCOM_PINMUX_PAD0
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD1   PINMUX_UNUSED
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD2   EXT2_SPI_SERCOM_PINMUX_PAD2
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD3   EXT2_SPI_SERCOM_PINMUX_PAD3
 
-/* ! \name Configuration for SAM4L */
-/* ! @{ */
-#if (SAM4L)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     (0)
-#endif /* SAM4L */
+#define AT86RFX_IRQ_CHAN       EXT2_IRQ_INPUT
+#define AT86RFX_IRQ_PINMUX     EXT2_IRQ_PINMUX
 
-#if (SAM4S || SAM4E)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
-#define ID_TC                (ID_TC0)
-#endif /* SAM4S */
-/* ! @} */
+#define MCU_SOC_NAME        "ATSAML21J18B"
 
-/* ! \name Configuration for MEGARF */
-/* ! @{ */
-#if (MEGA_RF)
-#define TIMER     (&TCCR1A)
-#endif /* MEGA_RF */
-/* ! @} */
-/* ! \name Configuration for SAMD20 */
-/* ! @{ */
-#if (SAMD20)
-#define TIMER     (TC0)
-#endif /* SAMD */
-/* ! @} */
-/* ! \name Configuration for SAMD21/SAMR21 */
-/* ! @{ */
-#if (SAMD21 || SAMR21)
-#define TIMER                (TC3)
-#define TIMER_CHANNEL_ID     0
-#endif
-/* ! @} */
-/* ! \name Configuration for SAML21 */
-/* ! @{ */
-#if (SAML21)
-#define TIMER      (TC0)
-#endif
-/* ! @} */
-
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

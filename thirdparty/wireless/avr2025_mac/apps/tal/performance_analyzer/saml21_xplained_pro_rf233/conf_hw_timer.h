@@ -46,8 +46,7 @@
 /*! \name Configuration
  */
 /* ! @{ */
-#define TIMER                (TC3)
-#define TIMER_CHANNEL_ID     0
+#define TIMER                (TC0)
 /* ! @} */
 
 #endif /* CONF_HW_TIMER_H_INCLUDED */

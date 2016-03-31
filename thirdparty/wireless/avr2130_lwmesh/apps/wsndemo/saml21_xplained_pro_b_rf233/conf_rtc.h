@@ -1,9 +1,9 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief Common Hardware Timer configuration
+ * \brief SAM RTC Driver Configuration Header
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,64 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
+ */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+#ifndef CONF_RTC_H_INCLUDED
+#define CONF_RTC_H_INCLUDED
 
-/* ! \name Configuration for XMEGA */
-/* ! @{ */
-#if (XMEGA)
-#define TIMER     (&TCC0)
-#endif /* XMEGA */
-/* ! @} */
+/** Select RTC clock. Use 1.024kHz from 32kHz internal ULP oscillator(OSCULP32K)
+ *  for RTC clock.
+ */
+#  define RTC_CLOCK_SOURCE    RTC_CLOCK_SELECTION_ULP1K
 
-/* ! \name Configuration for UC3 */
-/* ! @{ */
-#if (UC3)
-#define TIMER                (&AVR32_TC0)
-#define TIMER_CHANNEL_ID     0
-#endif /* UC3 */
-/* ! @} */
-
-/* ! \name Configuration for SAM4L */
-/* ! @{ */
-#if (SAM4L)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     (0)
-#endif /* SAM4L */
-
-#if (SAM4S || SAM4E)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
-#define ID_TC                (ID_TC0)
-#endif /* SAM4S */
-/* ! @} */
-
-/* ! \name Configuration for MEGARF */
-/* ! @{ */
-#if (MEGA_RF)
-#define TIMER     (&TCCR1A)
-#endif /* MEGA_RF */
-/* ! @} */
-/* ! \name Configuration for SAMD20 */
-/* ! @{ */
-#if (SAMD20)
-#define TIMER     (TC0)
-#endif /* SAMD */
-/* ! @} */
-/* ! \name Configuration for SAMD21/SAMR21 */
-/* ! @{ */
-#if (SAMD21 || SAMR21)
-#define TIMER                (TC3)
-#define TIMER_CHANNEL_ID     0
 #endif
-/* ! @} */
-/* ! \name Configuration for SAML21 */
-/* ! @{ */
-#if (SAML21)
-#define TIMER      (TC0)
-#endif
-/* ! @} */
-
-#endif /* CONF_HW_TIMER_H_INCLUDED */

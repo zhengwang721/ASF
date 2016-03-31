@@ -1,9 +1,9 @@
 /**
- * \file *********************************************************************
+ * \file conf_sio2host.h
  *
- * \brief Common Hardware Timer configuration
+ * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,62 +40,23 @@
  * \asf_license_stop
  */
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
 
-/* ! \name Configuration for XMEGA */
-/* ! @{ */
-#if (XMEGA)
-#define TIMER     (&TCC0)
-#endif /* XMEGA */
-/* ! @} */
+/** Since MCPS.DATA.indication requires max no of bytes of around 150 bytes than
+ * all other primitives,the Maximum Buffer size is kept as 156 bytes */
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 
-/* ! \name Configuration for UC3 */
-/* ! @{ */
-#if (UC3)
-#define TIMER                (&AVR32_TC0)
-#define TIMER_CHANNEL_ID     0
-#endif /* UC3 */
-/* ! @} */
+#define USART_HOST                 EDBG_CDC_MODULE
+#define HOST_SERCOM_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define HOST_SERCOM_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define HOST_SERCOM_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define HOST_SERCOM_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define HOST_SERCOM_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
 
-/* ! \name Configuration for SAM4L */
-/* ! @{ */
-#if (SAM4L)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     (0)
-#endif /* SAM4L */
-
-#if (SAM4S || SAM4E)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
-#define ID_TC                (ID_TC0)
-#endif /* SAM4S */
-/* ! @} */
-
-/* ! \name Configuration for MEGARF */
-/* ! @{ */
-#if (MEGA_RF)
-#define TIMER     (&TCCR1A)
-#endif /* MEGA_RF */
-/* ! @} */
-/* ! \name Configuration for SAMD20 */
-/* ! @{ */
-#if (SAMD20)
-#define TIMER     (TC0)
-#endif /* SAMD */
-/* ! @} */
-/* ! \name Configuration for SAMD21/SAMR21 */
-/* ! @{ */
-#if (SAMD21 || SAMR21)
-#define TIMER                (TC3)
-#define TIMER_CHANNEL_ID     0
-#endif
-/* ! @} */
-/* ! \name Configuration for SAML21 */
-/* ! @{ */
-#if (SAML21)
-#define TIMER      (TC0)
-#endif
-/* ! @} */
-
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT); \
+	USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
+#endif /* CONF_SIO2HOST_H_INCLUDED */
