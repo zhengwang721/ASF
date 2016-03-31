@@ -166,6 +166,10 @@ at_ble_status_t ble_event_task(uint32_t timeout)
 
 at_ble_init_config_t pf_cfg;
 
+volatile uint32_t 	event_pool_memory[256] 		= {0};
+volatile uint32_t 	event_params_memory[1024] 	= {0};
+
+
 /** @brief BLE device initialization */
 void ble_device_init(at_ble_addr_t *addr)
 {
@@ -173,7 +177,15 @@ void ble_device_init(at_ble_addr_t *addr)
 	char *dev_name = NULL;
 	init_global_var();
 
+	memset((uint8_t *)event_pool_memory, 0, sizeof(event_pool_memory));
+	memset((uint8_t *)event_params_memory, 0, sizeof(event_params_memory));
+
 	memset(&pf_cfg, 0, sizeof(pf_cfg));
+
+	pf_cfg.event_mem_pool.memStartAdd        = (uint8_t *)event_pool_memory;
+	pf_cfg.event_mem_pool.memSize            = sizeof(event_pool_memory);
+	pf_cfg.event_params_mem_pool.memStartAdd = (uint8_t *)event_params_memory;
+	pf_cfg.event_params_mem_pool.memSize     = sizeof(event_params_memory);
 
 	/* Initialize the BLE Event callbacks */
 	for (idx = 0; idx < MAX_GAP_EVENT_SUBSCRIBERS; idx++)

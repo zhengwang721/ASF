@@ -1,49 +1,30 @@
-/**
- * \file
- *
- * \brief SAMB11 Platform Driver
- *
- * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
- *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- */
+/**************************************************************************//**
+  \file platform_drv.c
+ 
+  \brief Includes implementation for SAMB11 Platform Driver
+ 
+  Copyright (c) 2016, Atmel Corporation. All rights reserved.
+  Released under NDA
+  Licensed under Atmel's Limited License Agreement.
+ 
+ 
+  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+  EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE.
+ 
+  Atmel Corporation: http://www.atmel.com
+ 
+******************************************************************************/
 
-/*
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
+
 #include <stdint.h>
 #include <string.h>
 
@@ -66,11 +47,18 @@ uint8_t (*platform_register_isr)(uint8_t isr_index,void *fp);
 uint8_t (*platform_unregister_isr)(uint8_t isr_index);
 uint32_t  *apps_resume_cb;
 uint32_t 	*actualfreq;
+uint32_t 	*wakeup_event_pending;
+uint32_t	*wakeup_source_active_cb;
 void (*volatile updateuartbr_fp)(void);
 void (*rwip_prevent_sleep_set)(uint16_t prv_slp_bit);
 void (*rwip_prevent_sleep_clear)(uint16_t prv_slp_bit);
 //#ifdef CHIPVERSION_B0
 void (*handle_ext_wakeup_isr)(void);
+/** callback function type for handling wakeup source active callback */
+typedef void (*wakeup_source_active_callback) (uint32_t);
+extern void wakeup_active_event_callback(uint32_t wakeup_source);
+extern uint8_t wakeup_int_unregister_callback(uint8_t wakeup_source);
+
 //#endif	//CHIPVERSION_B0
 resume_callback samb11_app_resume_cb;
 #ifdef CHIPVERSION_A4
@@ -204,6 +192,8 @@ plf_drv_status platform_driver_init()
 		apps_resume_cb = (uint32_t *)0x1004003c;
 		actualfreq = (uint32_t *)0x10041FC0; /* set to NULL for now as clock calibration is disabled for the time being */  /*(uint32_t *)0x10006bd8;*/
 		updateuartbr_fp = (void (*)())0x10041FC4;
+		wakeup_source_active_cb = (uint32_t *)0x10041FD4;
+		wakeup_event_pending = (uint32_t *)0x10041FD8;
 		/* power APIs */
 		pwr_enable_arm_wakeup = (void (*)(uint32_t wakeup_domain))0x0001cbe9;
 		pwr_disable_arm_wakeup = (void (*)(uint32_t wakeup_domain))0x0001cd8f;
@@ -274,6 +264,10 @@ plf_drv_status platform_driver_init()
 #endif
 		samb11_app_resume_cb = NULL;
 		*apps_resume_cb = (uint32_t)((resume_callback)samb11_plf_resume_callback);
+		*wakeup_source_active_cb = (uint32_t)((wakeup_source_active_callback)wakeup_active_event_callback);
+		wakeup_int_unregister_callback(0);
+		wakeup_int_unregister_callback(1);
+		wakeup_int_unregister_callback(2);
 		platform_initialized = 1;
 		status = STATUS_SUCCESS;
 	}

@@ -145,6 +145,10 @@ volatile static uint8_t 	gu8InvalidPrinted   = 1;
 volatile static int8_t 		gs8CmdIndex			= -1;
 volatile static uint8_t 	carriage_return 	= 0;
 
+volatile uint32_t 	event_pool_memory[256] 		= {0};
+volatile uint32_t 	event_params_memory[1024] 	= {0};
+
+
 void callback_uart_rx(uint8_t input)
 {
 	//UART_READ(gau8UartRxBuffer);
@@ -262,7 +266,17 @@ at_ble_status_t init_ble_stack(void)
 	at_ble_init_config_t pf_cfg;
 	at_ble_addr_t addr;
 	/* BLE core Intialization */
+
+	memset((uint8_t *)event_pool_memory, 0, sizeof(event_pool_memory));
+	memset((uint8_t *)event_params_memory, 0, sizeof(event_params_memory));
+
 	memset(&pf_cfg,0,sizeof(pf_cfg));
+
+	pf_cfg.event_mem_pool.memStartAdd		 = (uint8_t *)event_pool_memory;
+	pf_cfg.event_mem_pool.memSize			 = sizeof(event_pool_memory);
+	pf_cfg.event_params_mem_pool.memStartAdd = (uint8_t *)event_params_memory;
+	pf_cfg.event_params_mem_pool.memSize	 = sizeof(event_params_memory);
+
 	enuStatus = at_ble_init(&pf_cfg);
     CHECK_ERROR(enuStatus, __EXIT);
 	//Set device name

@@ -1,41 +1,30 @@
-/**
- ****************************************************************************************
- *
- * @file at_ble_api.h
- *
- * @brief Atmel BLE API for Applications
- *
- * This module contains the public API and the necessary enumerations and structures that are required for
- * BLE Application Developers using Atmel BLE SDK
- *
- *
- *  Copyright (c) 2016 Atmel Corporation. All rights reserved.
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions are met:
- *
- *  1. Redistributions of source code must retain the above copyright notice, this
- *  list of conditions and the following disclaimer.
- *
- *  2. Redistributions in binary form must reproduce the above copyright notice,
- *  this list of conditions and the following disclaimer in the documentation
- *  and/or other materials provided with the distribution.
- *
- *  3. The name of Atmel may not be used to endorse or promote products derived from this software
- *  without specific prior written permission.
- *
- *  4. This software may only be redistributed and used in connection with an Atmel microcontroller product.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
- *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
- *  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- *  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- *  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- ****************************************************************************************
- */
+/****************************************************************************
+  \file at_ble_api.h
+ 
+  \brief Includes signatures and datatypes for Atmel BLE API for Applications
+ 
+  Copyright (c) 2016, Atmel Corporation. All rights reserved.
+  Released under NDA
+  Licensed under Atmel's Limited License Agreement.
+ 
+ 
+  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+  EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  POSSIBILITY OF SUCH DAMAGE.
+ 
+  Atmel Corporation: http://www.atmel.com
+ 
+******************************************************************************/
+
+
 #ifndef __AT_BLE_API_H__
 #define __AT_BLE_API_H__
 
@@ -159,8 +148,10 @@ typedef struct
 
 typedef struct
 {
-    at_ble_mempool_t memPool; /**< Memory pool that library can use for storing data base related data */
-    void *plf_config; /**< Platform Configuration*/
+    at_ble_mempool_t	memPool; /**< Memory pool that library can use for storing data base related data */
+	at_ble_mempool_t    event_mem_pool; /**< Memory pool that the library should use to queue events */
+	at_ble_mempool_t   	event_params_mem_pool; /**< Memory pool that library should use to save queued events parameters */
+    void 				*plf_config; /**< Platform Configuration*/
 } at_ble_init_config_t;
 
 /**
@@ -547,6 +538,7 @@ typedef enum
     AT_BLE_TERMINATED_BY_USER = 0x13,
     AT_BLE_REMOTE_DEV_TERM_LOW_RESOURCES,
     AT_BLE_REMOTE_DEV_POWER_OFF,
+	AT_BLE_CON_TERM_BY_LOCAL_HOST,
     AT_BLE_UNSUPPORTED_REMOTE_FEATURE = 0x1A,
     AT_BLE_PAIRING_WITH_UNIT_KEY_NOT_SUP = 0x29,
     AT_BLE_UNACCEPTABLE_INTERVAL = 0x3B,
