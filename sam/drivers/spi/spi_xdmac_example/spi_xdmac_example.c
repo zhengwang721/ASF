@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface (SPI) XDMAC example for SAMV71/SAME70.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -171,7 +171,7 @@ static const uint32_t gs_ul_clock_configurations[] =
 
 uint8_t tx_buffer[] = "This is message from SPI master transferred by XDMAC test";
 
-uint8_t rx_buffer[BUFFER_SIZE];
+uint8_t rx_buffer[BUFFER_SIZE] = "0";
 
 uint32_t g_size = sizeof(tx_buffer);
 
