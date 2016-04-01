@@ -56,9 +56,13 @@
 #include "twi_master.h"
 #include "freertos_peripheral_control.h"
 
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
+/**INDENT-ON**/
+/// @endcond
 	
 #if XMEGA
 # error Unsupported chip type
@@ -694,8 +698,12 @@ status_code_t freertos_twi_read_packet_async(freertos_twi_if p_twi,
 \endcode
  */
 
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
+/**INDENT-ON**/
+/// @endcond
 
 #endif /* FREERTOS_TWI_MASTER_INCLUDED */

@@ -46,7 +46,7 @@
 
 #ifndef FREERTOS_SPI_MASTER_INCLUDED
 #define FREERTOS_SPI_MASTER_INCLUDED
- 
+
 /* FreeRTOS includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -55,10 +55,14 @@
 /* ASF includes. */
 #include "spi_master.h"
 #include "freertos_peripheral_control.h"
- 
+
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
+/**INDENT-ON**/
+/// @endcond
 
 #if XMEGA
 # error Unsupported chip type
@@ -657,8 +661,13 @@ status_code_t freertos_spi_full_duplex_packet_async(freertos_spi_if p_spi,
 	  }
 \endcode
  */
+
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
+/**INDENT-ON**/
+/// @endcond
 
  #endif /* FREERTOS_SPI_MASTER_INCLUDED */

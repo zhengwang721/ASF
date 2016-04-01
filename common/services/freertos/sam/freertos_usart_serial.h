@@ -55,9 +55,13 @@
 #include "freertos_peripheral_control.h"
 #include "usart.h"
 
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
+/**INDENT-ON**/
+/// @endcond
 
 #if XMEGA
 # error Unsupported chip type
@@ -147,9 +151,14 @@ uint32_t freertos_usart_serial_read_packet(freertos_usart_if p_usart,
  *     PDC was successfully configured to perform the USART write operation.
  */
 #define freertos_usart_write_packet(p_usart, data, len, block_time_ticks) freertos_usart_write_packet_async((p_usart), (data), (len), (block_time_ticks), (NULL))
+ 
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 }
-#endif 
+#endif
+/**INDENT-ON**/
+/// @endcond
 
 #endif  /* FREERTOS_USART_SERIAL_INCLUDED */
 
