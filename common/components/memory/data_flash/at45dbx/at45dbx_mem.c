@@ -3,7 +3,7 @@
  *
  * \brief CTRL_ACCESS interface for the AT45DBX data flash driver.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -161,9 +161,21 @@ Ctrl_status at45dbx_df_2_ram(U32 addr, void *ram)
 	if (addr + 1 > AT45DBX_MEM_CNT << (AT45DBX_MEM_SIZE - AT45DBX_SECTOR_BITS)){
 		return CTRL_FAIL;
 	}
+
+#ifdef AT45DB641E
+	at45dbx_read_sector_open(addr*2);
+	at45dbx_read_sector_to_ram(ram);
+	at45dbx_read_close();
+
+	at45dbx_read_sector_open(addr*2+1);
+	at45dbx_read_sector_to_ram(ram + AT45DBX_PAGE_SIZE);
+	at45dbx_read_close();
+#else
 	at45dbx_read_sector_open(addr);
 	at45dbx_read_sector_to_ram(ram);
 	at45dbx_read_close();
+#endif
+
 	return CTRL_GOOD;
 }
 
@@ -174,9 +186,20 @@ Ctrl_status at45dbx_ram_2_df(U32 addr, const void *ram)
 		return CTRL_FAIL;
 	}
 
+#ifdef AT45DB641E
+	at45dbx_write_sector_open(addr*2);
+	at45dbx_write_sector_from_ram(ram);
+	at45dbx_write_close();
+
+	at45dbx_write_sector_open(addr*2+1);
+	at45dbx_write_sector_from_ram(ram + AT45DBX_PAGE_SIZE);
+	at45dbx_write_close();
+#else
 	at45dbx_write_sector_open(addr);
 	at45dbx_write_sector_from_ram(ram);
 	at45dbx_write_close();
+#endif
+
 	return CTRL_GOOD;
 }
 
