@@ -144,13 +144,14 @@ uint32_t freertos_uart_serial_read_packet(freertos_uart_if p_uart,
  *     specify a block time in milliseconds, divide the milliseconds value by
  *     portTICK_RATE_MS, and pass the result in block_time_ticks.
  *     portTICK_RATE_MS is defined by FreeRTOS.
+ *
  * \return     ERR_INVALID_ARG is returned if an input parameter is invalid.
  *     ERR_TIMEOUT is returned if block_time_ticks passed before exclusive access
  *     to the UART peripheral could be obtained.  STATUS_OK is returned if the
  *     PDC was successfully configured to perform the UART write operation.
  */
 #define freertos_uart_write_packet(p_uart, data, len, block_time_ticks) freertos_uart_write_packet_async((p_uart), (data), (len), (block_time_ticks), (NULL))
- 
+
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
