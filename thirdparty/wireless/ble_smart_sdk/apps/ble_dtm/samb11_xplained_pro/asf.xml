@@ -1,18 +1,23 @@
 <asf xmlversion="1.0">
-	<project caption="Battery Service Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.battery_info.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="BLE Direct Test Mode[DTM] Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.ble_dtm.samb11_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		Battery Service Application for BLE stack.
+		BLE Direct Test Mode[DTM] Application for BLE stack.
 		</info>	
-		<require idref="thirdparty.wireless.ble_smart_sdk.apps.battery_info"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.apps.ble_dtm"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.apps.config.samb11"/>
 		<build type="include-path" value="../../config/samb11/"/>
 		<build type="header-file" value="../../config/samb11/conf_board.h"/>
 		<build type="header-file" value="../../config/samb11/conf_dualtimer.h"/>
-		<build type="header-file" value="../../config/samb11/conf_aon_sleep_timer.h"/>
 		<build type="header-file" value="../../config/samb11/conf_console_serial.h"/>
 
+  		<require idref="thirdparty.wireless.ble_smart_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.src"/>
+
+		<require idref="thirdparty.wireless.ble_smart_sdk.services.uart"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.services.gpio"/>
+
 		<require idref="board.samb11_xplained_pro"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.services.aon_sleep_timer"/>
 		
 		<!--generator value="iarewarm"/-->
 		<generator value="armgcc" />

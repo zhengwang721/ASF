@@ -4,9 +4,11 @@
 
 #include <uart.h>
 
+typedef void (*uart_rx_callback_t)(uint8_t input);
+
 void serial_console_init(void);
 int getchar_b11(void);
 int getchar_b11_timeout(unsigned int sec);
-void getchar_aysnc(uart_callback_t callback_func, unsigned char * input);
+void register_uart_callback(uart_rx_callback_t callback_func);
 
 #endif /* COSOLE_SERIAL_H */

@@ -3,6 +3,7 @@
 
 typedef void (*button_callback_t)(void);
 
-void button_init(button_callback_t callback);
+void button_init(void);
+void button_register_callback(button_callback_t callback);
 
 #endif /* __BUTTON_H__ */
