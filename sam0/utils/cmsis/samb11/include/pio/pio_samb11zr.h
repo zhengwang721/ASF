@@ -44,60 +44,60 @@
 #ifndef _SAMB11ZR_PIO_
 #define _SAMB11ZR_PIO_
 
-#define GPIO_LP_GPIO_0           (1u << 0)  /**< \brief Pin Controlled by LP_GPIO_0 */
-#define GPIO_LP_GPIO_0_IDX               0 
-#define GPIO_LP_GPIO_1           (1u << 1)  /**< \brief Pin Controlled by LP_GPIO_1 */
-#define GPIO_LP_GPIO_1_IDX               1 
-#define GPIO_LP_GPIO_2           (1u << 2)  /**< \brief Pin Controlled by LP_GPIO_2 */
-#define GPIO_LP_GPIO_2_IDX               2 
-#define GPIO_LP_GPIO_3           (1u << 3)  /**< \brief Pin Controlled by LP_GPIO_3 */
-#define GPIO_LP_GPIO_3_IDX               3 
-#define GPIO_LP_GPIO_4           (1u << 4)  /**< \brief Pin Controlled by LP_GPIO_4 */
-#define GPIO_LP_GPIO_4_IDX               4 
-#define GPIO_LP_GPIO_5           (1u << 5)  /**< \brief Pin Controlled by LP_GPIO_5 */
-#define GPIO_LP_GPIO_5_IDX               5 
-#define GPIO_LP_GPIO_6           (1u << 6)  /**< \brief Pin Controlled by LP_GPIO_6 */
-#define GPIO_LP_GPIO_6_IDX               6 
-#define GPIO_LP_GPIO_7           (1u << 7)  /**< \brief Pin Controlled by LP_GPIO_7 */
-#define GPIO_LP_GPIO_7_IDX               7 
-#define GPIO_LP_GPIO_8           (1u << 8)  /**< \brief Pin Controlled by LP_GPIO_8 */
-#define GPIO_LP_GPIO_8_IDX               8 
-#define GPIO_LP_GPIO_9           (1u << 9)  /**< \brief Pin Controlled by LP_GPIO_9 */
-#define GPIO_LP_GPIO_9_IDX               9 
-#define GPIO_LP_GPIO_10          (1u << 10) /**< \brief Pin Controlled by LP_GPIO_10 */
-#define GPIO_LP_GPIO_10_IDX              10
-#define GPIO_LP_GPIO_11          (1u << 11) /**< \brief Pin Controlled by LP_GPIO_11 */
-#define GPIO_LP_GPIO_11_IDX              11
-#define GPIO_LP_GPIO_12          (1u << 12) /**< \brief Pin Controlled by LP_GPIO_12 */
-#define GPIO_LP_GPIO_12_IDX              12
-#define GPIO_LP_GPIO_13          (1u << 13) /**< \brief Pin Controlled by LP_GPIO_13 */
-#define GPIO_LP_GPIO_13_IDX              13
-#define GPIO_LP_GPIO_14          (1u << 14) /**< \brief Pin Controlled by LP_GPIO_14 */
-#define GPIO_LP_GPIO_14_IDX              14
-#define GPIO_LP_GPIO_15          (1u << 15) /**< \brief Pin Controlled by LP_GPIO_15 */
-#define GPIO_LP_GPIO_15_IDX              15
-#define GPIO_LP_GPIO_16          (1u << 0)  /**< \brief Pin Controlled by LP_GPIO_16 */
-#define GPIO_LP_GPIO_16_IDX              16
-#define GPIO_LP_GPIO_17          (1u << 1)  /**< \brief Pin Controlled by LP_GPIO_17 */
-#define GPIO_LP_GPIO_17_IDX              17
-#define GPIO_LP_GPIO_18          (1u << 2)  /**< \brief Pin Controlled by LP_GPIO_18 */
-#define GPIO_LP_GPIO_18_IDX              18
-#define GPIO_LP_GPIO_19          (1u << 3)  /**< \brief Pin Controlled by LP_GPIO_19 */
-#define GPIO_LP_GPIO_19_IDX              19
-#define GPIO_AO_GPIO_2           (1u << 13) /**< \brief Pin Controlled by AO_GPIO_2 */
-#define GPIO_AO_GPIO_2_IDX               29
-#define GPIO_AO_GPIO_1           (1u << 14) /**< \brief Pin Controlled by AO_GPIO_1 */
-#define GPIO_AO_GPIO_1_IDX               30
-#define GPIO_AO_GPIO_0           (1u << 15) /**< \brief Pin Controlled by AO_GPIO_0 */
-#define GPIO_AO_GPIO_0_IDX               31
-#define GPIO_GPIO_MS4            (1u << 12) /**< \brief Pin Controlled by GPIO_MS4 */
-#define GPIO_GPIO_MS4_IDX                44
-#define GPIO_GPIO_MS3            (1u << 13) /**< \brief Pin Controlled by GPIO_MS3 */
-#define GPIO_GPIO_MS3_IDX                45
-#define GPIO_GPIO_MS2            (1u << 14) /**< \brief Pin Controlled by GPIO_MS2 */
-#define GPIO_GPIO_MS2_IDX                46
-#define GPIO_GPIO_MS1            (1u << 15) /**< \brief Pin Controlled by GPIO_MS1 */
-#define GPIO_GPIO_MS1_IDX                47
+#define PIN_LP_GPIO_0                     0  /**< Pin Number for LP_GPIO_0 */
+#define GPIO_LP_GPIO_0           (1ul <<  0) /**< GPIO Mask for LP_GPIO_0 */
+#define PIN_LP_GPIO_1                     1  /**< Pin Number for LP_GPIO_1 */
+#define GPIO_LP_GPIO_1           (1ul <<  1) /**< GPIO Mask for LP_GPIO_1 */
+#define PIN_LP_GPIO_2                     2  /**< Pin Number for LP_GPIO_2 */
+#define GPIO_LP_GPIO_2           (1ul <<  2) /**< GPIO Mask for LP_GPIO_2 */
+#define PIN_LP_GPIO_3                     3  /**< Pin Number for LP_GPIO_3 */
+#define GPIO_LP_GPIO_3           (1ul <<  3) /**< GPIO Mask for LP_GPIO_3 */
+#define PIN_LP_GPIO_4                     4  /**< Pin Number for LP_GPIO_4 */
+#define GPIO_LP_GPIO_4           (1ul <<  4) /**< GPIO Mask for LP_GPIO_4 */
+#define PIN_LP_GPIO_5                     5  /**< Pin Number for LP_GPIO_5 */
+#define GPIO_LP_GPIO_5           (1ul <<  5) /**< GPIO Mask for LP_GPIO_5 */
+#define PIN_LP_GPIO_6                     6  /**< Pin Number for LP_GPIO_6 */
+#define GPIO_LP_GPIO_6           (1ul <<  6) /**< GPIO Mask for LP_GPIO_6 */
+#define PIN_LP_GPIO_7                     7  /**< Pin Number for LP_GPIO_7 */
+#define GPIO_LP_GPIO_7           (1ul <<  7) /**< GPIO Mask for LP_GPIO_7 */
+#define PIN_LP_GPIO_8                     8  /**< Pin Number for LP_GPIO_8 */
+#define GPIO_LP_GPIO_8           (1ul <<  8) /**< GPIO Mask for LP_GPIO_8 */
+#define PIN_LP_GPIO_9                     9  /**< Pin Number for LP_GPIO_9 */
+#define GPIO_LP_GPIO_9           (1ul <<  9) /**< GPIO Mask for LP_GPIO_9 */
+#define PIN_LP_GPIO_10                   10  /**< Pin Number for LP_GPIO_10 */
+#define GPIO_LP_GPIO_10          (1ul << 10) /**< GPIO Mask for LP_GPIO_10 */
+#define PIN_LP_GPIO_11                   11  /**< Pin Number for LP_GPIO_11 */
+#define GPIO_LP_GPIO_11          (1ul << 11) /**< GPIO Mask for LP_GPIO_11 */
+#define PIN_LP_GPIO_12                   12  /**< Pin Number for LP_GPIO_12 */
+#define GPIO_LP_GPIO_12          (1ul << 12) /**< GPIO Mask for LP_GPIO_12 */
+#define PIN_LP_GPIO_13                   13  /**< Pin Number for LP_GPIO_13 */
+#define GPIO_LP_GPIO_13          (1ul << 13) /**< GPIO Mask for LP_GPIO_13 */
+#define PIN_LP_GPIO_14                   14  /**< Pin Number for LP_GPIO_14 */
+#define GPIO_LP_GPIO_14          (1ul << 14) /**< GPIO Mask for LP_GPIO_14 */
+#define PIN_LP_GPIO_15                   15  /**< Pin Number for LP_GPIO_15 */
+#define GPIO_LP_GPIO_15          (1ul << 15) /**< GPIO Mask for LP_GPIO_15 */
+#define PIN_LP_GPIO_16                   16  /**< Pin Number for LP_GPIO_16 */
+#define GPIO_LP_GPIO_16          (1ul <<  0) /**< GPIO Mask for LP_GPIO_16 */
+#define PIN_LP_GPIO_17                   17  /**< Pin Number for LP_GPIO_17 */
+#define GPIO_LP_GPIO_17          (1ul <<  1) /**< GPIO Mask for LP_GPIO_17 */
+#define PIN_LP_GPIO_18                   18  /**< Pin Number for LP_GPIO_18 */
+#define GPIO_LP_GPIO_18          (1ul <<  2) /**< GPIO Mask for LP_GPIO_18 */
+#define PIN_LP_GPIO_19                   19  /**< Pin Number for LP_GPIO_19 */
+#define GPIO_LP_GPIO_19          (1ul <<  3) /**< GPIO Mask for LP_GPIO_19 */
+#define PIN_AO_GPIO_2                    29  /**< Pin Number for AO_GPIO_2 */
+#define GPIO_AO_GPIO_2           (1ul << 13) /**< GPIO Mask for AO_GPIO_2 */
+#define PIN_AO_GPIO_1                    30  /**< Pin Number for AO_GPIO_1 */
+#define GPIO_AO_GPIO_1           (1ul << 14) /**< GPIO Mask for AO_GPIO_1 */
+#define PIN_AO_GPIO_0                    31  /**< Pin Number for AO_GPIO_0 */
+#define GPIO_AO_GPIO_0           (1ul << 15) /**< GPIO Mask for AO_GPIO_0 */
+#define PIN_GPIO_MS4                     44  /**< Pin Number for GPIO_MS4 */
+#define GPIO_GPIO_MS4            (1ul << 12) /**< GPIO Mask for GPIO_MS4 */
+#define PIN_GPIO_MS3                     45  /**< Pin Number for GPIO_MS3 */
+#define GPIO_GPIO_MS3            (1ul << 13) /**< GPIO Mask for GPIO_MS3 */
+#define PIN_GPIO_MS2                     46  /**< Pin Number for GPIO_MS2 */
+#define GPIO_GPIO_MS2            (1ul << 14) /**< GPIO Mask for GPIO_MS2 */
+#define PIN_GPIO_MS1                     47  /**< Pin Number for GPIO_MS1 */
+#define GPIO_GPIO_MS1            (1ul << 15) /**< GPIO Mask for GPIO_MS1 */
 
 /* PinMux definitions                                               */
 /* Mux values for LP_GPIO_0 */
