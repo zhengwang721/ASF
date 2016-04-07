@@ -79,7 +79,7 @@
 void configure_opamp2(void);
 void configure_adc(void);
 void configure_adc_callbacks(void);
-void adc_complete_callback(const struct adc_module *const module);
+void adc_complete_callback(struct adc_module *const module);
 
 /* Buffer for ADC sample storage */
 #define ADC_SAMPLES 128
@@ -153,7 +153,7 @@ void configure_adc_callbacks(void)
 }
 
 /* ADC Callback Function */
-void adc_complete_callback(const struct adc_module *const module)
+void adc_complete_callback(struct adc_module *const module)
 {
 	/* Set ADC conversion ended flag */
 	adc_read_done = true;
