@@ -133,6 +133,9 @@ static void ble_init(at_ble_init_config_t * args);
 /** @brief Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_dev_config(at_ble_addr_t *addr);
 
+/** filter function for avoiding duplicated scan data.*/
+static bool ble_scan_duplication_check(at_ble_scan_info_t * info);
+
 static void init_global_var(void)
 {
 	ble_user_event_cb = 0;
@@ -488,11 +491,22 @@ at_ble_status_t gap_dev_scan(void)
 	#endif
 }
 
-bool ble_scan_duplication_check(at_ble_scan_info_t * info)
+static bool ble_scan_duplication_check(at_ble_scan_info_t * info)
 {
 	uint32_t i = 0;
 	uint32_t ret = 0;
 	bool found = false;
+	/*
+	if( //if need to add or remove filter type
+	scan_info[i].type != AT_BLE_ADV_TYPE_DIRECTED &&
+	scan_info[i].type != AT_BLE_ADV_TYPE_UNDIRECTED &&
+	scan_info[i].type != AT_BLE_ADV_TYPE_SCAN_RESPONSE
+	//&& scan_info[i].type != AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED
+	//&& scan_info[i].type != AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED
+	//&& scan_info[i].type != AT_BLE_ADV_TYPE_DIRECTED_LDC
+	)
+		return true;
+	*/
 	for(i=0 ; i<scan_response_count ; i++)
 	{
 		ret = memcmp(scan_info[i].dev_addr.addr, info->dev_addr.addr, sizeof(uint8_t)*6);
@@ -507,62 +521,6 @@ bool ble_scan_duplication_check(at_ble_scan_info_t * info)
 	return !found;
 }
 
-void ble_scan_filter()
-{
-	uint32_t i=0, cnt = 0, j=0;
-	at_ble_scan_info_t dummy= {0,};
-	at_ble_scan_info_t dummy_list[MAX_SCAN_DEVICE];
-	uint32_t ret = 0 , ret1 = 0;
-	uint32_t found = 0;
-	
-	for(i=0 ; i< scan_response_count ; i++)
-	{	
-		
-		if( //if need to add or remove filter type
-			scan_info[i].type != AT_BLE_ADV_TYPE_DIRECTED &&
-			scan_info[i].type != AT_BLE_ADV_TYPE_UNDIRECTED &&
-			scan_info[i].type != AT_BLE_ADV_TYPE_SCAN_RESPONSE
-			//&& scan_info[i].type != AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED 
-			//&& scan_info[i].type != AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED
-			//&& scan_info[i].type != AT_BLE_ADV_TYPE_DIRECTED_LDC
-			)
-			continue;
-			
-		memcpy(&dummy,&scan_info[i], sizeof(at_ble_scan_info_t) );
-		
-		if( !cnt ) 
-		{
-			memcpy( &dummy_list[cnt], &dummy, sizeof(at_ble_scan_info_t));
-			cnt++;
-		}
-		else
-		{
-			found = 1;
-			
-			for(j=0 ; j<cnt ; j++) 
-			{				
-				ret = memcmp(dummy.dev_addr.addr,dummy_list[j].dev_addr.addr, sizeof(uint8_t)*6);
-				ret |= (dummy.type != dummy_list[j].type) ? 1 : 0;
-				if( !ret ) 
-				{
-					found = 0;
-					break;
-				}					
-			}			
-			
-			if( found )
-			{
-				memcpy( &dummy_list[cnt], &dummy, sizeof(at_ble_scan_info_t));
-				cnt++;
-			}
-		}
-	}
-	
-	memset(scan_info, 0, sizeof(at_ble_scan_info_t)*MAX_SCAN_DEVICE);
-	scan_response_count = cnt;
-	memcpy(scan_info,dummy_list, sizeof(at_ble_scan_info_t)*cnt );
-}
-
 /** @brief function handling scaned information */
 at_ble_status_t ble_scan_info_handler(void *params)
 {
@@ -575,7 +533,7 @@ at_ble_status_t ble_scan_info_handler(void *params)
 		if( !ble_scan_duplication_check(scan_param) )
 		{
 			//already exist scan info
-			return;
+			return AT_BLE_SUCCESS;
 		}
 		#endif
 		memcpy((uint8_t *)&scan_info[scan_response_count], scan_param, sizeof(at_ble_scan_info_t));
