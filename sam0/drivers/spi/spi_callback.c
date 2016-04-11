@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface Driver for SAMB11
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -620,8 +620,10 @@ static void _spi_transceive_buffer(
 
 	if (module->hw == SPI0) {
 		flag_direction_both[0] = false;
+#if (!BTLC1000)
 	} else if (module->hw == SPI1) {
 		flag_direction_both[1] = false;
+#endif
 	}
 
 	/* Get a pointer to the hardware module instance */

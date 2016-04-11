@@ -105,8 +105,10 @@ static void configure_gpio(void)
 	//! [setup_gpio_2]
 	//! [setup_gpio_3]
 	gpio_pin_set_config(PIN_AO_GPIO_0, &config_gpio_pin);
+#if (!BTLC1000)
 	gpio_pin_set_config(PIN_AO_GPIO_1, &config_gpio_pin);
 	gpio_pin_set_config(PIN_AO_GPIO_2, &config_gpio_pin);
+#endif
 	//! [setup_gpio_3]
 }
 
@@ -119,15 +121,19 @@ static void configure_gpio_callbacks(void)
 	//! [callback_reg]
 	gpio_register_callback(PIN_AO_GPIO_0, aon_gpio_0_callback,
 			GPIO_CALLBACK_RISING);
+#if (!BTLC1000)
 	gpio_register_callback(PIN_AO_GPIO_1, aon_gpio_1_callback,
 			GPIO_CALLBACK_RISING);
 	gpio_register_callback(PIN_AO_GPIO_2, aon_gpio_2_callback,
 			GPIO_CALLBACK_RISING);
+#endif
 	//! [callback_reg]
 	//! [callback_en]
 	gpio_enable_callback(PIN_AO_GPIO_0);
+#if (!BTLC1000)
 	gpio_enable_callback(PIN_AO_GPIO_1);
 	gpio_enable_callback(PIN_AO_GPIO_2);
+#endif
 	//! [callback_en]
 }
 //! [setup]

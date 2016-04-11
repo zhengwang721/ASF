@@ -280,6 +280,7 @@ void uart_get_config_defaults(
 	config->stop_bits = UART_1_STOP_BIT;
 	config->parity = UART_NO_PARITY;
 	config->flow_control = false;
+#if (!BTLC1000)
 	config->pin_number_pad[0] = PIN_LP_GPIO_2;
 	config->pin_number_pad[1] = PIN_LP_GPIO_3;
 	config->pin_number_pad[2] = PIN_LP_GPIO_4;
@@ -289,6 +290,17 @@ void uart_get_config_defaults(
 	config->pinmux_sel_pad[1] = MUX_LP_GPIO_3_UART0_TXD;
 	config->pinmux_sel_pad[2] = MUX_LP_GPIO_4_UART0_CTS;
 	config->pinmux_sel_pad[3] = MUX_LP_GPIO_5_UART0_RTS;
+#else
+	config->pin_number_pad[0] = PIN_LP_GPIO_2;
+	config->pin_number_pad[1] = PIN_LP_GPIO_3;
+	config->pin_number_pad[2] = PIN_LP_GPIO_8;
+	config->pin_number_pad[3] = PIN_LP_GPIO_9;
+	
+	config->pinmux_sel_pad[0] = MUX_LP_GPIO_2_MUX2;
+	config->pinmux_sel_pad[1] = MUX_LP_GPIO_3_MUX2;
+	config->pinmux_sel_pad[2] = MUX_LP_GPIO_8_MUX2;
+	config->pinmux_sel_pad[3] = MUX_LP_GPIO_9_MUX2;
+#endif
 }
 
 /**
