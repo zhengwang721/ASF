@@ -123,7 +123,6 @@ static const ble_event_callback_t ble_mgr_gatt_server_handle[GATT_SERVER_HANDLER
 volatile uint8_t scan_response_count = 0;
 at_ble_scan_info_t scan_info[MAX_SCAN_DEVICE];
 
-
 at_ble_events_t event;
 uint8_t ble_event_params[BLE_EVENT_PARAM_MAX_SIZE];
 
@@ -133,8 +132,10 @@ static void ble_init(at_ble_init_config_t * args);
 /** @brief Set BLE Address, If address is NULL then it will use BD public address */
 static void ble_set_dev_config(at_ble_addr_t *addr);
 
+#ifdef USE_SCAN_SOFT_FILTER
 /** filter function for avoiding duplicated scan data.*/
 static bool ble_scan_duplication_check(at_ble_scan_info_t * info);
+#endif
 
 static void init_global_var(void)
 {
@@ -491,6 +492,7 @@ at_ble_status_t gap_dev_scan(void)
 	#endif
 }
 
+#ifdef USE_SCAN_SOFT_FILTER
 static bool ble_scan_duplication_check(at_ble_scan_info_t * info)
 {
 	uint32_t i = 0;
@@ -520,7 +522,7 @@ static bool ble_scan_duplication_check(at_ble_scan_info_t * info)
 	
 	return !found;
 }
-
+#endif
 /** @brief function handling scaned information */
 at_ble_status_t ble_scan_info_handler(void *params)
 {
@@ -533,7 +535,7 @@ at_ble_status_t ble_scan_info_handler(void *params)
 		if( !ble_scan_duplication_check(scan_param) )
 		{
 			//already exist scan info
-			return AT_BLE_SUCCESS;
+			return AT_BLE_INVALID_STATE;
 		}
 		#endif
 		memcpy((uint8_t *)&scan_info[scan_response_count], scan_param, sizeof(at_ble_scan_info_t));
@@ -1510,6 +1512,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
 {
+	at_ble_status_t status =AT_BLE_SUCCESS;
 	DBG_LOG_DEV("BLE-Event:%d", events);
 	switch(events)
 	{		
@@ -1542,7 +1545,11 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 				const ble_event_callback_t *event_cb_fn = ble_mgr_gap_event_cb[idx];
 				if(event_cb_fn[events] != NULL)
 				{
-					event_cb_fn[events](event_params);
+					status = event_cb_fn[events](event_params);
+					#ifdef USE_SCAN_SOFT_FILTER
+					if( status != AT_BLE_SUCCESS) 
+						break;
+					#endif						
 				}
 			}
 		}
