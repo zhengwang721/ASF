@@ -480,7 +480,87 @@ at_ble_status_t gap_dev_scan(void)
 	DBG_LOG("Scanning...Please wait...");
 	/* make service discover counter to zero*/
 	scan_response_count = 0;
-	return(at_ble_scan_start(SCAN_INTERVAL, SCAN_WINDOW, SCAN_TIMEOUT, SCAN_TYPE, AT_BLE_SCAN_GEN_DISCOVERY, false,true)) ;
+	memset(scan_info, 0, sizeof(scan_info));
+	#ifdef USE_SCAN_SOFT_FILTER
+	return(at_ble_scan_start(SCAN_INTERVAL, SCAN_WINDOW, SCAN_TIMEOUT, SCAN_TYPE, AT_BLE_SCAN_GEN_DISCOVERY, false,false)) ;	
+	#else
+	return(at_ble_scan_start(SCAN_INTERVAL, SCAN_WINDOW, SCAN_TIMEOUT, SCAN_TYPE, AT_BLE_SCAN_GEN_DISCOVERY, false,true)) ;	
+	#endif
+}
+
+bool ble_scan_duplication_check(at_ble_scan_info_t * info)
+{
+	uint32_t i = 0;
+	uint32_t ret = 0;
+	bool found = false;
+	for(i=0 ; i<scan_response_count ; i++)
+	{
+		ret = memcmp(scan_info[i].dev_addr.addr, info->dev_addr.addr, sizeof(uint8_t)*6);
+		ret |= (scan_info[i].type != info->type) ? 1 : 0;
+		if( !ret ) 
+		{
+			found = true;
+			break;
+		}
+	}
+	
+	return !found;
+}
+
+void ble_scan_filter()
+{
+	uint32_t i=0, cnt = 0, j=0;
+	at_ble_scan_info_t dummy= {0,};
+	at_ble_scan_info_t dummy_list[MAX_SCAN_DEVICE];
+	uint32_t ret = 0 , ret1 = 0;
+	uint32_t found = 0;
+	
+	for(i=0 ; i< scan_response_count ; i++)
+	{	
+		
+		if( //if need to add or remove filter type
+			scan_info[i].type != AT_BLE_ADV_TYPE_DIRECTED &&
+			scan_info[i].type != AT_BLE_ADV_TYPE_UNDIRECTED &&
+			scan_info[i].type != AT_BLE_ADV_TYPE_SCAN_RESPONSE
+			//&& scan_info[i].type != AT_BLE_ADV_TYPE_SCANNABLE_UNDIRECTED 
+			//&& scan_info[i].type != AT_BLE_ADV_TYPE_NONCONN_UNDIRECTED
+			//&& scan_info[i].type != AT_BLE_ADV_TYPE_DIRECTED_LDC
+			)
+			continue;
+			
+		memcpy(&dummy,&scan_info[i], sizeof(at_ble_scan_info_t) );
+		
+		if( !cnt ) 
+		{
+			memcpy( &dummy_list[cnt], &dummy, sizeof(at_ble_scan_info_t));
+			cnt++;
+		}
+		else
+		{
+			found = 1;
+			
+			for(j=0 ; j<cnt ; j++) 
+			{				
+				ret = memcmp(dummy.dev_addr.addr,dummy_list[j].dev_addr.addr, sizeof(uint8_t)*6);
+				ret |= (dummy.type != dummy_list[j].type) ? 1 : 0;
+				if( !ret ) 
+				{
+					found = 0;
+					break;
+				}					
+			}			
+			
+			if( found )
+			{
+				memcpy( &dummy_list[cnt], &dummy, sizeof(at_ble_scan_info_t));
+				cnt++;
+			}
+		}
+	}
+	
+	memset(scan_info, 0, sizeof(at_ble_scan_info_t)*MAX_SCAN_DEVICE);
+	scan_response_count = cnt;
+	memcpy(scan_info,dummy_list, sizeof(at_ble_scan_info_t)*cnt );
 }
 
 /** @brief function handling scaned information */
@@ -490,7 +570,14 @@ at_ble_status_t ble_scan_info_handler(void *params)
 	scan_param = (at_ble_scan_info_t *)params;
 	if(scan_response_count < MAX_SCAN_DEVICE)
 	{
-		// store the advertising report data into scan_info[]
+		#ifdef USE_SCAN_SOFT_FILTER
+		//store the advertising report data into scan_info[]
+		if( !ble_scan_duplication_check(scan_param) )
+		{
+			//already exist scan info
+			return;
+		}
+		#endif
 		memcpy((uint8_t *)&scan_info[scan_response_count], scan_param, sizeof(at_ble_scan_info_t));
 		DBG_LOG_DEV("Info:Device found address [%d]  0x%02X%02X%02X%02X%02X%02X ",
 		scan_response_count,
@@ -510,7 +597,26 @@ at_ble_status_t ble_scan_info_handler(void *params)
 		{
 			DBG_LOG("Failed to stop scanning");
 		}
-		
+		#ifdef USE_SCAN_SOFT_FILTER
+		uint32_t idx = 0;
+		at_ble_scan_report_t result = {0,};
+			
+		//ble_scan_filter();				
+		result.status = AT_BLE_SUCCESS;				
+				
+		for (idx = 0; idx < MAX_GAP_EVENT_SUBSCRIBERS; idx++)
+		{
+			if (ble_mgr_gap_event_cb[idx] != NULL)
+			{
+				const ble_event_callback_t *event_cb_fn = ble_mgr_gap_event_cb[idx];
+				if(event_cb_fn[AT_BLE_SCAN_REPORT] != NULL)
+				{
+					event_cb_fn[AT_BLE_SCAN_REPORT](&result);
+				}
+			}
+		}
+	
+		#endif
 		return AT_BLE_FAILURE;
 	}
 }
