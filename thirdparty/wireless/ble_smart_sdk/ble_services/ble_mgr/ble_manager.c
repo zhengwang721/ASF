@@ -520,7 +520,7 @@ static bool ble_scan_duplication_check(at_ble_scan_info_t * info)
 		}
 	}
 	
-	return !found;
+	return found;
 }
 #endif
 /** @brief function handling scaned information */
@@ -530,14 +530,6 @@ at_ble_status_t ble_scan_info_handler(void *params)
 	scan_param = (at_ble_scan_info_t *)params;
 	if(scan_response_count < MAX_SCAN_DEVICE)
 	{
-		#ifdef USE_SCAN_SOFT_FILTER
-		//store the advertising report data into scan_info[]
-		if( !ble_scan_duplication_check(scan_param) )
-		{
-			//already exist scan info
-			return AT_BLE_INVALID_STATE;
-		}
-		#endif
 		memcpy((uint8_t *)&scan_info[scan_response_count], scan_param, sizeof(at_ble_scan_info_t));
 		DBG_LOG_DEV("Info:Device found address [%d]  0x%02X%02X%02X%02X%02X%02X ",
 		scan_response_count,
@@ -1512,7 +1504,6 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
 {
-	at_ble_status_t status =AT_BLE_SUCCESS;
 	DBG_LOG_DEV("BLE-Event:%d", events);
 	switch(events)
 	{		
@@ -1538,6 +1529,15 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	case AT_BLE_CON_CHANNEL_MAP_IND:
 	{
 		uint8_t idx;
+		
+		#ifdef USE_SCAN_SOFT_FILTER
+		if( events == AT_BLE_SCAN_INFO )
+		{
+			if( ble_scan_duplication_check((at_ble_scan_info_t*)event_params) )
+				return;
+		}
+		#endif			
+		
 		for (idx = 0; idx < MAX_GAP_EVENT_SUBSCRIBERS; idx++)
 		{
 			if (ble_mgr_gap_event_cb[idx] != NULL)
@@ -1545,11 +1545,7 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 				const ble_event_callback_t *event_cb_fn = ble_mgr_gap_event_cb[idx];
 				if(event_cb_fn[events] != NULL)
 				{
-					status = event_cb_fn[events](event_params);
-					#ifdef USE_SCAN_SOFT_FILTER
-					if( status != AT_BLE_SUCCESS) 
-						break;
-					#endif						
+					event_cb_fn[events](event_params);		
 				}
 			}
 		}
@@ -1714,8 +1710,6 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	}
 	break;		
 	}
-	
-	ALL_UNUSED(status);
 }
 
 /* Advertisement Data will be set based on the advertisement configuration */
