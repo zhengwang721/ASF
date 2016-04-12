@@ -410,7 +410,6 @@
 			<build type="doxygen-entry-point" value="winc1500_group"/>
 			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
 			<device-support value="same70"/>
-			<device-support value="samv71"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.spi"/>

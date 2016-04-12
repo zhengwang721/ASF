@@ -3,7 +3,7 @@
  *
  * \brief SAM XDMA Controller (DMAC) driver.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -360,6 +360,10 @@ static inline void xdmac_channel_enable(Xdmac *xdmac, uint32_t channel_num)
 {
 	Assert(xdmac);
 	Assert(channel_num < XDMACCHID_NUMBER);
+	
+	/* Update DCache before DMA transmit */
+	SCB_CleanInvalidateDCache();
+	
 	xdmac->XDMAC_GE = (XDMAC_GE_EN0 << channel_num);
 }
 

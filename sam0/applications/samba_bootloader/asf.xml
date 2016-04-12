@@ -21,7 +21,6 @@
 			<require idref="sam0.drivers.system"/>
 			<device-support value="samc21"/>
 			<device-support value="samda1"/>
-			<device-support value="saml21"/>
 			<device-support value="samr21"/>
 		</module>
 		<module type="application" id="sam0.applications.samba_bootloader#1" caption="SAM0 SAM-BA Bootloader Example">
@@ -39,6 +38,7 @@
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="common.services.usb.class.device"/>
 			<device-support value="samd21"/>
+			<device-support value="saml21"/>
 			<device-support value="saml22"/>
 		</module>
 	</select-by-device>
