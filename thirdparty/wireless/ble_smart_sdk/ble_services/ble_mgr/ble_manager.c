@@ -1512,6 +1512,7 @@ at_ble_status_t ble_encryption_request_handler(void *params)
 
 void ble_event_manager(at_ble_events_t events, void *event_params)
 {
+	at_ble_status_t status =AT_BLE_SUCCESS;
 	DBG_LOG_DEV("BLE-Event:%d", events);
 	switch(events)
 	{		
@@ -1544,8 +1545,9 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 				const ble_event_callback_t *event_cb_fn = ble_mgr_gap_event_cb[idx];
 				if(event_cb_fn[events] != NULL)
 				{
+					status = event_cb_fn[events](event_params);
 					#ifdef USE_SCAN_SOFT_FILTER
-					if( event_cb_fn[events](event_params) != AT_BLE_SUCCESS) 
+					if( status != AT_BLE_SUCCESS) 
 						break;
 					#endif						
 				}
@@ -1712,6 +1714,8 @@ void ble_event_manager(at_ble_events_t events, void *event_params)
 	}
 	break;		
 	}
+	
+	ALL_UNUSED(status);
 }
 
 /* Advertisement Data will be set based on the advertisement configuration */
