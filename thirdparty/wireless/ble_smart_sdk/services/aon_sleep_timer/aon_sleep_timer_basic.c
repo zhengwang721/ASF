@@ -92,6 +92,7 @@ void aon_sleep_timer_service_stop()
 	aon_status = AON_TIMER_IDLE;
 	
 	aon_sleep_timer_disable();
+	aon_sleep_timer_unregister_callback();
 	NVIC_DisableIRQ(AON_SLEEP_TIMER_IRQn);
 }
 
