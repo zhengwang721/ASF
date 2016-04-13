@@ -115,7 +115,7 @@
 	/* / ** Stop bits setting * / */
 	#define USART_HOST_STOP_BITS       US_MR_NBSTOP_1_BIT
 	
-#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt((Usart *)USART_HOST, \
+#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, \
 		US_IER_RXRDY); \
 	NVIC_EnableIRQ(USART_HOST_IRQn);
 #endif /* SAM */
