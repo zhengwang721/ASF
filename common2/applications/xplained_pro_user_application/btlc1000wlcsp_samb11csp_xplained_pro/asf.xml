@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project id="common.applications.user_application.xplained_pro2.samb11csp_xplained_pro" caption="SAM B11 Xplained Pro template project" type="template">
+	<project id="common.applications.user_application.xplained_pro2.samb11csp_xplained_pro" caption="SAM B11 CSP Xplained Pro template project" type="template">
 		<device-support value="atbtlc1000wlcsp"/>
 		<require idref="common.applications.user_application.xplained_pro2"/>
 		<require idref="board.samb11csp_xplained_pro"/>

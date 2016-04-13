@@ -828,6 +828,7 @@ typedef struct {  /* ARM General Purpose Dual Timer */
 #endif /* COMPONENT_TYPEDEF_STYLE */
 
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
 /** @}*/
 
 

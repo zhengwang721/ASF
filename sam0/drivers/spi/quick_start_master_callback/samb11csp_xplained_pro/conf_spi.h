@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMB11 CSP Xplained SPI configuration
+ * \brief SAM B11 CSP Xplained Pro SPI configuration
  *
- * Copyright (C) 2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

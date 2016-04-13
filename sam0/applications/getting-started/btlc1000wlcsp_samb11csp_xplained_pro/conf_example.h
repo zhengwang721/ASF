@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example configuration.
+ * \brief SAM B11 CSP Xplained Pro Example configuration.
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *

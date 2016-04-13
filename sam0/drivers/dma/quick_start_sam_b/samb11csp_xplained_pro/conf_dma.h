@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAMB11 CSP Xplained Direct Memory Access Driver Configuration Header
+ * \brief SAM B11 CSP Xplained Pro Direct Memory Access Driver Configuration Header
  *
- * Copyright (C) 2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

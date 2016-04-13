@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM B11 GPIO Driver (Callback)" id="sam0.drivers.gpio.quick_start_callback.samb11csp_xplained_pro">
+	<project caption="Quick Start for the SAM B11 CSP GPIO Driver (Callback)" id="sam0.drivers.gpio.quick_start_callback.samb11csp_xplained_pro">
 		<info type="gui-flag" value="move-to-root"/>
 		<require idref="board.samb11csp_xplained_pro"/>
 		<require idref="sam0.drivers.gpio.quick_start_callback"/>

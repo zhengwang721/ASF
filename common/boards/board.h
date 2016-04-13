@@ -157,6 +157,7 @@ extern "C" {
 #define ATMEGA168PB_XPLAINED_MINI  89  //!< ATMEGA168PB Xplained MINI board.
 #define ATMEGA324PB_XPLAINED_PRO   90  //!< ATMEGA324PB Xplained Pro board.
 #define SAMB11CSP_XPLAINED_PRO     91  //!< SAM B11 CSP Xplained Pro board.
+#define SAMB11ZR_XPLAINED_PRO      92  //!< SAM B11 ZR Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices.
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -369,6 +370,8 @@ extern "C" {
 #  include "atmega324pb_xplained_pro/atmega324pb_xplained_pro.h"
 #elif BOARD == SAMB11CSP_XPLAINED_PRO
 #  include "samb11csp_xplained_pro/samb11csp_xplained_pro.h"
+#elif BOARD == SAMB11ZR_XPLAINED_PRO
+#  include "samb11zr_xplained_pro/samb11zr_xplained_pro.h"
 #elif BOARD == SIMULATOR_XMEGA_A1
 #  include "simulator/xmega_a1/simulator_xmega_a1.h"
 #elif BOARD == AVR_SIMULATOR_UC3

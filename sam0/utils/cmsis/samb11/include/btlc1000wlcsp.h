@@ -59,6 +59,19 @@
 
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 #include <stdint.h>
+/* IO definitions (access restrictions to peripheral registers) */
+/**
+    \defgroup Atmel_glob_defs Atmel Global Defines
+
+    <strong>IO Type Qualifiers</strong> are used
+    \li to specify the access to peripheral variables.
+    \li for automatic generation of peripheral register debug information.
+
+    
+emark
+    CMSIS core has a syntax that differs from this using i.e. __I, __O, or __IO followed by 'uint<size>_t' respective types.
+    Default the header files will follow the CMSIS core syntax.
+*/
 #ifndef __cplusplus
 typedef volatile const uint32_t RoReg;   /**< Read only 32-bit register (volatile const unsigned int) */
 typedef volatile const uint16_t RoReg16; /**< Read only 16-bit register (volatile const unsigned int) */
@@ -126,18 +139,18 @@ typedef struct _DeviceVectors
 
   /* Cortex-M handlers */
   void* pfnReset_Handler;                        /* 0   Reset handler                        */
-  void* pfnNMI_Handler;                          /* 2   Non Maskable Interrupt               */
+  void* pfnNonMaskableInt_Handler;               /* 2   Non Maskable Interrupt               */
   void* pfnHardFault_Handler;                    /* 3   Hard Fault Interrupt                 */
-  void* pfnReserved1_Handler;
-  void* pfnReserved2_Handler;
-  void* pfnReserved3_Handler;
-  void* pfnReserved4_Handler;
-  void* pfnReserved5_Handler;
-  void* pfnReserved6_Handler;
-  void* pfnReserved7_Handler;
-  void* pfnSVC_Handler;                          /* 11  SV Call Interrupt                    */
-  void* pfnReserved8_Handler;
-  void* pfnReserved9_Handler;
+  void* pfnReservedM12;
+  void* pfnReservedM11;
+  void* pfnReservedM10;
+  void* pfnReservedM9;
+  void* pfnReservedM8;
+  void* pfnReservedM7;
+  void* pfnReservedM6;
+  void* pfnSVCall_Handler;                       /* 11  SV Call Interrupt                    */
+  void* pfnReservedM4;
+  void* pfnReservedM3;
   void* pfnPendSV_Handler;                       /* 14  Pend SV Interrupt                    */
   void* pfnSysTick_Handler;                      /* 15  System Tick Interrupt                */
 
@@ -148,8 +161,8 @@ typedef struct _DeviceVectors
   void* pfnUART1_TX_Handler;                     /* 3   BTLC1000WLCSP UART Controller (UART1) */
   void* pfnSPI0_RX_Handler;                      /* 4   BTLC1000WLCSP SPI Master/Slave Controller (SPI0) */
   void* pfnSPI0_TX_Handler;                      /* 5   BTLC1000WLCSP SPI Master/Slave Controller (SPI0) */
-  void* pvReserved6;
-  void* pvReserved7;
+  void* pfnReserved6;
+  void* pfnReserved7;
   void* pfnI2C0_RX_Handler;                      /* 8   BTLC1000WLCSP I2C Master/Slave Controller (I2C0) */
   void* pfnI2C0_TX_Handler;                      /* 9   BTLC1000WLCSP I2C Master/Slave Controller (I2C0) */
   void* pfnI2C1_RX_Handler;                      /* 10  BTLC1000WLCSP I2C Master/Slave Controller (I2C1) */
@@ -157,26 +170,26 @@ typedef struct _DeviceVectors
   void* pfnWDT0_Handler;                         /* 12  BTLC1000WLCSP Watchdog0 Timer (WDT0) */
   void* pfnWDT1_Handler;                         /* 13  BTLC1000WLCSP Watchdog0 Timer (WDT1) */
   void* pfnDUALTIMER0_Handler;                   /* 14  BTLC1000WLCSP ARM General Purpose Dual Timer (DUALTIMER0) */
-  void* pvReserved15;
-  void* pvReserved16;
-  void* pvReserved17;
+  void* pfnReserved15;
+  void* pfnReserved16;
+  void* pfnReserved17;
   void* pfnSPI_FLASH0_Handler;                   /* 18  BTLC1000WLCSP SPI Flash Controller (SPI_FLASH0) */
-  void* pvReserved19;
-  void* pvReserved20;
-  void* pvReserved21;
-  void* pvReserved22;
+  void* pfnReserved19;
+  void* pfnReserved20;
+  void* pfnReserved21;
+  void* pfnReserved22;
   void* pfnGPIO0_Handler;                        /* 23  BTLC1000WLCSP GPIO Controller (GPIO0) */
   void* pfnGPIO1_Handler;                        /* 24  BTLC1000WLCSP GPIO Controller (GPIO1) */
   void* pfnGPIO2_Handler;                        /* 25  BTLC1000WLCSP GPIO Controller (GPIO2) */
   void* pfnTIMER0_Handler;                       /* 26  BTLC1000WLCSP ARM General Purpose Timer (TIMER0) */
-  void* pvReserved27;
+  void* pfnReserved27;
 } DeviceVectors;
 
 /* CORTEX-M0 core handlers */
 void Reset_Handler        ( void );
-void NMI_Handler          ( void );
+void NonMaskableInt_Handler ( void );
 void HardFault_Handler    ( void );
-void SVC_Handler          ( void );
+void SVCall_Handler       ( void );
 void PendSV_Handler       ( void );
 void SysTick_Handler      ( void );
 
@@ -280,7 +293,7 @@ void WDT1_Handler             ( void );
 /* ************************************************************************** */
 /**  PERIPHERAL ID DEFINITIONS FOR BTLC1000WLCSP */
 /* ************************************************************************** */
-/** \addtogroup legacy_BTLC1000WLCSP_id Legacy Peripheral Ids Definitions 
+/** \addtogroup BTLC1000WLCSP_id Peripheral Ids Definitions 
  *  @{
  */
 

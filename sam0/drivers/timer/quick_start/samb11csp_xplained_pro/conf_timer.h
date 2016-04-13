@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMB11 Xplained Pro board configuration.
+ * \brief SAM B11 CSP Xplained Pro board configuration.
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
