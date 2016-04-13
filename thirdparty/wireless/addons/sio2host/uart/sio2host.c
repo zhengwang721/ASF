@@ -124,7 +124,7 @@ uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 			= usart_serial_write_packet(&host_uart_module,
 				(const uint8_t *)data, length);
 #else
-		status = usart_serial_write_packet(USART_HOST,
+		status = usart_serial_write_packet((Usart *)USART_HOST,
 				(const uint8_t *)data,
 				length);
 #endif
@@ -238,7 +238,7 @@ USART_HOST_ISR_VECT()
 #if SAMD || SAMR21 || SAML21
 	usart_serial_read_packet(&host_uart_module, &temp, 1);
 #else
-	usart_serial_read_packet(USART_HOST, &temp, 1);
+	usart_serial_read_packet((Usart *)USART_HOST, &temp, 1);
 #endif
 
 	/* Introducing critical section to avoid buffer corruption. */

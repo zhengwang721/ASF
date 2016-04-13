@@ -59,7 +59,7 @@
 
 #define USART_HOST_IRQn            UART0_IRQn
 
-#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, \
+#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt((Usart *)USART_HOST, \
 		US_IER_RXRDY); \
 	NVIC_EnableIRQ(USART_HOST_IRQn);
 
