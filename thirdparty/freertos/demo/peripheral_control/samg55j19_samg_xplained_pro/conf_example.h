@@ -52,7 +52,7 @@
 
 //#define confINCLUDE_UART_CLI
 #define confINCLUDE_USART_ECHO_TASKS
-//#define confINCLUDE_USART_CLI
+#define confINCLUDE_USART_CLI
 #define confINCLUDE_CDC_CLI
 
 /* Less user LEDS are available on this kit, so redefine the corresponding define. */
