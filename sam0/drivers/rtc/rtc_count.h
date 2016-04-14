@@ -728,7 +728,7 @@ struct rtc_count_config {
 	 *  needed for reading */
 	bool continuously_update;
 #endif
-#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
+#if (SAML21XXXB) || (SAML22) || (SAMC20) || (SAMC21)
 	/** Enable count read synchronization. The COUNT value requires
 	 * synchronization when reading. Disabling the synchronization
 	 * will prevent the COUNT value from displaying the current value. */
@@ -778,7 +778,7 @@ static inline void rtc_count_get_config_defaults(
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config->continuously_update = false;
 #endif
-#if (SAML22)
+#if (SAML21XXXB) || (SAML22) || (SAMC20) || (SAMC21)
 	config->enable_read_sync    = true;
 #endif
 

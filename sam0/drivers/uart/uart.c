@@ -331,6 +331,17 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 	/* Assign module pointer to software instance struct */
 	module->hw = hw;
 
+	for (i = 0; i < UART_CALLBACK_N; i++) {
+		module->callback[i] = NULL;
+	}
+	module->rx_buffer_ptr = NULL;
+	module->tx_buffer_ptr = NULL;
+	module->remaining_rx_buffer_length = 0;
+	module->remaining_tx_buffer_length = 0;
+	module->callback_reg_mask = 0;
+	module->callback_enable_mask = 0;
+	module->status = STATUS_OK;
+
 	if (hw == UART0) {
 		system_peripheral_reset(PERIPHERAL_UART0_CORE);
 		system_peripheral_reset(PERIPHERAL_UART0_IF);
