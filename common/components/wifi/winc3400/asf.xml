@@ -1,12 +1,12 @@
 <asf xmlversion="1.0">
-	<select-by-device id="common.components.wifi.winc3400" caption="WINC3400 (Wi-Fi) Host Driver v0.1.3">
+	<select-by-device id="common.components.wifi.winc3400" caption="WINC3400 (Wi-Fi) Host Driver v1.0.2">
 		<info type="description" value="summary">
 			The Atmel SmartConnect WINC3400 is an IEEE 802.11 b/g/n/BLE4.0 IOT network controller SoC. It is the ideal add-On to existing MCU solutions bringing WiFi and BLE Network capabilities through UART or SPI-to-WiFi interface. The WINC3400 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>
 		</info>
-		<module type="service" id="common.components.wifi.winc3400#1" caption="WINC3400 (Wi-Fi) Host Driver v0.1.3 - SAMD21 implementation">
+		<module type="service" id="common.components.wifi.winc3400#1" caption="WINC3400 (Wi-Fi) Host Driver v1.0.2 - SAMD21 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WINC3400 is an IEEE 802.11 b/g/n/BLE4.0 IOT network controller SoC. It is the ideal add-On to existing MCU solutions bringing WiFi and BLE Network capabilities through UART or SPI-to-WiFi interface. The WINC3400 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
 			</info>

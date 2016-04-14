@@ -561,7 +561,10 @@ int main(void)
 			}
 			if (connected_to_central == false)
 			{
-				at_ble_scan_stop();
+				if(peripheral_state == PERIPHERAL_ADVERTISING_STATE) {
+					peripheral_state = PERIPHERAL_IDLE_STATE;
+					at_ble_scan_stop();
+				}
 				pxp_monitor_start_scan();
 			}
 			button_pressed = false;
