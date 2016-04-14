@@ -8,8 +8,8 @@
 		<require idref="common.utils"/>
 		<require idref="common.boards"/>
 		<device-support value="atbtlc1000wlcsp"/>
-		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/samb11_xplained_pro_sram.gdb" toolchain="armgcc"/>
-		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/samb11_xplained_pro_sram.mac" toolchain="iarewarm"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/samb11csp_xplained_pro_sram.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/samb11csp_xplained_pro_sram.mac" toolchain="iarewarm"/>
 		<build type="header-file" value="samb11csp_xplained_pro.h"/>
 		<build type="c-source" value="board_init.c"/>
 		<build type="module-config" subtype="path" value="board_config"/>
