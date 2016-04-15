@@ -1,7 +1,7 @@
 /*
 *
 ****************************************************************************
-* Copyright (C) 2013 - 2014 Bosch Sensortec GmbH
+* Copyright (C) 2013 - 2016 Bosch Sensortec GmbH
 *
 * File : bno055.c
 *
@@ -53,6 +53,14 @@
 * patent rights of the copyright holder.
 **************************************************************************/
 
+/**
+ * \defgroup bno055__sensor__group Accelerometer BNO055
+ * Sensor
+ *
+ * This driver provides access to the main features of the BNO055 sensor.
+ *
+ * \{
+ */
 
 /*********************************************************/
 /*  INCLUDES */
