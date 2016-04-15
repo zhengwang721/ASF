@@ -266,7 +266,7 @@ extern void at45dbx_spi_write_packet(void const *data, size_t len);
  */
 static inline bool at45dbx_check_address(uint32_t address)
 {
-	if (address > (((uint32_t)1<<AT45DBX_MEM_SIZE)*AT45DBX_MEM_CNT)) {
+	if (address >= (((uint32_t)1<<AT45DBX_MEM_SIZE)*AT45DBX_MEM_CNT)) {
 		return false;
 	} else {
 		return true;
