@@ -79,6 +79,10 @@ struct uart_module uart_instance;
 at_ble_init_config_t pf_cfg;
 volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
+volatile uint32_t 	event_pool_memory[256] 		= {0};
+volatile uint32_t 	event_params_memory[1024] 	= {0};
+
+
 void ble_init(void);
 int main(void);
 
@@ -134,7 +138,17 @@ static at_ble_status_t app_init(void)
 		memset(scan_rsp_data,0,sizeof(scan_rsp_data));
 		memcpy(adv_data,ro_adv_data,sizeof(ro_adv_data));
 		memcpy(scan_rsp_data,ro_scan_rsp_data,sizeof(ro_scan_rsp_data));
+		
+		memset((uint8_t *)event_pool_memory, 0, sizeof(event_pool_memory));
+		memset((uint8_t *)event_params_memory, 0, sizeof(event_params_memory));
+		
 		memset(&pf_cfg,0,sizeof(pf_cfg));
+
+		pf_cfg.event_mem_pool.memStartAdd        = (uint8_t *)event_pool_memory;
+		pf_cfg.event_mem_pool.memSize            = sizeof(event_pool_memory);
+		pf_cfg.event_params_mem_pool.memStartAdd = (uint8_t *)event_params_memory;
+		pf_cfg.event_params_mem_pool.memSize     = sizeof(event_params_memory);
+
 		// init device
 		if((status = at_ble_init(&pf_cfg)) == AT_BLE_SUCCESS)
 		{
