@@ -198,7 +198,6 @@ static void _spi_read_buffer(
 		/* Enable Slave Select Low Interrupt for slave */
 		tmp_intenset |= SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW;
 #endif
-/* Workaround for SSL flag enable */
 	}
 #  endif
 
