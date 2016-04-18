@@ -348,8 +348,9 @@ enum status_code usart_init(
 	}
 #elif (SAMC21)
 	pm_index	= sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
+	
 	if (sercom_index == 5){
-		pm_index	= SERCOM5_GCLK_ID_CORE;
+		gclk_index	= SERCOM5_GCLK_ID_CORE;
     } else {
     	gclk_index	= sercom_index + SERCOM0_GCLK_ID_CORE;	
     }
