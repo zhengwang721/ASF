@@ -3,7 +3,7 @@
  *
  * \brief Common SD/MMC stack
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1506,6 +1506,7 @@ static bool sd_mmc_spi_card_init(void)
 static bool sd_mmc_mci_card_init(void)
 {
 	uint8_t v2 = 0;
+	uint8_t data = 0x08;
 
 	// In first, try to install SD/SDIO card
 	sd_mmc_card->type = CARD_TYPE_SD;
@@ -1515,6 +1516,9 @@ static bool sd_mmc_mci_card_init(void)
 
 	// Card need of 74 cycles clock minimum to start
 	driver_send_clock();
+
+	/* CMD52 Reset SDIO */
+	sdio_cmd52(SDIO_CMD52_WRITE_FLAG, SDIO_CIA,SDIO_CCCR_IOA, 0, &data);
 
 	// CMD0 - Reset all cards to idle state.
 	if (!driver_send_cmd(SDMMC_MCI_CMD0_GO_IDLE_STATE, 0)) {
