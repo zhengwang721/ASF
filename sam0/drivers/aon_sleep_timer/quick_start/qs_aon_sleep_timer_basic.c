@@ -46,6 +46,8 @@
 #include <asf.h>
 #include "conf_aon_sleep_timer.h"
 
+#define AON_SLEEP_TIMER_IRQn 28
+
 //! [setup]
 
 //! [callback_funcs]
@@ -98,7 +100,7 @@ static void configure_aon_sleep_timer_callback(void)
 	//! [setup_register_callback]
 
 	//! [enable_IRQ]
-	NVIC_EnableIRQ(PERIPH_COUNT_IRQn);
+	NVIC_EnableIRQ(AON_SLEEP_TIMER_IRQn);
 	//! [enable_IRQ]
 }
 
