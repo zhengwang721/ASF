@@ -3,7 +3,7 @@
  *
  * \brief SAMV70/SAMV71/SAME70/SAMS70-XULTRA board mpu config.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -155,7 +155,7 @@ void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, ui
 {
 
 	/* Disable interrupt */
-	__disable_irq();
+	cpu_irq_disable();
 
 	/* Clean up data and instruction buffer */
 	__DSB();
@@ -176,5 +176,5 @@ void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, ui
 	__ISB();
 
 	/* Enable the interrupt */
-	__enable_irq();
+	cpu_irq_enable();
 }
