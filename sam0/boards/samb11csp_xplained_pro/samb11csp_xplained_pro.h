@@ -86,14 +86,14 @@ void system_board_init(void);
 
 /** \name LED0 definitions
  *  @{ */
-#define LED0_PIN                  PIN_LP_GPIO_22
+#define LED0_PIN                  PIN_AO_GPIO_0
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
 
 /** \name SW0 definitions
  *  @{ */
-#define SW0_PIN                   PIN_LP_GPIO_23
+#define SW0_PIN                   PIN_LP_GPIO_1
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
 #define SW0_EIC_PIN               
@@ -467,14 +467,14 @@ void system_board_init(void);
  */
 #define EDBG_CDC_MODULE              UART0
 #define EDBG_CDC_SERCOM_MUX_SETTING 
-#define EDBG_CDC_SERCOM_PIN_PAD0  PIN_LP_GPIO_2_MUX2_UART0_RXD
-#define EDBG_CDC_SERCOM_PIN_PAD1  PIN_LP_GPIO_3_MUX2_UART0_TXD
-#define EDBG_CDC_SERCOM_PIN_PAD2  PIN_LP_GPIO_4_MUX2_UART0_CTS
-#define EDBG_CDC_SERCOM_PIN_PAD3  PIN_LP_GPIO_5_MUX2_UART0_RTS 
-#define EDBG_CDC_SERCOM_MUX_PAD0  MUX_LP_GPIO_2_MUX2_UART0_RXD
-#define EDBG_CDC_SERCOM_MUX_PAD1  MUX_LP_GPIO_3_MUX2_UART0_TXD
-#define EDBG_CDC_SERCOM_MUX_PAD2  MUX_LP_GPIO_4_MUX2_UART0_CTS
-#define EDBG_CDC_SERCOM_MUX_PAD3  MUX_LP_GPIO_5_MUX2_UART0_RTS
+#define EDBG_CDC_SERCOM_PIN_PAD0  PIN_LP_GPIO_2
+#define EDBG_CDC_SERCOM_PIN_PAD1  PIN_LP_GPIO_3
+#define EDBG_CDC_SERCOM_PIN_PAD2  PIN_LP_GPIO_8
+#define EDBG_CDC_SERCOM_PIN_PAD3  PIN_LP_GPIO_9 
+#define EDBG_CDC_SERCOM_MUX_PAD0  MUX_LP_GPIO_2_MUX2
+#define EDBG_CDC_SERCOM_MUX_PAD1  MUX_LP_GPIO_3_MUX2
+#define EDBG_CDC_SERCOM_MUX_PAD2  MUX_LP_GPIO_8_MUX2
+#define EDBG_CDC_SERCOM_MUX_PAD3  MUX_LP_GPIO_9_MUX2
 #define EDBG_CDC_SERCOM_DMAC_ID_TX   
 #define EDBG_CDC_SERCOM_DMAC_ID_RX   
 /** @} */

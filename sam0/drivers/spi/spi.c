@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface Driver for SAMB11
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -85,11 +85,13 @@ static void _spi_clock_enable(struct spi_module *const module)
 		system_clock_peripheral_enable(PERIPHERAL_SPI0_SCK_PHASE);
 		system_clock_peripheral_enable(PERIPHERAL_SPI0_IF);
 		system_clock_peripheral_enable(PERIPHERAL_SPI0_CORE);
+#if (!BTLC1000)
 	} else if (spi_module == (void *)SPI1) {
 		system_clock_peripheral_enable(PERIPHERAL_SPI1_SCK_CLK);
 		system_clock_peripheral_enable(PERIPHERAL_SPI1_SCK_PHASE);
 		system_clock_peripheral_enable(PERIPHERAL_SPI1_IF);
 		system_clock_peripheral_enable(PERIPHERAL_SPI1_CORE);
+#endif
 	}
 }
 
@@ -111,11 +113,13 @@ static void _spi_clock_disable(struct spi_module *const module)
 		system_clock_peripheral_disable(PERIPHERAL_SPI0_SCK_PHASE);
 		system_clock_peripheral_disable(PERIPHERAL_SPI0_IF);
 		system_clock_peripheral_disable(PERIPHERAL_SPI0_CORE);
+#if (!BTLC1000)
 	} else if (spi_module == (void *)SPI1) {
 		system_clock_peripheral_disable(PERIPHERAL_SPI1_SCK_CLK);
 		system_clock_peripheral_disable(PERIPHERAL_SPI1_SCK_PHASE);
 		system_clock_peripheral_disable(PERIPHERAL_SPI1_IF);
 		system_clock_peripheral_disable(PERIPHERAL_SPI1_CORE);
+#endif
 	}
 }
 
@@ -308,15 +312,23 @@ void spi_get_config_defaults(
 	config->clock_source     = SPI_CLK_INPUT_0;
 	config->clock_divider    = 129;
 
-	config->pin_number_pad[0] = PIN_LP_GPIO_10_MUX2_SPI0_SCK;
-	config->pin_number_pad[1] = PIN_LP_GPIO_11_MUX2_SPI0_MOSI;
-	config->pin_number_pad[2] = PIN_LP_GPIO_12_MUX2_SPI0_SSN;
-	config->pin_number_pad[3] = PIN_LP_GPIO_13_MUX2_SPI0_MISO;
+	config->pin_number_pad[0] = PIN_LP_GPIO_10;
+	config->pin_number_pad[1] = PIN_LP_GPIO_11;
+	config->pin_number_pad[2] = PIN_LP_GPIO_12;
+	config->pin_number_pad[3] = PIN_LP_GPIO_13;
 
-	config->pinmux_sel_pad[0] = MUX_LP_GPIO_10_MUX2_SPI0_SCK;
-	config->pinmux_sel_pad[1] = MUX_LP_GPIO_11_MUX2_SPI0_MOSI;
-	config->pinmux_sel_pad[2] = MUX_LP_GPIO_12_MUX2_SPI0_SSN;
-	config->pinmux_sel_pad[3] = MUX_LP_GPIO_13_MUX2_SPI0_MISO;
+#if (!BTLC1000)
+	config->pinmux_sel_pad[0] = MUX_LP_GPIO_10_SPI0_SCK;
+	config->pinmux_sel_pad[1] = MUX_LP_GPIO_11_SPI0_MOSI;
+	config->pinmux_sel_pad[2] = MUX_LP_GPIO_12_SPI0_SSN;
+	config->pinmux_sel_pad[3] = MUX_LP_GPIO_13_SPI0_MISO;
+#else
+	config->pinmux_sel_pad[0] = MUX_LP_GPIO_10_MUX2;
+	config->pinmux_sel_pad[1] = MUX_LP_GPIO_11_MUX2;
+	config->pinmux_sel_pad[2] = MUX_LP_GPIO_12_MUX2;
+	config->pinmux_sel_pad[3] = MUX_LP_GPIO_13_MUX2;
+#endif
+
 };
 
 /**
@@ -369,9 +381,11 @@ void spi_reset(struct spi_module *const module)
 	if(spi_module == (void *)SPI0) {
 		system_peripheral_reset(PERIPHERAL_SPI0_CORE);
 		system_peripheral_reset(PERIPHERAL_SPI0_IF);
+#if (!BTLC1000)
 	} else if (spi_module == (void *)SPI1) {
 		system_peripheral_reset(PERIPHERAL_SPI1_CORE);
 		system_peripheral_reset(PERIPHERAL_SPI1_IF);
+#endif
 	}
 }
 
@@ -409,8 +423,8 @@ enum status_code spi_init(
 	Spi *const spi_module = (module->hw);
 
 	/* Check if module is enabled. */
-	if (spi_module->SPI_MODULE_ENABLE.reg & SPI_SPI_MODULE_ENABLE_MASK) {
-		spi_module->SPI_MODULE_ENABLE.reg = (0x0ul << SPI_SPI_MODULE_ENABLE_ENABLE_Pos);
+	if (spi_module->SPI_MODULE_ENABLE.reg & SPI_MODULE_ENABLE_MASK) {
+		spi_module->SPI_MODULE_ENABLE.reg = (0x0ul << SPI_MODULE_ENABLE_ENABLE_Pos);
 	}
 
 	spi_reset(module);
@@ -421,10 +435,12 @@ enum status_code spi_init(
 		_spi_instances[0] = module;
 		system_register_isr(RAM_ISR_TABLE_SPIRX0_INDEX, (uint32_t)spi_rx0_isr_handler);
 		system_register_isr(RAM_ISR_TABLE_SPITX0_INDEX, (uint32_t)spi_tx0_isr_handler);
+#if (!BTLC1000)
 	} else if (module->hw == SPI1) {
 		_spi_instances[1] = module;
 		system_register_isr(RAM_ISR_TABLE_SPIRX1_INDEX, (uint32_t)spi_rx1_isr_handler);
 		system_register_isr(RAM_ISR_TABLE_SPITX1_INDEX, (uint32_t)spi_tx1_isr_handler);
+#endif
 	}
 #endif
 
@@ -506,14 +522,16 @@ void spi_enable(struct spi_module *const module)
 	if(spi_module == SPI0) {
 		NVIC_EnableIRQ(SPI0_RX_IRQn);
 		NVIC_EnableIRQ(SPI0_TX_IRQn);
+#if (!BTLC1000)
 	} else if(spi_module == SPI1) {
 		NVIC_EnableIRQ(SPI1_RX_IRQn);
 		NVIC_EnableIRQ(SPI1_TX_IRQn);
+#endif
 	}
 #endif
 
 	/* Enable SPI */
-	spi_module->SPI_MODULE_ENABLE.reg = SPI_SPI_MODULE_ENABLE_ENABLE;
+	spi_module->SPI_MODULE_ENABLE.reg = SPI_MODULE_ENABLE_ENABLE;
 }
 
 /**
@@ -531,14 +549,16 @@ void spi_disable(struct spi_module *const module)
 	if(spi_module == SPI0) {
 		NVIC_DisableIRQ(SPI0_RX_IRQn);
 		NVIC_DisableIRQ(SPI0_TX_IRQn);
+#if (!BTLC1000)
 	} else if(spi_module == SPI1) {
 		NVIC_DisableIRQ(SPI1_RX_IRQn);
 		NVIC_DisableIRQ(SPI1_TX_IRQn);
+#endif
 	}
 #  endif
 
 	/* Disable SPI */
-	spi_module->SPI_MODULE_ENABLE.reg = (0x0ul << SPI_SPI_MODULE_ENABLE_ENABLE_Pos);
+	spi_module->SPI_MODULE_ENABLE.reg = (0x0ul << SPI_MODULE_ENABLE_ENABLE_Pos);
 	_spi_clock_disable(module);
 }
 

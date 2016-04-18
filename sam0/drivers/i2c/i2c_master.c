@@ -3,7 +3,7 @@
  *
  * \brief I2C Master Driver for SAMB
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,10 +71,15 @@ void i2c_master_get_config_defaults(
 	
 	config->clock_source    = I2C_CLK_INPUT_3;
 	config->clock_divider   = 0x10;
-	config->pin_number_pad0 = PIN_LP_GPIO_8_MUX2_I2C0_SDA;
-	config->pin_number_pad1 = PIN_LP_GPIO_9_MUX2_I2C0_SCL;
-	config->pinmux_sel_pad0 = MUX_LP_GPIO_8_MUX2_I2C0_SDA;
-	config->pinmux_sel_pad1 = MUX_LP_GPIO_9_MUX2_I2C0_SCL;
+	config->pin_number_pad0 = PIN_LP_GPIO_8;
+	config->pin_number_pad1 = PIN_LP_GPIO_9;
+#if (!BTLC1000)
+	config->pinmux_sel_pad0 = MUX_LP_GPIO_8_I2C0_SDA;
+	config->pinmux_sel_pad1 = MUX_LP_GPIO_9_I2C0_SCL;
+#else
+	config->pinmux_sel_pad0 = MUX_LP_GPIO_8_MUX2;
+	config->pinmux_sel_pad1 = MUX_LP_GPIO_9_MUX2;
+#endif
 }
 
 #if !defined(__DOXYGEN__)
@@ -101,9 +106,9 @@ static void _i2c_master_set_config(
 	gpio_pinmux_cofiguration(config->pin_number_pad1, (uint16_t)(config->pinmux_sel_pad1));
 	/* Set clock. */
 	i2c_module->CLOCK_SOURCE_SELECT.reg = config->clock_source;
-	i2c_module->I2C_CLK_DIVIDER.reg = I2C_I2C_CLK_DIVIDER_I2C_DIVIDE_RATIO(config->clock_divider);
+	i2c_module->I2C_CLK_DIVIDER.reg = I2C_CLK_DIVIDER_I2C_DIVIDE_RATIO(config->clock_divider);
 	/* Enable master mode. */
-	i2c_module->I2C_MASTER_MODE.reg = I2C_I2C_MASTER_MODE_MASTER_ENABLE_1;
+	i2c_module->I2C_MASTER_MODE.reg = I2C_MASTER_MODE_MASTER_ENABLE_1;
 }
 #endif /* __DOXYGEN__ */
 
@@ -217,7 +222,7 @@ static enum status_code _i2c_master_read_packet(
 	i2c_module->I2C_FLUSH.reg = 1;
 
 	/* Enable I2C on bus (start condition). */
-	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
+	i2c_module->I2C_ONBUS.reg = I2C_ONBUS_ONBUS_ENABLE_1;
 	/* Address I2C slave in case of Master mode enabled. */
 	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 |
 			(packet->address << 1) | I2C_TRANSFER_READ;
@@ -234,7 +239,7 @@ static enum status_code _i2c_master_read_packet(
 
 	/* Send stop condition. */
 	if (!module->no_stop) {
-		i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
+		i2c_module->I2C_ONBUS.reg = I2C_ONBUS_ONBUS_ENABLE_0;
 	}
 
 	return STATUS_OK;
@@ -359,7 +364,7 @@ static enum status_code _i2c_master_write_packet(
 	i2c_module->I2C_FLUSH.reg = 1;
 
 	/* Enable I2C on bus (start condition) */
-	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
+	i2c_module->I2C_ONBUS.reg = I2C_ONBUS_ONBUS_ENABLE_1;
 
 	/* Address I2C slave in case of Master mode enabled */
 	i2c_module->TRANSMIT_DATA.reg = I2C_TRANSMIT_DATA_ADDRESS_FLAG_1 | 
@@ -378,7 +383,7 @@ static enum status_code _i2c_master_write_packet(
 
 	/* Send stop condition */
 	if (!module->no_stop) {
-		i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
+		i2c_module->I2C_ONBUS.reg = I2C_ONBUS_ONBUS_ENABLE_0;
 	}
 
 	return STATUS_OK;
@@ -494,7 +499,7 @@ void i2c_master_send_stop(struct i2c_master_module *const module)
 	/* Send stop command */
 	i2c_wait_for_idle(i2c_module);
 
-	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_0;
+	i2c_module->I2C_ONBUS.reg = I2C_ONBUS_ONBUS_ENABLE_0;
 }
 
 /**
@@ -516,7 +521,7 @@ void i2c_master_send_start(struct i2c_master_module *const module)
 	i2c_wait_for_idle(i2c_module);
 
 	/* Send start command */
-	i2c_module->I2C_ONBUS.reg = I2C_I2C_ONBUS_ONBUS_ENABLE_1;
+	i2c_module->I2C_ONBUS.reg = I2C_ONBUS_ONBUS_ENABLE_1;
 }
 
 /**

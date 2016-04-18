@@ -3,7 +3,7 @@
  *
  * \brief I2C Common Driver for SAMB
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -323,7 +323,7 @@ static inline void i2c_enable(I2C *const i2c_module)
 	/* Wait for module to sync. */
 	i2c_wait_for_idle(i2c_module);
 	/* Enable module. */
-	i2c_module->I2C_MODULE_ENABLE.reg = (1 << I2C_I2C_MODULE_ENABLE_ENABLE_Pos);
+	i2c_module->I2C_MODULE_ENABLE.reg = (1 << I2C_MODULE_ENABLE_ENABLE_Pos);
 }
 
 /**
