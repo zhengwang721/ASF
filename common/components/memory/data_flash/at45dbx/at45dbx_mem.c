@@ -56,6 +56,17 @@
 #include "at45dbx.h"
 #include "at45dbx_mem.h"
 
+#ifdef AT45DB641E
+//!< Address bits for byte position within buffer.
+#define AT45DBX_BYTE_ADDR_BITS            9
+
+//! Number of bits for addresses within pages.
+#define AT45DBX_PAGE_BITS                 (AT45DBX_BYTE_ADDR_BITS - 1)
+
+//! Page size in bytes.
+#define AT45DBX_PAGE_SIZE                 (1 << AT45DBX_PAGE_BITS)
+#endif
+
 
 //_____ D E F I N I T I O N S ______________________________________________
 
