@@ -118,7 +118,7 @@ enum status_code nvm_set_config(
 #endif
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_NVME;
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
@@ -223,7 +223,7 @@ enum status_code nvm_execute_command(
 #endif
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_NVME;
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
@@ -477,7 +477,7 @@ enum status_code nvm_write_buffer(
 	}
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_NVME;
 
 	uint32_t nvm_address = destination_address / 2;
 
@@ -575,7 +575,7 @@ enum status_code nvm_read_buffer(
 	}
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_NVME;
 
 	uint32_t page_address = source_address / 2;
 
@@ -650,7 +650,7 @@ enum status_code nvm_erase_row(
 	}
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_NVME;
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_address / 4];
@@ -694,7 +694,7 @@ void nvm_get_parameters(
 	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_NVME;
 
 	/* Read out from the PARAM register */
 	uint32_t param_reg = nvm_module->PARAM.reg;
