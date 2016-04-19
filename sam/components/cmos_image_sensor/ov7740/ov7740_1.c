@@ -3,7 +3,7 @@
  *
  * \brief API driver for OV7740 CMOS image sensor.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -543,7 +543,7 @@ uint32_t ov_restore_manual(volatile uint32_t *p_backup_addr, uint32_t ul_size)
 	}
 }
 
-/* @} */
+/** @} */
 
 #ifdef __cplusplus
 }

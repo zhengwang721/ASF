@@ -1519,7 +1519,7 @@ const ov_reg OV7740_VGA_YUV422_20FPS[] = {
 	{0xFF, 0xFF}
 };
 
-/* @} */
+/** @} */
 
 #ifdef __cplusplus
 }
