@@ -1076,6 +1076,7 @@ extern void qt_enable_slider(    channel_t from_channel,
                             uint8_t position_hysteresis );
 
 #endif
+
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
