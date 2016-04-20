@@ -83,7 +83,8 @@ Ctrl_status at45dbx_test_unit_ready(void)
 
 Ctrl_status at45dbx_read_capacity(U32 *u32_nb_sector)
 {
-  *u32_nb_sector = (AT45DBX_MEM_CNT << (AT45DBX_MEM_SIZE - AT45DBX_SECTOR_BITS)) - 1;
+	/* FATFS sector size 512Byte. */
+	*u32_nb_sector = (AT45DBX_MEM_CNT << (AT45DBX_MEM_SIZE - 9)) - 1;
 
   return CTRL_GOOD;
 }
@@ -195,7 +196,8 @@ void at45dbx_write_multiple_sector_callback(void *psector)
 
 Ctrl_status at45dbx_df_2_ram(U32 addr, void *ram)
 {
-  if (addr + 1 > AT45DBX_MEM_CNT << (AT45DBX_MEM_SIZE - AT45DBX_SECTOR_BITS)) return CTRL_FAIL;
+	/* FATFS sector size 512Byte. */
+	if (addr + 1 > AT45DBX_MEM_CNT << (AT45DBX_MEM_SIZE - 9)) return CTRL_FAIL;
 
 #ifdef AT45DB641E
 	at45dbx_read_open(addr*2);
@@ -217,7 +219,8 @@ Ctrl_status at45dbx_df_2_ram(U32 addr, void *ram)
 
 Ctrl_status at45dbx_ram_2_df(U32 addr, const void *ram)
 {
-	if (addr + 1 > AT45DBX_MEM_CNT << (AT45DBX_MEM_SIZE - AT45DBX_SECTOR_BITS)) return CTRL_FAIL;
+	/* FATFS sector size 512Byte. */
+	if (addr + 1 > AT45DBX_MEM_CNT << (AT45DBX_MEM_SIZE - 9)) return CTRL_FAIL;
 
 #ifdef AT45DB641E
 	at45dbx_write_open(addr*2);
