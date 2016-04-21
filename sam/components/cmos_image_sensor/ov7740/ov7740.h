@@ -3,7 +3,7 @@
  *
  * \brief API driver for OV7740 CMOS image sensor.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,9 +52,13 @@
 #include "delay.h"
 #include "pio.h"
 
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
-extern "C" {
+ extern "C" {
 #endif
+/**INDENT-ON**/
+/// @endcond
 
 /** Slave address of OMNIVISION chip. */
 #define OV_I2C_SENSOR_ADDRESS          (0x42u >> 1)   /* OV7740 -> 0x42 */
@@ -360,9 +364,13 @@ void ov_power(uint32_t on_off, Pio* const p_pio, const uint32_t ul_mask);
 void ov_reset(Pio* const p_pio, const uint32_t ul_mask);
 uint32_t ov_restore_manual(volatile uint32_t *p_backup_addr, uint32_t ul_size);
 
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
+/**INDENT-ON**/
+/// @endcond
 
 /**
  * \page sam_component_ov7740_quick_start Quick Start Guide for the OV7740
