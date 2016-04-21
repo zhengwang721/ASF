@@ -3,7 +3,7 @@
  *
  * \brief SAM Control Area Network (MCAN) Low Level Driver
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1180,6 +1180,19 @@ static inline void mcan_clear_interrupt_status(
 #endif
 
 /** @} */
+
+/**
+ * \page asfdoc_sam_mcan_exqsg Examples for MCAN Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_sam_mcan_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that a QSG can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_sam_mcan_module_overview
+ *
+ */
 
 #endif /* CAN_H_INCLUDED */
 
