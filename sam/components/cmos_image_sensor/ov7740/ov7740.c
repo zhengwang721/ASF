@@ -40,15 +40,6 @@
  * \asf_license_stop
  *
  */
-
-/**
- * \defgroup ov7740_CMOS_image_sensor_group
- *
- * Low-level driver for the OV7740 CMOS image sensor. This driver provides
- * access to the main features of the  OV7740 CMOS image sensor.
- *
- * \{
- */
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -59,13 +50,18 @@
 #include <assert.h>
 #include <stdlib.h>
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
-/**INDENT-ON**/
-/// @endcond
+
+/**
+ * \defgroup ov7740_cmos_image_sensor_group
+ *
+ * Low-level driver for the OV7740 CMOS image sensor. This driver provides
+ * access to the main features of the  OV7740 CMOS image sensor.
+ *
+ * @{
+ */
 
 /**
  * \brief Read PID and VER.
@@ -547,14 +543,8 @@ uint32_t ov_restore_manual(volatile uint32_t *p_backup_addr, uint32_t ul_size)
 	}
 }
 
-/// @cond 0
-/**INDENT-OFF**/
+/* @} */
+
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/// @endcond
-
-/**
- * \}
- */

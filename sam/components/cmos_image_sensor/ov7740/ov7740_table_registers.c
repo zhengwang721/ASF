@@ -3,7 +3,7 @@
  *
  * \brief Register table for OV7740 CMOS image sensor.
  *
- * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,16 +47,12 @@
 #include "board.h"
 #include <ov7740.h>
 
-/// @cond 0
-/**INDENT-OFF**/
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
-/**INDENT-ON**/
-/// @endcond
 
 /**
- * \defgroup ov7740_CMOS_image_sensor_registers_group
+ * \defgroup ov7740_cmos_image_sensor_registers_group
  *
  * This file defines several arrays. Each of them contain adress of ov7740
  * register and corresponding value for a specific configuration.
@@ -71,7 +67,7 @@
  *       -  OV7740_TEST_PATTERN[]
  *       -  OV7740_VGA_YUV422_20FPS[]
  * These values have been obtained from OV7740 datasheet and OmniVision Developer Kit.
- * \{
+ * @{
  */
 
 /**
@@ -1523,14 +1519,8 @@ const ov_reg OV7740_VGA_YUV422_20FPS[] = {
 	{0xFF, 0xFF}
 };
 
-/// @cond 0
-/**INDENT-OFF**/
+/* @} */
+
 #ifdef __cplusplus
 }
 #endif
-/**INDENT-ON**/
-/// @endcond
-
-/**
- * \}
- */
