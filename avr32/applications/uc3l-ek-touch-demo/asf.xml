@@ -19,6 +19,7 @@
 		<build type="header-file" value="qdebug/serial.h"/>
 		<build type="header-file" value="conf/conf_clock.h"/>
 		<build type="include-path" value="./conf/"/>
+		<build type="include-path" value="./qdebug/"/>
 		<require idref="common.services.delay"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pdca"/>
