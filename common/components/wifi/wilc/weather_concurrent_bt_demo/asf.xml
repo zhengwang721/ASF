@@ -16,6 +16,7 @@
 
 			<!-- Device support -->
 			<device-support value="sam4s"/>
+			<device-support value="samv71"/>
 
 			<!-- Required modules -->
 			<require idref="common.components.wifi.wilc3000"/>
