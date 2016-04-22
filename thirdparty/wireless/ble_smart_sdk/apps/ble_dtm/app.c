@@ -52,18 +52,59 @@
 /*- Includes ---------------------------------------------------------------*/
 
 #include <asf.h>
+#include "at_ble_api.h"
 #include "platform.h"
 
 #define APP_STACK_SIZE	(1024)
 volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
+
+/** Enum for the possible callback types for the timer module. */
+enum timer_callback_type
+{
+	/** Callback for timer expiry*/
+	TIMER_EXPIRED_CALLBACK_TYPE_DETECT = 1,
+};
+
+#define AON_SLEEP_TIMER_EXPIRY_CALLBACK 0x42
+
+void (* stop_AON_sleep_timer)(void);
+
 int main(void)
 {
 
+	uint16_t plf_event_type;
+	uint8_t plf_event_data[16];
+	uint16_t plf_event_data_len;
+	uint32_t sleep_count = 0;
+	uint32_t clk_enables;
+	at_ble_status_t status = AT_BLE_SUCCESS;
+	stop_AON_sleep_timer	= (void (*)(void))(*(unsigned int *)0x10041FCC);
+	#if 1
+	platform_driver_init();
+	clk_enables = *((volatile unsigned int *)0x4000b00c);
+	clk_enables |= 0x1E000;
+	*((volatile unsigned int *)0x4000b00c) = clk_enables;
+	release_sleep_lock();
+	while(platform_event_get(&plf_event_type,plf_event_data,&plf_event_data_len))
+	{
+		//This is  added just not to optimize it out.
+		acquire_sleep_lock();
+		if(plf_event_type == ((TIMER_EXPIRED_CALLBACK_TYPE_DETECT<< 8)| AON_SLEEP_TIMER_EXPIRY_CALLBACK ))
+		{
+			sleep_count++;
+			if((sleep_count%100) == 0) {
+				stop_AON_sleep_timer();
+			}
+		}
+		release_sleep_lock();
+	}
+	#else
 	while(1)
 	{
-		
+		//WFI();
 	}
-
-	return 0;
+	#endif
+	
+	return status;
 }
