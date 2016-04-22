@@ -72,15 +72,15 @@
 
 
 #define APP_STACK_SIZE	(1024)
-#define BEACON_IDENTIFIER (0x49)
+#define BEACON_IDENTIFIER (0x31)
 static uint8_t adv_data[31];
 static uint8_t scan_rsp_data[31];
 struct uart_module uart_instance;
 at_ble_init_config_t pf_cfg;
 volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
-volatile uint32_t 	event_pool_memory[256] 		= {0};
-volatile uint32_t 	event_params_memory[1024] 	= {0};
+volatile uint8_t 	event_pool_memory[256] 		= {0};
+volatile uint8_t 	event_params_memory[1024] 	= {0};
 
 
 void ble_init(void);
