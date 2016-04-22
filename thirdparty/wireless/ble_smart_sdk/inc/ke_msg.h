@@ -108,7 +108,12 @@ struct ke_msghdr
  * @return The pointer to the ke_msg
  ****************************************************************************************
  */
+#if defined( __ICCARM__) //remove warning message on IAR
+#pragma inline
+static struct ke_msg *ke_param2msg(void const *param_ptr)
+#else
 static __inline struct ke_msg *ke_param2msg(void const *param_ptr)
+#endif
 {
 	return (struct ke_msg *)((void *)(((uint8_t *)param_ptr) - offsetof(struct ke_msg, param)));
 }
@@ -122,7 +127,12 @@ static __inline struct ke_msg *ke_param2msg(void const *param_ptr)
  * @return The pointer to the param member
  ****************************************************************************************
  */
+#if defined( __ICCARM__) //remove warning message on IAR
+#pragma inline
+static void *ke_msg2param(struct ke_msg const *msg)
+#else
 static __inline void *ke_msg2param(struct ke_msg const *msg)
+#endif
 {
     return (void*) (((uint8_t*) msg) + offsetof(struct ke_msg, param));
 }
