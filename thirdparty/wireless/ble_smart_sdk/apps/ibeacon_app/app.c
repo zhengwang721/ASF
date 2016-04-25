@@ -56,6 +56,7 @@
 #include <string.h>
 #include <conf_console_serial.h>
 #include "platform.h"
+#include <common.h>
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
@@ -72,7 +73,7 @@
 
 
 #define APP_STACK_SIZE	(1024)
-#define BEACON_IDENTIFIER (0x31)
+#define BEACON_IDENTIFIER (0x13)
 static uint8_t adv_data[31];
 static uint8_t scan_rsp_data[31];
 struct uart_module uart_instance;
@@ -82,6 +83,22 @@ volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 volatile uint8_t 	event_pool_memory[256] 		= {0};
 volatile uint8_t 	event_params_memory[1024] 	= {0};
 
+static void spi_flash_turn_off(void)
+{
+	volatile uint32_t regval = 0;
+	regval = REG_RD(0x4000B050);
+	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_0));
+	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_1));
+	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_2));
+	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_3));
+	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_4));
+	regval |= (0xF8000000);
+	REG_WR(0x4000B050,regval);
+	//regval = REG_RD(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0);
+	//regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_SPIFLASH_CLK_EN);
+	//REG_WR(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0,regval);
+	REG_WR(0x4000B0A0,0x0);
+}
 
 void ble_init(void);
 int main(void);
@@ -112,6 +129,7 @@ static void resume_cb(void)
 {
 	init_port_list();
 	configure_uart();
+	spi_flash_turn_off();//for power consumption.
 }
 
 static at_ble_status_t app_init(void)
@@ -195,56 +213,75 @@ int main(void)
 	register_resume_callback(resume_cb);
 	release_sleep_lock();
 	
-	while(1) {
-		while((status = at_ble_event_get(&event, params, (uint32_t)-1)) == AT_BLE_SUCCESS)
+
+	while((status = at_ble_event_get(&event, params, (uint32_t)-1)) == AT_BLE_SUCCESS)
+	{
+		acquire_sleep_lock();
+		switch(event)
 		{
-			acquire_sleep_lock();
-			switch(event)
+			case AT_BLE_CONNECTED:
 			{
-				case AT_BLE_CONNECTED:
+				volatile at_ble_connected_t *conn_params = (at_ble_connected_t *)((void *)params);
+				PRINT_H1("AT_BLE_CONNECTED:\r\n");
+				if (AT_BLE_SUCCESS == conn_params->conn_status)
 				{
-					volatile at_ble_connected_t *conn_params = (at_ble_connected_t *)((void *)params);
-					PRINT_H1("AT_BLE_CONNECTED:\r\n");
-					if (AT_BLE_SUCCESS == conn_params->conn_status)
-					{
-						PRINT_H2("Device connected:\r\n");
-						PRINT_H3("Conn. handle : 0x%04X\r\n", conn_params->handle);
-						PRINT_H3("Address      : 0x%02X%02X%02X%02X%02X%02X\r\n",
-							conn_params->peer_addr.addr[5],
-							conn_params->peer_addr.addr[4],
-							conn_params->peer_addr.addr[3],
-							conn_params->peer_addr.addr[2],
-							conn_params->peer_addr.addr[1],
-							conn_params->peer_addr.addr[0]
-						);
-					}
-					else
-					{
-						PRINT_H2("Unable to connect to device:\r\n");
-						PRINT_H3("Status : %d\r\n", conn_params->conn_status);
-					}
+					PRINT_H2("Device connected:\r\n");
+					PRINT_H3("Conn. handle : 0x%04X\r\n", conn_params->handle);
+					PRINT_H3("Address      : 0x%02X%02X%02X%02X%02X%02X\r\n",
+						conn_params->peer_addr.addr[5],
+						conn_params->peer_addr.addr[4],
+						conn_params->peer_addr.addr[3],
+						conn_params->peer_addr.addr[2],
+						conn_params->peer_addr.addr[1],
+						conn_params->peer_addr.addr[0]
+					);
+				PRINT_H3("Conn.Interval: 0x%04X\r\n", conn_params->conn_params.con_interval);
+				PRINT_H3("Conn. Latency: 0x%04X\r\n", conn_params->conn_params.con_latency);
+				PRINT_H3("Supr. Timeout: 0x%04X\r\n", conn_params->conn_params.sup_to);
 				}
-				break;
-
-				case AT_BLE_DISCONNECTED:
+				else
 				{
-					at_ble_disconnected_t *disconn_params = (at_ble_disconnected_t *)((void *)params);
-					PRINT_H1("AT_BLE_DISCONNECTED:\r\n");
-					PRINT_H2("Device disconnected:\r\n");
-					PRINT_H3("Conn. handle : 0x%04X\r\n", disconn_params->handle);
-					PRINT_H3("Reason       : 0x%02X\r\n", disconn_params->reason);
-					PRINT_H2("Start Advertising again\r\n");
-					status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 1600, 0, 0);
-					PRINT_H3("Status : %d\r\n", status);
+					PRINT_H2("Unable to connect to device:\r\n");
+					PRINT_H3("Status : %d\r\n", conn_params->conn_status);
 				}
-				break;
-
-				default:
-				break;
-
 			}
-			release_sleep_lock();
+			break;
+		case AT_BLE_MTU_CHANGED_INDICATION:
+		{
+			at_ble_mtu_changed_ind_t *args = (at_ble_mtu_changed_ind_t *)((void *)params);
+			PRINT_H1("AT_BLE_MTU_CHANGED_INDICATION\r\n");
+			PRINT_H2("New MTU for Conn. Handle 0x%02X is 0x%04X\r\n", args->conhdl, args->mtu_value);
 		}
+		break;
+		case AT_BLE_CONN_PARAM_UPDATE_DONE:
+		{
+			at_ble_conn_param_update_done_t *args = (at_ble_conn_param_update_done_t *)((void *)params);
+			PRINT_H1("AT_BLE_CONN_PARAM_UPDATE_DONE\r\n");
+			PRINT_H2("New Parameters Update for Conn. handle 0x%02X:\r\n", args->handle);
+			PRINT_H3("Conn. Interval    : 0x%04X\r\n",args->con_intv);
+			PRINT_H3("Conn. Latency     : 0x%04X\r\n",args->con_latency);
+			PRINT_H3("Conn. Sup. Timeout: 0x%04X\r\n",args->superv_to);
+		}
+		break;
+			case AT_BLE_DISCONNECTED:
+			{
+				at_ble_disconnected_t *disconn_params = (at_ble_disconnected_t *)((void *)params);
+				PRINT_H1("AT_BLE_DISCONNECTED:\r\n");
+				PRINT_H2("Device disconnected:\r\n");
+				PRINT_H3("Conn. handle : 0x%04X\r\n", disconn_params->handle);
+				PRINT_H3("Reason       : 0x%02X\r\n", disconn_params->reason);
+				PRINT_H2("Start Advertising again\r\n");
+				status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 1600, 0, 0);
+				PRINT_H3("Status : %d\r\n", status);
+			}
+			break;
+
+			default:
+				PRINT_H1("default: 0x%04X\r\n",event);
+			break;
+
+		}
+		release_sleep_lock();
 	}
 
 __EXIT:
