@@ -87,7 +87,11 @@ extern "C" {
 //! @}
 
 //! Number of bits for addresses within logical sectors of file system.
+#ifdef AT45DB641E
+#define AT45DBX_SECTOR_BITS     8
+#else
 #define AT45DBX_SECTOR_BITS     9
+#endif
 
 //! Logical sector size of file system in bytes.
 #define AT45DBX_SECTOR_SIZE     (1 << AT45DBX_SECTOR_BITS)

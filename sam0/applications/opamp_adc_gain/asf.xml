@@ -1,0 +1,25 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.opamp_adc" caption="OPAMP ADC Gain Application">
+		<info type="description" value="summary">
+		Example application using the Operational Amplifier (OPAMP) as gain for the ADC.
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="I/O" />
+			<keyword value="CPU" />
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+
+		<build type="c-source" value="main.c"/>
+
+		<build type="include-path" value="."/>
+
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.system"/>
+		<require idref="sam0.drivers.opamp"/>
+		<require idref="sam0.drivers.adc"/>
+		
+		<device-support value="sam0"/>
+	</module>
+</asf>
