@@ -16,6 +16,7 @@
 
 		<require idref="thirdparty.wireless.ble_smart_sdk.services.uart"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.services.gpio"/>
+		<require idref="sam0.drivers.spi_flash"/>
 
 		<require idref="board.samb11_xplained_pro"/>
 		

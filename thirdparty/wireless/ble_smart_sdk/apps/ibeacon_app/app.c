@@ -57,6 +57,7 @@
 #include <conf_console_serial.h>
 #include "platform.h"
 #include <common.h>
+#include <spi_flash.h>
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
@@ -82,23 +83,6 @@ volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
 volatile uint8_t 	event_pool_memory[256] 		= {0};
 volatile uint8_t 	event_params_memory[1024] 	= {0};
-
-static void spi_flash_turn_off(void)
-{
-	volatile uint32_t regval = 0;
-	regval = REG_RD(0x4000B050);
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_0));
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_1));
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_2));
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_3));
-	//regval = (uint32_t)(regval | (LPMCU_CORTEX_MISC_REGS_PULL_ENABLE_LP_SIP_4));
-	regval |= (0xF8000000);
-	REG_WR(0x4000B050,regval);
-	//regval = REG_RD(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0);
-	//regval &= ~(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0_SPIFLASH_CLK_EN);
-	//REG_WR(LPMCU_CORTEX_MISC_REGS_LPMCU_CLOCK_ENABLES_0,regval);
-	REG_WR(0x4000B0A0,0x0);
-}
 
 void ble_init(void);
 int main(void);
