@@ -223,7 +223,7 @@ static void configure_console(void)
  */
 int main(void)
 {
-	/* Initilize the SAM system */
+	/* Initialize the SAM system */
 	sysclk_init();
 	board_init();
 
