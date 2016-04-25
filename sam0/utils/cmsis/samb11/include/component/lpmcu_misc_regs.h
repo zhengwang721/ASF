@@ -6000,7 +6000,7 @@ typedef union {
 typedef union { 
   struct {
     uint32_t UPPER:16;                  /**< bit:  0..15  Upper Threshold of counter for QUAD_DEC0 */
-    uint32_t LOWER:16;                  /**< bit: 16..31  Lower Threshold of counter for QUAD_DEC1 */
+    uint32_t LOWER:16;                  /**< bit: 16..31  Lower Threshold of counter for QUAD_DEC0 */
   } bit;                                /**< Structure used for bit  access */
   uint32_t reg;                         /**< Type used for register access */
 } LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_Type;
@@ -6012,8 +6012,8 @@ typedef union {
 #define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_UPPER_Pos 0                                              /**< (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD) Upper Threshold of counter for QUAD_DEC0 Position */
 #define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_UPPER_Msk (0xFFFFu << LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_UPPER_Pos)  /**< (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD) Upper Threshold of counter for QUAD_DEC0 Mask */
 #define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_UPPER(value) (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_UPPER_Msk & ((value) << LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_UPPER_Pos))
-#define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_LOWER_Pos 16                                             /**< (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD) Lower Threshold of counter for QUAD_DEC1 Position */
-#define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_LOWER_Msk (0xFFFFu << LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_LOWER_Pos)  /**< (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD) Lower Threshold of counter for QUAD_DEC1 Mask */
+#define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_LOWER_Pos 16                                             /**< (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD) Lower Threshold of counter for QUAD_DEC0 Position */
+#define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_LOWER_Msk (0xFFFFu << LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_LOWER_Pos)  /**< (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD) Lower Threshold of counter for QUAD_DEC0 Mask */
 #define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_LOWER(value) (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_LOWER_Msk & ((value) << LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_LOWER_Pos))
 #define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_MASK 0xFFFFFFFFu                                    /**< \deprecated (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD) Register MASK  (Use LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_Msk instead)  */
 #define LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD_Msk 0xFFFFFFFFu                                    /**< (LPMCU_MISC_REGS_QUAD_DEC0_THRESHOLD) Register Mask  */

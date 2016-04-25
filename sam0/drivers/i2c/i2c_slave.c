@@ -73,13 +73,8 @@ void i2c_slave_get_config_defaults(
 	config->clock_divider   = 0x10;
 	config->pin_number_pad0 = PIN_LP_GPIO_8;
 	config->pin_number_pad1 = PIN_LP_GPIO_9;
-#if (!BTLC1000)
 	config->pinmux_sel_pad0 = ((PIN_LP_GPIO_8 << 16) | MUX_LP_GPIO_8_I2C0_SDA);
 	config->pinmux_sel_pad1 = ((PIN_LP_GPIO_9 << 16) | MUX_LP_GPIO_9_I2C0_SCL);
-#else
-	config->pinmux_sel_pad0 = ((PIN_LP_GPIO_8 << 16) | MUX_LP_GPIO_8_MUX2);
-	config->pinmux_sel_pad1 = ((PIN_LP_GPIO_9 << 16) | MUX_LP_GPIO_9_MUX2);
-#endif
 }
 
 /**
@@ -105,7 +100,7 @@ static enum status_code _i2c_slave_set_config(
 	Assert(config);
 
 	enum status_code status = STATUS_OK;
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 
 	/* Set the pinmux for this i2c module. */
 	gpio_pinmux_cofiguration(config->pin_number_pad0, (uint16_t)(config->pinmux_sel_pad0));
@@ -139,7 +134,7 @@ static enum status_code _i2c_slave_set_config(
  */
 enum status_code i2c_slave_init(
 		struct i2c_slave_module *const module,
-		I2C *const hw,
+		I2c *const hw,
 		const struct i2c_slave_config *const config)
 {
 	/* Sanity check */
@@ -215,7 +210,7 @@ enum status_code i2c_slave_read_packet_wait(
 	Assert(module->hw);
 	Assert(packet);
 
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 	uint16_t counter = 0;
 	uint32_t status  = 0;
 	uint16_t length  = packet->data_length;
@@ -255,7 +250,7 @@ enum status_code i2c_slave_write_packet_wait(
 		struct i2c_slave_module *const module,
 		struct i2c_slave_packet *const packet)
 {
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 	uint16_t i = 0;
 	uint32_t status = 0;
 	uint16_t length = packet->data_length;

@@ -128,8 +128,9 @@ typedef enum IRQn
   GPIO1_IRQn                = 24 , /**< 24  BTLC1000WLCSP GPIO Controller (GPIO1) */
   GPIO2_IRQn                = 25 , /**< 25  BTLC1000WLCSP GPIO Controller (GPIO2) */
   TIMER0_IRQn               = 26 , /**< 26  BTLC1000WLCSP ARM General Purpose Timer (TIMER0) */
+  AON_SLEEP_TIMER0_IRQn     = 27 , /**< 27  BTLC1000WLCSP Always On Sleep Timer (AON_SLEEP_TIMER0) */
 
-  PERIPH_COUNT_IRQn        = 27  /**< Number of peripheral IDs */
+  PERIPH_COUNT_IRQn        = 28  /**< Number of peripheral IDs */
 } IRQn_Type;
 
 typedef struct _DeviceVectors
@@ -182,7 +183,8 @@ typedef struct _DeviceVectors
   void* pfnGPIO1_Handler;                        /* 24  BTLC1000WLCSP GPIO Controller (GPIO1) */
   void* pfnGPIO2_Handler;                        /* 25  BTLC1000WLCSP GPIO Controller (GPIO2) */
   void* pfnTIMER0_Handler;                       /* 26  BTLC1000WLCSP ARM General Purpose Timer (TIMER0) */
-  void* pfnReserved27;
+  void* pfnAON_SLEEP_TIMER0_Handler;             /* 27  BTLC1000WLCSP Always On Sleep Timer (AON_SLEEP_TIMER0) */
+  void* pfnReserved28;
 } DeviceVectors;
 
 /* CORTEX-M0 core handlers */
@@ -194,6 +196,7 @@ void PendSV_Handler       ( void );
 void SysTick_Handler      ( void );
 
 /* Peripherals handlers */
+void AON_SLEEP_TIMER0_Handler ( void );
 void DUALTIMER0_Handler       ( void );
 void GPIO0_Handler            ( void );
 void GPIO1_Handler            ( void );
@@ -347,8 +350,8 @@ void WDT1_Handler             ( void );
 #define PROV_DMA_CTRL_INST_NUM 1                              /**< \brief (PROV_DMA_CTRL) Number of instances */
 #define PROV_DMA_CTRL_INSTS    { PROV_DMA_CTRL0 }             /**< \brief (PROV_DMA_CTRL) Instances List */
 
-#define I2C0                   ((I2C *)0x40003000U)           /**< \brief (I2C0      ) Base Address */
-#define I2C1                   ((I2C *)0x40003400U)           /**< \brief (I2C1      ) Base Address */
+#define I2C0                   ((I2c *)0x40003000U)           /**< \brief (I2C0      ) Base Address */
+#define I2C1                   ((I2c *)0x40003400U)           /**< \brief (I2C1      ) Base Address */
 #define I2C_INST_NUM           2                              /**< \brief (I2C       ) Number of instances */
 #define I2C_INSTS              { I2C0, I2C1 }                 /**< \brief (I2C       ) Instances List */
 

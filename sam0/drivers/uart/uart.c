@@ -296,10 +296,10 @@ void uart_get_config_defaults(
 	config->pin_number_pad[2] = PIN_LP_GPIO_8;
 	config->pin_number_pad[3] = PIN_LP_GPIO_9;
 	
-	config->pinmux_sel_pad[0] = MUX_LP_GPIO_2_MUX2;
-	config->pinmux_sel_pad[1] = MUX_LP_GPIO_3_MUX2;
-	config->pinmux_sel_pad[2] = MUX_LP_GPIO_8_MUX2;
-	config->pinmux_sel_pad[3] = MUX_LP_GPIO_9_MUX2;
+	config->pinmux_sel_pad[0] = MUX_LP_GPIO_2_UART0_RXD;
+	config->pinmux_sel_pad[1] = MUX_LP_GPIO_3_UART0_TXD;
+	config->pinmux_sel_pad[2] = MUX_LP_GPIO_8_I2C0_SDA;
+	config->pinmux_sel_pad[3] = MUX_LP_GPIO_9_I2C0_SCL;
 #endif
 }
 

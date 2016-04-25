@@ -129,8 +129,9 @@ typedef enum IRQn
   GPIO1_IRQn                = 24 , /**< 24  SAMB11G18A GPIO Controller (GPIO1)  */
   GPIO2_IRQn                = 25 , /**< 25  SAMB11G18A GPIO Controller (GPIO2)  */
   TIMER0_IRQn               = 26 , /**< 26  SAMB11G18A ARM General Purpose Timer (TIMER0) */
+  AON_SLEEP_TIMER0_IRQn     = 27 , /**< 27  SAMB11G18A Always On Sleep Timer (AON_SLEEP_TIMER0) */
 
-  PERIPH_COUNT_IRQn        = 27  /**< Number of peripheral IDs */
+  PERIPH_COUNT_IRQn        = 28  /**< Number of peripheral IDs */
 } IRQn_Type;
 
 typedef struct _DeviceVectors
@@ -183,7 +184,8 @@ typedef struct _DeviceVectors
   void* pfnGPIO1_Handler;                        /* 24  SAMB11G18A GPIO Controller (GPIO1) */
   void* pfnGPIO2_Handler;                        /* 25  SAMB11G18A GPIO Controller (GPIO2) */
   void* pfnTIMER0_Handler;                       /* 26  SAMB11G18A ARM General Purpose Timer (TIMER0) */
-  void* pfnReserved27;
+  void* pfnAON_SLEEP_TIMER0_Handler;             /* 27  SAMB11G18A Always On Sleep Timer (AON_SLEEP_TIMER0) */
+  void* pfnReserved28;
 } DeviceVectors;
 
 /* CORTEX-M0 core handlers */
@@ -195,6 +197,7 @@ void PendSV_Handler       ( void );
 void SysTick_Handler      ( void );
 
 /* Peripherals handlers */
+void AON_SLEEP_TIMER0_Handler ( void );
 void DUALTIMER0_Handler       ( void );
 void GPIO0_Handler            ( void );
 void GPIO1_Handler            ( void );
