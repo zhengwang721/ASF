@@ -55,7 +55,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup ov7740_coms_image_sensor_group
+ * \defgroup ov7740_cmos_image_sensor_group
  *
  * Low-level driver for the OV7740 CMOS image sensor. This driver provides
  * access to the main features of the  OV7740 CMOS image sensor.
