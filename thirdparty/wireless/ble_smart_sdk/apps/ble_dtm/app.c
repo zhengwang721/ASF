@@ -52,6 +52,7 @@
 /*- Includes ---------------------------------------------------------------*/
 
 #include <asf.h>
+#include "at_ble_api.h"
 #include "platform.h"
 
 #define APP_STACK_SIZE	(1024)
@@ -59,11 +60,23 @@ volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
 int main(void)
 {
-
-	while(1)
+	uint16_t plf_event_type;
+	uint8_t plf_event_data[16];
+	uint16_t plf_event_data_len;
+	uint32_t sleep_count = 0;
+	uint32_t clk_enables;
+	at_ble_status_t status = AT_BLE_SUCCESS;
+	platform_driver_init();
+	clk_enables = *((volatile unsigned int *)0x4000b00c);
+	clk_enables |= 0x1E000;
+	*((volatile unsigned int *)0x4000b00c) = clk_enables;
+	release_sleep_lock();
+	while(platform_event_get(&plf_event_type,plf_event_data,&plf_event_data_len))// for WFI(wait for Interrupt)
 	{
-		
+		//This is  added just not to optimize it out.
+		sleep_count++;
+		sleep_count--;
 	}
-
-	return 0;
+	
+	return status;
 }
