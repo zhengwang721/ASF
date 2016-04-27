@@ -157,7 +157,7 @@ int main(void)
 			puts("Read EEPROM error\r");
 			return 0;
 		} else {
-			if (memcmp(tx, rx, NB_BYTE - 1) && (rx[NB_PAGE - 1] != i)) {
+			if (memcmp(tx, rx, NB_BYTE - 1) || (rx[NB_PAGE - 1] != i)) {
 				puts("Comparison error\r");
 				return 0;
 			}
