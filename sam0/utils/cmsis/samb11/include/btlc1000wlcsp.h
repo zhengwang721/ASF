@@ -184,7 +184,6 @@ typedef struct _DeviceVectors
   void* pfnGPIO2_Handler;                        /* 25  BTLC1000WLCSP GPIO Controller (GPIO2) */
   void* pfnTIMER0_Handler;                       /* 26  BTLC1000WLCSP ARM General Purpose Timer (TIMER0) */
   void* pfnAON_SLEEP_TIMER0_Handler;             /* 27  BTLC1000WLCSP Always On Sleep Timer (AON_SLEEP_TIMER0) */
-  void* pfnReserved28;
 } DeviceVectors;
 
 /* CORTEX-M0 core handlers */
@@ -430,7 +429,7 @@ void WDT1_Handler             ( void );
  *  @{
  */
 
-#include "pio/pio_btlc1000wlcsp.h"
+#include "pio/btlc1000wlcsp.h"
 /** @}*/
 
 

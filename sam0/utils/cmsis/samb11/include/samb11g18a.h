@@ -185,7 +185,6 @@ typedef struct _DeviceVectors
   void* pfnGPIO2_Handler;                        /* 25  SAMB11G18A GPIO Controller (GPIO2) */
   void* pfnTIMER0_Handler;                       /* 26  SAMB11G18A ARM General Purpose Timer (TIMER0) */
   void* pfnAON_SLEEP_TIMER0_Handler;             /* 27  SAMB11G18A Always On Sleep Timer (AON_SLEEP_TIMER0) */
-  void* pfnReserved28;
 } DeviceVectors;
 
 /* CORTEX-M0 core handlers */
@@ -355,8 +354,8 @@ void WDT1_Handler             ( void );
 #define PROV_DMA_CTRL_INST_NUM 1                              /**< \brief (PROV_DMA_CTRL) Number of instances */
 #define PROV_DMA_CTRL_INSTS    { PROV_DMA_CTRL0 }             /**< \brief (PROV_DMA_CTRL) Instances List */
 
-#define I2C0                   ((I2C *)0x40003000U)           /**< \brief (I2C0      ) Base Address */
-#define I2C1                   ((I2C *)0x40003400U)           /**< \brief (I2C1      ) Base Address */
+#define I2C0                   ((I2c *)0x40003000U)           /**< \brief (I2C0      ) Base Address */
+#define I2C1                   ((I2c *)0x40003400U)           /**< \brief (I2C1      ) Base Address */
 #define I2C_INST_NUM           2                              /**< \brief (I2C       ) Number of instances */
 #define I2C_INSTS              { I2C0, I2C1 }                 /**< \brief (I2C       ) Instances List */
 
@@ -436,7 +435,7 @@ void WDT1_Handler             ( void );
  *  @{
  */
 
-#include "pio/pio_samb11g18a.h"
+#include "pio/samb11g18a.h"
 /** @}*/
 
 

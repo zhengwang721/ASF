@@ -186,7 +186,6 @@ typedef struct _DeviceVectors
   void* pfnGPIO2_Handler;                        /* 25  SAMB11ZR GPIO Controller (GPIO2) */
   void* pfnTIMER0_Handler;                       /* 26  SAMB11ZR ARM General Purpose Timer (TIMER0) */
   void* pfnAON_SLEEP_TIMER0_Handler;             /* 27  SAMB11ZR Always On Sleep Timer (AON_SLEEP_TIMER0) */
-  void* pfnReserved28;
 } DeviceVectors;
 
 /* CORTEX-M0 core handlers */
@@ -437,7 +436,7 @@ void WDT1_Handler             ( void );
  *  @{
  */
 
-#include "pio/pio_samb11zr.h"
+#include "pio/samb11zr.h"
 /** @}*/
 
 
