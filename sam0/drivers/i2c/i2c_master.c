@@ -73,13 +73,8 @@ void i2c_master_get_config_defaults(
 	config->clock_divider   = 0x10;
 	config->pin_number_pad0 = PIN_LP_GPIO_8;
 	config->pin_number_pad1 = PIN_LP_GPIO_9;
-#if (!BTLC1000)
 	config->pinmux_sel_pad0 = MUX_LP_GPIO_8_I2C0_SDA;
 	config->pinmux_sel_pad1 = MUX_LP_GPIO_9_I2C0_SCL;
-#else
-	config->pinmux_sel_pad0 = MUX_LP_GPIO_8_I2C0_SDA;
-	config->pinmux_sel_pad1 = MUX_LP_GPIO_9_I2C0_SCL;
-#endif
 }
 
 #if !defined(__DOXYGEN__)
