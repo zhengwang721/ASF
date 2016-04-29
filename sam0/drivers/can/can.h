@@ -1253,9 +1253,9 @@ enum can_interrupt_source {
 	/** Watchdog Interrupt Interrupt Enable. */
 	CAN_WATCHDOG = CAN_IE_WDIE,
 	/** Protocol Error in Arbitration Phase Enable. */
-	CAN_PROTOCAL_ERROR_ARBITRATION = CAN_IE_PEAE,
+	CAN_PROTOCOL_ERROR_ARBITRATION = CAN_IE_PEAE,
 	/** Protocol Error in Data Phase Enable. */
-	CAN_PROTOCAL_ERROR_DATA = CAN_IE_PEDE,
+	CAN_PROTOCOL_ERROR_DATA = CAN_IE_PEDE,
 	/** Access to Reserved Address Enable. */
 	CAN_ACCESS_RESERVED_ADDRESS = CAN_IE_ARAE,
 };
