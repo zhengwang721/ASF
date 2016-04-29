@@ -184,8 +184,13 @@ static void config_dma_for_wave(void)
 	descriptor_config.dst_increment_enable = false;
 	descriptor_config.source_address =
 			(uint32_t)compare_values + sizeof(compare_values);
+#if (SAMR21) || (SAMD21) || (SAMDA1)
+	descriptor_config.destination_address =
+			(uint32_t)&CONF_PWM_MODULE->CC[CONF_PWM_CHANNEL];
+#else
 	descriptor_config.destination_address =
 			(uint32_t)&CONF_PWM_MODULE->CCBUF[CONF_PWM_CHANNEL];
+#endif
 
 	dma_descriptor_create(&compare_dma_descriptor, &descriptor_config);
 	//! [config_dma_descriptor_for_wave]
