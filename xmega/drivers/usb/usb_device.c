@@ -806,7 +806,7 @@ ISR(USB_BUSEVENT_vect)
 #if (0!=USB_DEVICE_MAX_EP)
 		// Abort all endpoint jobs on going
 		uint8_t i;
-		for (i = 1; i < USB_DEVICE_MAX_EP; i++) {
+		for (i = 1; i <= USB_DEVICE_MAX_EP; i++) {
 			udd_ep_abort(i);
 			udd_ep_abort(i | USB_EP_DIR_IN);
 		}
