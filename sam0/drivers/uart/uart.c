@@ -370,7 +370,7 @@ enum status_code uart_init(struct uart_module *const module, Uart * const hw,
 		index = 2;
 	}
 
-#if (!BTLC1000)
+#if (BTLC1000)
     index = 2;  /* BTLC1000 has no flow control function. */
 #endif
 
