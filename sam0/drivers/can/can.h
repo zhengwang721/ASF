@@ -3,7 +3,7 @@
  *
  * \brief SAM Control Area Network (CAN) Low Level Driver
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -917,7 +917,7 @@ static inline void can_get_standard_message_filter_element_default(
  *  \retval STATUS_OK   Set the correct standard message filter.
  *  \retval STATUS_ERR_INVALID_ARG The parameter is not correct.
  */
-enum status_code can_set_rx_standand_filter(
+enum status_code can_set_rx_standard_filter(
 		struct can_module *const module_inst,
 		struct can_standard_message_filter_element *sd_filter, uint32_t index);
 

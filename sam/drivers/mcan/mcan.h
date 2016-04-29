@@ -3,7 +3,7 @@
  *
  * \brief SAM Control Area Network (MCAN) Low Level Driver
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -864,7 +864,7 @@ static inline void mcan_get_standard_message_filter_element_default(
 			MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;
 }
 
-enum status_code mcan_set_rx_standand_filter(
+enum status_code mcan_set_rx_standard_filter(
 		struct mcan_module *const module_inst,
 		struct mcan_standard_message_filter_element *sd_filter, uint32_t index);
 

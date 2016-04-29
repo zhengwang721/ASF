@@ -455,7 +455,7 @@ void mcan_disable_test_mode(struct mcan_module *const module_inst)
  *
  * \return status code.
  */
-enum status_code mcan_set_rx_standand_filter(
+enum status_code mcan_set_rx_standard_filter(
 		struct mcan_module *const module_inst,
 		struct mcan_standard_message_filter_element *sd_filter, uint32_t index)
 {
