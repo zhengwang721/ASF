@@ -46,8 +46,6 @@
 #include <asf.h>
 #include "conf_aon_sleep_timer.h"
 
-#define AON_SLEEP_TIMER_IRQn 27
-
 //! [setup]
 
 //! [callback_funcs]

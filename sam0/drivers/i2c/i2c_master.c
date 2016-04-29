@@ -73,13 +73,8 @@ void i2c_master_get_config_defaults(
 	config->clock_divider   = 0x10;
 	config->pin_number_pad0 = PIN_LP_GPIO_8;
 	config->pin_number_pad1 = PIN_LP_GPIO_9;
-#if (!BTLC1000)
 	config->pinmux_sel_pad0 = MUX_LP_GPIO_8_I2C0_SDA;
 	config->pinmux_sel_pad1 = MUX_LP_GPIO_9_I2C0_SCL;
-#else
-	config->pinmux_sel_pad0 = MUX_LP_GPIO_8_MUX2;
-	config->pinmux_sel_pad1 = MUX_LP_GPIO_9_MUX2;
-#endif
 }
 
 #if !defined(__DOXYGEN__)
@@ -99,7 +94,7 @@ static void _i2c_master_set_config(
 	Assert(module->hw);
 	Assert(config);
 
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 
 	/* Set the pinmux for this i2c module. */
 	gpio_pinmux_cofiguration(config->pin_number_pad0, (uint16_t)(config->pinmux_sel_pad0));
@@ -130,7 +125,7 @@ static void _i2c_master_set_config(
  */
 enum status_code i2c_master_init(
 		struct i2c_master_module *const module,
-		I2C *const hw,
+		I2c *const hw,
 		const struct i2c_master_config *const config)
 {
 	/* Sanity check */
@@ -209,7 +204,7 @@ static enum status_code _i2c_master_read_packet(
 	
 	uint16_t counter = 0;
 	uint32_t status  = 0;
-	I2C *const i2c_module    = (module->hw);
+	I2c *const i2c_module    = (module->hw);
 	uint16_t length = packet->data_length;
 
 	if (length == 0) {
@@ -352,7 +347,7 @@ static enum status_code _i2c_master_write_packet(
 	Assert(module->hw);
 	Assert(packet);
 	
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 	uint16_t counter = 0;
 	uint32_t status  = 0;
 
@@ -494,7 +489,7 @@ void i2c_master_send_stop(struct i2c_master_module *const module)
 	Assert(module);
 	Assert(module->hw);
 	
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 
 	/* Send stop command */
 	i2c_wait_for_idle(i2c_module);
@@ -516,7 +511,7 @@ void i2c_master_send_stop(struct i2c_master_module *const module)
  */
 void i2c_master_send_start(struct i2c_master_module *const module)
 {
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 
 	i2c_wait_for_idle(i2c_module);
 
@@ -537,7 +532,7 @@ enum status_code i2c_master_read_byte(
 		struct i2c_master_module *const module,
 		uint8_t *byte)
 {
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 
 	/* Read a byte from slave. */
 	i2c_wait_for_idle(i2c_module);
@@ -562,7 +557,7 @@ enum status_code i2c_master_write_address(
 		uint8_t address,
 		uint8_t command)
 {
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 
 	/* Write byte to slave. */
 	i2c_wait_for_idle(i2c_module);
@@ -587,7 +582,7 @@ enum status_code i2c_master_write_byte(
 		struct i2c_master_module *const module,
 		uint8_t byte)
 {
-	I2C *const i2c_module = (module->hw);
+	I2c *const i2c_module = (module->hw);
 
 	/* Write byte to slave. */
 	i2c_wait_for_idle(i2c_module);

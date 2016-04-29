@@ -61,7 +61,7 @@ static void _i2c_master_read(
 	Assert(module);
 	Assert(module->hw);
 
-	I2C *const i2c_module = module->hw;
+	I2c *const i2c_module = module->hw;
 
 	/* Find index to save next value in buffer */
 	uint16_t buffer_index = module->buffer_length - module->buffer_remaining;
@@ -84,7 +84,7 @@ static void _i2c_master_write(struct i2c_master_module *const module)
 	Assert(module);
 	Assert(module->hw);
 
-	I2C *const i2c_module = module->hw;
+	I2c *const i2c_module = module->hw;
 
 	/* Find index to get next byte in buffer */
 	volatile uint16_t buffer_index = module->buffer_length - module->buffer_remaining;
@@ -175,7 +175,7 @@ static enum status_code _i2c_master_read_packet(
 	Assert(module->hw);
 	Assert(packet);
 
-	I2C *const i2c_module = module->hw;
+	I2c *const i2c_module = module->hw;
 
 	/* Save packet to software module */
 	module->buffer             = packet->data;
@@ -288,7 +288,7 @@ static enum status_code _i2c_master_write_packet(
 	Assert(module->hw);
 	Assert(packet);
 
-	I2C *const i2c_module = module->hw;
+	I2c *const i2c_module = module->hw;
 
 	/* Save packet to software module */
 	module->buffer             = packet->data;
@@ -389,7 +389,7 @@ void _i2c_master_isr_handler(void)
 
 	Assert(module);
 
-	I2C *const i2c_module = module->hw;
+	I2c *const i2c_module = module->hw;
 
 	/* Combine callback registered and enabled masks */
 	uint8_t callback_mask = module->enabled_callback &

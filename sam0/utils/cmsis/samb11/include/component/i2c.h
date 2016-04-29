@@ -465,7 +465,7 @@ typedef struct {  /* I2C Master/Slave Controller */
   RwReg8  RX_INTERRUPT_MASK; /**< (I2C Offset: 0x30) Enable or Disable the generation of interrupts by the rx_status register.  */
   __I  uint8_t  Reserved13[3];
   WoReg8  I2C_FLUSH;      /**< (I2C Offset: 0x34) Writing to this address  flushes the contents of both the Tx and Rx FIFOs. The value written has no effect. Flushing the Tx FIFO will abort ongoing transactions when the current byte has been transmitted.  */
-} I2C;
+} I2c;
 
 #elif COMPONENT_TYPEDEF_STYLE == 'N'
 /** \brief I2C hardware registers */
@@ -497,7 +497,7 @@ typedef struct {  /* I2C Master/Slave Controller */
   __IO I2C_RX_INTERRUPT_MASK_Type     RX_INTERRUPT_MASK; /**< Offset: 0x30 (R/W   8) Enable or Disable the generation of interrupts by the rx_status register.  */
        RoReg8                         Reserved13[0x3];
   __O  I2C_FLUSH_Type                 I2C_FLUSH;      /**< Offset: 0x34 ( /W   8) Writing to this address  flushes the contents of both the Tx and Rx FIFOs. The value written has no effect. Flushing the Tx FIFO will abort ongoing transactions when the current byte has been transmitted.  */
-} I2C;
+} I2c;
 
 #else /* COMPONENT_TYPEDEF_STYLE */
 #error Unknown component typedef style
