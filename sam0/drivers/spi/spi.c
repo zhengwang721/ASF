@@ -317,18 +317,10 @@ void spi_get_config_defaults(
 	config->pin_number_pad[2] = PIN_LP_GPIO_12;
 	config->pin_number_pad[3] = PIN_LP_GPIO_13;
 
-#if (!BTLC1000)
 	config->pinmux_sel_pad[0] = MUX_LP_GPIO_10_SPI0_SCK;
 	config->pinmux_sel_pad[1] = MUX_LP_GPIO_11_SPI0_MOSI;
 	config->pinmux_sel_pad[2] = MUX_LP_GPIO_12_SPI0_SSN;
 	config->pinmux_sel_pad[3] = MUX_LP_GPIO_13_SPI0_MISO;
-#else
-	config->pinmux_sel_pad[0] = MUX_LP_GPIO_10_MUX2;
-	config->pinmux_sel_pad[1] = MUX_LP_GPIO_11_MUX2;
-	config->pinmux_sel_pad[2] = MUX_LP_GPIO_12_MUX2;
-	config->pinmux_sel_pad[3] = MUX_LP_GPIO_13_MUX2;
-#endif
-
 };
 
 /**
