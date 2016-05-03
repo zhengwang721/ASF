@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC - Timer Counter for Control Applications Driver
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -2123,7 +2123,7 @@ static inline void tcc_set_ramp_index(
 		if (TCC_RAMP_INDEX_DEFAULT == ramp_index) {
 			/* Cancel pending command */
 			tcc_module->CTRLBCLR.reg = TCC_CTRLBSET_IDXCMD_DISABLE;
-			return;
+			break;
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_IDXCMD_Msk;
 		if (last_cmd == TCC_CTRLBSET_IDXCMD_DISABLE) {
@@ -2135,7 +2135,7 @@ static inline void tcc_set_ramp_index(
 	} while (1);
 
 	/* Write command to execute */
-	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD(ramp_index);
+	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_IDXCMD(ramp_index);
 }
 
 /** @} */
