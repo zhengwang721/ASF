@@ -162,18 +162,39 @@ static at_ble_status_t ble_char_changed_app_event(void *param)
 	return bat_char_changed_event(char_handle->conn_handle,&bas_service_handler, char_handle, &flag);
 }
 
-
-static const ble_gap_event_cb_t battery_app_gap_cb = {
-	.connected = ble_connected_app_event,
-	.disconnected = ble_disconnected_app_event,
-	.pair_done = ble_paired_app_event,
-	.encryption_status_changed = ble_paired_app_event
+static const ble_event_callback_t battery_app_gap_cb[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	ble_connected_app_event,
+	ble_disconnected_app_event,
+	NULL,
+	NULL,
+	ble_paired_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	ble_paired_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL
 };
 
-
-static const ble_gatt_server_event_cb_t battery_app_gatt_server_cb = {
-	.notification_confirmed = ble_notification_confirmed_app_event,
-	.characteristic_changed = ble_char_changed_app_event
+static const ble_event_callback_t battery_app_gatt_server_cb[] = {
+	ble_notification_confirmed_app_event,
+	NULL,
+	ble_char_changed_app_event,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
 };
 
 
@@ -240,13 +261,12 @@ int main(void)
 	/* Register callbacks for gap related events */ 
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 									BLE_GAP_EVENT_TYPE,
-									&battery_app_gap_cb);
+									battery_app_gap_cb);
 									
 	/* Register callbacks for gatt server related events */
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 									BLE_GATT_SERVER_EVENT_TYPE,
-									&battery_app_gatt_server_cb);
-	led_init();
+									battery_app_gatt_server_cb);
 	
 	/* Capturing the events  */ 
 	while (1) {
