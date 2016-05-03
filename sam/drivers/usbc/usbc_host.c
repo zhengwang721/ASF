@@ -529,6 +529,8 @@ void otg_dual_disable(void)
 #endif
 	otg_disable();
 	sysclk_disable_usb();
+	NVIC_ClearPendingIRQ(USBC_IRQn);
+	NVIC_DisableIRQ(USBC_IRQn);
 	uhd_sleep_mode(UHD_STATE_OFF);
 }
 
