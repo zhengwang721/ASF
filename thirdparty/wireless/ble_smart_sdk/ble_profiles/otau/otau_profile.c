@@ -79,42 +79,53 @@ otau_process_t otau_process_status = {
 	.status = AT_OTAU_CMD_SUCCESS
 };
 
-/* BLE GATT Server event callback handlers for OTAU profile */
-static const ble_gatt_server_event_cb_t otau_gatt_server_handle = {
-	/* GATT Server characteristics changed handler */
-	.characteristic_changed = otau_char_changed_handler,
-	.characteristic_configuration_changed = NULL,
-	.characteristic_write_cmd_cmp = NULL,
-	/* GATT Server indication confirmation handler */
-	.indication_confirmed = otau_indication_confirmation_handler,
-	.mtu_changed_cmd_complete = NULL,
-	.mtu_changed_indication = NULL,
-	.notification_confirmed = NULL,
-	.read_authorize_request = NULL,
-	.service_changed_indication_sent = NULL,
-	.write_authorize_request = NULL
+/* BLE GAP event callback handlers for OTAU profile */
+static /*const*/ ble_event_callback_t otau_gap_handle[] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	otau_connected_state_handler,
+	otau_disconnect_event_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
 };
 
-/* BLE GAP event callback handlers for OTAU profile */
-static const ble_gap_event_cb_t otau_gap_handle = {
-	/* BLE GAP Connected event callback handler */
-	.connected = otau_connected_state_handler,
-	/* BLE GAP Disconnected event callback handler */
-	.disconnected = otau_disconnect_event_handler,
-	/* BLE GAP encryption complete event callback handler */
-	.encryption_status_changed = NULL,
-	/* BLE GAP pair complete event callback handler */
-	.pair_done = NULL
+
+/* BLE GATT Server event callback handlers for OTAU profile */
+static /*const*/ ble_event_callback_t otau_gatt_server_handle[] = {
+	NULL,
+	otau_indication_confirmation_handler,
+	otau_char_changed_handler,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
 };
+
 
 /* BLE Custom event callback handlers for OTAU profile */
-static const ble_custom_event_cb_t otau_custom_event_handle = {
+static /*const*/ ble_event_callback_t otau_custom_event_handle[] = {
 	/* BLE custom event post callback handler */
-	.custom_event = otau_custom_event_handler,
+	otau_custom_event_handler,
 	/* BLE device ready internal event callback handler */
-	.device_ready = NULL,
+	NULL,
 	/* BLE device max event reached callback handler */
-	.event_max = NULL
+	NULL
 };
 
 /**	OTAU Flash layout information - 
@@ -602,21 +613,56 @@ at_ble_status_t otau_profile_init(void *params)
 	OTAU_CHECK_ERROR(status);
 	
 	status = AT_BLE_FAILURE;
+	
+	otau_gap_handle[0] = NULL;
+	otau_gap_handle[1] = NULL;
+	otau_gap_handle[2] = NULL;
+	otau_gap_handle[3] = NULL;
+	otau_gap_handle[4] = NULL;
+	otau_gap_handle[5] = otau_connected_state_handler;
+	otau_gap_handle[6] = otau_disconnect_event_handler;
+	otau_gap_handle[7] = NULL;
+	otau_gap_handle[8] = NULL;
+	otau_gap_handle[9] = NULL;
+	otau_gap_handle[10] = NULL;
+	otau_gap_handle[11] = NULL;
+	otau_gap_handle[12] = NULL;
+	otau_gap_handle[13] = NULL;
+	otau_gap_handle[14] = NULL;
+	otau_gap_handle[15] = NULL;
+	otau_gap_handle[16] = NULL;
+	otau_gap_handle[17] = NULL;
+	otau_gap_handle[18] = NULL;
+	
+	otau_gatt_server_handle[0] = NULL;
+	otau_gatt_server_handle[1] = otau_indication_confirmation_handler;
+	otau_gatt_server_handle[2] = otau_char_changed_handler;
+	otau_gatt_server_handle[3] = NULL;
+	otau_gatt_server_handle[4] = NULL;
+	otau_gatt_server_handle[5] = NULL;
+	otau_gatt_server_handle[6] = NULL;
+	otau_gatt_server_handle[7] = NULL;
+	otau_gatt_server_handle[8] = NULL;
+	otau_gatt_server_handle[9] = NULL;
+	
+	otau_custom_event_handle[0] = otau_custom_event_handler;
+	otau_custom_event_handle[1] = NULL;
+	otau_custom_event_handle[2] = NULL;
 		
 	/* Register for BLE GAP event callbacks */
 	if(ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 	BLE_GAP_EVENT_TYPE,
-	&otau_gap_handle))
+	otau_gap_handle))
 	{
 		/* Register for BLE GATT Server event callbacks */
 		if(ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 		BLE_GATT_SERVER_EVENT_TYPE,
-		&otau_gatt_server_handle))
+		otau_gatt_server_handle))
 		{
 			/* Register for BLE custom event callbacks */
 			if (ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 			BLE_CUSTOM_EVENT_TYPE,
-			&otau_custom_event_handle))
+			otau_custom_event_handle))
 			{	
 				/* All OTAU Events are successfully registered */			
 				otau_process_status.status = AT_OTAU_CMD_SUCCESS;					
