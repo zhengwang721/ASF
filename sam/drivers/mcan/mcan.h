@@ -3,7 +3,7 @@
  *
  * \brief SAM Control Area Network (MCAN) Low Level Driver
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -571,10 +571,12 @@ struct mcan_config {
 	enum mcan_timeout_mode timeout_mode;
 	/** Timeout enable. */
 	bool timeout_enable;
+	/** Transceiver Delay Compensation enable. */	
+	bool tdc_enable;
 	/** Transmitter Delay Compensation Offset : 0x0-0x7F */
 	uint8_t delay_compensation_offset;
-	/** Transmitter Delay Compensation Filter Window Length : 0x0-0x7F */
-	uint8_t delay_compensation_filter_window_length;
+//	/** Transmitter Delay Compensation Filter Window Length : 0x0-0x7F */
+//	uint8_t delay_compensation_filter_window_length;
 	/** Nonmatching frames action for standard frames. */
 	enum mcan_nonmatching_frames_action nonmatching_frames_action_standard;
 	/** Nonmatching frames action for extended frames. */
@@ -655,8 +657,9 @@ static inline void mcan_get_config_defaults(
 	config->timeout_period = 0xFFFF;
 	config->timeout_mode = MCAN_TIMEOUT_CONTINUES;
 	config->timeout_enable = false;
+	config->tdc_enable = false;
 	config->delay_compensation_offset = 0;
-	config->delay_compensation_filter_window_length = 0;
+//	config->delay_compensation_filter_window_length = 0;
 	config->nonmatching_frames_action_standard = MCAN_NONMATCHING_FRAMES_REJECT;
 	config->nonmatching_frames_action_extended = MCAN_NONMATCHING_FRAMES_REJECT;
 	config->remote_frames_standard_reject = true;

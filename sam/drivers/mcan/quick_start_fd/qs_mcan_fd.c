@@ -164,7 +164,8 @@ static void configure_mcan(void)
 	/* Initialize the module. */
 	struct mcan_config config_mcan;
 	mcan_get_config_defaults(&config_mcan);
-	config_mcan.delay_compensation_offset = 3;
+//	config_mcan.tdc_enable = true;
+//	config_mcan.delay_compensation_offset = 3;
 	mcan_init(&mcan_instance, MCAN_MODULE, &config_mcan);
 
 	mcan_enable_fd_mode(&mcan_instance);
@@ -283,7 +284,7 @@ static void mcan_fd_send_standard_message(uint32_t id_value, uint8_t *data)
 
 	mcan_get_tx_buffer_element_defaults(&tx_element);
 	tx_element.T0.reg |= MCAN_TX_ELEMENT_T0_STANDARD_ID(id_value);
-	tx_element.T1.reg = MCAN_TX_ELEMENT_T1_FDF | MCAN_TX_ELEMENT_T1_BRS |
+	tx_element.T1.reg = //MCAN_TX_ELEMENT_T1_FDF | MCAN_TX_ELEMENT_T1_BRS |
 			MCAN_TX_ELEMENT_T1_DLC(MCAN_TX_ELEMENT_T1_DLC_DATA64_Val);
 	for (i = 0; i < CONF_MCAN_ELEMENT_DATA_SIZE; i++) {
 		tx_element.data[i] = *data;
@@ -309,8 +310,8 @@ static void mcan_fd_send_extended_message(uint32_t id_value, uint8_t *data)
 	mcan_get_tx_buffer_element_defaults(&tx_element);
 	tx_element.T0.reg |= MCAN_TX_ELEMENT_T0_EXTENDED_ID(id_value) |
 			MCAN_TX_ELEMENT_T0_XTD;
-	tx_element.T1.reg = MCAN_TX_ELEMENT_T1_EFC | MCAN_TX_ELEMENT_T1_FDF |
-			MCAN_TX_ELEMENT_T1_BRS |
+	tx_element.T1.reg = MCAN_TX_ELEMENT_T1_EFC | //MCAN_TX_ELEMENT_T1_FDF |
+			//MCAN_TX_ELEMENT_T1_BRS |
 			MCAN_TX_ELEMENT_T1_DLC(MCAN_TX_ELEMENT_T1_DLC_DATA64_Val);
 	for (i = 0; i < CONF_MCAN_ELEMENT_DATA_SIZE; i++) {
 		tx_element.data[i] = *data;

@@ -3,7 +3,7 @@
  *
  * \brief SAM Control Area Network (CAN) Low Level Driver
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -148,6 +148,10 @@ static void _can_set_configuration(Can *hw, struct can_config *config)
 			CAN_DBTP_DTSEG1(CONF_CAN_DBTP_DTSEG1_VALUE) |
 			CAN_DBTP_DTSEG2(CONF_CAN_DBTP_DTSEG2_VALUE);
 
+	if (config->tdc_enable) {
+		hw->DBTP.reg |= CAN_DBTP_TDC;
+	}
+	
 	if (config->run_in_standby) {
 		hw->MRCFG.reg |= 0x01<<6;
 	}
@@ -185,7 +189,7 @@ static void _can_set_configuration(Can *hw, struct can_config *config)
 			config->timeout_mode | config->timeout_enable;
 
 	hw->TDCR.reg = CAN_TDCR_TDCO(config->delay_compensation_offset) |
-			CAN_TDCR_TDCF(config->delay_compensation_filter_window_length);
+				CAN_TDCR_TDCF(config->delay_compensation_filter_window_length);
 
 	hw->GFC.reg = CAN_GFC_ANFS(config->nonmatching_frames_action_standard) |
 			CAN_GFC_ANFE(config->nonmatching_frames_action_extended);
