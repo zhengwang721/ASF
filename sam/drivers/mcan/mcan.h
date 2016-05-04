@@ -575,8 +575,6 @@ struct mcan_config {
 	bool tdc_enable;
 	/** Transmitter Delay Compensation Offset : 0x0-0x7F */
 	uint8_t delay_compensation_offset;
-//	/** Transmitter Delay Compensation Filter Window Length : 0x0-0x7F */
-//	uint8_t delay_compensation_filter_window_length;
 	/** Nonmatching frames action for standard frames. */
 	enum mcan_nonmatching_frames_action nonmatching_frames_action_standard;
 	/** Nonmatching frames action for extended frames. */
