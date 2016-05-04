@@ -98,7 +98,7 @@ static void configure_aon_sleep_timer_callback(void)
 	//! [setup_register_callback]
 
 	//! [enable_IRQ]
-	NVIC_EnableIRQ(AON_SLEEP_TIMER_IRQn);
+	NVIC_EnableIRQ(AON_SLEEP_TIMER0_IRQn);
 	//! [enable_IRQ]
 }
 
