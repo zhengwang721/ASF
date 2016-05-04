@@ -659,7 +659,6 @@ static inline void mcan_get_config_defaults(
 	config->timeout_enable = false;
 	config->tdc_enable = false;
 	config->delay_compensation_offset = 0;
-//	config->delay_compensation_filter_window_length = 0;
 	config->nonmatching_frames_action_standard = MCAN_NONMATCHING_FRAMES_REJECT;
 	config->nonmatching_frames_action_extended = MCAN_NONMATCHING_FRAMES_REJECT;
 	config->remote_frames_standard_reject = true;

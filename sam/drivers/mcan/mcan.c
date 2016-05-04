@@ -168,7 +168,6 @@ static void _mcan_set_configuration(Mcan *hw, struct mcan_config *config)
 			MCAN_FBTP_FSJW(CONF_MCAN_FBTP_FSJW_VALUE) |
 			MCAN_FBTP_FTSEG1(CONF_MCAN_FBTP_FTSEG1_VALUE) |
 			MCAN_FBTP_FTSEG2(CONF_MCAN_FBTP_FTSEG2_VALUE) |
-//			MCAN_FBTP_TDC_DISABLED |
 			MCAN_FBTP_TDCO(config->delay_compensation_offset);
 
 	if (config->tdc_enable) {
