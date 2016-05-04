@@ -189,7 +189,7 @@ static void _can_set_configuration(Can *hw, struct can_config *config)
 			config->timeout_mode | config->timeout_enable;
 
 	hw->TDCR.reg = CAN_TDCR_TDCO(config->delay_compensation_offset) |
-				CAN_TDCR_TDCF(config->delay_compensation_filter_window_length);
+			CAN_TDCR_TDCF(config->delay_compensation_filter_window_length);
 
 	hw->GFC.reg = CAN_GFC_ANFS(config->nonmatching_frames_action_standard) |
 			CAN_GFC_ANFE(config->nonmatching_frames_action_extended);
