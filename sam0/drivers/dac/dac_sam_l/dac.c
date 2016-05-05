@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Digital-to-Analog Converter Driver
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -424,7 +424,7 @@ void dac_chan_get_config_defaults(
 	config->current        = DAC_CURRENT_12M;
 	config->run_in_standby = false;
 	config->dither_mode    = false;
-	config->refresh_period = 1;
+	config->refresh_period = 2;
 }
 
 
