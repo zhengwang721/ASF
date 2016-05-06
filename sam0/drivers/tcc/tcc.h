@@ -2122,7 +2122,7 @@ static inline void tcc_set_ramp_index(
 		}
 		if (TCC_RAMP_INDEX_DEFAULT == ramp_index) {
 			/* Cancel pending command */
-			tcc_module->CTRLBCLR.reg = ~TCC_CTRLBSET_IDXCMD_DISABLE;
+			tcc_module->CTRLBCLR.reg = TCC_CTRLBSET_IDXCMD_HOLD;
 			return;
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_IDXCMD_Msk;
