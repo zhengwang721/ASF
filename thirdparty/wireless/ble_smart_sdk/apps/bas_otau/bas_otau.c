@@ -212,28 +212,30 @@ static void otau_progress_handler (uint8_t section_id, uint8_t completed)
 static void otau_image_nofification_handler (firmware_version_t *new_firmware_ver, 
 								firmware_version_t *old_firmware_ver, bool *permission)
 {
-	if (new_firmware_ver->major_number > old_firmware_ver->major_number)
-	{
-		*permission = true;		
-	}
-	else if((new_firmware_ver->major_number == old_firmware_ver->major_number) && 
-			(new_firmware_ver->minor_number > old_firmware_ver->minor_number))
-	{
-		*permission = true;
-	}
-	else if ((new_firmware_ver->major_number == old_firmware_ver->major_number) && 
-			(new_firmware_ver->minor_number == old_firmware_ver->minor_number) &&
-			(new_firmware_ver->build_number > old_firmware_ver->build_number))
-	{
-		*permission = true;
-	}
-	else
-	{
-		*permission = false;
-		DBG_LOG("[OTAU] Update canceled for Firmware version:%d.%d.%d", new_firmware_ver->major_number, 
-																		new_firmware_ver->minor_number,
-																		new_firmware_ver->build_number);
-	}
+	//if (new_firmware_ver->major_number > old_firmware_ver->major_number)
+	//{
+		//*permission = true;
+	//}
+	//else if((new_firmware_ver->major_number == old_firmware_ver->major_number) &&
+	//(new_firmware_ver->minor_number > old_firmware_ver->minor_number))
+	//{
+		//*permission = true;
+	//}
+	//else if ((new_firmware_ver->major_number == old_firmware_ver->major_number) &&
+	//(new_firmware_ver->minor_number == old_firmware_ver->minor_number) &&
+	//(new_firmware_ver->build_number > old_firmware_ver->build_number))
+	//{
+		//*permission = true;
+	//}
+	//else
+	//{
+		//*permission = false;
+		//DBG_LOG("[OTAU] Update canceled for Firmware version:%d.%d.%d", new_firmware_ver->major_number,
+		//new_firmware_ver->minor_number,
+		//new_firmware_ver->build_number);
+	//}
+	
+	*permission = true;
 	
 	if (*permission)
 	{

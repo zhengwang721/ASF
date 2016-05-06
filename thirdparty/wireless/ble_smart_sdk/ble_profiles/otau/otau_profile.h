@@ -303,6 +303,22 @@ typedef enum otau_image_option
 	OTAU_RESUME_DOWNLOAD = AT_OTAU_RESUME_OTAU_REQUEST
 }otau_image_option_t;
 
+/* image section mask will used to identify the OTAU is 
+	upper part of section or lower part of the section */
+#define SECTION1_IMAGE_IDENTIFIER_MASK		(0x0F)
+#define SECTION1_TOP_IMAGE_IDENTIFIER		(0x00)
+#define SECTION1_BOTTOM_IMAGE_IDENTIFIER	(0x01)
+
+#define SECTION2_IMAGE_IDENTIFIER_MASK		(0xF0)
+#define SECTION2_TOP_IMAGE_IDENTIFIER		(0x00)
+#define SECTION2_BOTTOM_IMAGE_IDENTIFIER	(0x10)
+
+#define SECTION3_IMAGE_IDENTIFIER_MASK		(0xF00)
+#define SECTION3_TOP_IMAGE_IDENTIFIER		(0x000)
+#define SECTION3_BOTTOM_IMAGE_IDENTIFIER	(0x100)
+
+#define IMAGE_CRC32_POLYNOMIAL				(0xFFFFFFFF)
+
 typedef uint8_t	section_id_t;
 typedef uint32_t otau_flash_addr_t;
 
@@ -586,6 +602,8 @@ typedef struct otau_resume_process
 
 typedef otau_error_resp_t device_info_failure_resp_t;
 
+
+
 typedef uint32_t section_image_id_t;
 
 typedef struct image_meta_data
@@ -619,16 +637,18 @@ typedef struct meta_data_header
 BLE_PACK_RESET
 
 /* Check and return in case of error */
-#define OTAU_CHECK_ERROR(status)	{ if(status != AT_BLE_SUCCESS) {return status;}}
+#define OTAU_CHECK_ERROR(status)	{ if(status != AT_BLE_SUCCESS) {DBG_OTAU("#Error"); return status;}}
+
+#define OTAU_CHECK_NULL(params)	{ if(params == NULL) {return AT_BLE_FAILURE;}}
 
 /****************************************************************************************
 *							        Function Prototypes	                                *
 ****************************************************************************************/
 
-/** @brief otau_profile_init function initializes and defines the services of the OTAU profile
+/** @brief otau_profile_init function initialize and defines the service of the OTAU profile
  *			also initializes the OTAU flash interface driver populates the flash information into 
  *			dev_flash_info global variable
- *  @param[in] params are unused.
+ *  @param[in] params of type otau_profile_config_t to configure the OTAU
  *	@return	returns AT_BLE_SUCCESS on success or at_ble_err_status_t on failure
  */
 at_ble_status_t otau_profile_init(void *params);
@@ -656,7 +676,7 @@ at_ble_status_t otau_disconnect_event_handler(void *params);
 at_ble_status_t otau_custom_event_handler(void *params);
 
 /** @brief otau_send_indication sets the otau characteristic value and
- *  sends the indication
+ *			sends the indication
  *
  *  @param[in] conn_handle connection handle
  *  @param[in] att_handle attribute handle of the characteristics that needs to be updated
@@ -681,7 +701,7 @@ at_ble_status_t otau_indication_confirmation_handler(void * params);
  *  characteristic, new value and connection handle
  *  @return AT_BLE_SUCCESS on success and AT_BLE_FAILURE on failure
  */
-at_ble_status_t otau_char_changed_handler(void *char_params);
+at_ble_status_t otau_char_changed_handler(void *params);
 
 /** @brief otau_connected_state_handler called by ble manager after a
  *			change in characteristic
@@ -845,6 +865,20 @@ at_ble_status_t otau_pause_update_process(void *params);
  *  @return	  returns AT_BLE_SUCCESS otau resume request is correct and send to OTAU manager or at_ble_err_status_t in case of failure
  */
 at_ble_status_t otau_resume_update_process(void *params);
+
+/** @brief flash_crc32_compute calculate a checksum for given flash memory address and length
+ *			if resume is true then crc32 will be calculated from previously calculated crc32 value.
+ *			This function will read from the flash memory and calculates the CRC
+ *	@param[in] read_addr Flash memory address for CRC calculation
+ *	@param[in] len length of the buffer
+ *	@param[in] section_id section id of the flash memory
+ *	@param[in] resume if true it will calculate the crc from previously calculated crc value 
+ *	@param[in] crc previously computed crc value
+ *
+ *  @return	calculated crc32 for given data and len
+ */
+image_crc_t flash_crc32_compute(uint32_t read_addr, uint32_t len, section_id_t section_id, 
+								bool resume, image_crc_t crc);
 
 #ifdef __cplusplus
 }

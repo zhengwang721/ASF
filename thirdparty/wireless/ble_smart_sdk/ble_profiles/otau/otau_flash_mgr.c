@@ -231,7 +231,7 @@ at_ble_status_t ofm_read_meta_data(void *params, flash_id_t flash_id)
 		/* Check whether valid meta data present */
 		if (image_meta_info->len == (sizeof(image_meta_data_t) - sizeof(image_meta_info->len)))
 		{
-			crc = crc32_compute(meta_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)));
+			crc = crc32_compute(meta_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)), false, 0);
 			
 			/* validate CRC */
 			if (crc == image_meta_info->header_crc)
@@ -281,7 +281,7 @@ at_ble_status_t ofm_otau_meta_data_update(void *params)
 	image_meta_info->len = sizeof(image_meta_data_t) - sizeof(image_meta_info->len);
 	image_meta_info->flashid = OTAU_IMAGE_META_DATA_ID;
 	
-	crc = crc32_compute(meta_buf, (image_meta_info->len-2));
+	crc = crc32_compute(meta_buf, (image_meta_info->len-2), false, 0);
 	
 	DBG_OTAU("meta data len:%d", image_meta_info->len);
 	
@@ -384,7 +384,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 		 /* Check whether valid meta data present */
 		 if ( meta_data_info->len == (sizeof(image_meta_data_t) - sizeof(meta_data_info->len)) )
 		 {
-			 crc = crc32_compute(read_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)));			 
+			 crc = crc32_compute(read_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)), false, 0);		 
 			 			 
 			/* validate CRC */
 			if (crc == meta_data_info->header_crc)
@@ -453,7 +453,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 
 				if (idx == 0)
 				{
-					DBG_OTAU("Device Firmware version-[idx-%d]: %d.%d,%d", idx,
+					DBG_OTAU("Meta Firmware version-[idx-%d]: %d.%d,%d", idx,
 					meta_data_info->dev_info.fw_version.major_number,
 					meta_data_info->dev_info.fw_version.minor_number,
 					meta_data_info->dev_info.fw_version.build_number);
@@ -463,7 +463,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 				}
 				else if(idx == 1)
 				{
-					DBG_OTAU("Device Firmware version-[idx-%d]: %d.%d,%d", idx,
+					DBG_OTAU("Meta Firmware version-[idx-%d]: %d.%d,%d", idx,
 					meta_data_info->dev_info.fw_version.major_number,
 					meta_data_info->dev_info.fw_version.minor_number,
 					meta_data_info->dev_info.fw_version.build_number);
@@ -482,9 +482,6 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 		   }
 		}			
 	}	
-	
-	DBG_OTAU("Current data address:0x%8X", meta_loc.current_image_data_addr);
-	DBG_OTAU("OTAU data address:0x%8X", meta_loc.otau_image_data_addr);
 	
 	/* Get the current running image */
 	if (completed_download_meta_data[0] && completed_download_meta_data[1])
@@ -529,7 +526,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 		/* Check whether valid meta data present */
 		if ( meta_data_info->len == (sizeof(image_meta_data_t) - sizeof(meta_data_info->len)) )
 		{
-			crc = crc32_compute(read_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)));
+			crc = crc32_compute(read_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)), false, 0);
 			
 			/* validate CRC */
 			if (crc == meta_data_info->header_crc)
@@ -542,6 +539,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 				
 				if(meta_data_info->section_image_id == 0x00000000)
 				{
+					DBG_OTAU("Current Image resides at Upper part of section");
 					/* Update the OTAU section image id */
 					meta_data.data_buf = read_buf;
 					meta_data.flash_addr = meta_loc.otau_image_data_addr;
@@ -553,17 +551,50 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 						/* Check whether valid meta data present */
 						if ( meta_data_info->len == (sizeof(image_meta_data_t) - sizeof(meta_data_info->len)) )
 						{
-							crc = crc32_compute(read_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)));
+							crc = crc32_compute(read_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)), false, 0);
 							
 							/* validate CRC */
 							if (crc == meta_data_info->header_crc)
 							{
+								DBG_OTAU("OTAU image download at Lower part of section");
 								meta_data_info->section_image_id = 0xFFFFF111;
 								/* Update the meta data */
 								ofm_otau_meta_data_update(read_buf);
 							}
 						}
 					}
+				}
+				else if(meta_data_info->section_image_id == 0xFFFFF111)
+				{
+					DBG_OTAU("Current Image resides at Lower part of section");
+					/* Update the OTAU section image id */
+					meta_data.data_buf = read_buf;
+					meta_data.flash_addr = meta_loc.otau_image_data_addr;
+					meta_data.section_id = 0xFF;
+					meta_data.size = sizeof(image_meta_data_t);
+					meta_data.flash_info = flash_inst;
+					if(ofid_read_metadeta(&meta_data) == AT_OFID_OP_SUCESS)
+					{
+						/* Check whether valid meta data present */
+						if ( meta_data_info->len == (sizeof(image_meta_data_t) - sizeof(meta_data_info->len)) )
+						{
+							crc = crc32_compute(read_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)), false, 0);
+							
+							/* validate CRC */
+							if (crc == meta_data_info->header_crc)
+							{
+								DBG_OTAU("OTAU image download at Upper part of section");
+								
+								meta_data_info->section_image_id = 0x00000000;
+								/* Update the meta data */
+								ofm_otau_meta_data_update(read_buf);
+							}
+						}
+					}
+				}
+				else
+				{
+					DBG_OTAU("Unable to identify the section identifier");
 				}
 			}
 			
@@ -880,45 +911,29 @@ at_ble_status_t ofm_init(void *params)
 }
 
 /** @brief crc32_compute calculate a checksum for buffer, buffer length
- *
+ *			if resume is true then crc32 will be calculated from previously calculated crc32 value
  *	@param[in] buf input buffer for CRC calculation
  *	@param[in] len length of the buffer
+ *	@param[in] resume compute the crc from previous results
+ *	@param[in] crc previously computed crc value
  *
- *  @return	calculated crc32 for given data
+ *  @return	calculated crc32 for given data and len
  */
-uint32_t crc32_compute(uint8_t *buf, uint32_t len)
+image_crc_t crc32_compute(uint8_t *buf, uint32_t len, bool resume, image_crc_t crc)
 {
-	//Local Variables
-	uint32_t i, j;
-	uint32_t crc = 0xFFFFFFFF;
-
-	for (j = 0; j < len; j++)
+	/* Local Variables */
+	uint32_t idx, l_idx;
+	
+	if (!resume)
 	{
-		uint8_t tmp = *buf++;
-		i = ((int)(crc >> 24) ^ tmp) & 0xff;
-		crc = (crc << 8) ^ crc32_lookup[i];
+		crc = 0xFFFFFFFF;
 	}
-	return crc;
-}
 
-/** @brief crc32_resume_compute calculate a checksum for buffer, buffer length
- *			crc32 will be calculated from previous calculated crc32 value
- *
- *	@param[in] buf input buffer for CRC calculation
- *	@param[in] len length of the buffer
- *	@param[in] crc previously calculated crc32 value
- *
- *  @return	calculated crc32 for given data
- */
-uint32_t crc32_resume_compute(uint8_t *buf, uint32_t len, uint32_t crc)
-{
-	//Local Variables
-	uint32_t i, j;
-	for (j = 0; j < len; j++)
+	for (l_idx = 0; l_idx < len; l_idx++)
 	{
-		uint8_t tmp = *buf++;
-		i = ((uint32_t)(crc >> 24) ^ tmp) & 0xff;
-		crc = (crc << 8) ^ crc32_lookup[i];
+		uint8_t tvar = *buf++;
+		idx = ((int)(crc >> 24) ^ tvar) & 0xFF;
+		crc = (crc << 8) ^ crc32_lookup[idx];
 	}
 	return crc;
 }

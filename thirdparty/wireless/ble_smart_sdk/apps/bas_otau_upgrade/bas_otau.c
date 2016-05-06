@@ -78,6 +78,12 @@ bool volatile flag = true;
 bool volatile battery_flag = true;
 at_ble_handle_t bat_connection_handle;
 
+static void otau_image_nofification_handler (firmware_version_t *new_firmware_ver,
+											firmware_version_t *old_firmware_ver,
+											bool *permission);
+static void otau_image_switch_handler (firmware_version_t *fw_version, bool *permission);
+static void otau_progress_handler (uint8_t section_id, uint8_t completed);
+
 /**
  * \Timer callback handler called on timer expiry
  */
@@ -197,6 +203,57 @@ static const ble_event_callback_t battery_app_gatt_server_cb[] = {
 	NULL
 };
 
+/* OTAU Download Progress Percentage to application */
+static void otau_progress_handler (uint8_t section_id, uint8_t completed)
+{
+	DBG_LOG("[OTAU] Downloading Section:%d, Completed:%d%%", section_id, completed);
+}
+
+/* Check application for update */
+static void otau_image_nofification_handler (firmware_version_t *new_firmware_ver,
+						firmware_version_t *old_firmware_ver, bool *permission)
+{
+	DBG_LOG("Checking FW Version");
+	//if (new_firmware_ver->major_number > old_firmware_ver->major_number)
+	//{
+		//*permission = true;
+	//}
+	//else if((new_firmware_ver->major_number == old_firmware_ver->major_number) &&
+	//(new_firmware_ver->minor_number > old_firmware_ver->minor_number))
+	//{
+		//*permission = true;
+	//}
+	//else if ((new_firmware_ver->major_number == old_firmware_ver->major_number) &&
+	//(new_firmware_ver->minor_number == old_firmware_ver->minor_number) &&
+	//(new_firmware_ver->build_number > old_firmware_ver->build_number))
+	//{
+		//*permission = true;
+	//}
+	//else
+	//{
+		//*permission = false;
+		//DBG_LOG("[OTAU] Update canceled for Firmware version:%d.%d.%d", new_firmware_ver->major_number,
+		//new_firmware_ver->minor_number,
+		//new_firmware_ver->build_number);
+	//}
+	*permission = true;
+	if (*permission)
+	{
+		DBG_LOG("[OTAU] Upgrading to New Firmware version:%d.%d.%d", new_firmware_ver->major_number,
+		new_firmware_ver->minor_number,
+		new_firmware_ver->build_number);
+	}
+}
+
+/* Check the OTAU image switch permission */
+static void otau_image_switch_handler (firmware_version_t *fw_version, bool *permission)
+{
+	*permission = true;
+	DBG_LOG("[OTAU] Switching to New Firmware version:%d.%d.%d", fw_version->major_number,
+	fw_version->minor_number,
+	fw_version->build_number);
+}
+
 
 /**
 * \Battery Service Application main function
@@ -236,16 +293,32 @@ int main(void)
 		DBG_LOG("defining battery service failed %d", status);
 	}
 	
-	{
-		otau_config.service_config.char_endpoint_permission[OTAU_INDICATION_CHAR_IDX] = \
-			AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
-		otau_config.service_config.char_endpoint_permission[OTAU_WRITE_CHAR_IDX] = \
-			AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
-		otau_config.service_config.char_endpoint_permission[OTAU_READ_CHAR_IDX] = \
-			AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
-		otau_config.service_config.service_type = PRIMARY_SERVICE;
-		otau_profile_init(&otau_config);
-	}
+#if OTAU_FEATURE
+	/* set permission for OTAU Indication Characteristics */
+	otau_config.service_config.char_endpoint_permission[OTAU_INDICATION_CHAR_IDX] = \
+	AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
+	/* set permission for OTAU Write Characteristics */
+	otau_config.service_config.char_endpoint_permission[OTAU_WRITE_CHAR_IDX] = \
+	AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
+	/* set permission for OTAU Read Characteristics */
+	otau_config.service_config.char_endpoint_permission[OTAU_READ_CHAR_IDX] = \
+	AT_BLE_ATTR_READABLE_NO_AUTHN_NO_AUTHR | AT_BLE_ATTR_WRITABLE_NO_AUTHN_NO_AUTHR;
+	/* Set OTAU service needs to be registered as Primary or Secondary service */
+	otau_config.service_config.service_type = PRIMARY_SERVICE;
+
+	/* OTAU image switch permission to OTAU Profile */
+	otau_config.app_cb.otau_image_switch = otau_image_switch_handler;
+
+	/* OTAU image download progress from OTAU Profile */
+	otau_config.app_cb.otau_progress_cb = otau_progress_handler;
+
+	/* OTAU image upgrade permission to OTAU Profile */
+	otau_config.app_cb.otau_image_notification = otau_image_nofification_handler;
+
+	/* OTAU Profile initialization */
+	otau_profile_init(&otau_config);
+
+#endif /* OTAU_FEATURE */
 		
 	/* Initialize the dis */
 	dis_init_service(&dis_service_handler);
@@ -261,12 +334,13 @@ int main(void)
 	/* Register callbacks for gap related events */ 
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 									BLE_GAP_EVENT_TYPE,
-									battery_app_gap_cb);
+									&battery_app_gap_cb);
 									
 	/* Register callbacks for gatt server related events */
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 									BLE_GATT_SERVER_EVENT_TYPE,
-									battery_app_gatt_server_cb);
+									&battery_app_gatt_server_cb);
+	led_init();
 	
 	/* Capturing the events  */ 
 	while (1) {

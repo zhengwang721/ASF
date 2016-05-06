@@ -158,8 +158,8 @@ static at_ble_status_t otau_download_status(uint16_t *resume_page_no,
 											section_id_t *resume_section_id);
 
 /** @brief otau_state_machine_controller function controls each state of OTAU 
- *			before executing the functionality of the OTAU
- *  @param[in] params next_state
+ *			before executing the functions of the OTAU
+ *  @param[in] next_state next state that requires to be changed
  *	@return AT_BLE_SUCCESS state execution is allowed, AT_BLE_FAILURE when state executions are not allowed
  *
  */
@@ -173,8 +173,8 @@ at_ble_status_t otau_state_machine_controller(otau_state_t next_state);
 ****************************************************************************************/
 
 /** @brief otau_state_machine_controller function controls each state of OTAU 
- *			before executing the functionality of the OTAU
- *  @param[in] params unused
+ *			before executing the functions of the OTAU
+ *  @param[in] next_state next state that requires to be changed
  *	@return AT_BLE_SUCCESS state execution is allowed, AT_BLE_FAILURE when state executions are not allowed
  *
  */
@@ -574,25 +574,22 @@ at_ble_status_t otau_state_machine_controller(otau_state_t next_state)
 	return status;
 }
 
-/** @brief otau_profile_init function initializes and defines the services of the OTAU profile
+/** @brief otau_profile_init function initialize and defines the service of the OTAU profile
  *			also initializes the OTAU flash interface driver populates the flash information into 
  *			dev_flash_info global variable
- *  @param[in] params are unused.
+ *  @param[in] params of type otau_profile_config_t to configure the OTAU
  *	@return	returns AT_BLE_SUCCESS on success or at_ble_err_status_t on failure
  */
 at_ble_status_t otau_profile_init(void *params)
 {
 	at_ble_status_t status;
 	otau_profile_config_t *otau_config = NULL;
-	
-	if (params == NULL)
-	{
-		return AT_BLE_FAILURE;
-	}
+		
+	OTAU_CHECK_NULL(params);
 	
 	otau_config = (otau_profile_config_t *)params;
 	otau_profile_instance = otau_config;	
-	
+
 	otau_process_status.status = AT_OTAU_CMD_SUCCESS;	
 	status = otau_state_machine_controller(OTAU_INIT_STATE);
 		
@@ -674,7 +671,8 @@ at_ble_status_t otau_profile_init(void *params)
 	return status;
 }
 
-/** @brief otau_service_define defines the services and creates the database for OTAU profile
+/** @brief otau_service_define defines the OTAU service and creates the database for OTAU profile
+ *
  *	@param[in] params of type otau_service_config_t
  *	@return	returns AT_BLE_SUCCESS on success or at_ble_err_status_t on failure
  */
@@ -682,6 +680,8 @@ at_ble_status_t otau_service_define(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	otau_service_config_t *service_config = NULL;
+		
+	OTAU_CHECK_NULL(params);
 	service_config = (otau_service_config_t *)params;
 	
 	/* application defined Service permission configuration */
@@ -717,6 +717,8 @@ at_ble_status_t otau_disconnect_event_handler(void *params)
 	at_ble_status_t status = AT_BLE_FAILURE;
 	
 	at_ble_disconnected_t *disconnect_param = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	disconnect_param = (at_ble_disconnected_t *)params;
 	
 	/* Check the OTAU manager is disconnected */
@@ -744,6 +746,9 @@ at_ble_status_t otau_custom_event_handler(void *params)
 	at_ble_status_t status = AT_BLE_FAILURE;
 	
 	otau_device_reset_request_t	*device_reset_req = NULL;
+	
+	OTAU_CHECK_NULL(params);
+	
 	device_reset_req = (otau_device_reset_request_t *)params;
 	//if ((device_reset_req->req.length == (sizeof(otau_device_reset_request_t) -2)) &&
 		//(device_reset_req->req.cmd == AT_OTAU_RESET_DEVICE))
@@ -756,7 +761,7 @@ at_ble_status_t otau_custom_event_handler(void *params)
 }
 
 /** @brief otau_send_indication sets the otau characteristic value and
- *  sends the indication
+ *			sends the indication
  *
  *  @param[in] conn_handle connection handle
  *  @param[in] att_handle attribute handle of the characteristics that needs to be updated
@@ -770,7 +775,7 @@ at_ble_status_t otau_send_indication(at_ble_handle_t conn_handle, at_ble_handle_
 	
 	/** Updating the new characteristic value */
 	status = at_ble_characteristic_value_set(att_handle,
-				buf, length);
+											buf, length);
 	
 	OTAU_CHECK_ERROR(status);
 	
@@ -794,6 +799,8 @@ at_ble_status_t otau_indication_confirmation_handler(void * params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	at_ble_indication_confirmed_t *indication_confirmed = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	indication_confirmed = (at_ble_indication_confirmed_t *)params;
 	
 	if ((indication_confirmed->conn_handle == otau_gatt_service.conn_hanle) &&
@@ -806,7 +813,7 @@ at_ble_status_t otau_indication_confirmation_handler(void * params)
 	return status;
 }
 
-/** @brief memcpy_nreverse copy the memory content from one location to another memory location
+/** @brief memcpy_nreverse copy the memory content from source location to destination memory location
  *			and reverse the copied content
  *
  *	@param[in] dst destination memory location
@@ -838,6 +845,7 @@ static at_ble_status_t otau_download_status(uint16_t *resume_page_no,
 	at_ble_status_t status = AT_BLE_FAILURE;
 	if(ofm_read_meta_data(&meta_data, OTAU_IMAGE_META_DATA_ID) == AT_BLE_SUCCESS)
 	{
+		/* OTAU must have at least one section */
 		if (meta_data.dev_info.total_sections >= 1)
 		{
 			uint32_t data_len = 0;
@@ -901,7 +909,9 @@ static at_ble_status_t otau_download_status(uint16_t *resume_page_no,
 at_ble_status_t otau_image_notify_request_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;	
-	image_notification_req_t *image_notification = NULL;	
+	image_notification_req_t *image_notification = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	image_notification = (image_notification_req_t *)params;
 	device_info_t dev_info;		
 	uint32_t fw_ver;
@@ -918,6 +928,8 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 	status = otau_state_machine_controller(OTAU_IMAGE_NOTIFICATION_STATE);
 	OTAU_CHECK_ERROR(status);
 	
+	DBG_OTAU("Image Notification received");
+	
 	/* Read current image info and device information */
 	if (ofm_get_device_info(&dev_info) == AT_BLE_SUCCESS)
 	{
@@ -928,12 +940,21 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 		 
 		 memcpy_nreverse((uint8_t *)&new_fw_ver, (uint8_t *)&image_notification->fw_ver, sizeof(new_fw_ver));
 		 
-		 memcpy_nreverse((uint8_t *)&new_hw_ver, (uint8_t *)&image_notification->hw_ver, sizeof(new_hw_ver));	
+		 memcpy_nreverse((uint8_t *)&new_hw_ver, (uint8_t *)&image_notification->hw_ver, sizeof(new_hw_ver));
+		 
+		 DBG_OTAU("Get Dev Info Success");
 		 
 		 /* Check the permission from application for updating the firmware */
-		 otau_profile_instance->app_cb.otau_image_notification(&image_notification->fw_ver, 
-																&dev_info.fw_version, 
-																&otau_permission);	 
+		 if (otau_profile_instance->app_cb.otau_image_notification != NULL)
+		 {
+			 otau_profile_instance->app_cb.otau_image_notification(&image_notification->fw_ver,
+																 &dev_info.fw_version,
+																 &otau_permission);
+		 }
+		 else
+		 {
+			 otau_permission = true;
+		 }
 		 
 		/* Compare the Product ID and vendor ID */
 		if ((dev_info.product_id == image_notification->product_id) && 
@@ -948,6 +969,8 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 			uint16_t resume_page_no;
 			uint16_t resume_block_no;
 			section_id_t resume_section_id;
+			
+			
 			
 			image_notify_response.fw_ver = dev_info.fw_version;
 			image_notify_response.hardware_version = dev_info.hw_version;
@@ -1026,6 +1049,10 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 					}
 				}
 			 }
+			 else
+			 {
+				 DBG_OTAU("OTAU Meta data read failed");
+			 }
 			if(otau_send_indication(otau_gatt_service.conn_hanle,
 			otau_gatt_service.chars[OTAU_INDICATION_CHAR_IDX].char_val_handle,
 			(uint8_t *)&image_notify_response,
@@ -1038,6 +1065,8 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 		else
 		{
 			image_notification_failure_resp_t image_notify_failure_resp; //For incorrect request
+			
+			DBG_OTAU("OTAU Command Failed");
 			image_notify_failure_resp.error = AT_OTAU_INVALID_IMAGE;
 			image_notify_failure_resp.resp.cmd = AT_OTAU_FAILURE;
 			image_notify_failure_resp.resp.length = (sizeof(image_notification_failure_resp_t) - 2);
@@ -1048,6 +1077,10 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 			otau_process_status.status = AT_OTAU_CMD_FAILED;
 		}
 		
+	}
+	else
+	{
+		DBG_OTAU("Get Device info failed");
 	}		
 	
 	return status;
@@ -1062,7 +1095,9 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 at_ble_status_t otau_image_info_request_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
-	image_info_request_t *image_info_request = NULL;	
+	image_info_request_t *image_info_request = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	image_info_request = (image_info_request_t *)params;
 	image_meta_data_t meta_data;	
 
@@ -1218,6 +1253,8 @@ at_ble_status_t otau_page_data_request_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	page_data_notify_request_t *page_data_notify_req = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	page_data_notify_req = (page_data_notify_request_t *)params;
 	
 	/* Read meta data */
@@ -1240,13 +1277,13 @@ at_ble_status_t otau_page_data_request_handler(void *params)
 			data_len += (page_data_notify_req->req.length - 4);
 			memcpy(meta_data.patch_downloaded_info.size, (uint8_t *)&data_len, 3);
 			memcpy((uint8_t *)&percent, meta_data.patch_section.size, 3);
-			if((meta_data.section_image_id & 0x0F) == 0x1)
+			if((meta_data.section_image_id & SECTION1_IMAGE_IDENTIFIER_MASK) == SECTION1_BOTTOM_IMAGE_IDENTIFIER)
 			{
 				/* Calculate the address */
 				write_addr = (meta_data.patch_section.start_address+ (page_data_notify_req->page_no * dev_flash_info.page_size));
 				write_addr += (dev_flash_info.section_info[page_data_notify_req->section_id -1].size/2);									
 			}
-			else if((meta_data.section_image_id & 0x0F) == 0x0)
+			else if((meta_data.section_image_id & SECTION1_IMAGE_IDENTIFIER_MASK) == SECTION1_TOP_IMAGE_IDENTIFIER)
 			{
 				write_addr = (meta_data.patch_section.start_address+ (page_data_notify_req->page_no * dev_flash_info.page_size));
 			}
@@ -1258,14 +1295,14 @@ at_ble_status_t otau_page_data_request_handler(void *params)
 			data_len += (page_data_notify_req->req.length - 4);
 			memcpy(meta_data.app_hdr_downloaded_info.size, (uint8_t *)&data_len, 3);
 			memcpy((uint8_t *)&percent, meta_data.app_header_section.size, 3);
-			if((meta_data.section_image_id & 0xF0) == 0x10)
+			if((meta_data.section_image_id & SECTION2_IMAGE_IDENTIFIER_MASK) == SECTION2_BOTTOM_IMAGE_IDENTIFIER)
 			{
 				/* Calculate the address */
 				write_addr = (meta_data.app_header_section.start_address+ (page_data_notify_req->page_no * dev_flash_info.page_size));
 				write_addr += ((dev_flash_info.section_info[page_data_notify_req->section_id -1].size/2));
 							
 			}
-			else if((meta_data.section_image_id & 0xF0) == 0x00)
+			else if((meta_data.section_image_id & SECTION2_IMAGE_IDENTIFIER_MASK) == SECTION2_TOP_IMAGE_IDENTIFIER)
 			{
 				write_addr = (meta_data.app_header_section.start_address+ (page_data_notify_req->page_no * dev_flash_info.page_size));
 			}
@@ -1277,14 +1314,14 @@ at_ble_status_t otau_page_data_request_handler(void *params)
 			data_len += (page_data_notify_req->req.length - 4);
 			memcpy(meta_data.app_downloaded_info.size, (uint8_t *)&data_len, 3);
 			memcpy((uint8_t *)&percent, meta_data.app_section.size, 3);
-			if((meta_data.section_image_id & 0xF00) == 0x100)
+			if((meta_data.section_image_id & SECTION3_IMAGE_IDENTIFIER_MASK) == SECTION3_BOTTOM_IMAGE_IDENTIFIER)
 			{
 				/* Calculate the address */
 				write_addr = (meta_data.app_section.start_address+ (page_data_notify_req->page_no * dev_flash_info.page_size));
 				write_addr += ((dev_flash_info.section_info[page_data_notify_req->section_id-1].size/2));
 								
 			}
-			else if((meta_data.section_image_id & 0xF00) == 0x000)
+			else if((meta_data.section_image_id & SECTION3_IMAGE_IDENTIFIER_MASK) == SECTION3_TOP_IMAGE_IDENTIFIER)
 			{
 				write_addr = (meta_data.app_section.start_address+ (page_data_notify_req->page_no * dev_flash_info.page_size));
 			}
@@ -1307,14 +1344,17 @@ at_ble_status_t otau_page_data_request_handler(void *params)
 					page_data_notify_resp_t page_data_notify_resp; //For correct response
 					page_data_notify_resp.page_no = page_data_notify_req->page_no;
 					page_data_notify_resp.resp.cmd = AT_OTAU_PAGE_DATA_NOTIFY_RESP;
-					page_data_notify_resp.resp.length = (sizeof(page_data_notify_resp_t) -2);
+					page_data_notify_resp.resp.length = (sizeof(page_data_notify_resp_t) - sizeof(page_data_notify_resp.resp.length));
 					page_data_notify_resp.section_id = page_data_notify_req->section_id;	
 					
 					DBG_OTAU("[DBG] Total Section Size:%d, Downloaded Size:%d", percent, data_len);
 
 					percent = ((data_len * 100)/percent);
+					if (otau_profile_instance->app_cb.otau_progress_cb != NULL)
+					{
+						otau_profile_instance->app_cb.otau_progress_cb(page_data_notify_req->section_id, percent);
+					}
 					
-					otau_profile_instance->app_cb.otau_progress_cb(page_data_notify_req->section_id, percent);
 					DBG_OTAU("OTAU Upgrading Section->%d, Completed->%d%%", page_data_notify_req->section_id, percent);		
 					
 					if(otau_send_indication(otau_gatt_service.conn_hanle,
@@ -1347,7 +1387,7 @@ at_ble_status_t otau_page_data_request_handler(void *params)
 			page_data_failure_resp_t page_data_notify_failure; //For incorrect response
 			page_data_notify_failure.page_no = page_data_notify_req->page_no;
 			page_data_notify_failure.resp.cmd = AT_OTAU_IMAGE_PAGE_INFO_ERROR;
-			page_data_notify_failure.resp.length = (sizeof(page_data_notify_resp_t) -2);
+			page_data_notify_failure.resp.length = (sizeof(page_data_notify_resp_t) - sizeof(page_data_notify_failure.resp.length));
 			page_data_notify_failure.section_id = page_data_notify_req->section_id;
 			
 			otau_send_indication(otau_gatt_service.conn_hanle,
@@ -1375,6 +1415,8 @@ at_ble_status_t otau_block_data_request_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	block_data_notify_request_t *block_data_notify_request = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	block_data_notify_resp_t block_data_resp;
 	block_data_failure_resp_t block_failure_resp;
 	block_data_notify_request = (block_data_notify_request_t *)params;
@@ -1394,6 +1436,8 @@ at_ble_status_t otau_block_data_request_handler(void *params)
 at_ble_status_t otau_abort_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
+	
+	OTAU_CHECK_NULL(params);
 	
 	return status;
 }
@@ -1469,6 +1513,8 @@ at_ble_status_t otau_pause_request_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	otau_pause_process_t *pause_req = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	pause_req = (otau_pause_process_t *)params;
 	
 	if (pause_req->req.cmd == AT_OTAU_PAUSE_OTAU_REQUEST)
@@ -1495,9 +1541,10 @@ at_ble_status_t otau_pause_request_handler(void *params)
 
 at_ble_status_t otau_pause_resp_handler(void *params)
 {
-	at_ble_status_t status = AT_BLE_FAILURE;
-		
+	at_ble_status_t status = AT_BLE_FAILURE;		
 	otau_pause_resp_t *pause_response = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	pause_response = (otau_pause_resp_t *)params;
 	
 	if(pause_response->resp.cmd == AT_OTAU_PAUSE_OTAU_RESP)
@@ -1521,6 +1568,7 @@ at_ble_status_t otau_resume_request_handler(void *params)
 	at_ble_status_t status = AT_BLE_FAILURE;
 	otau_resume_req_t *resume_request = NULL;
 	
+	OTAU_CHECK_NULL(params);
 	resume_request = (otau_resume_req_t *)params;
 	
 	if (resume_request->req.cmd == AT_OTAU_RESUME_OTAU_REQUEST)
@@ -1558,6 +1606,8 @@ at_ble_status_t otau_resume_resp_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	
+	OTAU_CHECK_NULL(params);
+	
 	return status;
 }
 
@@ -1591,13 +1641,13 @@ at_ble_status_t otau_update_firmware_version(void *params)
 			/* Check the section id */
 			if(meta_data.patch_section.section_id == (idx+1))
 			{
-				if((meta_data.section_image_id & 0x0F) == 0x1)
+				if((meta_data.section_image_id & SECTION1_IMAGE_IDENTIFIER_MASK) == SECTION1_BOTTOM_IMAGE_IDENTIFIER)
 				{
 					/* Calculate the address */
 					read_addr = meta_data.patch_section.start_address;
 					read_addr += (dev_flash_info.section_info[idx].size/2);
 				}
-				else if((meta_data.section_image_id & 0x0F) == 0x0)
+				else if((meta_data.section_image_id & SECTION1_IMAGE_IDENTIFIER_MASK) == SECTION1_TOP_IMAGE_IDENTIFIER)
 				{
 					read_addr = meta_data.patch_section.start_address;
 				}
@@ -1605,13 +1655,13 @@ at_ble_status_t otau_update_firmware_version(void *params)
 			}
 			else if (meta_data.app_header_section.section_id == (idx+1))
 			{
-				if((meta_data.section_image_id & 0xF0) == 0x10)
+				if((meta_data.section_image_id & SECTION2_IMAGE_IDENTIFIER_MASK) == SECTION2_BOTTOM_IMAGE_IDENTIFIER)
 				{
 					/* Calculate the address */
 					read_addr = meta_data.app_header_section.start_address;
 					read_addr += (dev_flash_info.section_info[idx].size/2);
 				}
-				else if((meta_data.section_image_id & 0xF0) == 0x00)
+				else if((meta_data.section_image_id & SECTION2_IMAGE_IDENTIFIER_MASK) == SECTION2_TOP_IMAGE_IDENTIFIER)
 				{
 					read_addr = meta_data.app_header_section.start_address;
 				}
@@ -1619,13 +1669,13 @@ at_ble_status_t otau_update_firmware_version(void *params)
 			}
 			else if (meta_data.app_section.section_id == (idx+1))
 			{
-				if((meta_data.section_image_id & 0xF00) == 0x100)
+				if((meta_data.section_image_id & SECTION3_IMAGE_IDENTIFIER_MASK) == SECTION3_BOTTOM_IMAGE_IDENTIFIER)
 				{
 					/* Calculate the address */
 					read_addr = meta_data.app_section.start_address;
 					read_addr += (dev_flash_info.section_info[idx].size/2);
 				}
-				else if((meta_data.section_image_id & 0xF00) == 0x000)
+				else if((meta_data.section_image_id & SECTION3_IMAGE_IDENTIFIER_MASK) == SECTION3_TOP_IMAGE_IDENTIFIER)
 				{
 					read_addr = meta_data.app_section.start_address;
 				}
@@ -1636,7 +1686,7 @@ at_ble_status_t otau_update_firmware_version(void *params)
 			{
 				uint32_t offset_addr = 0;
 				uint8_t page_buf[dev_flash_info.page_size];
-				image_crc_t crc = 0xFFFFFFFF;
+				image_crc_t crc = IMAGE_CRC32_POLYNOMIAL;
 				
 				/* Read Actual Section size */
 				if(ofm_read_page((idx+1), (read_addr+sizeof(firmware_version)), page_buf, sizeof(read_size)) == AT_BLE_SUCCESS)
@@ -1655,34 +1705,10 @@ at_ble_status_t otau_update_firmware_version(void *params)
 					memcpy(page_buf, (uint8_t *)&firmware_version, sizeof(firmware_version));
 					
 					if(ofm_write_page((idx+1), (read_addr+offset_addr), page_buf, dev_flash_info.page_size) == AT_BLE_SUCCESS)
-					{	
-						uint32_t crc_calc_len = 0;					
-						/* Calculate the CRC for Entire section of Image excluding the CRC at the end of the section */
-						offset_addr = 0;
-						crc_calc_len = (read_size - sizeof(image_crc_t));
-						
-						while (crc_calc_len != 0)
-						{
-							if (crc_calc_len >= (dev_flash_info.page_size))
-							{
-								if(ofm_read_page((idx+1), (read_addr+offset_addr), page_buf, dev_flash_info.page_size) == AT_BLE_SUCCESS)
-								{
-									crc = crc32_resume_compute(page_buf, dev_flash_info.page_size, crc);
-								}
-								offset_addr += dev_flash_info.page_size;
-								crc_calc_len -= dev_flash_info.page_size;
-							}
-							else
-							{
-								if(ofm_read_page((idx+1), (read_addr+offset_addr), page_buf, crc_calc_len) == AT_BLE_SUCCESS)
-								{
-									crc = crc32_resume_compute(page_buf, crc_calc_len, crc);
-								}
-								crc_calc_len = 0;
-								offset_addr += crc_calc_len;
-							}
-						}
-						
+					{					
+						/* Calculate the CRC for Entire section of Image excluding the CRC at the end of the section */						
+						crc = flash_crc32_compute(read_addr, (read_size - sizeof(image_crc_t)), (idx+1), true, crc);						
+					
 						uint8_t crca[sizeof(image_crc_t)] = {0,0,0,0 };
 						if(ofm_read_page((idx+1), (read_addr+(read_size - sizeof(image_crc_t))), crca, sizeof(image_crc_t)) == AT_BLE_SUCCESS)
 						{
@@ -1728,6 +1754,7 @@ at_ble_status_t otau_image_switch_request_handler(void *params)
 	uint32_t fw_version;
 	bool permission = false;
 	
+	OTAU_CHECK_NULL(params);
 	image_switch_notify_req = (image_switch_notify_request_t *)params;
 	
 	/* Validate the incoming frame */
@@ -1741,7 +1768,14 @@ at_ble_status_t otau_image_switch_request_handler(void *params)
 	
 	memcpy_nreverse((uint8_t *)&fw_version, (uint8_t *)&image_switch_notify_req->fw_version, sizeof(fw_version));
 	
-	otau_profile_instance->app_cb.otau_image_switch(&image_switch_notify_req->fw_version, &permission);
+	if (otau_profile_instance->app_cb.otau_image_switch != NULL)
+	{
+		otau_profile_instance->app_cb.otau_image_switch(&image_switch_notify_req->fw_version, &permission);
+	}
+	else
+	{
+		permission = true;
+	}
 	
 	if((image_switch_notify_req->req.cmd == AT_OTAU_IMAGE_SWITCH_REQUEST) && (permission))
 	{		
@@ -1765,7 +1799,7 @@ at_ble_status_t otau_image_switch_request_handler(void *params)
 				image_switch_notify_resp.total_sections = meta_data.dev_info.total_sections;
 				
 				image_switch_notify_resp.resp.cmd = AT_OTAU_IMAGE_SWITCH_RESP;
-				image_switch_notify_resp.resp.length = (sizeof(image_switch_notify_resp_t) -2);
+				image_switch_notify_resp.resp.length = (sizeof(image_switch_notify_resp_t) - sizeof(image_switch_notify_resp.resp.length));
 				if(otau_send_indication(otau_gatt_service.conn_hanle,
 				otau_gatt_service.chars[OTAU_INDICATION_CHAR_IDX].char_val_handle,
 				(uint8_t *)&image_switch_notify_resp,
@@ -1781,7 +1815,7 @@ at_ble_status_t otau_image_switch_request_handler(void *params)
 						otau_device_reset_request_t	device_reset_req;
 						
 						device_reset_req.req.cmd = AT_OTAU_RESET_DEVICE;
-						device_reset_req.req.length = (sizeof(otau_device_reset_request_t) -2);
+						device_reset_req.req.length = (sizeof(otau_device_reset_request_t) - sizeof(device_reset_req.req.length));
 						device_reset_req.fw_version.major_number = image_switch_notify_req->fw_version.major_number;
 						device_reset_req.fw_version.minor_number = image_switch_notify_req->fw_version.minor_number;
 						device_reset_req.fw_version.build_number = image_switch_notify_req->fw_version.build_number;		
@@ -1803,7 +1837,7 @@ at_ble_status_t otau_image_switch_request_handler(void *params)
 		image_switch_failure_resp_t image_switch_failure_resp;//Failure Response
 		image_switch_failure_resp.resp.cmd = AT_OTAU_FAILURE;
 		image_switch_failure_resp.error = AT_OTAU_IMAGE_SWITCH_ERROR;
-		image_switch_failure_resp.resp.length = (sizeof(image_switch_failure_resp_t) -2);
+		image_switch_failure_resp.resp.length = (sizeof(image_switch_failure_resp_t) - sizeof(image_switch_failure_resp.resp.length));
 		
 		otau_send_indication(otau_gatt_service.conn_hanle,
 		otau_gatt_service.chars[OTAU_INDICATION_CHAR_IDX].char_val_handle,
@@ -1825,6 +1859,8 @@ at_ble_status_t otau_image_end_request_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	image_end_notify_request_t *image_end_notify_req = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	image_end_notify_req = (image_end_notify_request_t *)params;
 	
 	/* Validate the incoming frame */
@@ -1893,7 +1929,7 @@ static at_ble_status_t calculate_total_image_crc(uint8_t total_sections, image_c
 	
 	if(ofm_read_meta_data((void *)&meta_data, OTAU_IMAGE_META_DATA_ID) == AT_BLE_SUCCESS)
 	{		
-		image_crc_t crc = 0xFFFFFFFF;
+		image_crc_t crc = IMAGE_CRC32_POLYNOMIAL;
 		for ( idx = 0; idx < total_sections; ++idx)
 		{
 			uint32_t read_addr = 0xFFFFFFFF;
@@ -1954,7 +1990,7 @@ static at_ble_status_t calculate_total_image_crc(uint8_t total_sections, image_c
 					{
 						if(ofm_read_page((idx+1), (read_addr+offset_addr), page_buf, dev_flash_info.page_size) == AT_BLE_SUCCESS)
 						{
-							crc = crc32_resume_compute(page_buf, dev_flash_info.page_size, crc);
+							crc = crc32_compute(page_buf, dev_flash_info.page_size,  true, crc);
 						}
 						offset_addr += dev_flash_info.page_size;
 						read_size -= dev_flash_info.page_size;
@@ -1963,7 +1999,7 @@ static at_ble_status_t calculate_total_image_crc(uint8_t total_sections, image_c
 					{
 						if(ofm_read_page((idx+1), (read_addr+offset_addr), page_buf, read_size) == AT_BLE_SUCCESS)
 						{
-							crc = crc32_resume_compute(page_buf, read_size, crc);
+							crc = crc32_compute(page_buf, read_size,  true, crc);
 						}
 						read_size = 0;
 					}				
@@ -1998,6 +2034,8 @@ at_ble_status_t otau_missed_block_resp_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	
+	OTAU_CHECK_NULL(params);
+	
 	return status;
 }
 
@@ -2013,6 +2051,8 @@ at_ble_status_t otau_page_end_notify_request_handler(void *params)
 	page_end_notify_request_t *page_end_notify_req;
 	page_end_notify_resp_t page_end_resp;
 	page_end_failure_resp_t page_end_failure_response;
+	
+	OTAU_CHECK_NULL(params);
 	page_end_notify_req = (page_end_notify_request_t *)params;
 	
 	/* Validate the incoming frame */
@@ -2029,6 +2069,52 @@ at_ble_status_t otau_page_end_notify_request_handler(void *params)
 	return status;
 }
 
+/** @brief flash_crc32_compute calculate a checksum for given flash memory address and length
+ *			if resume is true then crc32 will be calculated from previously calculated crc32 value.
+ *			This function will read from the flash memory and calculates the CRC
+ *	@param[in] read_addr Flash memory address for CRC calculation
+ *	@param[in] len length of the buffer
+ *	@param[in] section_id section id of the flash memory
+ *	@param[in] resume if true it will calculate the crc from previously calculated crc value 
+ *	@param[in] crc previously computed crc value
+ *
+ *  @return	calculated crc32 for given data and len
+ */
+image_crc_t flash_crc32_compute(uint32_t read_addr, uint32_t len, section_id_t section_id, 
+								bool resume, image_crc_t crc)
+{
+	uint8_t page_buf[dev_flash_info.page_size];
+	
+	if (!resume)
+	{
+		crc = IMAGE_CRC32_POLYNOMIAL;
+	}
+	
+	while (len != 0)
+	{
+		DBG_OTAU("Section End:Read size->0x%4X", len);
+		if (len >= (dev_flash_info.page_size))
+		{												
+			if(ofm_read_page(section_id, read_addr, page_buf, dev_flash_info.page_size) == AT_BLE_SUCCESS)
+			{
+					crc = crc32_compute(page_buf, dev_flash_info.page_size,  true, crc);
+			}
+			read_addr += dev_flash_info.page_size;
+			len -= dev_flash_info.page_size;
+		}
+		else
+		{					
+			if(ofm_read_page(section_id, read_addr, page_buf, len) == AT_BLE_SUCCESS)
+			{						  
+				crc = crc32_compute(page_buf, len,  true, crc);
+			}
+			read_addr += len;
+			len = 0;
+		}				
+	}
+	return crc;
+}
+
 /** @brief otau_section_end_request_handler section end will be sent by the OTAU manager 
  *			to OTAU target at the each end of the section. Section end will be used to verify the CRC 
  *			of the each section before move to another section download
@@ -2040,12 +2126,14 @@ at_ble_status_t otau_section_end_request_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	section_end_notify_request_t *section_end_req = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	section_end_req = (section_end_notify_request_t *)params;	
 	/* Read meta data */
 	image_meta_data_t meta_data;
 	uint32_t read_addr = 0xFFFFFFFF;
 	uint32_t read_size = 0;
-	image_crc_t crc_wrote = 0xFFFFFFFF;
+	image_crc_t crc_wrote = IMAGE_CRC32_POLYNOMIAL;
 	
 	/* Validate the incoming frame */
 	if (section_end_req->req.length != (sizeof(section_end_notify_request_t)-OTAU_FRAME_LEN_SIZE))
@@ -2059,16 +2147,16 @@ at_ble_status_t otau_section_end_request_handler(void *params)
 	if(ofm_read_meta_data((void *)&meta_data, OTAU_IMAGE_META_DATA_ID) == AT_BLE_SUCCESS)
 	{
 		/* get the address */
-		/* Check the section id */
+		/* Check the section id of the OTAU */
 		if(meta_data.patch_section.section_id == section_end_req->section_id)
 		{						
-			if((meta_data.section_image_id & 0x0F) == 0x1)
+			if((meta_data.section_image_id & SECTION1_IMAGE_IDENTIFIER_MASK) == SECTION1_BOTTOM_IMAGE_IDENTIFIER)
 			{
 				/* Calculate the address */
 				read_addr = meta_data.patch_section.start_address;
 				read_addr += (dev_flash_info.section_info[section_end_req->section_id-1].size/2);
 			}
-			else if((meta_data.section_image_id & 0x0F) == 0x0)
+			else if((meta_data.section_image_id & SECTION1_IMAGE_IDENTIFIER_MASK) == SECTION1_TOP_IMAGE_IDENTIFIER)
 			{
 				read_addr = meta_data.patch_section.start_address;
 			}
@@ -2078,13 +2166,13 @@ at_ble_status_t otau_section_end_request_handler(void *params)
 		}
 		else if (meta_data.app_header_section.section_id == section_end_req->section_id)
 		{			
-			if((meta_data.section_image_id & 0xF0) == 0x10)
+			if((meta_data.section_image_id & SECTION2_IMAGE_IDENTIFIER_MASK) == SECTION2_BOTTOM_IMAGE_IDENTIFIER)
 			{
 				/* Calculate the address */
 				read_addr = meta_data.app_header_section.start_address;
 				read_addr += (dev_flash_info.section_info[section_end_req->section_id-1].size/2);
 			}
-			else if((meta_data.section_image_id & 0xF0) == 0x00)
+			else if((meta_data.section_image_id & SECTION2_IMAGE_IDENTIFIER_MASK) == SECTION2_TOP_IMAGE_IDENTIFIER)
 			{
 				read_addr = meta_data.app_header_section.start_address;
 			}
@@ -2093,13 +2181,13 @@ at_ble_status_t otau_section_end_request_handler(void *params)
 		}
 		else if (meta_data.app_section.section_id == section_end_req->section_id)
 		{			
-			if((meta_data.section_image_id & 0xF00) == 0x100)
+			if((meta_data.section_image_id & SECTION3_IMAGE_IDENTIFIER_MASK) == SECTION3_BOTTOM_IMAGE_IDENTIFIER)
 			{
 				/* Calculate the address */
 				read_addr = meta_data.app_section.start_address;
 				read_addr += (dev_flash_info.section_info[section_end_req->section_id-1].size/2);
 			}
-			else if((meta_data.section_image_id & 0xF00) == 0x000)
+			else if((meta_data.section_image_id & SECTION3_IMAGE_IDENTIFIER_MASK) == SECTION3_TOP_IMAGE_IDENTIFIER)
 			{
 				read_addr = meta_data.app_section.start_address;
 			}
@@ -2109,38 +2197,15 @@ at_ble_status_t otau_section_end_request_handler(void *params)
 		DBG_OTAU("Section End: Read Addr->%6X, Read size->0x%2X, 0x%2X, 0x%2X", read_addr, meta_data.app_downloaded_info.size[0], meta_data.app_downloaded_info.size[1], meta_data.app_downloaded_info.size[2]);
 		if (read_size)
 		{
-				//uint32_t idx = 0;
-				image_crc_t crc = 0xFFFFFFFF;
-				uint32_t offset_addr = 0;
-				uint8_t page_buf[dev_flash_info.page_size];
-				while (read_size != 0)
-				{
-					DBG_OTAU("Section End:Read size->%6X", read_size);
-					if (read_size >= (dev_flash_info.page_size))
-					{												
-						if(ofm_read_page(section_end_req->section_id, (read_addr+offset_addr), page_buf, dev_flash_info.page_size) == AT_BLE_SUCCESS)
-						{
-								crc = crc32_resume_compute(page_buf, dev_flash_info.page_size, crc);
-						}
-						offset_addr += dev_flash_info.page_size;
-						read_size -= dev_flash_info.page_size;
-					}
-					else
-					{					
-						if(ofm_read_page(section_end_req->section_id, (read_addr+offset_addr), page_buf, read_size) == AT_BLE_SUCCESS)
-						{						  
-							crc = crc32_resume_compute(page_buf, read_size, crc);
-						}
-						read_size = 0;
-					}				
-				}
+				image_crc_t crc = IMAGE_CRC32_POLYNOMIAL;
+				crc = flash_crc32_compute(read_addr, read_size, section_end_req->section_id, false, crc);				
 			
 				if (crc == crc_wrote)
 				{
 					DBG_OTAU("Section end: CRC is correct");
 					section_end_notify_resp_t section_end_notify_res;
 					section_end_notify_res.resp.cmd = AT_OTAU_IMAGE_SECTION_END_NOTIFY_RESP;
-					section_end_notify_res.resp.length = (sizeof(section_end_notify_resp_t) -2);
+					section_end_notify_res.resp.length = (sizeof(section_end_notify_resp_t) - section_end_notify_res.resp.length);
 					section_end_notify_res.section_id = section_end_req->section_id;
 								
 					if(otau_send_indication(otau_gatt_service.conn_hanle,
@@ -2161,7 +2226,7 @@ at_ble_status_t otau_section_end_request_handler(void *params)
 					DBG_OTAU("Section end: CRC Verification failed, Original CRC->0x%8X, calculated crc->0x%8X", crc_wrote, crc);
 					section_end_failure_resp_t section_end_failure;
 					section_end_failure.resp.cmd = AT_OTAU_IMAGE_SECTION_END_ERROR;
-					section_end_failure.resp.length = (sizeof(section_end_failure_resp_t) -2);
+					section_end_failure.resp.length = (sizeof(section_end_failure_resp_t) - sizeof(section_end_failure.resp.length));
 					section_end_failure.section_id = section_end_req->section_id;
 				
 					otau_send_indication(otau_gatt_service.conn_hanle,
@@ -2224,6 +2289,8 @@ at_ble_status_t otau_get_device_info_request_handler(void *params)
 	at_ble_status_t status = AT_BLE_FAILURE;
 	get_device_info_request_t *device_info_req = NULL;
 	device_info_resp_t device_info;
+	
+	OTAU_CHECK_NULL(params);
 	device_info_req = (get_device_info_request_t *)params;
 	
 	/* Validate the incoming frame */
@@ -2257,12 +2324,14 @@ at_ble_status_t otau_get_device_info_request_handler(void *params)
  *  characteristic, new value and connection handle
  *  @return AT_BLE_SUCCESS on success and AT_BLE_FAILURE on failure
  */
-at_ble_status_t otau_char_changed_handler(void *char_params)
+at_ble_status_t otau_char_changed_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	at_ble_characteristic_changed_t *characteristic_changed = NULL;
 	uint16_t new_cccd;
-	characteristic_changed = (at_ble_characteristic_changed_t *)char_params;
+	
+	OTAU_CHECK_NULL(params);
+	characteristic_changed = (at_ble_characteristic_changed_t *)params;
 	
 	new_cccd = otau_characteritics_changed_handler(&otau_gatt_service, characteristic_changed);
 	
@@ -2412,6 +2481,8 @@ at_ble_status_t otau_connected_state_handler(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	at_ble_connected_t *connected = NULL;
+	
+	OTAU_CHECK_NULL(params);
 	connected = (at_ble_connected_t *)params;
 	ALL_UNUSED(connected);
 	return status;

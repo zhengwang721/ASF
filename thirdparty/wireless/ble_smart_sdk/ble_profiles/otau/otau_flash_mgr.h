@@ -75,21 +75,12 @@ typedef struct image_meta_data_status
  *
  *	@param[in] buf input buffer for CRC calculation
  *	@param[in] len length of the buffer
+ *	@param[in] resume compute the crc from previous results
+ *	@param[in] crc previously computed crc value
  *
- *  @return	calculated crc32 for given data
+ *  @return	calculated crc32 for given data and len
  */
-uint32_t crc32_compute(uint8_t *buf, uint32_t len);
-
-/** @brief crc32_resume_compute calculate a checksum for buffer, buffer length
- *			crc32 will be calculated from previous calculated crc32 value
- *
- *	@param[in] buf input buffer for CRC calculation
- *	@param[in] len length of the buffer
- *	@param[in] crc previously calculated crc32 value
- *
- *  @return	calculated crc32 for given data
- */
-uint32_t crc32_resume_compute(uint8_t *buf, uint32_t len, uint32_t crc);
+image_crc_t crc32_compute(uint8_t *buf, uint32_t len, bool resume, image_crc_t crc);
 
 /** @brief ofm_init OTAU flash driver initialization
  *			and gets the information about the flash memory
