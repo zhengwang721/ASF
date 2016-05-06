@@ -74,11 +74,17 @@
 	#define BLE_PAIR_ENABLE				(false)
 	#endif
 
-	#ifdef HID_MOUSE_DEVICE
-	#ifndef BLE_DEVICE_NAME
-		#define BLE_DEVICE_NAME				"ATMEL-HID"
-	#endif	/* BLE_DEVICE_NAME */
-	#endif
+#if OTA_FEATURE
+#ifndef BLE_DEVICE_NAME
+	#define BLE_DEVICE_NAME				"ATMEL-OTA"
+#endif /* BLE_DEVICE_NAME */
+#endif /* OTA_FEATURE */
+
+#ifdef HID_MOUSE_DEVICE
+#ifndef BLE_DEVICE_NAME
+	#define BLE_DEVICE_NAME				"ATMEL-HID"
+#endif	/* BLE_DEVICE_NAME */
+#endif
 #endif /* HID_DEVICE */
 
 #if defined PROXIMITY_REPORTER
