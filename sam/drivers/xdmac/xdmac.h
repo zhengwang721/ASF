@@ -308,24 +308,24 @@ static inline uint32_t xdmac_get_arbiter(Xdmac *xdmac)
  * \brief Enables XDMAC global interrupt.
  *
  * \param[out] xdmac Module hardware register base address pointer.
- * \param[in] mask A bitmask of channels to be enabled interrupt.
+ * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline void xdmac_enable_interrupt(Xdmac *xdmac, uint32_t mask)
+static inline void xdmac_enable_interrupt(Xdmac *xdmac, uint32_t channel_num)
 {
 	Assert(xdmac);
-	xdmac->XDMAC_GIE = ( XDMAC_GIE_IE0 << mask) ;
+	xdmac->XDMAC_GIE = ( XDMAC_GIE_IE0 << channel_num) ;
 }
 
 /**
  * \brief Disables XDMAC global interrupt
  *
  * \param[out] xdmac Module hardware register base address pointer.
- * \param[in] mask A bitmask of channels to be disabled interrupt.
+ * \param[in] channel_num  XDMA Channel number (range 0 to 23).
  */
-static inline void xdmac_disable_interrupt(Xdmac *xdmac, uint32_t mask)
+static inline void xdmac_disable_interrupt(Xdmac *xdmac, uint32_t channel_num)
 {
 	Assert(xdmac);
-	xdmac->XDMAC_GID = (XDMAC_GID_ID0 << mask);
+	xdmac->XDMAC_GID = (XDMAC_GID_ID0 << channel_num);
 }
 
 /**

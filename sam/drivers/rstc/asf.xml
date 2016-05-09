@@ -22,9 +22,10 @@
 		</info>
 		
 		<build type="c-source" value="rstc.c"/>
-		<build type="header-file" subtype="api" value="rstc.h"/>
 		<build type="include-path" value="."/>
-		
+		<build type="header-file" subtype="api" value="rstc.h"/>
+		<build type="include-path" value="./example1"/>
+
 		<build type="doxygen-entry-point" value="asfdoc_sam_drivers_rstc_group"/>
 		<build type="doxygen-example-path" value="example1"/>
 		<build type="header-file" value="example1/rstc_example1.h"/>
