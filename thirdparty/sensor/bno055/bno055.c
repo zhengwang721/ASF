@@ -54,7 +54,7 @@
 **************************************************************************/
 
 /**
- * \defgroup bno055__sensor__group Accelerometer BNO055
+ * \defgroup bno055_sensor_group Accelerometer BNO055
  * Sensor
  *
  * This driver provides access to the main features of the BNO055 sensor.
