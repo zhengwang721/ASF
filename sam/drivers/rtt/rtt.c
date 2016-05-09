@@ -203,7 +203,7 @@ void rtt_disable_interrupt(Rtt *p_rtt, uint32_t ul_sources)
  */
 uint32_t rtt_read_timer_value(Rtt *p_rtt)
 {
-	uin32_t rtt_val = p_rtt->RTT_VR;
+	uint32_t rtt_val = p_rtt->RTT_VR;
 
 	while (rtt_val != p_rtt->RTT_VR) {
 		rtt_val = p_rtt->RTT_VR;
