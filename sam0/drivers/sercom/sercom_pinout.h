@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM Module Pinout Definitions
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -435,7 +435,7 @@
 	#define SERCOM5_PAD2_DEFAULT      PINMUX_PA24D_SERCOM5_PAD2
 	#define SERCOM5_PAD3_DEFAULT      PINMUX_PA25D_SERCOM5_PAD3
 
-#elif (SAML21E)
+#elif (SAML21E) || (SAMR30E)
 
 	/* SERCOM0 */
 	#define SERCOM0_PAD0_DEFAULT      PINMUX_PA04D_SERCOM0_PAD0

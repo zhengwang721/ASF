@@ -4,7 +4,7 @@
  *
  * \brief SAM SERCOM USART Driver
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -281,7 +281,7 @@ extern "C" {
  * @{
  */
 #if (SAMD21) || (SAMR21) || (SAMD09) || (SAMD10) || (SAMD11) || (SAML21) || \
-	(SAML22) ||(SAMDA1) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+	(SAML22) ||(SAMDA1) || (SAMC20) || (SAMC21) || (SAMR30) || defined(__DOXYGEN__)
 /** USART sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
 /** USART oversampling. */

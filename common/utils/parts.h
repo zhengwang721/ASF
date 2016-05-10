@@ -981,6 +981,19 @@
 /** @} */
 
 /**
+ * \name SAMR30 series
+ * @{
+ */
+#define SAMR30G ( \
+		SAM_PART_IS_DEFINED(SAMR30G18A) \
+	)
+
+#define SAMR30E ( \
+		SAM_PART_IS_DEFINED(SAMR30E18A) \
+	)
+/** @} */
+
+/**
  * \name SAMB11 series
  * @{
  */
@@ -1556,6 +1569,9 @@
 /** SAMR21 Family */
 #define SAMR21 (SAMR21G || SAMR21E)
 
+/** SAMR30 Family */
+#define SAMR30 (SAMR30G || SAMR30E)
+
 /** SAMB11 Family */
 #define SAMB11 (SAMB11G)
 
@@ -1614,7 +1630,7 @@
 
 /** SAM0 product line (cortex-m0+) */
 #define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11 || SAML21 ||\
-		SAMDA1 || SAMC20 || SAMC21 || SAML22 || SAMD09)
+		SAMDA1 || SAMC20 || SAMC21 || SAML22 || SAMD09 || SAMR30)
 
 /** @} */
 
