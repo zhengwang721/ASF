@@ -10,12 +10,6 @@
 		<build type="header-file" value="../../config/samb11/conf_dualtimer.h"/>
 		<build type="header-file" value="../../config/samb11/conf_console_serial.h"/>
 
-  		<require idref="thirdparty.wireless.ble_smart_sdk.lib"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.inc"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.src"/>
-
-		<require idref="thirdparty.wireless.ble_smart_sdk.services.uart"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.services.gpio"/>
 
 		<require idref="board.samb11_xplained_pro"/>
 		

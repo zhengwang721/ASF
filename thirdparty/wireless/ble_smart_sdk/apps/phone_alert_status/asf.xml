@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="PHONE ALERT STATUS APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.phone_alert_status">
+	<module type="application" caption="PHONE ALERT STATUS APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.phone_alert_status">
 		<info type="description" value="summary">
 		Phone Alert Status  application for BLE stack
 		</info>

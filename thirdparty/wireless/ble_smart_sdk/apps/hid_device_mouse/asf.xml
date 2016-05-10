@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="BLE-HID Mouse Application" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_mouse">
+	<module type="application" caption="BLE-HID Mouse Application" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_mouse">
 		<info type="description" value="summary">
 		BLE-HID Mouse Application for BLE stack
 		</info>

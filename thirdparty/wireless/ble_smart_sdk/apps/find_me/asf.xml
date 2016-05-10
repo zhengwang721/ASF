@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="FIND ME APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.find_me">
+	<module type="application" caption="FIND ME APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.find_me">
 		<info type="description" value="summary">
 		Find Me application for BLE stack
 		</info>

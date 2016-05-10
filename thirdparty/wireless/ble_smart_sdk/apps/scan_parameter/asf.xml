@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="Scan Parameter Application" id="thirdparty.wireless.ble_smart_sdk.apps.scan_parameter">
+	<module type="application" caption="Scan Parameter Application" id="thirdparty.wireless.ble_smart_sdk.apps.scan_parameter">
 		<info type="description" value="summary">
 		Scan Parameter Application for BLE stack
 		</info>

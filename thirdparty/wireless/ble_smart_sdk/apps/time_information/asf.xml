@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="TIME INFORMATION PROFILE" id="thirdparty.wireless.ble_smart_sdk.apps.time_information">
+	<module type="application" caption="TIME INFORMATION PROFILE" id="thirdparty.wireless.ble_smart_sdk.apps.time_information">
 		<info type="description" value="summary">
 		Time Information App for BLE stack
 		</info>

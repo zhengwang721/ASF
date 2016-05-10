@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="BLE OBSERVER APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.ble_observer">
+	<module type="application" caption="BLE OBSERVER APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.ble_observer">
 		<info type="description" value="summary">
 		BLE OBSERVER application for BLE stack
 		</info>

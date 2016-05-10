@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="CUSTOM SERIAL CHAT Application" id="thirdparty.wireless.ble_smart_sdk.apps.custom_serial_chat">
+	<module type="application" caption="CUSTOM SERIAL CHAT Application" id="thirdparty.wireless.ble_smart_sdk.apps.custom_serial_chat">
 		<info type="description" value="summary">
 		Custom Serial Chat App for BLE stack
 		</info>

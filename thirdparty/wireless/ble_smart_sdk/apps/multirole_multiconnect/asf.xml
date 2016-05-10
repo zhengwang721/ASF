@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="BLE Multirole Multiconnect Application" id="thirdparty.wireless.ble_smart_sdk.apps.multirole_multiconnect">
+	<module type="application" caption="BLE Multirole Multiconnect Application" id="thirdparty.wireless.ble_smart_sdk.apps.multirole_multiconnect">
 		<info type="description" value="summary">
 		BLE Multirole Multiconnect application for BLE stack
 		</info>

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="Alert Notification Client Application" id="thirdparty.wireless.ble_smart_sdk.apps.alert_notification">
+	<module type="application" caption="Alert Notification Client Application" id="thirdparty.wireless.ble_smart_sdk.apps.alert_notification">
 		<info type="description" value="summary">
 		Alert Notification Client Application for BLE stack
 		</info>

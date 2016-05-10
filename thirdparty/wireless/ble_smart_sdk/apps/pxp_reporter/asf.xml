@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="PROXIMITY REPORTER APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.pxp_reporter">
+	<module type="application" caption="PROXIMITY REPORTER APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.pxp_reporter">
 		<info type="description" value="summary">
 		Proximity Reporter application for BLE stack
 		</info>

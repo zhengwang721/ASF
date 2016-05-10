@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="Heart Rate Sensor Application" id="thirdparty.wireless.ble_smart_sdk.apps.hr_sensor">
+	<module type="application" caption="Heart Rate Sensor Application" id="thirdparty.wireless.ble_smart_sdk.apps.hr_sensor">
 		<info type="description" value="summary">
 		Heart Rate Sensor Application for BLE stack
 		</info>

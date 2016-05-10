@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="Battery Service Application" id="thirdparty.wireless.ble_smart_sdk.apps.battery_info">
+	<module type="application" caption="Battery Service Application" id="thirdparty.wireless.ble_smart_sdk.apps.battery_info">
 		<info type="description" value="summary">
 		Battery Service Application for BLE stack
 		</info>

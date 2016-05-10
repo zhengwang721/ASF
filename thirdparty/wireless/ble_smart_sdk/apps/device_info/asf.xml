@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="Device Information Service Application" id="thirdparty.wireless.ble_smart_sdk.apps.device_info">
+	<module type="application" caption="Device Information Service Application" id="thirdparty.wireless.ble_smart_sdk.apps.device_info">
 		<info type="description" value="summary">
 		Device Information Service Application for BLE stack
 		</info>

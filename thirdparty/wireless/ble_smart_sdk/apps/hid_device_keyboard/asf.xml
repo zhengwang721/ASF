@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="BLE-HID Keyboard Application" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_keyboard">
+	<module type="application" caption="BLE-HID Keyboard Application" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_keyboard">
 		<info type="description" value="summary">
 		BLE-HID Keyboard Application for BLE stack
 		</info>

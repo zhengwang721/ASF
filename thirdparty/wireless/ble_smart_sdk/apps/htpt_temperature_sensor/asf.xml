@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="HTPT TEMPERATURE SENSOR APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.htpt_temperature_sensor">
+	<module type="application" caption="HTPT TEMPERATURE SENSOR APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.htpt_temperature_sensor">
 		<info type="description" value="summary">
 		HTPT Temperature Sensor application for BLE stack
 		</info>

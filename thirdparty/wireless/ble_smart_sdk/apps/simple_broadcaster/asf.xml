@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="SIMPLE BROADCASTER APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.simple_broadcaster">
+	<module type="application" caption="SIMPLE BROADCASTER APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.simple_broadcaster">
 		<info type="description" value="summary">
 		Simple Broadcaster application for BLE stack
 		</info>

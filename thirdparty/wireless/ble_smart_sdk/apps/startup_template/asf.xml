@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="BLE-Startup Template" id="thirdparty.wireless.ble_smart_sdk.apps.startup_template">
+	<module type="application" caption="BLE-Startup Template" id="thirdparty.wireless.ble_smart_sdk.apps.startup_template">
 		<info type="description" value="summary">
 		Startup Template for BLE stack
 		</info>

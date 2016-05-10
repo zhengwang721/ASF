@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="BLE OTAU Profile" id="thirdparty.wireless.ble_smart_sdk.apps.bas_otau">
+	<module type="application" caption="BLE OTAU Profile" id="thirdparty.wireless.ble_smart_sdk.apps.bas_otau">
 		<info type="description" value="summary">
 		BLE OTAU Profile and BAS for BLE stack
 		</info>
