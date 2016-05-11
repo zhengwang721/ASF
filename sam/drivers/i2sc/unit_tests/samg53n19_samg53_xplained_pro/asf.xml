@@ -11,7 +11,6 @@
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<require idref="sam.drivers.i2sc.unit_tests"/>
 		<require idref="board.samg53_xplained_pro"/>
-		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<device-support value="atsamg53n19"/>
