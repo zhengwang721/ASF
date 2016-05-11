@@ -1062,6 +1062,28 @@
 		<device-support value="atsaml21j18b"/>
 	</project>
 
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamr30e18a" caption="User board project template for SAML21E18A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMR30E18A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samr30"/>
+		<require idref="board.user_board.samr30"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamr30e18a"/>
+	</project>
+
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamr30g18a" caption="User board project template for SAML21G18A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMR30G18A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samr30"/>
+		<require idref="board.user_board.samr30"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamr30g18a"/>
+	</project>
+	
 	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsaml22n16a" caption="User board project template for SAML22N16A" type="template">
 		<info type="description" value="summary">
 		User board project template for SAML22N16A devices.
