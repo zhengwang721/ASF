@@ -212,10 +212,6 @@ typedef union {
 #define MCAN_TX_ELEMENT_T1_DLC_DATA48_Val       0xEul
 /**< \brief (MCAN_RXESC) 64 byte data field */
 #define MCAN_TX_ELEMENT_T1_DLC_DATA64_Val       0xFul
-#define MCAN_TX_ELEMENT_T1_BRS_Pos         20
-#define MCAN_TX_ELEMENT_T1_BRS             (0x1ul << MCAN_TX_ELEMENT_T1_BRS_Pos)
-#define MCAN_TX_ELEMENT_T1_FDF_Pos         21
-#define MCAN_TX_ELEMENT_T1_FDF             (0x1ul << MCAN_TX_ELEMENT_T1_FDF_Pos)
 #define MCAN_TX_ELEMENT_T1_EFC_Pos         23
 #define MCAN_TX_ELEMENT_T1_EFC             (0x1ul << MCAN_TX_ELEMENT_T1_EFC_Pos)
 #define MCAN_TX_ELEMENT_T1_MM_Pos          24
