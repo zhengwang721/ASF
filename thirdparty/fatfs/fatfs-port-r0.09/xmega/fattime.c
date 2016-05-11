@@ -82,7 +82,7 @@ uint32_t get_fattime(void)
 			| ((cal.month + 1) << (21 - 16))
 			| ((cal.date + 1) << (16 - 16));
 	fattime <<= 16;
-	fattime |= (cal.hour << 11) | (cal.minute << 5) | ((cal.second / 2) << 0);
+	fattime |= (cal.hour << 11) | (cal.minute << 5) | ((cal.second >> 1) << 0);
 
 	return fattime;
 }

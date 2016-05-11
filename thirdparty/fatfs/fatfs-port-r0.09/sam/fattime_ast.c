@@ -76,7 +76,7 @@ uint32_t get_fattime(void)
 			| (calendar.day << 16)
 			| (calendar.hour << 11)
 			| (calendar.min << 5)
-			| ((calendar.sec / 2) << 0);
+			| ((calendar.sec >> 1) << 0);
 
 	return time_val;
 }

@@ -78,7 +78,7 @@ uint32_t get_fattime(void)
 			| (current_time.day << 16)
 			| (current_time.hour << 11)
 			| (current_time.minute << 5)
-			| ((current_time.second / 2) << 0);
+			| ((current_time.second >> 1) << 0);
 
 	return ul_time;
 }

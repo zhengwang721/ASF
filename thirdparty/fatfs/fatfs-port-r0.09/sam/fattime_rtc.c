@@ -78,7 +78,7 @@ uint32_t get_fattime(void)
 			| (ul_day << 16)
 			| (ul_hour << 11)
 			| (ul_minute << 5)
-			| ((ul_second / 2) << 0);
+			| ((ul_second >> 1) << 0);
 
 	return ul_time;
 }
