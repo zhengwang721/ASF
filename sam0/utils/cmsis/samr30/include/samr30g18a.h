@@ -121,10 +121,7 @@ typedef enum IRQn
   TC4_IRQn                 = 21, /**< 21 SAMR30G18A Basic Timer Counter 4 (TC4) */
   ADC_IRQn                 = 22, /**< 22 SAMR30G18A Analog Digital Converter (ADC) */
   AC_IRQn                  = 23, /**< 23 SAMR30G18A Analog Comparators (AC) */
-  DAC_IRQn                 = 24, /**< 24 SAMR30G18A Digital-to-Analog Converter (DAC) */
   PTC_IRQn                 = 25, /**< 25 SAMR30G18A Peripheral Touch Controller (PTC) */
-  AES_IRQn                 = 26, /**< 26 SAMR30G18A Advanced Encryption Standard (AES) */
-  TRNG_IRQn                = 27, /**< 27 SAMR30G18A True Random Generator (TRNG) */
 
   PERIPH_COUNT_IRQn        = 29  /**< Number of peripheral IDs */
 } IRQn_Type;
@@ -412,7 +409,6 @@ void PTC_Handler                 ( void );
 #define TAL                           (0x40002C00UL) /**< \brief (TAL) APB Base Address */
 #define TC0                           (0x42002000UL) /**< \brief (TC0) APB Base Address */
 #define TC1                           (0x42002400UL) /**< \brief (TC1) APB Base Address */
-#define TC3                           (0x42002C00UL) /**< \brief (TC1) APB Base Address */
 #define TC4                           (0x43000800UL) /**< \brief (TC4) APB Base Address */
 #define TCC0                          (0x42001400UL) /**< \brief (TCC0) APB Base Address */
 #define TCC1                          (0x42001800UL) /**< \brief (TCC1) APB Base Address */
@@ -525,7 +521,6 @@ void PTC_Handler                 ( void );
 
 #define TC0               ((Tc       *)0x42002000UL) /**< \brief (TC0) APB Base Address */
 #define TC1               ((Tc       *)0x42002400UL) /**< \brief (TC1) APB Base Address */
-#define TC3               ((Tc       *)0x42002C00UL) /**< \brief (TC3) APB Base Address */
 #define TC4               ((Tc       *)0x43000800UL) /**< \brief (TC4) APB Base Address */
 #define TC_INST_NUM       3                          /**< \brief (TC) Number of instances */
 #define TC_INSTS          { TC0, TC1, TC4 }          /**< \brief (TC) Instances List */

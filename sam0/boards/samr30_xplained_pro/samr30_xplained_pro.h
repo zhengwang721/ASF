@@ -86,19 +86,19 @@ void system_board_init(void);
 
 /** \name LED0 definitions
  *  @{ */
-#define LED0_PIN                  PIN_PB09
+#define LED0_PIN                  PIN_PA18
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
 
 /** \name SW0 definitions
  *  @{ */
-#define SW0_PIN                   PIN_PA16
+#define SW0_PIN                   PIN_PA28
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
-#define SW0_EIC_PIN               PIN_PA16A_EIC_EXTINT0
-#define SW0_EIC_MUX               MUX_PA16A_EIC_EXTINT0
-#define SW0_EIC_PINMUX            PINMUX_PA16A_EIC_EXTINT0
+#define SW0_EIC_PIN               PIN_PA28A_EIC_EXTINT8
+#define SW0_EIC_MUX               MUX_PA28A_EIC_EXTINT8
+#define SW0_EIC_PINMUX            PINMUX_PA28A_EIC_EXTINT8
 #define SW0_EIC_LINE              2
 /** @} */
 

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM R30 Xplained Pro board configuration.
+ * \brief User board configuration template
  *
- * Copyright (c) 2016 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,9 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#define CONF_TC_INSTANCE TC1
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif // CONF_BOARD_H

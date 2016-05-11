@@ -63,6 +63,14 @@
 		<require idref="common.applications.user_application.sam0_system"/>
 	</module>
 
+	<module type="meta" id="common.applications.user_application.sam0_system.user_board.common_samr30" caption="User board project template">
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="include-path" value="config_samr30"/>
+		<build type="header-file" value="config_samr30/conf_board.h"/>
+		<build type="header-file" value="config_samr30/conf_clocks.h"/>
+		<require idref="common.applications.user_application.sam0_system"/>
+	</module>
+
 	<module type="meta" id="common.applications.user_application.sam0_system.user_board.common_saml22" caption="User board project template">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="config_saml22"/>
