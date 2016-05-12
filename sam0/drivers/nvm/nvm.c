@@ -1105,7 +1105,7 @@ enum status_code nvm_set_fuses(struct nvm_fusebits *fb)
 #endif
 		
 	fusebits[0] &= (~FUSES_BOD12USERLEVEL_Msk);
-	fusebits[0] |= ((FUSES_BOD12USERLEVEL_Msk & ((fb->bod33_level) << 
+	fusebits[0] |= ((FUSES_BOD12USERLEVEL_Msk & ((fb->bod12_level) << 
 						FUSES_BOD12USERLEVEL_Pos)));
 
 	fusebits[0] &= (~FUSES_BOD12_DIS_Msk);
