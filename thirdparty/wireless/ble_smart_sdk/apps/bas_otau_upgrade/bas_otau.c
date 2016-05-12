@@ -213,35 +213,43 @@ static void otau_progress_handler (uint8_t section_id, uint8_t completed)
 static void otau_image_nofification_handler (firmware_version_t *new_firmware_ver,
 						firmware_version_t *old_firmware_ver, bool *permission)
 {
-	DBG_LOG("Checking FW Version");
-	//if (new_firmware_ver->major_number > old_firmware_ver->major_number)
-	//{
-		//*permission = true;
-	//}
-	//else if((new_firmware_ver->major_number == old_firmware_ver->major_number) &&
-	//(new_firmware_ver->minor_number > old_firmware_ver->minor_number))
-	//{
-		//*permission = true;
-	//}
-	//else if ((new_firmware_ver->major_number == old_firmware_ver->major_number) &&
-	//(new_firmware_ver->minor_number == old_firmware_ver->minor_number) &&
-	//(new_firmware_ver->build_number > old_firmware_ver->build_number))
-	//{
-		//*permission = true;
-	//}
-	//else
-	//{
-		//*permission = false;
-		//DBG_LOG("[OTAU] Update canceled for Firmware version:%d.%d.%d", new_firmware_ver->major_number,
-		//new_firmware_ver->minor_number,
-		//new_firmware_ver->build_number);
-	//}
-	*permission = true;
 	if (*permission)
 	{
-		DBG_LOG("[OTAU] Upgrading to New Firmware version:%d.%d.%d", new_firmware_ver->major_number,
+		DBG_LOG("[OTAU] Force image download to Firmware version:%d.%d.%d", new_firmware_ver->major_number,
 		new_firmware_ver->minor_number,
 		new_firmware_ver->build_number);
+	}
+	else
+	{
+		if (new_firmware_ver->major_number > old_firmware_ver->major_number)
+		{
+			*permission = true;
+		}
+		else if((new_firmware_ver->major_number == old_firmware_ver->major_number) &&
+		(new_firmware_ver->minor_number > old_firmware_ver->minor_number))
+		{
+			*permission = true;
+		}
+		else if ((new_firmware_ver->major_number == old_firmware_ver->major_number) &&
+		(new_firmware_ver->minor_number == old_firmware_ver->minor_number) &&
+		(new_firmware_ver->build_number > old_firmware_ver->build_number))
+		{
+			*permission = true;
+		}
+		else
+		{
+			*permission = false;
+			DBG_LOG("[OTAU] Update canceled for Firmware version:%d.%d.%d", new_firmware_ver->major_number,
+			new_firmware_ver->minor_number,
+			new_firmware_ver->build_number);
+		}
+	
+		if (*permission)
+		{
+			DBG_LOG("[OTAU] Upgrading to New Firmware version:%d.%d.%d", new_firmware_ver->major_number,
+			new_firmware_ver->minor_number,
+			new_firmware_ver->build_number);
+		}
 	}
 }
 
@@ -334,12 +342,12 @@ int main(void)
 	/* Register callbacks for gap related events */ 
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 									BLE_GAP_EVENT_TYPE,
-									&battery_app_gap_cb);
+									battery_app_gap_cb);
 									
 	/* Register callbacks for gatt server related events */
 	ble_mgr_events_callback_handler(REGISTER_CALL_BACK,
 									BLE_GATT_SERVER_EVENT_TYPE,
-									&battery_app_gatt_server_cb);
+									battery_app_gatt_server_cb);
 	led_init();
 	
 	/* Capturing the events  */ 

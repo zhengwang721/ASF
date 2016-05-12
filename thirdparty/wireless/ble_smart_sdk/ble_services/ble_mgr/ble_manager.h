@@ -62,6 +62,12 @@
 #define BLE_DEVICE_ROLE BLE_ROLE_ALL
 #endif
 
+#if OTAU_FEATURE
+#ifndef BLE_DEVICE_NAME
+#define BLE_DEVICE_NAME				"ATML-OTAD"
+#endif /* BLE_DEVICE_NAME */
+#endif /* OTA_FEATURE */
+
 #if defined HID_DEVICE
 	#ifdef HID_KEYBOARD_DEVICE
 	#ifndef BLE_DEVICE_NAME
@@ -73,12 +79,6 @@
 	#define BLE_BOND_REQ				(false)
 	#define BLE_PAIR_ENABLE				(false)
 	#endif
-
-#if OTA_FEATURE
-#ifndef BLE_DEVICE_NAME
-	#define BLE_DEVICE_NAME				"ATMEL-OTA"
-#endif /* BLE_DEVICE_NAME */
-#endif /* OTA_FEATURE */
 
 #ifdef HID_MOUSE_DEVICE
 #ifndef BLE_DEVICE_NAME

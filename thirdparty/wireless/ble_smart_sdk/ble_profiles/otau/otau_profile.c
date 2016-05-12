@@ -947,8 +947,19 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 		 /* Check the permission from application for updating the firmware */
 		 if (otau_profile_instance->app_cb.otau_image_notification != NULL)
 		 {
-			 otau_profile_instance->app_cb.otau_image_notification(&image_notification->fw_ver,
-																 &dev_info.fw_version,
+			 firmware_version_t new_ver, old_ver;
+			 
+			 /* Send the Firmware version in aligned format */
+			 memcpy((uint8_t *)&new_ver, (uint8_t *)&image_notification->fw_ver, sizeof(firmware_version_t));
+			 memcpy((uint8_t *)&old_ver, (uint8_t *)&dev_info.fw_version, sizeof(firmware_version_t));	
+			 
+			  if(image_notification->req.cmd == AT_OTAU_FORCE_UDPATE_REQUEST)
+			  {
+				  otau_permission = true;
+			  }	 
+			 
+			 otau_profile_instance->app_cb.otau_image_notification(&new_ver,
+																 &old_ver,
 																 &otau_permission);
 		 }
 		 else
@@ -977,14 +988,15 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 			image_notify_response.hardware_revision = dev_info.hw_revision;
 			if (image_notification->req.cmd == AT_OTAU_FORCE_UDPATE_REQUEST)
 			{
-				image_notify_response.resp.cmd = AT_OTAU_IMAGE_NOTIFY_RESP;//AT_OTAU_FORCE_UDPATE_RESP;
+				image_notify_response.resp.cmd = AT_OTAU_FORCE_UDPATE_RESP;
 			}
 			else
 			{
 				image_notify_response.resp.cmd = AT_OTAU_IMAGE_NOTIFY_RESP;
 			}
 			
-			image_notify_response.resp.length = (sizeof(image_notification_resp_t) -2);
+			image_notify_response.resp.length = (sizeof(image_notification_resp_t) - sizeof(image_notify_response.resp.length));
+			
 			image_notify_response.image_option = OTAU_START_DOWNLOAD;						
 				
 			if(ofm_read_meta_data(&meta_data, OTAU_IMAGE_META_DATA_ID) == AT_BLE_SUCCESS)
@@ -1262,6 +1274,14 @@ at_ble_status_t otau_page_data_request_handler(void *params)
 	uint32_t write_addr = 0xFFFFFFFF;
 	uint32_t data_len = 0;
 	volatile bool write_into_flash = false;
+	uint32_t index;
+	uint8_t *param_buf = (uint8_t *)params;
+	
+	DBG_OTAU("OTAU Page Data:");
+	for (index = 0; index < page_data_notify_req->req.length+sizeof(page_data_notify_req->req.length); index++)
+	{
+		DBG_OTAU_CONT("0x%2X, ", param_buf[index]);
+	}
 	
 	status = otau_state_machine_controller(OTAU_PAGE_DOWNLOADING_STATE);
 	OTAU_CHECK_ERROR(status);
