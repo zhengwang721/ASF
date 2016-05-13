@@ -119,9 +119,9 @@ void system_board_init(void);
 #define LED_0_PWM4CTRL_MODULE     TCC0
 #define LED_0_PWM4CTRL_CHANNEL    0
 #define LED_0_PWM4CTRL_OUTPUT     0
-#define LED_0_PWM4CTRL_PIN        PIN_PB10F_TCC0_WO4
-#define LED_0_PWM4CTRL_MUX        MUX_PB10F_TCC0_WO4
-#define LED_0_PWM4CTRL_PINMUX     PINMUX_PB10F_TCC0_WO4
+#define LED_0_PWM4CTRL_PIN        PIN_PA22F_TCC0_WO4
+#define LED_0_PWM4CTRL_MUX        MUX_PA22F_TCC0_WO4
+#define LED_0_PWM4CTRL_PINMUX     PINMUX_PA22F_TCC0_WO4
 /** @} */
 
 /** Number of on-board LEDs */
@@ -222,10 +222,10 @@ void system_board_init(void);
  *  @{
  */
 #define EXT1_IRQ_MODULE           EIC
-#define EXT1_IRQ_INPUT            4
-#define EXT1_IRQ_PIN              PIN_PB04A_EIC_EXTINT4
-#define EXT1_IRQ_MUX              MUX_PB04A_EIC_EXTINT4
-#define EXT1_IRQ_PINMUX           PINMUX_PB04A_EIC_EXTINT4
+#define EXT1_IRQ_INPUT            20
+#define EXT1_IRQ_PIN              PIN_PA20A_EIC_EXTINT4
+#define EXT1_IRQ_MUX              MUX_PA20A_EIC_EXTINT4
+#define EXT1_IRQ_PINMUX           PINMUX_PA20A_EIC_EXTINT4
 /** @} */
 
 /** \name Extension header #1 I2C definitions
@@ -325,13 +325,13 @@ void system_board_init(void);
  */
 #define EXT2_PWM_MODULE           TC0
 #define EXT2_PWM_0_CHANNEL        0
-#define EXT2_PWM_0_PIN            PIN_PB12E_TC0_WO0
-#define EXT2_PWM_0_MUX            MUX_PB12E_TC0_WO0
-#define EXT2_PWM_0_PINMUX         PINMUX_PB12E_TC0_WO0
+#define EXT2_PWM_0_PIN            PIN_PA22E_TC0_WO0
+#define EXT2_PWM_0_MUX            MUX_PA22E_TC0_WO0
+#define EXT2_PWM_0_PINMUX         PINMUX_PA22E_TC0_WO0
 #define EXT2_PWM_1_CHANNEL        1
-#define EXT2_PWM_1_PIN            PIN_PB13E_TC0_WO1
-#define EXT2_PWM_1_MUX            MUX_PB13E_TC0_WO1
-#define EXT2_PWM_1_PINMUX         PINMUX_PB13E_TC0_WO1
+#define EXT2_PWM_1_PIN            PIN_PA23E_TC0_WO1
+#define EXT2_PWM_1_MUX            MUX_PA23E_TC0_WO1
+#define EXT2_PWM_1_PINMUX         PINMUX_PA23E_TC0_WO1
 /** @} */
 
 /** \name Extension header #2 IRQ/External interrupt definitions

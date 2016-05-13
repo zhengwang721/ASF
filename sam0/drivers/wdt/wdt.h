@@ -287,7 +287,7 @@ static inline bool wdt_is_syncing(void)
 {
 	Wdt *const WDT_module = WDT;
 
-#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || (SAMR30)
 	if (WDT_module->SYNCBUSY.reg) {
 #else
 	if (WDT_module->STATUS.reg & WDT_STATUS_SYNCBUSY) {
@@ -347,7 +347,7 @@ static inline bool wdt_is_locked(void)
 {
 	Wdt *const WDT_module = WDT;
 
-#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || (SAMR30)
 	return (WDT_module->CTRLA.reg & WDT_CTRLA_ALWAYSON);
 #else
 	return (WDT_module->CTRL.reg & WDT_CTRL_ALWAYSON);

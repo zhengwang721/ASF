@@ -373,7 +373,7 @@ extern "C" {
  * Define port features set according to different device family.
  * @{
 */
-#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || (SAMR30) || defined(__DOXYGEN__)
 /** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
 /** RTC prescaler is off. */

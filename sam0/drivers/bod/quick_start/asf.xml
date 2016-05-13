@@ -25,6 +25,7 @@
 			<require idref="sam0.drivers.bod"/>
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>
+			<device-support value="samr30"/>
 		</module>
 		<module type="application" id="sam0.drivers.bod.quick_start#sam_c" caption="Quick Start for the SAM BOD Driver (Polled)">
 			<info type="description" value="summary">

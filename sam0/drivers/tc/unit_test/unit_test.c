@@ -3,7 +3,7 @@
  *
  * \brief SAM TC Unit test
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -394,7 +394,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 
 	/* Calculate the theoretical PWM frequency & duty */
 	uint32_t frequency_output, duty_output;
-#if (SAML21) || (SAML22)
+#if (SAML21) || (SAML22) || (SAMR30)
 	frequency_output = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC16M)/ (0x03FF+1);
 	/* This value is depend on the WaveGeneration Mode */
 	duty_output = (uint32_t)(tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]) * 100 \
@@ -438,7 +438,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	extint_chan_config.gpio_pin            = CONF_EIC_PIN;
 	extint_chan_config.gpio_pin_mux        = CONF_EIC_MUX;
 	extint_chan_config.gpio_pin_pull       = EXTINT_PULL_UP;
-#if (!SAML21) && (!SAML22) && (!SAMC21)
+#if (!SAML21) && (!SAML22) && (!SAMC21) && (!SAMR30)
 	extint_chan_config.wake_if_sleeping    = false;
 #endif
 	extint_chan_config.filter_input_signal = false;
@@ -482,7 +482,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	}
 
 	if(period_after_capture != 0) {
-#if (SAML21) || (SAML22)
+#if (SAML21) || (SAML22) || (SAMR30)
 		capture_frequency = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC16M)/ period_after_capture;
 #elif SAMC21
 		capture_frequency = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC48M)/ period_after_capture;

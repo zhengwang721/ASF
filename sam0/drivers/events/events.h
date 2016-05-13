@@ -3,7 +3,7 @@
  *
  * \brief SAM Event System Driver
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -362,7 +362,7 @@ struct events_config {
 	uint8_t                    generator;
 	/** Clock source for the event channel */
 	uint8_t                    clock_source;
-#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || (SAMR30)
 	/** Run in standby mode for the channel */
 	bool                       run_in_standby;
 	/** Run On Demand */
