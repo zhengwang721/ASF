@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Analog-to-Digital Converter Driver
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -240,10 +240,12 @@ static inline void _adc_configure_ain_pin(uint8_t index, uint32_t pin)
 #define PIN_INVALID_ADC_AIN    0xFFFFUL
 
 	/* Pinmapping table for AINxx -> GPIO pin number */
-#if (SAML21) || (SAML22)
+#if (SAML21) || (SAML22) || (SAMR30)
 	const uint32_t pinmapping[] = {
-#   if (SAML21E)
+#if (SAML21E) || (SAMR30E)
+#if !(SAMR30)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
+#endif
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
 			PIN_PA06B_ADC_AIN6,  PIN_PA07B_ADC_AIN7,
@@ -255,8 +257,10 @@ static inline void _adc_configure_ain_pin(uint8_t index, uint32_t pin)
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
-#   elif (SAML21G)
+#elif (SAML21G) || (SAMR30G)
+#if !(SAMR30)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
+#endif
 			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
 			PIN_PA06B_ADC_AIN6,  PIN_PA07B_ADC_AIN7,
@@ -268,7 +272,7 @@ static inline void _adc_configure_ain_pin(uint8_t index, uint32_t pin)
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
-#   elif (SAML21J)
+#elif (SAML21J)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -758,7 +762,7 @@ enum status_code adc_init(
 #if (SAML22)
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_ADC);
-#elif (SAML21)
+#elif (SAML21) || (SAMR30)
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_ADC);
 #else

@@ -388,7 +388,7 @@ extern "C" {
  * @{
  */
 #  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || (SAMDA1) || \
-	  (SAML22) || (SAMC20) || (SAMC21) || (SAMD09) || defined(__DOXYGEN__)
+	  (SAML22) || (SAMC20) || (SAMC21) || (SAMD09) || (SAMR30) || defined(__DOXYGEN__)
 /** SPI slave select low detection. */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 /** Slave select can be controlled by hardware. */

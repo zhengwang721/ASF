@@ -101,6 +101,7 @@
 			<build type="header-file" value="adc_sam_l_c/adc_feature.h"/>
 
 			<device-support value="saml21"/>
+			<device-support value="samr30"/>			
 			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
@@ -131,6 +132,7 @@
 			<build type="header-file" value="adc_sam_l_c/adc_feature.h"/>
 
 			<device-support value="saml21"/>
+			<device-support value="samr30"/>			
 			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
@@ -244,6 +246,7 @@
 			<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
 
 			<device-support value="saml21"/>
+			<device-support value="samr30"/>
 			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>

@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC - Timer Counter for Control Applications Driver
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -73,6 +73,7 @@
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
+ *  - Atmel | SMART SAM R30
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -618,7 +619,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_TCC_GENERATE_DMA_TRIGGER</td>
- *    <td>SAM L21/L22</td>
+ *    <td>SAM L21/L22/R30</td>
  *  </tr>
  * </table>
  *
@@ -632,10 +633,10 @@
  * used.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
- * For SAM D21/R21/L21/L22/DA1/C21, the TCC features are:
+ * For SAM D21/R21/L21/L22/DA1/C21/R30, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC module features for SAM D21/R21/L21/L22/DA1/C21</caption>
+ *   <caption>TCC module features for SAM D21/R21/L21/L22/DA1/C21/R30</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture channels</th>
@@ -771,7 +772,7 @@
  * Define port features set according to different device family.
  * @{
 */
-#if (SAML21) || (SAML22) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || (SAMR30) || defined(__DOXYGEN__)
 /** Generate DMA triggers */
 #  define FEATURE_TCC_GENERATE_DMA_TRIGGER
 #endif
@@ -2032,12 +2033,12 @@ static inline void tcc_dma_trigger_command(
 			/* Wait for sync */
 	}
 	
-#if !(SAML21 || SAML22)
+#if !(SAML21 || SAML22 || SAMR30)
 	/* Write command to execute */
 	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD_DMATRG;
 #endif
 
-#if (SAML21XXXB) || (SAML22)
+#if (SAML21XXXB) || (SAML22) || (SAMR30)
 	/* Write command to execute */
 	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD_DMAOS;
 #endif
