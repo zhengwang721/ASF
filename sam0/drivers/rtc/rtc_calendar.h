@@ -70,6 +70,7 @@
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
+ *  - Atmel | SMART SAM R30
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_calendar_prerequisites
@@ -111,19 +112,19 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PERIODIC_INT</td>
- *    <td>SAM L21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PRESCALER_OFF</td>
- *    <td>SAM L21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAM L21/L22/C20/C21</td>
+ *    <td>SAM L21/L22/C20/C21/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
- *    <td>SAM L21/L22</td>
+ *    <td>SAM L21/L22/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
@@ -298,7 +299,7 @@
  * \note For the calendar to operate correctly, an asynchronous clock of 1Hz
  *       should be used.
  *
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_saml SAM L21/C20/C21 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_calendar_clock_saml SAM L21/C20/C21/R30 Clock Setup
  * The RTC clock can be selected from OSC32K, XOSC32K, or OSCULP32K. A 32KHz
  * or 1KHz oscillator clock frequency is required. This clock must be
  * configured and enabled in the 32KHz oscillator controller before using the RTC.
@@ -763,7 +764,7 @@ struct rtc_calendar_config {
 	bool clock_24h;
 	/** Initial year for counter value 0 */
 	uint16_t year_init_value;
-#if (SAML21XXXB) || (SAML22) || (SAMC20) || (SAMC21)
+#if (SAML21XXXB) || (SAML22) || (SAMC20) || (SAMC21) || (SAMR30)
 	/** Enable count read synchronization. The CLOCK value requires
 	 * synchronization when reading. Disabling the synchronization
 	 * will prevent the CLOCK value from displaying the current value. */
@@ -837,7 +838,7 @@ static inline void rtc_calendar_get_config_defaults(
 #endif
 	config->clock_24h           = false;
 	config->year_init_value     = 2000;
-#if (SAML21XXXB) || (SAML22) || (SAMC20) || (SAMC21) 
+#if (SAML21XXXB) || (SAML22) || (SAMC20) || (SAMC21) || (SAMR30)
 	config->enable_read_sync    = true;
 #endif
 	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
@@ -1380,7 +1381,7 @@ void rtc_tamper_get_stamp (struct rtc_module *const module,
  *	<tr>
  *		<td>42126E</td>
  *		<td>12/2015</td>
- *		<td>Added support for SAM L21/L22, SAM C21, SAM D09, and SAM DA1</td>
+ *		<td>Added support for SAM L21/L22, SAMR30, SAM C21, SAM D09, and SAM DA1</td>
  *	</tr>
  *	<tr>
  *		<td>42126D</td>

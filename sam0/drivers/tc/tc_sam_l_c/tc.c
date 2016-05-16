@@ -142,7 +142,14 @@ enum status_code tc_init(
 	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC0,
 									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC1,
 									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC2,
-									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC3};
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC3
+#elif (SAMR30)
+	/* Array of GLCK ID for different TC instances */
+	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC2_GCLK_ID};
+	/* Array of MCLK APB mask bit position for different TC instances */
+	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC0,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC1,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC2};
 #else
 	/* Array of GLCK ID for different TC instances */
 	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC4_GCLK_ID};
