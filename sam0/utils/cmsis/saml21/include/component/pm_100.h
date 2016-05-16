@@ -3,7 +3,7 @@
  *
  * \brief Component description for PM
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -126,6 +126,8 @@ typedef union {
 #define PM_PLCFG_PLSEL_PL0          (PM_PLCFG_PLSEL_PL0_Val        << PM_PLCFG_PLSEL_Pos)
 #define PM_PLCFG_PLSEL_PL1          (PM_PLCFG_PLSEL_PL1_Val        << PM_PLCFG_PLSEL_Pos)
 #define PM_PLCFG_PLSEL_PL2          (PM_PLCFG_PLSEL_PL2_Val        << PM_PLCFG_PLSEL_Pos)
+#define PM_PLCFG_PLDIS_Pos          7            /**< \brief (PM_PLCFG) Performance Level Disable */
+#define PM_PLCFG_PLDIS              (0x1ul << PM_PLCFG_PLDIS_Pos)
 #define PM_PLCFG_MASK               0x03ul       /**< \brief (PM_PLCFG) MASK Register */
 
 /* -------- PM_INTENCLR : (PM Offset: 0x04) (R/W  8) Interrupt Enable Clear -------- */

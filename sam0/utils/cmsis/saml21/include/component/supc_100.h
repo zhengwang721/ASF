@@ -3,7 +3,7 @@
  *
  * \brief Component description for SUPC
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -414,7 +414,8 @@ typedef union {
     uint32_t :1;               /*!< bit:      0  Reserved                           */
     uint32_t ENABLE:1;         /*!< bit:      1  Enable                             */
     uint32_t SEL:2;            /*!< bit:  2.. 3  Voltage Regulator Selection in active mode */
-    uint32_t :2;               /*!< bit:  4.. 5  Reserved                           */
+    uint32_t :1;               /*!< bit:      4  Reserved                           */
+    uint32_t STDBYPL0:1;       /*!< bit:      5  Standby in PL0                     */
     uint32_t RUNSTDBY:1;       /*!< bit:      6  Run during Standby                 */
     uint32_t :9;               /*!< bit:  7..15  Reserved                           */
     uint32_t VSVSTEP:4;        /*!< bit: 16..19  Voltage Scaling Voltage Step       */
