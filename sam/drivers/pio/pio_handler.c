@@ -149,28 +149,22 @@ uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
 		return 1;
 
     /* Check interrupt for this pin, if already defined, redefine it. */
-	for (i = 0; i < gs_ul_nb_sources; i++) {
+	for (i = 0; i <= gs_ul_nb_sources; i++) {
 		pSource = &(gs_interrupt_sources[i]);
-        
 		if (pSource->id == ul_id) {
-			pSource->mask = ul_mask;
-			pSource->attr = ul_attr;
-			pSource->handler = p_handler;
-
-            /* Configure interrupt mode */
-			pio_configure_interrupt(p_pio, ul_mask, ul_attr);
-            
-			return 0;
+			break;
 		}
 	}
 
 	/* Define new source */
-	pSource = &(gs_interrupt_sources[gs_ul_nb_sources]);
 	pSource->id = ul_id;
 	pSource->mask = ul_mask;
 	pSource->attr = ul_attr;
 	pSource->handler = p_handler;
-	gs_ul_nb_sources++;
+	if (i == gs_ul_nb_sources + 1)
+	{
+		gs_ul_nb_sources++;
+	}
 
 	/* Configure interrupt mode */
 	pio_configure_interrupt(p_pio, ul_mask, ul_attr);
