@@ -70,6 +70,7 @@
  *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM DA1
  *  - Atmel | SMART SAM C20/C21
+ *  - Atmel | SMART SAM R30
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_spi_prerequisites
@@ -107,19 +108,19 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SLAVE_SELECT_LOW_DETECT</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_HARDWARE_SLAVE_SELECT</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_ERROR_INTERRUPT</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SYNC_SCHEME_VERSION_2</td>
- *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21</td>
+ *    <td>SAM D21/R21/D10/D11/L21/L22/DA1/C20/C21/R30</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -1773,7 +1774,7 @@ enum status_code spi_select_slave(
   *	<tr>
   *		<td>42115E</td>
   *		<td>12/2015</td>
-  *		<td>Add SAM L21/L22, SAM DA1, SAM D09, and SAM C21 support</td>
+  *		<td>Add SAM L21/L22, SAM DA1, SAM D09, SAMR30 and SAM C21 support</td>
   *	</tr>
   *	<tr>
   *		<td>42115D</td>
