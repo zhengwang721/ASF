@@ -158,7 +158,7 @@ void system_board_init(void);
 #define EXT1_PIN_7                PIN_PA12
 #define EXT1_PIN_8                PIN_PA13
 #define EXT1_PIN_9                PIN_PB04
-#define EXT1_PIN_10               PIN_PA02
+#define EXT1_PIN_10               PIN_PA23
 #define EXT1_PIN_11               PIN_PA08
 #define EXT1_PIN_12               PIN_PA09
 #define EXT1_PIN_13               PIN_PB09
