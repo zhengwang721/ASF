@@ -408,7 +408,7 @@ static inline void system_voltage_regulator_set_config(
 #if (SAML21XXXB)
 	SUPC->VREG.bit.LPEFF    = config->low_power_efficiency;
 #endif
-#if SAML22 || SAML21
+#if SAML22 || SAML21XXXB
 	SUPC->VREG.bit.STDBYPL0 = config->run_in_standby_pl0;
 #endif
 	while(!(SUPC->STATUS.reg & SUPC_STATUS_VREGRDY)) {
@@ -809,7 +809,7 @@ static inline enum status_code system_switch_performance_level(
 		return STATUS_OK;
 	}
 
-#if SAML22 || SAML21
+#if SAML22 || SAML21XXXB
 	if (PM->PLCFG.reg & PM_PLCFG_PLDIS) {
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -828,7 +828,7 @@ static inline enum status_code system_switch_performance_level(
 	return STATUS_OK;
 }
 
-#if SAML22 || SAML21
+#if SAML22 || SAML21XXXB
 /**
  * \brief Enable performance level switch.
  *
