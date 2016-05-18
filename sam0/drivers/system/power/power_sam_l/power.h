@@ -321,7 +321,7 @@ struct system_voltage_regulator_config {
 	enum system_voltage_regulator_sel  regulator_sel;
 	/** Low power efficiency */
 	enum system_voltage_regulator_low_power_efficiency low_power_efficiency;
-#if SAML22 || SAML21
+#if SAML22 || SAML21XXXB
 	/** Run in standby in performance level 0. */
 	bool run_in_standby_pl0;
 #endif
@@ -384,7 +384,7 @@ static inline void system_voltage_regulator_get_config_defaults(
 	config->run_in_standby       = false;
 	config->regulator_sel        = SYSTEM_VOLTAGE_REGULATOR_LDO;
 	config->low_power_efficiency = SYSTEM_VOLTAGE_REGULATOR_LOW_POWER_EFFICIENCY_DEFAULT;
-#if SAML22 || SAML21
+#if SAML22 || SAML21XXXB
 	config->run_in_standby_pl0   = false;
 #endif
 }
