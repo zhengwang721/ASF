@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Timer Driver Configuration Header
+ * \brief SAM R30 External Interrupt Driver Configuration Header
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -40,18 +40,39 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TIMER_H_INCLUDED
-#define CONF_TIMER_H_INCLUDED
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#if SAMR30
-#define CONF_TC_MODULE TC1
-#else
-#define CONF_TC_MODULE TC3
-#endif
-#define TC_COUNT_1SEC  (48000000ul/1024ul)
-struct tc_module tc_instance;
 
-#define CONF_BUS_TC_MODULE TC0
-struct tc_module bus_tc_instance;
+#include <asf.h>
+
+#  define EXTINT_CLOCK_SELECTION   EXTINT_CLK_GCLK
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+
+void button_cb(void);
+
+/* Button Initialize */
+static inline void button_init(void)
+{
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+
+	eint_chan_conf.gpio_pin           = SW0_EIC_PIN;
+	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_UP;
+	eint_chan_conf.gpio_pin_mux       = SW0_EIC_PINMUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_FALLING;
+	eint_chan_conf.filter_input_signal = true;
+	extint_chan_set_config(SW0_EIC_LINE, &eint_chan_conf);
+	
+	extint_register_callback(button_cb,
+							SW0_EIC_LINE,
+							EXTINT_CALLBACK_TYPE_DETECT);
+	
+	extint_chan_enable_callback(SW0_EIC_LINE,
+							EXTINT_CALLBACK_TYPE_DETECT);
+}
 
 #endif

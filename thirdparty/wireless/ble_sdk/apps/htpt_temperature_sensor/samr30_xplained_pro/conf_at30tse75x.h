@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Timer Driver Configuration Header
+ * \brief AT30TSE75X Temperature sensor driver configuration file.
  *
- * Copyright (c) 2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,18 +40,16 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TIMER_H_INCLUDED
-#define CONF_TIMER_H_INCLUDED
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+#ifndef CONF_AT30TSE75X_H_INCLUDED
+#define CONF_AT30TSE75X_H_INCLUDED
 
-#if SAMR30
-#define CONF_TC_MODULE TC1
-#else
-#define CONF_TC_MODULE TC3
-#endif
-#define TC_COUNT_1SEC  (48000000ul/1024ul)
-struct tc_module tc_instance;
+#include <board.h>
 
-#define CONF_BUS_TC_MODULE TC0
-struct tc_module bus_tc_instance;
+#define AT30TSE_SERCOM      EXT2_I2C_MODULE
+#define AT30TSE_PINMUX_PAD0 EXT2_I2C_SERCOM_PINMUX_PAD0
+#define AT30TSE_PINMUX_PAD1 EXT2_I2C_SERCOM_PINMUX_PAD1
 
-#endif
+#endif /* CONF_AT30TSE75X_H_INCLUDED */

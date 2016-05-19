@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file conf_sio2host.h
  *
- * \brief Timer Driver Configuration Header
+ * \brief Serial Input & Output configuration
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -38,20 +38,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_TIMER_H_INCLUDED
-#define CONF_TIMER_H_INCLUDED
 
-#if SAMR30
-#define CONF_TC_MODULE TC1
-#else
-#define CONF_TC_MODULE TC3
-#endif
-#define TC_COUNT_1SEC  (48000000ul/1024ul)
-struct tc_module tc_instance;
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
+/** Since MCPS.DATA.indication requires max no of bytes of around 150 bytes than
+ *all other primitives,the Maximum Buffer size is kept as 156 bytes */
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 
-#define CONF_BUS_TC_MODULE TC0
-struct tc_module bus_tc_instance;
+#define USART_HOST                 EDBG_CDC_MODULE
+#define HOST_SERCOM_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define HOST_SERCOM_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define HOST_SERCOM_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define HOST_SERCOM_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define HOST_SERCOM_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        115200
 
-#endif
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT); \
+	USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
+#endif /* CONF_SIO2HOST_H_INCLUDED */

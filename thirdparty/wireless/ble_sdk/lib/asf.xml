@@ -8,6 +8,7 @@
             <build type="library" subtype="user" value="cm0p/gcc/libble_sdk.a" toolchain="armgcc"/>
             <device-support value="samd21"/>
             <device-support value="saml21"/>
+			<device-support value="samr30"/>
         </module>
 			<module type="meta" id="thirdparty.wireless.ble_sdk.lib#2" caption="BLE SDK library for CM4F">
             <info type="description" value="summary">

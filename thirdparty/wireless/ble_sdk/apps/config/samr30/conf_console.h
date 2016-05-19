@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Timer Driver Configuration Header
+ * \brief SAM R30 Console configuration.
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -40,18 +40,17 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TIMER_H_INCLUDED
-#define CONF_TIMER_H_INCLUDED
 
-#if SAMR30
-#define CONF_TC_MODULE TC1
-#else
-#define CONF_TC_MODULE TC3
-#endif
-#define TC_COUNT_1SEC  (48000000ul/1024ul)
-struct tc_module tc_instance;
+#ifndef CONF_CONSOLE_H_INCLUDED
+#define CONF_CONSOLE_H_INCLUDED
 
-#define CONF_BUS_TC_MODULE TC0
-struct tc_module bus_tc_instance;
+#define CONF_STDIO_USART_MODULE  EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING   EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0   EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1   EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2   EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE      115200
 
-#endif
+
+#endif /* CONF_CONSOLE_H_INCLUDED */

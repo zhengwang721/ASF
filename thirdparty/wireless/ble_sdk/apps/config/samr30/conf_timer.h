@@ -43,11 +43,7 @@
 #ifndef CONF_TIMER_H_INCLUDED
 #define CONF_TIMER_H_INCLUDED
 
-#if SAMR30
 #define CONF_TC_MODULE TC1
-#else
-#define CONF_TC_MODULE TC3
-#endif
 #define TC_COUNT_1SEC  (48000000ul/1024ul)
 struct tc_module tc_instance;
 

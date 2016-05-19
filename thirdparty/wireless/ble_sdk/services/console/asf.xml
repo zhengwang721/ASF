@@ -18,6 +18,7 @@
 
 				<device-support value="samd21"/>
 				<device-support value="saml21"/>
+				<device-support value="samr30"/>
 			</module>
    <module type="meta" id="thirdparty.wireless.ble_sdk.services.console#1"     caption="console">
 				<info type="description" value="summary">

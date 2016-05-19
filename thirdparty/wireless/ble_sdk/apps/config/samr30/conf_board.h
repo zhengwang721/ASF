@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Timer Driver Configuration Header
+ * \brief SAM R30 Xplained Pro board configuration.
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -40,18 +40,12 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_TIMER_H_INCLUDED
-#define CONF_TIMER_H_INCLUDED
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
-#if SAMR30
-#define CONF_TC_MODULE TC1
-#else
-#define CONF_TC_MODULE TC3
-#endif
-#define TC_COUNT_1SEC  (48000000ul/1024ul)
-struct tc_module tc_instance;
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BUS_TC_MODULE TC0
-struct tc_module bus_tc_instance;
 
-#endif
+#endif /* CONF_BOARD_H_INCLUDED */
