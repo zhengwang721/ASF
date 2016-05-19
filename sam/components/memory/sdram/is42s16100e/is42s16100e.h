@@ -3,7 +3,7 @@
  *
  * \brief IS42S16100E configuration.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,7 +59,7 @@ extern "C" {
 /// @endcond
 
 /**
- * \defgroup group_sam_components_memory_sdram_mt48lc16m16a2 SDRAM IS42S16100E
+ * \defgroup group_sam_components_memory_sdram_is42s16100e SDRAM IS42S16100E
  *
  * This is a configuration for the IS42S16100E SDRAM from Micron.
  * This configuration will be used by the SDRAM driver to set up the
