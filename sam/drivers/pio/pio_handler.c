@@ -161,8 +161,7 @@ uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
 	pSource->mask = ul_mask;
 	pSource->attr = ul_attr;
 	pSource->handler = p_handler;
-	if (i == gs_ul_nb_sources + 1)
-	{
+	if (i == gs_ul_nb_sources + 1) {
 		gs_ul_nb_sources++;
 	}
 
