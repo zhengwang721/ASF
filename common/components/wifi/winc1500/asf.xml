@@ -65,7 +65,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/sam4s"/>
 			<build type="doxygen-entry-point" value="winc1500_group"/>
-			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
+		<!-- 		<build type="doxygen-quick-start" value="winc1500_quickstart"/>		 -->
 			<device-support value="sam4s"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>
@@ -134,7 +134,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/samg53"/>
 			<build type="doxygen-entry-point" value="winc1500_group"/>
-			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
+		<!-- 		<build type="doxygen-quick-start" value="winc1500_quickstart"/>		 -->
 			<device-support value="samg53"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>
@@ -203,7 +203,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/samg55"/>
 			<build type="doxygen-entry-point" value="winc1500_group"/>
-			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
+		<!-- 		<build type="doxygen-quick-start" value="winc1500_quickstart"/>		 -->
 			<device-support value="samg55"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>
@@ -272,7 +272,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/samd21"/>
 			<build type="doxygen-entry-point" value="winc1500_group"/>
-			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
+		<!-- 		<build type="doxygen-quick-start" value="winc1500_quickstart"/>		 -->
 			<device-support value="samd21"/>
 			<require idref="sam0.drivers.port"/>
 			<require idref="sam0.drivers.sercom.spi"/>
@@ -340,7 +340,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/saml21"/>
 			<build type="doxygen-entry-point" value="winc1500_group"/>
-			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
+		<!-- 		<build type="doxygen-quick-start" value="winc1500_quickstart"/>		 -->
 			<device-support value="saml21"/>
 			<require idref="sam0.drivers.port"/>
 			<require idref="sam0.drivers.sercom.spi"/>
@@ -408,7 +408,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/same70"/>
 			<build type="doxygen-entry-point" value="winc1500_group"/>
-			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
+		<!-- 		<build type="doxygen-quick-start" value="winc1500_quickstart"/>		 -->
 			<device-support value="same70"/>
 			<require idref="sam.drivers.pmc"/>
 			<require idref="sam.drivers.pio"/>
@@ -477,7 +477,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/samr21"/>
 			<build type="doxygen-entry-point" value="winc1500_group"/>
-			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
+		<!-- 		<build type="doxygen-quick-start" value="winc1500_quickstart"/>		 -->
 			<device-support value="samr21"/>
 			<require idref="sam0.drivers.port"/>
 			<require idref="sam0.drivers.sercom.spi"/>
@@ -545,7 +545,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/saml22"/>
 			<build type="doxygen-entry-point" value="winc1500_group"/>
-			<build type="doxygen-quick-start" value="winc1500_quickstart"/>
+		<!-- 		<build type="doxygen-quick-start" value="winc1500_quickstart"/>		 -->
 			<device-support value="saml22"/>
 			<require idref="sam0.drivers.port"/>
 			<require idref="sam0.drivers.sercom.spi"/>
