@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM L21 Clock configuration
+ * \brief SAM R30 Clock configuration
  *
- * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

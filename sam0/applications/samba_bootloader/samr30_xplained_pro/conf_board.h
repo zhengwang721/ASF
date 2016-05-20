@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM L21 Xplained Pro board configuration.
+ * \brief SAM R30 Xplained Pro board configuration.
  *
- * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
