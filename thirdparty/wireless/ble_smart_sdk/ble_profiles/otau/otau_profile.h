@@ -59,6 +59,7 @@ extern "C" {
 #define DBG_OTAU		ALL_UNUSED //DBG_LOG
 #define DBG_OTAU_CONT	ALL_UNUSED //DBG_LOG_CONT
 #define OTAU_INFO		ALL_UNUSED //DBG_LOG
+#define OTAU_LOG		DBG_LOG
 
 /****************************************************************************************
 *							        Macro                                               *
@@ -711,6 +712,15 @@ at_ble_status_t otau_char_changed_handler(void *params);
  *
  */
 at_ble_status_t otau_connected_state_handler(void *params);
+
+/** @brief otau_mtu_changed_indication called by ble manager after a
+ *			change in MTU value
+ *  @param[in] params of type at_ble_mtu_changed_ind_t which has connection handle and new
+ *				mtu value
+ *	@return AT_BLE_SUCCESS in case of response is success or at_ble_err_status_t in case of failure
+ *
+ */
+at_ble_status_t otau_mtu_changed_indication(void *params);
 
 /** @brief otau_image_notify_request_handler image notification will be sent by OTAU manager
  *			in case of new image needs to be notified or old image needs to be downloaded or 

@@ -248,7 +248,69 @@ at_ble_status_t ofm_read_meta_data(void *params, flash_id_t flash_id)
 		else
 		{
 			DBG_OTAU("Invalid meta data length at Address:0x%X", ofid_info.flash_addr);
-		}	
+			
+			uint8_t page_buf[flash_inst->page_size];
+			uint32_t backup_addr = FLASH_SECTOR_SIZE;
+			
+			/* Restore the meta data from backup location */			
+			if (meta_loc.otau_image_data_addr < meta_loc.current_image_data_addr)
+			{
+				/* Copy two meta data pages from backup location */
+				backup_addr += meta_loc.otau_image_data_addr;
+			}
+			else
+			{
+				backup_addr += meta_loc.current_image_data_addr;
+			}
+			
+			if(ofm_read_page(0x01, backup_addr, page_buf, flash_inst->page_size) == AT_BLE_SUCCESS)
+			{
+				if(ofm_write_page(0x01, (backup_addr-FLASH_SECTOR_SIZE), page_buf, flash_inst->page_size) != AT_BLE_SUCCESS)
+				{
+					DBG_OTAU("Meta data restore failed");
+				}
+			}
+			
+			if(ofm_read_page(0x01, (backup_addr + flash_inst->page_size), page_buf, flash_inst->page_size) == AT_BLE_SUCCESS)
+			{
+				if(ofm_write_page(0x01, (backup_addr-FLASH_SECTOR_SIZE + flash_inst->page_size), page_buf, flash_inst->page_size) != AT_BLE_SUCCESS)
+				{
+					DBG_OTAU("Meta data restore failed");
+				}
+			}
+			
+			if (ofid_read_metadeta(&ofid_info) == AT_OFID_OP_SUCESS)
+			{
+				/* Validate the CRC for meta data */
+				crc = 0;
+				
+				/* Check whether valid meta data present */
+				if (image_meta_info->len == (sizeof(image_meta_data_t) - sizeof(image_meta_info->len)))
+				{
+					crc = crc32_compute(meta_buf, (sizeof(image_meta_data_t) - sizeof(image_crc_t)), false, 0);
+					
+					/* validate CRC */
+					if (crc == image_meta_info->header_crc)
+					{
+						/* CRC is matched and correct */
+						status = AT_BLE_SUCCESS;
+					}
+					else
+					{
+						/* CRC is incorrect */
+						DBG_OTAU("Meta data CRC is incorrect at Address:0x%X", ofid_info.flash_addr);
+					}
+				}
+				else
+				{
+					DBG_OTAU("Backup Failure: Invalid meta data Length");
+				}
+			}
+			else
+			{
+				DBG_OTAU("Backup Failure: Not able to read meta data");
+			}
+		}
 		
 	}
 	else
@@ -293,14 +355,38 @@ at_ble_status_t ofm_otau_meta_data_update(void *params)
 	ofid_info.data_buf = (uint8_t *)&current_meta_data;
 	ofid_info.flash_addr = meta_loc.current_image_data_addr;
 	if (ofid_read_metadeta(&ofid_info) == AT_OFID_OP_SUCESS)
-	{
+	{		
+		/* First Update it in backup sector */
 		/* Erase sector */
+		ofid_info.flash_addr = meta_loc.current_image_data_addr + FLASH_SECTOR_SIZE;
+		DBG_OTAU("Backup Meta Update Address: 0x%6X", ofid_info.flash_addr);
+		if(ofid_erase_metadata(&ofid_info) == AT_OFID_OP_SUCESS)
+		{
+			/* Write the Current image meta data */
+			if (ofid_write_metadeta(&ofid_info) == AT_OFID_OP_SUCESS)
+			{
+				/* Write OTAU image meta data */
+				ofid_info.data_buf = meta_buf;
+				ofid_info.flash_addr = meta_loc.otau_image_data_addr + FLASH_SECTOR_SIZE;
+				DBG_OTAU("Backup Meta Update Address: 0x%6X", ofid_info.flash_addr);
+				if(ofid_write_metadeta(&ofid_info) == AT_OFID_OP_SUCESS)
+				{
+					status = AT_BLE_SUCCESS;
+				}
+			}
+		}
+				
+		/* Erase sector */
+		ofid_info.data_buf = (uint8_t *)&current_meta_data;
+		ofid_info.flash_addr = meta_loc.current_image_data_addr;
+		DBG_OTAU("Real Meta Update Address: 0x%6X", ofid_info.flash_addr);
 		if(ofid_erase_metadata(&ofid_info) == AT_OFID_OP_SUCESS)
 		{
 			if (ofid_write_metadeta(&ofid_info) == AT_OFID_OP_SUCESS)
 			{
 				ofid_info.data_buf = meta_buf;
 				ofid_info.flash_addr = meta_loc.otau_image_data_addr;
+				DBG_OTAU("Real Meta Update Address: 0x%6X", ofid_info.flash_addr);
 				if(ofid_write_metadeta(&ofid_info) == AT_OFID_OP_SUCESS)
 				{
 					status = AT_BLE_SUCCESS;
@@ -532,7 +618,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 			if (crc == meta_data_info->header_crc)
 			{
 				
-				OTAU_INFO("Device Firmware version: %d.%d.%d", 
+				OTAU_LOG("Device Firmware version: %d.%d.%d", 
 					meta_data_info->dev_info.fw_version.major_number,
 					meta_data_info->dev_info.fw_version.minor_number,
 					meta_data_info->dev_info.fw_version.build_number);

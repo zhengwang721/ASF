@@ -69,6 +69,8 @@ otau_gatt_service_handler_t otau_gatt_service;
 
 otau_profile_config_t *otau_profile_instance = NULL;
 
+extern ofid_flash_info_t *flash_inst;
+
 /** Initialize the OTAU Process structure members */
 otau_process_t otau_process_status = {
 	/* OTAU Mode set to normal upgrade mode by default */
@@ -111,7 +113,7 @@ static /*const*/ ble_event_callback_t otau_gatt_server_handle[] = {
 	NULL,
 	NULL,
 	NULL,
-	NULL,
+	otau_mtu_changed_indication,
 	NULL,
 	NULL,
 	NULL
@@ -144,18 +146,21 @@ ofid_flash_info_t dev_flash_info;
  */
 static at_ble_status_t calculate_total_image_crc(uint8_t total_sections, image_crc_t total_crc, uint32_t total_size);
 
-/** @brief otau_download_status function will gives the information about the partial 
- *			downloaded image section to OTAU resume operation
+/** @brief otau_download_status which will check all section of the OTAU image download status
+ *			If the download is incomplete then the download process will start from the particular
+ *			section id, page no and block no
  *
- *  @param[in] resume_page_no function will retrieve partially downloaded sections page number else filled with 0xFF
- *  @param[in] resume_block_no function will retrieve partially downloaded sections block number else filled with 0xFF
- *  @param[in] resume_section_id function will retrieve partially downloaded sections else filled with 0xFF
- *	@return AT_BLE_SUCCESS in case resume required or AT_BLE_FAILURE in case resume not required
- *
+ *	@param[in] resume_page_no resume page number needs to be copied into this location
+ *	@param[in] resume_block_no resume block number needs to be copied into this location
+ *	@param[in] resume_section_id resume section id will be copied
+ *	@param[in] update_fw_ver Firmware version will be reset by boot loader when device is power cycled, 
+ *			   it needs to be set to 0xFFFFFFFF
+ *  @return	  returns AT_BLE_SUCCESS in case of resume required or at_ble_err_status_t in case of failure
  */
 static at_ble_status_t otau_download_status(uint16_t *resume_page_no,
 											uint16_t *resume_block_no,
-											section_id_t *resume_section_id);
+											section_id_t *resume_section_id, 
+											bool update_fw_ver);
 
 /** @brief otau_state_machine_controller function controls each state of OTAU 
  *			before executing the functions of the OTAU
@@ -584,6 +589,9 @@ at_ble_status_t otau_profile_init(void *params)
 {
 	at_ble_status_t status;
 	otau_profile_config_t *otau_config = NULL;
+	uint16_t resume_page_no = 0;
+	uint16_t resume_block_no = 0;
+	uint8_t resume_section_id = 0;
 		
 	OTAU_CHECK_NULL(params);
 	
@@ -597,6 +605,11 @@ at_ble_status_t otau_profile_init(void *params)
 		
 	/* Initialize the OFD  and get the Flash layout information */
 	status = ofm_init(&dev_flash_info);
+	
+	if((otau_download_status(&resume_page_no, &resume_block_no, &resume_section_id, true)) == AT_BLE_SUCCESS)
+	{
+		DBG_OTAU("Image Restored to OTAU state");
+	}
 		
 	OTAU_CHECK_ERROR(status);
 	
@@ -637,7 +650,7 @@ at_ble_status_t otau_profile_init(void *params)
 	otau_gatt_server_handle[3] = NULL;
 	otau_gatt_server_handle[4] = NULL;
 	otau_gatt_server_handle[5] = NULL;
-	otau_gatt_server_handle[6] = NULL;
+	otau_gatt_server_handle[6] = otau_mtu_changed_indication;
 	otau_gatt_server_handle[7] = NULL;
 	otau_gatt_server_handle[8] = NULL;
 	otau_gatt_server_handle[9] = NULL;
@@ -827,6 +840,71 @@ void memcpy_nreverse(uint8_t *dst, uint8_t *src, uint32_t len)
 	reverse_byte_buffer(dst, len);
 }
 
+static void por_update_firmware_version(section_id_t section_id, uint32_t section_addr)
+{
+	uint8_t page_buf[dev_flash_info.page_size];
+	uint32_t backup_addr = flash_inst->metadata_addr + (3 * FLASH_SECTOR_SIZE);
+	
+	if((backup_addr + FLASH_SECTOR_SIZE) > flash_inst->flash_size )
+	{
+		DBG_OTAU("POR Error: Invalid memory location!!!");
+	}
+	
+	DBG_OTAU("POR Backup Address: 0x%6X, section_addr: 0x%6X", backup_addr, section_addr);
+	
+	/* Erase the backup image section: Note backup location currently above the meta data and sector size */
+	if(ofm_erase_memory(backup_addr, FLASH_SECTOR_SIZE) == AT_BLE_SUCCESS)
+	{
+		uint32_t index;						
+		/* Read the image from actual location and Write to backup location */
+		
+		for (index = 0; index < FLASH_SECTOR_SIZE; index += dev_flash_info.page_size)
+		{
+			if(ofm_read_page(section_id, section_addr+index, page_buf, dev_flash_info.page_size) == AT_BLE_SUCCESS)
+			{
+				if(ofm_write_page(section_id, backup_addr+index, page_buf, dev_flash_info.page_size) != AT_BLE_SUCCESS)
+				{
+					DBG_OTAU("POR: Backup Write Page failed");
+				}
+			}
+			else
+			{
+				DBG_OTAU("POR: Read Page failed");
+			}
+		}
+		
+		/* Erase the actual image section */
+		if(ofm_erase_memory(section_addr, FLASH_SECTOR_SIZE) == AT_BLE_SUCCESS)
+		{
+			for (index = 0; index < FLASH_SECTOR_SIZE; index += dev_flash_info.page_size)
+			{
+				/* copy from backup section into OTA section */	
+				if(ofm_read_page(section_id, backup_addr+index, page_buf, dev_flash_info.page_size) == AT_BLE_SUCCESS)
+				{
+					/* Read First page from backup location  and update the firmware version */
+					if (!index)
+					{
+						memset(page_buf, 0xFF, sizeof(firmware_version_t));
+					}
+					if(ofm_write_page(section_id, section_addr+index, page_buf, dev_flash_info.page_size) != AT_BLE_SUCCESS)
+					{
+						DBG_OTAU("POR: Write Page failed");
+					}
+				}
+				else
+				{
+					DBG_OTAU("POR: Backup Read Page failed");
+				}
+			}
+			ofm_erase_memory(backup_addr, FLASH_SECTOR_SIZE);
+		}
+	}
+	else
+	{
+		DBG_OTAU("POR: Backup memory erase failed");
+	}
+}
+
 /** @brief otau_download_status which will check all section of the OTAU image download status
  *			If the download is incomplete then the download process will start from the particular
  *			section id, page no and block no
@@ -834,68 +912,117 @@ void memcpy_nreverse(uint8_t *dst, uint8_t *src, uint32_t len)
  *	@param[in] resume_page_no resume page number needs to be copied into this location
  *	@param[in] resume_block_no resume block number needs to be copied into this location
  *	@param[in] resume_section_id resume section id will be copied
+ *	@param[in] update_fw_ver Firmware version will be reset by boot loader when device is power cycled, 
+ *			   it needs to be set to 0xFFFFFFFF
  *  @return	  returns AT_BLE_SUCCESS in case of resume required or at_ble_err_status_t in case of failure
  */
 static at_ble_status_t otau_download_status(uint16_t *resume_page_no, 
 											uint16_t *resume_block_no,
-											section_id_t *resume_section_id)
+											section_id_t *resume_section_id, bool update_fw_ver)
 {
 	/* Check the Firmware needs to be resumed */
 	image_meta_data_t meta_data;
 	at_ble_status_t status = AT_BLE_FAILURE;
+	
+	/* No section needs to be  updated */
+	*resume_section_id = 0xFF;
+	
 	if(ofm_read_meta_data(&meta_data, OTAU_IMAGE_META_DATA_ID) == AT_BLE_SUCCESS)
 	{
+		uint32_t data_len = 0;
+		uint32_t downloaded_image_size = 0;
+		
 		/* OTAU must have at least one section */
-		if (meta_data.dev_info.total_sections >= 1)
+		if (!meta_data.dev_info.total_sections)
 		{
-			uint32_t data_len = 0;
-			uint32_t downloaded_image_size = 0;					
+			return status;
+		}
+			
+			
+		if (meta_data.patch_section.section_id == 0x01)
+		{
 			/* Check for patch section */
 			memcpy((uint8_t *)&downloaded_image_size, meta_data.patch_downloaded_info.size, 3);
 			memcpy((uint8_t *)&data_len, meta_data.patch_section.size, 3);
 			
+			if (update_fw_ver)
+			{
+				uint32_t section_addr;
+				section_addr = meta_data.patch_section.start_address;
+				
+				if((meta_data.section_image_id & SECTION1_IMAGE_IDENTIFIER_MASK) == SECTION1_BOTTOM_IMAGE_IDENTIFIER)
+				{
+					/* Calculate the address */
+					section_addr += (dev_flash_info.section_info[meta_data.patch_section.section_id - 1].size/2);
+				}
+				
+				/* Update the Patch Section */
+				por_update_firmware_version(meta_data.patch_section.section_id, section_addr);
+			}
 			if (data_len > downloaded_image_size)
 			{
 				/* Resume from the Patch section */
 				*resume_page_no = (downloaded_image_size / dev_flash_info.page_size);
-				*resume_section_id = meta_data.patch_section.section_id;
+				*resume_section_id = meta_data.patch_section.section_id;				
 				status = AT_BLE_SUCCESS;
-			}					
-			else if (meta_data.dev_info.total_sections >= 2)
-			{
-				/* Check for App header section */
-				memcpy((uint8_t *)&downloaded_image_size, meta_data.app_hdr_downloaded_info.size, 3);
-				memcpy((uint8_t *)&data_len, meta_data.app_header_section.size, 3);
-				
-				if (data_len > downloaded_image_size)
-				{
-					/* Resume from the App header section */
-					*resume_page_no = (downloaded_image_size / dev_flash_info.page_size);
-					*resume_section_id = meta_data.app_header_section.section_id;
-					status = AT_BLE_SUCCESS;
-				}
-				else if (meta_data.dev_info.total_sections >= 3)
-				{
-					/* Check for Application section */
-					memcpy((uint8_t *)&downloaded_image_size, meta_data.app_downloaded_info.size, 3);
-					memcpy((uint8_t *)&data_len, meta_data.app_section.size, 3);
-					
-					if (data_len > downloaded_image_size)
-					{
-						/* Resume from the App header section */
-						*resume_page_no = (downloaded_image_size / dev_flash_info.page_size);
-						*resume_section_id = meta_data.app_section.section_id;
-						status = AT_BLE_SUCCESS;
-					}
-					else
-					{
-						/* No section needs to be  updated */
-						*resume_section_id = 0xFF;
-					}
-				}
 			}
-		}				
-	}
+		}
+									
+		if (meta_data.app_header_section.section_id == 0x02)
+		{
+			/* Check for App header section */
+			memcpy((uint8_t *)&downloaded_image_size, meta_data.app_hdr_downloaded_info.size, 3);
+			memcpy((uint8_t *)&data_len, meta_data.app_header_section.size, 3);
+			
+			if(update_fw_ver)
+			{
+				uint32_t section_addr;
+				section_addr = meta_data.app_header_section.start_address;
+				if((meta_data.section_image_id & SECTION1_IMAGE_IDENTIFIER_MASK) == SECTION1_BOTTOM_IMAGE_IDENTIFIER)
+				{
+					/* Calculate the address */
+					section_addr += (dev_flash_info.section_info[meta_data.app_header_section.section_id - 1].size/2);
+				}
+				por_update_firmware_version(meta_data.app_header_section.section_id, section_addr);
+			}
+				
+			if ((data_len > downloaded_image_size) && (*resume_section_id == 0xFF))
+			{
+				/* Resume from the App header section */
+				*resume_page_no = (downloaded_image_size / dev_flash_info.page_size);
+				*resume_section_id = meta_data.app_header_section.section_id;				
+				status = AT_BLE_SUCCESS;
+			}
+		}
+			
+		if (meta_data.app_section.section_id == 0x03)
+		{
+			/* Check for Application section */
+			memcpy((uint8_t *)&downloaded_image_size, meta_data.app_downloaded_info.size, 3);
+			memcpy((uint8_t *)&data_len, meta_data.app_section.size, 3);
+			
+			if(update_fw_ver)
+			{
+				uint32_t section_addr;
+				section_addr = meta_data.app_section.start_address;
+				if((meta_data.section_image_id & SECTION1_IMAGE_IDENTIFIER_MASK) == SECTION1_BOTTOM_IMAGE_IDENTIFIER)
+				{
+					/* Calculate the address */
+					section_addr += (dev_flash_info.section_info[meta_data.app_section.section_id - 1].size/2);
+				}
+				por_update_firmware_version(meta_data.app_section.section_id, section_addr);
+			}
+					
+			if ((data_len > downloaded_image_size) && (*resume_section_id == 0xFF))
+			{
+				/* Resume from the App header section */
+				*resume_page_no = (downloaded_image_size / dev_flash_info.page_size);
+				*resume_section_id = meta_data.app_section.section_id;				
+				status = AT_BLE_SUCCESS;
+			}
+		}
+	}				
+
 	return status;
 }
 
@@ -1015,7 +1142,7 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 									image_notification->fw_ver.major_number,
 									image_notification->fw_ver.minor_number,
 									image_notification->fw_ver.build_number);
-					if((otau_download_status(&resume_page_no, &resume_block_no, &resume_section_id)) != AT_BLE_SUCCESS)
+					if((otau_download_status(&resume_page_no, &resume_block_no, &resume_section_id, false)) != AT_BLE_SUCCESS)
 					{
 						/* Update need not to be resumed and need to erase the meta data and sections */
 						memcpy((uint8_t *)&meta_data.dev_info, (uint8_t *)&dev_info, sizeof(device_info_t));
@@ -1139,7 +1266,7 @@ at_ble_status_t otau_image_info_request_handler(void *params)
 			image_info_resp.resp.cmd = AT_OTAU_IMAGE_INFO_NOTIFY_RESP;
 			image_info_resp.resp.length = (sizeof(image_info_resp_t)-2);
 			
-			if((otau_download_status(&resume_page_no, &resume_block_no, &resume_section_id)) == AT_BLE_SUCCESS)
+			if((otau_download_status(&resume_page_no, &resume_block_no, &resume_section_id, false)) == AT_BLE_SUCCESS)
 			{
 				/* Check firmware needs to be resumed */
 				image_info_resp.block_no = resume_block_no;
@@ -2214,7 +2341,7 @@ at_ble_status_t otau_section_end_request_handler(void *params)
 			memcpy((uint8_t *)&read_size, meta_data.app_downloaded_info.size, 3);
 			crc_wrote = meta_data.app_crc;
 		}
-		DBG_OTAU("Section End: Read Addr->%6X, Read size->0x%2X, 0x%2X, 0x%2X", read_addr, meta_data.app_downloaded_info.size[0], meta_data.app_downloaded_info.size[1], meta_data.app_downloaded_info.size[2]);
+		DBG_OTAU("Section End CRC: Read Addr->%6X, Read size->0x%8X", read_addr, read_size);
 		if (read_size)
 		{
 				image_crc_t crc = IMAGE_CRC32_POLYNOMIAL;
@@ -2504,7 +2631,34 @@ at_ble_status_t otau_connected_state_handler(void *params)
 	
 	OTAU_CHECK_NULL(params);
 	connected = (at_ble_connected_t *)params;
+	if (connected->conn_status == AT_BLE_SUCCESS)
+	{
+		/* Exchange the MTU Size */
+		if(at_ble_exchange_mtu(connected->handle) == AT_BLE_SUCCESS)
+		{
+			DBG_OTAU("MTU Change Requested");
+		}
+	}
 	ALL_UNUSED(connected);
+	return status;
+}
+
+/** @brief otau_mtu_changed_indication called by ble manager after a
+ *			change in MTU value
+ *  @param[in] params of type at_ble_mtu_changed_ind_t which has connection handle and new
+ *				mtu value
+ *	@return AT_BLE_SUCCESS in case of response is success or at_ble_err_status_t in case of failure
+ *
+ */
+at_ble_status_t otau_mtu_changed_indication(void *params)
+{
+	at_ble_status_t status = AT_BLE_FAILURE;
+	at_ble_mtu_changed_ind_t *mtu_changed_ind = NULL;	
+	mtu_changed_ind = (at_ble_mtu_changed_ind_t *)params;
+	DBG_LOG("New MTU Value: %d", mtu_changed_ind->mtu_value);
+	
+	status = AT_BLE_SUCCESS;
+	
 	return status;
 }
 

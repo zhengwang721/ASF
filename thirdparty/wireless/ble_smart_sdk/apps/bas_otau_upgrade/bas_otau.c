@@ -62,6 +62,8 @@
 #include "otau_profile.h"
 #include "device_info.h"
 #include "led.h"
+#include "button.h"
+
 /* === GLOBALS ============================================================ */
 
 dis_gatt_service_handler_t dis_service_handler;
@@ -77,12 +79,17 @@ bool volatile timer_cb_done = false;
 bool volatile flag = true;
 bool volatile battery_flag = true;
 at_ble_handle_t bat_connection_handle;
+volatile bool button_pressed = false;
+volatile bool otau_paused = false;
 
 static void otau_image_nofification_handler (firmware_version_t *new_firmware_ver,
 											firmware_version_t *old_firmware_ver,
 											bool *permission);
 static void otau_image_switch_handler (firmware_version_t *fw_version, bool *permission);
 static void otau_progress_handler (uint8_t section_id, uint8_t completed);
+
+
+static void app_button_callback(void);
 
 /**
  * \Timer callback handler called on timer expiry
@@ -91,6 +98,11 @@ static void timer_callback_handler(void)
 {
 	timer_cb_done = true;
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
+}
+
+static void app_button_callback(void)
+{
+	button_pressed = true;
 }
 
 /* Advertisement data set and Advertisement start */
@@ -133,6 +145,11 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 	flag = true;
 	hw_timer_stop();
 	battery_service_advertise();
+	
+	#if OTAU_FEATURE
+	otau_paused = false;
+	#endif
+	
 	ALL_UNUSED(param);
 	return AT_BLE_SUCCESS;
 }
@@ -276,7 +293,8 @@ int main(void)
 	acquire_sleep_lock();
 
 	/* Initialize the button */
-	/* button_init(); */
+	button_init();
+	button_register_callback(app_button_callback);
 	
 	/* Initialize serial console */
 	serial_console_init();
@@ -354,6 +372,30 @@ int main(void)
 	while (1) {
 		/* BLE Event Task */
 		ble_event_task(BLE_EVENT_TIMEOUT);
+		
+		#if OTAU_FEATURE
+			if (button_pressed)
+			{
+				if (otau_paused)
+				{
+					if(otau_resume_update_process(NULL) == AT_BLE_SUCCESS)
+					{
+						DBG_LOG("OTAU Process Resumed...!!!");
+					}
+					otau_paused = false;
+				}
+				else
+				{
+					if(otau_pause_update_process(NULL) == AT_BLE_SUCCESS)
+					{
+						DBG_LOG("OTAU Process Paused...!!!");
+					}
+					otau_paused = true;
+				}
+				button_pressed = false;
+			}
+		#endif /* OTAU_FEATURE */
+		
 		if (timer_cb_done)
 		{
 			timer_cb_done = false;			
