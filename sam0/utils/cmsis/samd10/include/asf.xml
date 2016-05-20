@@ -13,7 +13,8 @@
 		<build type="header-file" value="samd10d14as.h"/>
 		<build type="header-file" value="samd10d12am.h"/>
 		<build type="header-file" value="samd10d13am.h"/>
-		<build type="header-file" value="samd10d14am.h"/>	
+		<build type="header-file" value="samd10d14am.h"/>
+		<build type="header-file" value="samd10d14au.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="samd10"/>
 	</module>

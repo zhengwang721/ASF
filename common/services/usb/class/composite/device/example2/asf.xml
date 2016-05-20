@@ -28,6 +28,10 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4e"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="sams70"/>
+			<device-support value="same70"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.usb.class.composite.device.example.hids_cdc_msc#1" caption="USB Composite Device Example HIDs, CDC and MSC">
@@ -55,6 +59,7 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>

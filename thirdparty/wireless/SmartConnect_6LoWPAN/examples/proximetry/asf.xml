@@ -1,0 +1,40 @@
+<asf xmlversion="1.0">
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
+	<!-- **************************************************************************************************** -->
+	<module type="application" id="thirdparty.wireless.smartconnect_6lowpan.examples.proximetry" caption="Smart Connect 6LoWPAN - Proximetry Registration Example">
+		<info type="description" value="summary">
+		</info>
+		<build type="c-source"      value="proximetry-node.c"/>
+		<build type="c-source"      value="proximetry-node-main.c"/>
+		<build type="c-source"      value="symbols.c"/>
+		<build type="include-path" value="inc/"/>
+		<build type="header-file" value="conf_common_sw_timer.h"/>
+		<build type="header-file"      value="symbols.h"/>
+		<build type="include-path" value="."/>
+		<build type="define" name="UIP_CONF_IPV6" value="1"/>
+		<build type="define" name="RDC" value="NULLRDC"/>
+		<build type="define" name="MAC" value="NULLMAC"/>
+		<build type="define" name="HW_ACK" value="1"/>	
+		
+		<build type="distribute" subtype="user-file" value="../../doc/SmartConnect_6LoWPAN_Proximetry_User_Guide.pdf"/>
+		<require idref="thirdparty.wireless.addons.sio2host"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.src"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ip"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv6"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.core.net.ipv4"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.thsq-conf"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.aes"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.ip64-addr"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.mdns"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.simple-rpl"/>
+		<require idref="thirdparty.wireless.smartconnect_6lowpan.apps.led_control"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.adc"/>
+		<require idref="sam0.services.eeprom_emulator"/>
+		<build type="define" name="ENABLE_LEDCTRL" value="1"/>
+		<device-support value="sam0"/>	
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+
+</asf>

@@ -1,0 +1,12 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.ble_sdk.utils" caption="COMPONENT - BLE Utils">
+		<info type="description" value="summary">
+		</info>
+		<build type="include-path"  value="."/>
+  		<build type="header-file"   value="ble_utils.h"/>
+
+		<build type="doxygen-entry-point" value="ble_stack_group"/>
+		<device-support-alias value="ble_stack_lib_support"/>		
+	</module>
+ 
+</asf>

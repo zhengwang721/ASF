@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief NMC1500 Peripherals Application Interface.
+ * \brief WINC ATE Test Driver Interface.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,7 +79,14 @@ MACROS
 #define M2M_ATE_ERR_UNHANDLED_CASE		(-3)	
 /*!< Invalid case.
  */
+#define M2M_ATE_RX_DISABLE_DA          		0x0
+#define M2M_ATE_RX_ENABLE_DA          		0x1
 
+#define M2M_ATE_RX_DISABLE_SA          		0x0
+#define M2M_ATE_RX_ENABLE_SA          		0x1
+
+#define M2M_ATE_DISABLE_SELF_MACADDR       	0x0
+#define M2M_ATE_SET_SELF_MACADDR         	0x1
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 DATA TYPES
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
@@ -203,6 +210,15 @@ typedef enum {
 }tenuM2mAteTxMode;
 
 /*!
+ *@enum		tenuM2mAteRxPwrMode	
+ *@brief	Used to define type of RX mode either high power or low power
+ */
+typedef enum {
+	M2M_ATE_RX_PWR_HIGH	= 0x00,
+	M2M_ATE_RX_PWR_LOW	= 0x01,
+}tenuM2mAteRxPwrMode;
+
+/*!
  *@enum		tenuM2mAteChannels	
  *@brief	Available channels for TX and RX 
  */
@@ -228,54 +244,70 @@ typedef enum {
  *@brief	Used to save statistics of RX case
  */
 typedef struct {
-	uint32_t num_rx_pkts;
+	uint32 num_rx_pkts;
 	/*!< Number of total RX packet
 	 */
-	uint32_t num_err_pkts;
+	uint32 num_err_pkts;
 	/*!< Number of RX failed packets
 	 */
+	 uint32 num_good_pkts;
+	/*!< Number of RX packets actually received
+	 */
 } tstrM2mAteRxStatus;
+
+/*!
+ *@struct	tstrM2mAteRxStatus
+ *@brief	Used to save statistics of RX case
+ */
+typedef struct {
+	uint8 u8RxPwrMode;
+	/*!< RX power mode review tenuM2mAteRxPwrMode
+	 */
+} tstrM2mAteInit;
 
 /*!
  *@struct	tstrM2mAteTx
  *@brief	Used as data source in case of enabling TX test case
  */
 typedef struct {
-	uint32_t	num_frames;	
+	uint32	num_frames;	
 	/*!< Number of frames to be sent where maximum number allowed is 4294967295 ul, and ZERO means infinite number of frames
 	 */
-	uint32_t	data_rate;
+	uint32	data_rate;
 	/*!< Rate to sent packets over to select rate use value of \ref tenuM2mAteTxIndexOfRates and pass it to \ref m2m_ate_get_tx_rate
 	 */
-	uint8_t		channel_num;
+	uint8		channel_num;
 	/*!< Channel number \ref tenuM2mAteChannels
 	 */
-	uint8_t     duty_cycle; 
+	uint8    duty_cycle; 
 	/*!< Duty cycle value between from 1 to 10, where maximum = 1, minimum = 10 \ref tenuM2mAteTxDutyCycle
 	 */
-	uint16_t    frame_len;
+	uint16    frame_len;
     /*!< Use \ref M2M_ATE_MAX_FRAME_LENGTH (1024) as the maximum value while \ref M2M_ATE_MIN_FRAME_LENGTH (1) is the minimum value
 	 */
-	uint8_t     tx_gain_sel;
+	uint8     tx_gain_sel;
 	/*!< TX gain mode selection value \ref tenuM2mAteTxGainSetting
 	 */
-	uint8_t     dpd_ctrl;
+	uint8     dpd_ctrl;
 	/*!< DPD mode value\ref tenuM2mAteTxDpdControl
 	 */
-	uint8_t     use_pmu;
+	uint8     use_pmu;
 	/*!< This is 0 if PMU is not used otherwise it must be be 1 \ref tenuM2mAtePMUSetting
 	 */
-	uint8_t     phy_burst_tx; 
+	uint8     phy_burst_tx; 
 	/*!< Source of Burst TX either PHY or MAC\ref tenuM2mAteTxSource
 	 */
-	uint8_t     cw_tx; 
+	uint8     cw_tx; 
 	/*!< Mode of Burst TX either normal TX sequence or CW(Continuous Wave) TX sequence \ref tenuM2mAteTxMode
 	 */
-	int32_t     xo_offset_x1000; 
+	uint32     xo_offset_x1000; 
 	/*!< Signed XO offset value in PPM (Part Per Million) multiplied by 1000.
 	 */
-	uint8_t     use_efuse_xo_offset;
+	uint8     use_efuse_xo_offset;
 	/*!< Set to 0 to use the XO offset provided in xo_offset_x1000. Set to 1 to use XO offset programmed on WINC efuse. 
+	*/
+	uint8 peer_mac_addr[6];
+	/*!< Set peer address to send directed frames to a certain address.
 	*/
 } tstrM2mAteTx;
 
@@ -284,17 +316,32 @@ typedef struct {
  *@brief	Used as data source in case of enabling RX test case
  */
 typedef struct {
-	uint8_t		channel_num;
+	uint8		channel_num;
 	/*!< Channel number \ref tenuM2mAteChannels
 	 */
-	uint8_t     use_pmu;
+	uint8     use_pmu;
 	/*!< This is 0 if PMU is not used otherwise it must be be 1 \ref tenuM2mAtePMUSetting
 	 */
-	int32_t     xo_offset_x1000; 
+	uint32     xo_offset_x1000; 
 	/*!< Signed XO offset value in PPM (Part Per Million) multiplied by 1000.
 	 */
-	uint8_t     use_efuse_xo_offset;
+	uint8     use_efuse_xo_offset;
 	/*!< Set to 0 to use the XO offset provided in xo_offset_x1000. Set to 1 to use XO offset programmed on WINC efuse. 
+	*/
+	uint8    self_mac_addr[6];
+	/*!< Set to the self mac address required to be overriden. 
+	*/
+	uint8    peer_mac_addr[6];
+	/*!< Set to the source mac address expected to filter frames from. 
+	*/
+	uint8    mac_filter_en_da;
+	/*!< Flag set to enable or disable reception with destination address as a filter. 
+	*/
+	uint8    mac_filter_en_sa;
+	/*!< Flag set to enable or disable reception with source address as a filter. 
+	*/
+	uint8   override_self_mac_addr;
+	/*!< Flag set to enable or disable self mac address feature. 
 	*/
 } tstrM2mAteRx;
 
@@ -316,6 +363,19 @@ FUNCTION PROTOTYPES
 	The function SHALL return 0 for success and a negative value otherwise.
 */
 sint8 m2m_ate_init(void);
+
+
+/*!
+@fn	\
+	sint8 m2m_ate_init(tstrM2mAteInit *pstrInit);
+
+@brief
+	This function used to download ATE firmware from flash and start it
+
+@return
+	The function SHALL return 0 for success and a negative value otherwise.
+*/
+sint8 m2m_ate_init_param(tstrM2mAteInit *pstrInit);
 
 /*!
 @fn	\
@@ -479,6 +539,77 @@ sint8 m2m_ate_stop_rx(void);
 */
 sint8 m2m_ate_read_rx_status(tstrM2mAteRxStatus *);
 
+/*!
+@fn	\
+	sint8 m2m_ate_set_dig_gain(double dGaindB)
+
+@brief
+	This function is used to set the digital gain
+
+@param [in]	double dGaindB
+		The digital gain value required to be set.
+@return
+	The function SHALL return 0 for success and a negative value otherwise.
+*/
+sint8 m2m_ate_set_dig_gain(double dGaindB);
+
+/*!
+@fn	\
+	sint8 m2m_ate_get_dig_gain(double * dGaindB)
+
+@brief
+	This function is used to get the digital gain
+
+@param [out]	double * dGaindB
+		The retrieved digital gain value obtained from HW registers in dB.
+@return
+	The function SHALL return 0 for success and a negative value otherwise.
+*/
+sint8 m2m_ate_get_dig_gain(double * dGaindB);
+
+/*!
+@fn	\
+	sint8 m2m_ate_get_pa_gain(double *paGaindB)
+
+@brief
+	This function is used to get the PA gain
+
+@param [out]	double *paGaindB
+		The retrieved PA gain value obtained from HW registers in dB.
+@return
+	The function SHALL return 0 for success and a negative value otherwise.
+*/
+sint8 m2m_ate_get_pa_gain(double *paGaindB);
+
+/*!
+@fn	\
+	sint8 m2m_ate_get_ppa_gain(double * ppaGaindB)
+
+@brief
+	This function is used to get the PPA gain
+
+@param [out]	uint32 * ppaGaindB
+		The retrieved PPA gain value obtained from HW registers in dB.
+@return
+	The function SHALL return 0 for success and a negative value otherwise.
+*/
+sint8 m2m_ate_get_ppa_gain(double * ppaGaindB);
+
+/*!
+@fn	\
+	sint8 m2m_ate_get_tot_gain(double * totGaindB)
+
+@brief
+	This function is used to calculate the total gain
+
+@param [out]	double * totGaindB
+		The retrieved total gain value obtained from calculations made based on the digital gain, PA and PPA gain values.
+@return
+	The function SHALL return 0 for success and a negative value otherwise.
+*/
+sint8 m2m_ate_get_tot_gain(double * totGaindB);
+
+	
 #ifdef __cplusplus
 }
 #endif

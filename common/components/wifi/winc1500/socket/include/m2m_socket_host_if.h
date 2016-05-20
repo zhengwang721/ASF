@@ -4,7 +4,7 @@
  *
  * \brief BSD alike socket interface internal types.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -63,10 +63,10 @@ MACROS
 *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
 
 #ifdef _FIRMWARE_
-#define HOSTNAME_MAX_SIZE			(64)
+#define HOSTNAME_MAX_SIZE					(64)
 #endif
 
-#define SSL_MAX_OPT_LEN				HOSTNAME_MAX_SIZE
+#define SSL_MAX_OPT_LEN						HOSTNAME_MAX_SIZE
 
 
 
@@ -76,7 +76,7 @@ MACROS
 */
 
 
-#define SOCKET_CMD_BIND					0x41
+#define SOCKET_CMD_BIND						0x41
 /*!< 
 	Socket Binding command value.
 */
@@ -94,19 +94,19 @@ MACROS
 */
 
 
-#define SOCKET_CMD_CONNECT				0x44
+#define SOCKET_CMD_CONNECT					0x44
 /*!< 
 	Socket Connecting command value.
 */
 
 
-#define SOCKET_CMD_SEND					0x45
+#define SOCKET_CMD_SEND						0x45
 /*!< 
 	Socket send command value.
 */
 
 
-#define SOCKET_CMD_RECV					0x46
+#define SOCKET_CMD_RECV						0x46
 /*!< 
 	Socket Recieve command value.
 */
@@ -118,7 +118,7 @@ MACROS
 */
 
 
-#define SOCKET_CMD_RECVFROM				0x48
+#define SOCKET_CMD_RECVFROM					0x48
 /*!< 
 	Socket RecieveFrom command value.
 */
@@ -130,25 +130,25 @@ MACROS
 */
 
 
-#define SOCKET_CMD_DNS_RESOLVE			0x4A
+#define SOCKET_CMD_DNS_RESOLVE				0x4A
 /*!< 
 	Socket DNS Resolve command value.
 */
 
 
-#define SOCKET_CMD_SSL_CONNECT			0x4B
+#define SOCKET_CMD_SSL_CONNECT				0x4B
 /*!< 
 	SSL-Socket Connect command value.
 */
 
 
-#define SOCKET_CMD_SSL_SEND				0x4C	
+#define SOCKET_CMD_SSL_SEND					0x4C	
 /*!< 
 	SSL-Socket Send command value.
 */	
 
 
-#define SOCKET_CMD_SSL_RECV				0x4D
+#define SOCKET_CMD_SSL_RECV					0x4D
 /*!< 
 	SSL-Socket Recieve command value.
 */
@@ -171,8 +171,17 @@ MACROS
 */
 
 
-#define SOCKET_CMD_SSL_SET_SOCK_OPT		0x51
+#define SOCKET_CMD_SSL_SET_SOCK_OPT			0x51
 
+
+#define SOCKET_CMD_PING						0x52
+
+#define SOCKET_CMD_SSL_SET_CS_LIST			0x53
+
+
+#define PING_ERR_SUCCESS					0
+#define PING_ERR_DEST_UNREACH				1
+#define PING_ERR_TIMEOUT					2
 
 /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 DATA TYPES
@@ -288,7 +297,11 @@ typedef struct{
 typedef struct{
 	SOCKET		sock;
 	sint8		s8Error;
-	uint16		u16SessionID;
+	uint16		u16AppDataOffset;
+	/*!<
+		In further packet send requests the host interface should put the user application
+		data at this offset in the allocated shared data packet.
+	*/
 }tstrConnectReply;
 
 
@@ -300,7 +313,7 @@ typedef struct{
 	uint8			u8Void;
 	uint16			u16DataSize;
 	tstrSockAddr	strAddr;
-	uint16		u16SessionID;
+	uint16			u16SessionID;
 	uint16			u16Void;
 }tstrSendCmd;
 
@@ -374,6 +387,32 @@ typedef struct{
 	uint8		au8OptVal[SSL_MAX_OPT_LEN];
 }tstrSSLSetSockOptCmd;
 
+
+/*!
+*/
+typedef struct{
+	uint32	u32DestIPAddr;
+	uint32	u32CmdPrivate;
+	uint16	u16PingCount;
+	uint8	u8TTL;
+	uint8	__PAD8__;
+}tstrPingCmd;
+
+
+typedef struct{
+	uint32	u32IPAddr;
+	uint32	u32CmdPrivate;
+	uint32	u32RTT;
+	uint16	u16Success;
+	uint16	u16Fail;
+	uint8	u8ErrorCode;
+	uint8	__PAD24__[3];
+}tstrPingReply;
+
+
+typedef struct{
+	uint32	u32CsBMP;
+}tstrSslSetActiveCsList;
 
 #ifdef  __cplusplus
 }

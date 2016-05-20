@@ -69,7 +69,7 @@
 /**
  * \internal Find the index of given TC module instance.
  *
- * \param[in] TC module instance pointer.
+ * \param[in] TC module instance pointer
  *
  * \return Index of the given TC module instance.
  */
@@ -158,7 +158,7 @@ enum status_code tc_init(
 	/* Associate the given device instance with the hardware module */
 	module_inst->hw = hw;
 
-#if SAMD10 || SAMD11
+#if SAMD09 || SAMD10 || SAMD11
 	/* Check if even numbered TC modules are being configured in 32-bit
 	 * counter size. Only odd numbered counters are allowed to be
 	 * configured in 32-bit counter size.
@@ -638,7 +638,7 @@ enum status_code tc_reset(
  * any other purpose.
  *
  * \note This function is designed to be used in PWM or frequency
- *       match modes only. When the counter is set to 16- or 32-bit counter
+ *       match modes only, when the counter is set to 16- or 32-bit counter
  *       size. In 8-bit counter size it will always be possible to change the
  *       top value even in normal mode.
  *

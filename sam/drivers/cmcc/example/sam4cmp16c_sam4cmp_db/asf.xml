@@ -17,6 +17,6 @@
 		<config name="config.compiler.iarewarm.debugger_flash_loader_file" value="$TOOLKIT_DIR$\config\flashloader\Atmel\sam4cmp16c\sam4cmp16c-flash-cached.board"/>
 		<build type="linker-config" subtype="script" value="linker_scripts/gcc/flash.ld" toolchain="armgcc"/>
 		<build type="linker-config" subtype="script" value="linker_scripts/iar/flash.icf" toolchain="iarewarm"/>
-		<device-support value="atsam4cmp16c_0"/>
+		<device-support value="atsam4cmp16c:0"/>
 	</project>
 </asf>

@@ -8,5 +8,6 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.trng"/>
 		<device-support value="saml21"/>
+		<device-support value="saml22"/>
 	</module>
 </asf>

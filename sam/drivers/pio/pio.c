@@ -3,7 +3,7 @@
  *
  * \brief Parallel Input/Output (PIO) Controller driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -768,7 +768,7 @@ void pio_toggle_pin(uint32_t ul_pin)
  * \brief Perform complete pin(s) configuration; general attributes and PIO init
  * if necessary.
  *
- * \param ul_pin Bitmask of one or more pin(s) to configure.
+ * \param ul_pin The pin index.
  * \param ul_flags Pins attributes.
  *
  * \return Whether the pin(s) have been configured properly.
@@ -1011,6 +1011,16 @@ uint32_t pio_get_pin_group_id(uint32_t ul_pin)
 	} else {
 		ul_id = ID_PIOA + (ul_pin >> 5);
 	}
+#elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
+	ul_id = ID_PIOA + (ul_pin >> 5);
+
+	#ifdef ID_PIOD 
+	if (ul_pin >= PIO_PD0_IDX) ul_id = ID_PIOD; 
+	#endif
+	
+	#ifdef ID_PIOE 
+	if (ul_pin >= PIO_PE0_IDX) ul_id = ID_PIOE; 
+	#endif 
 #else
 	ul_id = ID_PIOA + (ul_pin >> 5);
 #endif

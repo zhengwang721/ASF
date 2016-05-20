@@ -66,6 +66,10 @@
 #  include "samr21.h"
 #endif
 
+#if (SAMD09)
+#  include "samd09.h"
+#endif
+
 #if (SAMD10)
 #  include "samd10.h"
 #endif
@@ -78,6 +82,10 @@
 #  include "saml21.h"
 #endif
 
+#if (SAML22)
+#  include "saml22.h"
+#endif
+
 #if (SAMDA1)
 #  include "samda1.h"
 #endif
@@ -88,6 +96,10 @@
 
 #if (SAMC21)
 #  include "samc21.h"
+#endif
+
+#if (SAMB11)
+#  include "samb11.h"
 #endif
 
 #endif /* _SAM_IO_ */

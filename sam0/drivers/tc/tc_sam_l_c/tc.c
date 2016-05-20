@@ -3,7 +3,7 @@
  *
  * \brief SAM TC - Timer Counter Driver
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,7 +54,7 @@
 /**
  * \internal Find the index of given TC module instance.
  *
- * \param[in] TC module instance pointer.
+ * \param[in] TC module instance pointer
  *
  * \return Index of the given TC module instance.
  */
@@ -135,6 +135,14 @@ enum status_code tc_init(
 									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC2,
 									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC3,
 									SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_TC4};
+#elif (SAML22)
+	/* Array of GLCK ID for different TC instances */
+	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC2_GCLK_ID, TC3_GCLK_ID};
+	/* Array of MCLK APB mask bit position for different TC instances */
+	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC0,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC1,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC2,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC3};
 #else
 	/* Array of GLCK ID for different TC instances */
 	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC4_GCLK_ID};
@@ -220,8 +228,8 @@ enum status_code tc_init(
 	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) && (instance+1 < TC_INST_NUM))
 	{
 		/* Enable the user interface clock in the MCLK */
-		system_apb_clock_set_mask((enum system_clock_apb_bus)inst_mclk_apbmask[instance*2+1],
-				inst_mclk_apbmask[2*instance+2]);
+		system_apb_clock_set_mask((enum system_clock_apb_bus)inst_mclk_apbmask[(instance+1)*2],
+				inst_mclk_apbmask[(instance+1)*2+1]);
 	}
 
 
@@ -656,7 +664,7 @@ enum status_code tc_reset(
  * any other purpose.
  *
  * \note This function is designed to be used in PWM or frequency
- *       match modes only. When the counter is set to 16- or 32-bit counter
+ *       match modes only, when the counter is set to 16- or 32-bit counter
  *       size. In 8-bit counter size it will always be possible to change the
  *       top value even in normal mode.
  *

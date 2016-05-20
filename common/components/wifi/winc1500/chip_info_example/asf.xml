@@ -13,6 +13,7 @@
 			<!-- Device support -->
 			<device-support value="samd21"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
 
 			<!-- Required modules -->
 			<require idref="common.components.wifi.winc1500"/>

@@ -3,7 +3,7 @@
  *
  * \brief SAM Timer/Counter Driver for Control Applications DMA Quickstart
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -117,7 +117,7 @@ static void config_dma_for_capture(void)
 	//! [dma_setup_2]
 
 	//! [dma_setup_3]
-	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
+	config.trigger_action = DMA_TRIGGER_ACTION_BEAT;
 	config.peripheral_trigger = CONF_CAPTURE_TRIGGER;
 	//! [dma_setup_3]
 
@@ -169,7 +169,7 @@ static void config_dma_for_wave(void)
 	//! [config_dma_resource_for_wave]
 	struct dma_resource_config config;
 	dma_get_config_defaults(&config);
-	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
+	config.trigger_action = DMA_TRIGGER_ACTION_BEAT;
 	config.peripheral_trigger = CONF_COMPARE_TRIGGER;
 	dma_allocate(&compare_dma_resource, &config);
 	//! [config_dma_resource_for_wave]
@@ -184,8 +184,13 @@ static void config_dma_for_wave(void)
 	descriptor_config.dst_increment_enable = false;
 	descriptor_config.source_address =
 			(uint32_t)compare_values + sizeof(compare_values);
+#if (SAMR21) || (SAMD21) || (SAMDA1)
 	descriptor_config.destination_address =
 			(uint32_t)&CONF_PWM_MODULE->CC[CONF_PWM_CHANNEL];
+#else
+	descriptor_config.destination_address =
+			(uint32_t)&CONF_PWM_MODULE->CCBUF[CONF_PWM_CHANNEL];
+#endif
 
 	dma_descriptor_create(&compare_dma_descriptor, &descriptor_config);
 	//! [config_dma_descriptor_for_wave]

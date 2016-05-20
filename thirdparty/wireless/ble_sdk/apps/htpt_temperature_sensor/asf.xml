@@ -6,12 +6,25 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="htpt_app.h"/>
 		<build type="c-source" value="htpt_app.c"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.device_information"/>
+		<build type="define" name="NENABLE_PTS" value="false"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_PERIPHERAL"/>
+		<build type="define" name="ATT_DB_MEMORY" value=""/>
+		<build type="define" name="HTPT_SERVICE" value=""/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.timer"/>
 		<require idref="thirdparty.wireless.ble_sdk.services.console"/>
-		<device-support-alias value="ble_stack_lib_support"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42530-ATBTLC1000-BluSDK-Health-Thermometer-Profile-HTP-Getting-Started-Guide_USERGUIDE.pdf"/>
+		
+		<device-support-alias value="ble_stack_lib_support"/>		
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+			<keyword value="BLE"/>
+			<keyword value="Bluetooth"/>
+		</info>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

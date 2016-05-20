@@ -62,7 +62,7 @@ extern struct rtc_module *_rtc_instance[RTC_INST_NUM];
  *
  * \return                        Status of registering callback.
  * \retval STATUS_OK              Registering was done successfully
- * \retval STATUS_ERR_INVALID_ARG If trying to register a callback not available
+ * \retval STATUS_ERR_INVALID_ARG If trying to register, a callback is not available
  */
 enum status_code rtc_calendar_register_callback(
 		struct rtc_module *const module,
@@ -74,7 +74,10 @@ enum status_code rtc_calendar_register_callback(
 
 	/* Overflow callback */
 	if (callback_type == RTC_CALENDAR_CALLBACK_OVERFLOW
-	  || (callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+		|| callback_type == RTC_CALENDAR_CALLBACK_TAMPER
+#endif
+		|| (callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
 			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7)) {
 		status = STATUS_OK;
 	} else if (callback_type > (RTC_NUM_OF_ALARMS + RTC_PER_NUM)) {
@@ -103,7 +106,7 @@ enum status_code rtc_calendar_register_callback(
  *
  * \return                        Status of unregistering callback.
  * \retval STATUS_OK              Unregistering was done successfully
- * \retval STATUS_ERR_INVALID_ARG If trying to unregister a callback not available
+ * \retval STATUS_ERR_INVALID_ARG If trying to unregister, a callback is not available
  */
 enum status_code rtc_calendar_unregister_callback(
 		struct rtc_module *const module,
@@ -113,6 +116,9 @@ enum status_code rtc_calendar_unregister_callback(
 
 	/* Overflow callback */
 	if (callback_type == RTC_CALENDAR_CALLBACK_OVERFLOW
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+		|| callback_type == RTC_CALENDAR_CALLBACK_TAMPER
+#endif
 		|| (callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
 			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7)) {
 		status = STATUS_OK;
@@ -151,6 +157,10 @@ void rtc_calendar_enable_callback(
 
 	if (callback_type == RTC_CALENDAR_CALLBACK_OVERFLOW) {
 		rtc_module->MODE2.INTENSET.reg = RTC_MODE2_INTFLAG_OVF;
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	} else if (callback_type == RTC_CALENDAR_CALLBACK_TAMPER) {
+		rtc_module->MODE2.INTENSET.reg = RTC_MODE2_INTFLAG_TAMPER;
+#endif
 	} else if (callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
 			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7) {
 		rtc_module->MODE2.INTENSET.reg = RTC_MODE2_INTFLAG_PER((1 << callback_type));
@@ -182,6 +192,10 @@ void rtc_calendar_disable_callback(
 	/* Disable interrupt */
 	if (callback_type == RTC_CALENDAR_CALLBACK_OVERFLOW) {
 		rtc_module->MODE2.INTENCLR.reg = RTC_MODE2_INTFLAG_OVF;
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	} else if (callback_type == RTC_CALENDAR_CALLBACK_TAMPER) {
+		rtc_module->MODE2.INTENCLR.reg = RTC_MODE2_INTFLAG_TAMPER;
+#endif
 	} else if (callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
 			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7) {
 		rtc_module->MODE2.INTENCLR.reg = RTC_MODE2_INTFLAG_PER((1 << callback_type));
@@ -221,6 +235,16 @@ static void _rtc_interrupt_handler(const uint32_t instance_index)
 		/* Clear interrupt flag */
 		rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_OVF;
 
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	} else if (interrupt_status & RTC_MODE2_INTFLAG_TAMPER) {
+		/* Tamper interrupt */
+		if (callback_mask & (1 << RTC_CALENDAR_CALLBACK_TAMPER)) {
+			module->callbacks[RTC_CALENDAR_CALLBACK_TAMPER]();
+		}
+
+		/* Clear interrupt flag */
+		rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_TAMPER;
+#endif
 	}else if (interrupt_status & RTC_MODE2_INTFLAG_PER(0xff)) {
 		uint8_t i  = 0;
 		for (i = 0;i < RTC_PER_NUM;i++) {

@@ -64,13 +64,13 @@
  *
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
- *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM L21/L22
  *  - Atmel | SMART SAM C20/C21
  * \else
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM DA0/DA1
+ *  - Atmel | SMART SAM D09/D10/D11
+ *  - Atmel | SMART SAM DA1
  * \endif
  *
  * The outline of this documentation is as follows:
@@ -331,7 +331,7 @@
  * conversion is completed, the next conversion will start at the next positive
  * input channel and so on, until all requested pins to scan have been sampled
  * and converted.
- * SAM L21 has automatic sequences feature instead of pin scan mode. In automatic
+ * SAM L21/L22 has automatic sequences feature instead of pin scan mode. In automatic
  * sequence mode, all of 32 positives inputs can be included in a sequence. The
  * sequence starts from the lowest input, and go to the next enabled input
  * automatically.
@@ -380,7 +380,7 @@
  *
  * \note The connection of events between modules requires the use of the
  *       \ref asfdoc_sam0_events_group "SAM Event System Driver (EVENTS)"
- *       to route output event of one module to the the input event of another.
+ *       to route output event of one module to the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
  *
@@ -660,7 +660,7 @@ static inline enum status_code adc_disable(
 /**
  * \brief Resets the ADC module.
  *
- * Resets an ADC module, clearing all module state and registers to their
+ * Resets an ADC module, clearing all module state, and registers to their
  * default values.
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
@@ -1061,10 +1061,10 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * </tr>
  * \else
  *	<tr>
- *		<td>Added support for SAMR21</td>
+ *		<td>Added support for SAM R21</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21 and new DMA quick start guide</td>
+ *		<td>Added support for SAM D21 and new DMA quick start guide</td>
  *	</tr>
  *	<tr>
  *		<td>Added ADC calibration constant loading from the device signature
@@ -1096,11 +1096,16 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  * \if DEVICE_SAML21_SUPPORT
+  *	<tr>
+ *		<td>42451B</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM L22</td>
+ *	</tr>
  *  <tr>
  *      <td>42451A</td>
  *      <td>07/2015</td>
@@ -1109,18 +1114,18 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \else
  *	<tr>
  *		<td>42109E</td>
- *		<td>04/2015</td>
- *		<td>Added support for SAMDAx.</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM DA1 and SAM D09</td>
  *	</tr>
  *	<tr>
  *		<td>42109D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>42109C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
  *		<td>42109B</td>
