@@ -64,7 +64,7 @@
 
 #if OTAU_FEATURE
 #ifndef BLE_DEVICE_NAME
-#define BLE_DEVICE_NAME				"ATML-OTAD"
+#define BLE_DEVICE_NAME				"ATMEL-OTA"
 #endif /* BLE_DEVICE_NAME */
 #endif /* OTA_FEATURE */
 
