@@ -47,7 +47,7 @@
 #include "conf_timer.h"
 
 /* === TYPES =============================================================== */
-#if SAMD21
+#ifdef SAMD21
 #define TMRID TC3
 #else
 #define TMRID TC0

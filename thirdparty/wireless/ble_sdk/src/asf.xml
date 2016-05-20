@@ -15,6 +15,5 @@
 		<device-support value="samd21"/>
 		<device-support value="samg55"/>
 		<device-support value="sam4sd32"/>
-		<device-support value="samr30"/>
 	</device-alias-map>
 </asf>

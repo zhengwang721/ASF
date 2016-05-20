@@ -19,7 +19,6 @@
   
 				<device-support value="samd21"/>
 				<device-support value="saml21"/>
-				<device-support value="samr30"/>
 			</module>
 			<module type="meta" id="thirdparty.wireless.ble_sdk.services.timer#timer#1"     caption="Timer">
 				<info type="description" value="summary">
