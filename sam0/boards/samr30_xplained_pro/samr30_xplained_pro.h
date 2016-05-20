@@ -151,22 +151,22 @@ void system_board_init(void);
 /** \name Extension header #1 pin definitions
  *  @{
  */
-#define EXT1_PIN_3                PIN_PB05
-#define EXT1_PIN_4                PIN_PA03
-#define EXT1_PIN_5                PIN_PB06
-#define EXT1_PIN_6                PIN_PB07
-#define EXT1_PIN_7                PIN_PA12
-#define EXT1_PIN_8                PIN_PA13
-#define EXT1_PIN_9                PIN_PB04
+#define EXT1_PIN_3                PIN_PA06
+#define EXT1_PIN_4                PIN_PA07
+#define EXT1_PIN_5                PIN_PA13
+#define EXT1_PIN_6                PIN_PA28
+#define EXT1_PIN_7                PIN_PA18
+#define EXT1_PIN_8                PIN_PA19
+#define EXT1_PIN_9                PIN_PA22
 #define EXT1_PIN_10               PIN_PA23
-#define EXT1_PIN_11               PIN_PA08
-#define EXT1_PIN_12               PIN_PA09
-#define EXT1_PIN_13               PIN_PB09
-#define EXT1_PIN_14               PIN_PB08
-#define EXT1_PIN_15               PIN_PA05
-#define EXT1_PIN_16               PIN_PA06
-#define EXT1_PIN_17               PIN_PA04
-#define EXT1_PIN_18               PIN_PA07
+#define EXT1_PIN_11               PIN_PA16
+#define EXT1_PIN_12               PIN_PA17
+#define EXT1_PIN_13               PIN_PA05
+#define EXT1_PIN_14               PIN_PA04
+#define EXT1_PIN_15               PIN_PB03
+#define EXT1_PIN_16               PIN_PB22
+#define EXT1_PIN_17               PIN_PB02
+#define EXT1_PIN_18               PIN_PB23
 /** @} */
 
 /** \name Extension header #1 pin definitions by function
@@ -384,11 +384,11 @@ void system_board_init(void);
  *  @{
  */
 #define EXT3_PIN_3                PIN_PB00
-#define EXT3_PIN_4                PIN_PB01
+#define EXT3_PIN_4                PIN_PA01
 #define EXT3_PIN_5                PIN_PB30
 #define EXT3_PIN_6                PIN_PA15
-#define EXT3_PIN_7                PIN_PB10
-#define EXT3_PIN_8                PIN_PB11
+#define EXT3_PIN_7                PIN_PA04
+#define EXT3_PIN_8                PIN_PA05
 #define EXT3_PIN_9                PIN_PA16
 #define EXT3_PIN_10               PIN_PA27
 #define EXT3_PIN_11               PIN_PA08
