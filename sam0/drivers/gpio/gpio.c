@@ -114,19 +114,13 @@ enum status_code gpio_pin_set_config(const uint8_t gpio_pin,
 			LPMCU_MISC_REGS0->PINMUX_SEL_1.reg &= ~(7 << ((gpio_pin % 8) * 4));
 		} else if (gpio_pin <= 23) {
 			LPMCU_MISC_REGS0->PINMUX_SEL_2.reg &= ~(7 << ((gpio_pin % 8) * 4));
-#if (!BTLC1000)
 		} else if (44 <= gpio_pin  && gpio_pin < 48) {
 			/* Set GPIO_MSx as digital mode */
 			AON_GP_REGS0->MS_GPIO_MODE.vec.ANALOG_ENABLE_ &= ~(1 << (gpio_pin - PIN_GPIO_MS4));
-#endif
 		}
-
-#if (!BTLC1000)		
+	
 		if ((gpio_pin == PIN_AO_GPIO_0) || (gpio_pin == PIN_AO_GPIO_1) ||
 				(gpio_pin == PIN_AO_GPIO_2)) {
-#else
-		if (gpio_pin == PIN_AO_GPIO_0) {
-#endif
 			/* Active Low, Always On Pull Enable Control */
 			if (config->input_pull == GPIO_PIN_PULL_UP) {
 				AON_GP_REGS0->AON_PULL_ENABLE.reg &= ~(1 << (31 - gpio_pin));

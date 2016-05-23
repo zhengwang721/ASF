@@ -85,13 +85,11 @@ static void _spi_clock_enable(struct spi_module *const module)
 		system_clock_peripheral_enable(PERIPHERAL_SPI0_SCK_PHASE);
 		system_clock_peripheral_enable(PERIPHERAL_SPI0_IF);
 		system_clock_peripheral_enable(PERIPHERAL_SPI0_CORE);
-#if (!BTLC1000)
 	} else if (spi_module == (void *)SPI1) {
 		system_clock_peripheral_enable(PERIPHERAL_SPI1_SCK_CLK);
 		system_clock_peripheral_enable(PERIPHERAL_SPI1_SCK_PHASE);
 		system_clock_peripheral_enable(PERIPHERAL_SPI1_IF);
 		system_clock_peripheral_enable(PERIPHERAL_SPI1_CORE);
-#endif
 	}
 }
 
@@ -113,13 +111,11 @@ static void _spi_clock_disable(struct spi_module *const module)
 		system_clock_peripheral_disable(PERIPHERAL_SPI0_SCK_PHASE);
 		system_clock_peripheral_disable(PERIPHERAL_SPI0_IF);
 		system_clock_peripheral_disable(PERIPHERAL_SPI0_CORE);
-#if (!BTLC1000)
 	} else if (spi_module == (void *)SPI1) {
 		system_clock_peripheral_disable(PERIPHERAL_SPI1_SCK_CLK);
 		system_clock_peripheral_disable(PERIPHERAL_SPI1_SCK_PHASE);
 		system_clock_peripheral_disable(PERIPHERAL_SPI1_IF);
 		system_clock_peripheral_disable(PERIPHERAL_SPI1_CORE);
-#endif
 	}
 }
 
@@ -373,11 +369,9 @@ void spi_reset(struct spi_module *const module)
 	if(spi_module == (void *)SPI0) {
 		system_peripheral_reset(PERIPHERAL_SPI0_CORE);
 		system_peripheral_reset(PERIPHERAL_SPI0_IF);
-#if (!BTLC1000)
 	} else if (spi_module == (void *)SPI1) {
 		system_peripheral_reset(PERIPHERAL_SPI1_CORE);
 		system_peripheral_reset(PERIPHERAL_SPI1_IF);
-#endif
 	}
 }
 
@@ -427,12 +421,10 @@ enum status_code spi_init(
 		_spi_instances[0] = module;
 		system_register_isr(RAM_ISR_TABLE_SPIRX0_INDEX, (uint32_t)spi_rx0_isr_handler);
 		system_register_isr(RAM_ISR_TABLE_SPITX0_INDEX, (uint32_t)spi_tx0_isr_handler);
-#if (!BTLC1000)
 	} else if (module->hw == SPI1) {
 		_spi_instances[1] = module;
 		system_register_isr(RAM_ISR_TABLE_SPIRX1_INDEX, (uint32_t)spi_rx1_isr_handler);
 		system_register_isr(RAM_ISR_TABLE_SPITX1_INDEX, (uint32_t)spi_tx1_isr_handler);
-#endif
 	}
 #endif
 
@@ -514,11 +506,9 @@ void spi_enable(struct spi_module *const module)
 	if(spi_module == SPI0) {
 		NVIC_EnableIRQ(SPI0_RX_IRQn);
 		NVIC_EnableIRQ(SPI0_TX_IRQn);
-#if (!BTLC1000)
 	} else if(spi_module == SPI1) {
 		NVIC_EnableIRQ(SPI1_RX_IRQn);
 		NVIC_EnableIRQ(SPI1_TX_IRQn);
-#endif
 	}
 #endif
 
@@ -541,11 +531,9 @@ void spi_disable(struct spi_module *const module)
 	if(spi_module == SPI0) {
 		NVIC_DisableIRQ(SPI0_RX_IRQn);
 		NVIC_DisableIRQ(SPI0_TX_IRQn);
-#if (!BTLC1000)
 	} else if(spi_module == SPI1) {
 		NVIC_DisableIRQ(SPI1_RX_IRQn);
 		NVIC_DisableIRQ(SPI1_TX_IRQn);
-#endif
 	}
 #  endif
 

@@ -6,7 +6,5 @@
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="config"/>
 		<build type="header-file" value="config/conf_board.h"/>
-		<generator value="as5_arm_template"/>
-		<generator value="doxygen-v2"/>
 	</project>
 </asf>
