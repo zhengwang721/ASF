@@ -40,7 +40,6 @@
 			<device-support value="samd21"/>
 			<device-support value="saml21"/>
 			<device-support value="saml22"/>
-			<device-support value="samr30"/>
 		</module>
 	</select-by-device>
 </asf>

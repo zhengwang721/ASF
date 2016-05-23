@@ -23,6 +23,5 @@
 		<require idref="sam0.drivers.events"/>
 
 		<device-support value="saml21"/>
-		<device-support value="samr30"/>
 	</module>
 </asf>
