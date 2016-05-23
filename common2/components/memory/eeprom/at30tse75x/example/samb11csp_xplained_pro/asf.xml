@@ -7,8 +7,6 @@
 		<build type="header-file" value="conf_i2c.h"/>
 		<require idref="board.samb11csp_xplained_pro"/>
 		<require idref="common2.components.memory.eeprom.at30tse75x.example"/>
-		<generator value="armgcc"/>
-		<generator value="as5_arm"/>
 		<device-support value="atbtlc1000wlcsp"/>
 	</project>
 </asf>

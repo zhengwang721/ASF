@@ -620,10 +620,8 @@ static void _spi_transceive_buffer(
 
 	if (module->hw == SPI0) {
 		flag_direction_both[0] = false;
-#if (!BTLC1000)
 	} else if (module->hw == SPI1) {
 		flag_direction_both[1] = false;
-#endif
 	}
 
 	/* Get a pointer to the hardware module instance */
