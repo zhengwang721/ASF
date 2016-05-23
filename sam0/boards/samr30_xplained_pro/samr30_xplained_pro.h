@@ -86,7 +86,7 @@ void system_board_init(void);
 
 /** \name LED0 definitions
  *  @{ */
-#define LED0_PIN                  PIN_PA18
+#define LED0_PIN                  PIN_PA19
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
@@ -99,7 +99,7 @@ void system_board_init(void);
 #define SW0_EIC_PIN               PIN_PA28A_EIC_EXTINT8
 #define SW0_EIC_MUX               MUX_PA28A_EIC_EXTINT8
 #define SW0_EIC_PINMUX            PINMUX_PA28A_EIC_EXTINT8
-#define SW0_EIC_LINE              2
+#define SW0_EIC_LINE              8
 /** @} */
 
 /**
@@ -109,7 +109,7 @@ void system_board_init(void);
  * boards.
  *
  *  @{ */
-#define LED_0_NAME                "LED0 (yellow)"
+#define LED_0_NAME                "LED0 (orange)"
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
