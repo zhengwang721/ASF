@@ -33,5 +33,6 @@
 		<device-support value="samv70"/>
 		<device-support value="sams70"/>
 		<device-support value="same70"/>
+		<device-support value="samr30" />
 	</module>
 </asf>

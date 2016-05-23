@@ -191,14 +191,14 @@ static void adc_setup(void)
 {
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-#if (!SAML21) && (!SAML22) && (!SAMC21)
+#if (!SAML21) && (!SAML22) && (!SAMC21) && (!SAMR30)
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
 #endif
 	/* Use GCLK generator 4 as clock source */
 	config.clock_source       = GCLK_GENERATOR_4;
 	/* Divide input clock by 4 */
 	config.clock_prescaler    = ADC_CLOCK_PRESCALER_DIV4;
-#if (SAML21) || (SAML22) || (SAMC21)
+#if (SAML21) || (SAML22) || (SAMC21) || (SAMR30)
 	/* Use internal bandgap reference */
 	config.reference          = ADC_REFERENCE_INTREF;
 #else

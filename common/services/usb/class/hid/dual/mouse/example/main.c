@@ -53,7 +53,7 @@
  */
 int main(void)
 {
-#if SAMD21 || SAML21 || SAMDA1
+#if SAMD21 || SAML21 || SAMDA1 || SAMR30
 	system_init();
 #else
 	sysclk_init();

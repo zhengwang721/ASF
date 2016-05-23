@@ -27,6 +27,7 @@
 		<device-support value="samv70"/>
 		<device-support value="sams70"/>
 		<device-support value="same70"/>
+		<device-support value="samr30"/>
 		<require idref="common.drivers.usb.host"/>
 		<require idref="common.services.usb.protocol"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>

@@ -28,6 +28,7 @@
 			<device-support value="samv70"/>
 			<device-support value="sams70"/>
 			<device-support value="same70"/>
+			<device-support value="samr30"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.vendor.host.composite#disable" caption="USB Host Vendor disabled">
@@ -68,6 +69,7 @@
 		<device-support value="samv70"/>
 		<device-support value="sams70"/>
 		<device-support value="same70"/>
+		<device-support value="samr30"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 

@@ -3,7 +3,7 @@
  *
  * \brief SAM Low Power Application
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -555,7 +555,7 @@ static void test_standby_mode_static_power_sleepwalking(void)
 	config.enable_dpgpd0       = false;
 	config.enable_dpgpd1       = false;
 	config.power_domain        = SYSTEM_POWER_DOMAIN_DEFAULT;
-#if (SAML21XXXB)
+#if (SAML21XXXB) || (SAMR30)
 	config.vregs_mode          = SYSTEM_SYSTEM_VREG_SWITCH_AUTO;
 #else
 	config.disable_avregsd     = false;
