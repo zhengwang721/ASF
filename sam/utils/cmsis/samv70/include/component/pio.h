@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -111,21 +111,11 @@ typedef struct {
   __I  uint32_t PIO_LOCKSR;    /**< \brief (Pio Offset: 0x00E0) Lock Status */
   __IO uint32_t PIO_WPMR;      /**< \brief (Pio Offset: 0x00E4) Write Protection Mode Register */
   __I  uint32_t PIO_WPSR;      /**< \brief (Pio Offset: 0x00E8) Write Protection Status Register */
-  __I  uint32_t Reserved12[4];
-  __I  uint32_t PIO_VERSION;   /**< \brief (Pio Offset: 0x00FC) Version Register */
+  __I  uint32_t Reserved12[5];
   __IO uint32_t PIO_SCHMITT;   /**< \brief (Pio Offset: 0x0100) Schmitt Trigger Register */
-  __I  uint32_t Reserved13[7];
-  __IO uint32_t PIO_KER;       /**< \brief (Pio Offset: 0x0120) Keypad Controller Enable Register */
-  __IO uint32_t PIO_KRCR;      /**< \brief (Pio Offset: 0x0124) Keypad Controller Row Column Register */
-  __IO uint32_t PIO_KDR;       /**< \brief (Pio Offset: 0x0128) Keypad Controller Debouncing Register */
-  __I  uint32_t Reserved14[1];
-  __O  uint32_t PIO_KIER;      /**< \brief (Pio Offset: 0x0130) Keypad Controller Interrupt Enable Register */
-  __O  uint32_t PIO_KIDR;      /**< \brief (Pio Offset: 0x0134) Keypad Controller Interrupt Disable Register */
-  __I  uint32_t PIO_KIMR;      /**< \brief (Pio Offset: 0x0138) Keypad Controller Interrupt Mask Register */
-  __I  uint32_t PIO_KSR;       /**< \brief (Pio Offset: 0x013C) Keypad Controller Status Register */
-  __I  uint32_t PIO_KKPR;      /**< \brief (Pio Offset: 0x0140) Keypad Controller Key Press Register */
-  __I  uint32_t PIO_KKRR;      /**< \brief (Pio Offset: 0x0144) Keypad Controller Key Release Register */
-  __I  uint32_t Reserved15[2];
+  __I  uint32_t Reserved13[5];
+  __IO uint32_t PIO_DRIVER;     /**< (PIO Offset: 0x118) I/O Drive Register */
+  __I  uint32_t Reserved14[13];
   __IO uint32_t PIO_PCMR;      /**< \brief (Pio Offset: 0x0150) Parallel Capture Mode Register */
   __O  uint32_t PIO_PCIER;     /**< \brief (Pio Offset: 0x0154) Parallel Capture Interrupt Enable Register */
   __O  uint32_t PIO_PCIDR;     /**< \brief (Pio Offset: 0x0158) Parallel Capture Interrupt Disable Register */
