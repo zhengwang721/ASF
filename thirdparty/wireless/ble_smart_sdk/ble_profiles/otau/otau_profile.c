@@ -862,6 +862,18 @@ static void por_update_firmware_version(section_id_t section_id, uint32_t sectio
 		{
 			if(ofm_read_page(section_id, section_addr+index, page_buf, dev_flash_info.page_size) == AT_BLE_SUCCESS)
 			{
+				if (!index)
+				{
+					uint32_t ver = ((page_buf[0] << 24) | (page_buf[1] << 16) | \
+								   (page_buf[2] << 8) | (page_buf[3]));
+					uint32_t size = ((page_buf[4] << 24) | (page_buf[5] << 16) | \
+									(page_buf[6] << 8) | (page_buf[7]));
+					if((ver == 0) && (size == 0))
+					{
+						DBG_OTAU("Cannot Update the FW version");
+						return;
+					}
+				}
 				if(ofm_write_page(section_id, backup_addr+index, page_buf, dev_flash_info.page_size) != AT_BLE_SUCCESS)
 				{
 					DBG_OTAU("POR: Backup Write Page failed");
