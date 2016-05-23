@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="BLE OTAU Demo Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.bas_otau_upgrade.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="BLE OTAU UPGRADE Demo Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.bas_otau_upgrade.samb11_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		BLE OTAU Demo Application for BLE stack.
+		BLE OTAU UPGRADE Demo Application for BLE stack.
 		</info>	
 		<require idref="thirdparty.wireless.ble_smart_sdk.apps.bas_otau_upgrade"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.apps.config.samb11"/>
