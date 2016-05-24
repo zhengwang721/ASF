@@ -283,23 +283,13 @@ void uart_get_config_defaults(
 
 	config->pin_number_pad[0] = PIN_LP_GPIO_2;
 	config->pin_number_pad[1] = PIN_LP_GPIO_3;
-#if (!BTLC1000)
 	config->pin_number_pad[2] = PIN_LP_GPIO_4;
 	config->pin_number_pad[3] = PIN_LP_GPIO_5;
-#else
-    config->pin_number_pad[2] = 0;  /* BTLC1000 has no flow control function. */
-	config->pin_number_pad[3] = 0;  /* BTLC1000 has no flow control function. */
-#endif
 
 	config->pinmux_sel_pad[0] = MUX_LP_GPIO_2_UART0_RXD;
 	config->pinmux_sel_pad[1] = MUX_LP_GPIO_3_UART0_TXD;
-#if (!BTLC1000)
 	config->pinmux_sel_pad[2] = MUX_LP_GPIO_4_UART0_CTS;
 	config->pinmux_sel_pad[3] = MUX_LP_GPIO_5_UART0_RTS;
-#else
-	config->pinmux_sel_pad[2] = 0;  /* BTLC1000 has no flow control function. */
-	config->pinmux_sel_pad[3] = 0;  /* BTLC1000 has no flow control function. */
-#endif
 }
 
 /**

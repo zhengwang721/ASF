@@ -7,8 +7,6 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<require idref="board.samb11csp_xplained_pro"/>
 		<require idref="sam0.drivers.dualtimer.quick_start"/>
-		<generator value="armgcc"/>
-		<generator value="as5_arm"/>
 		<device-support value="atbtlc1000wlcsp"/>
 	</project>
 </asf>

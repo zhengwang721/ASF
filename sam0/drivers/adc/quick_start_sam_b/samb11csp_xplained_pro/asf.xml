@@ -6,8 +6,6 @@
 		<require idref="board.samb11csp_xplained_pro"/>
 		<require idref="sam0.drivers.adc.quick_start_sam_b"/>
 		<config name="config.samb.drivers.adc" value="polled"/>
-		<generator value="armgcc"/>
-		<generator value="as5_arm"/>
 		<device-support value="atbtlc1000wlcsp"/>
 	</project>
 </asf>
