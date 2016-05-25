@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS Peripheral Control API For the TWIHS
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,6 +55,14 @@
 /* ASF includes. */
 #include "twihs_master.h"
 #include "freertos_peripheral_control.h"
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
 
 #if XMEGA
 # error Unsupported chip type
@@ -689,5 +697,13 @@ status_code_t freertos_twihs_read_packet_async(freertos_twihs_if p_twihs,
  *  }
  * \endcode
  */
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond
 
 #endif /* FREERTOS_TWIHS_MASTER_INCLUDED */
