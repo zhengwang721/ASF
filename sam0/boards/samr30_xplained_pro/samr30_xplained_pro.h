@@ -222,10 +222,10 @@ void system_board_init(void);
  *  @{
  */
 #define EXT1_IRQ_MODULE           EIC
-#define EXT1_IRQ_INPUT            20
-#define EXT1_IRQ_PIN              PIN_PA20A_EIC_EXTINT4
-#define EXT1_IRQ_MUX              MUX_PA20A_EIC_EXTINT4
-#define EXT1_IRQ_PINMUX           PINMUX_PA20A_EIC_EXTINT4
+#define EXT1_IRQ_INPUT            3
+#define EXT1_IRQ_PIN              PIN_PA19A_EIC_EXTINT3
+#define EXT1_IRQ_MUX              MUX_PA19A_EIC_EXTINT3
+#define EXT1_IRQ_PINMUX           PINMUX_PA19A_EIC_EXTINT3
 /** @} */
 
 /** \name Extension header #1 I2C definitions
@@ -264,140 +264,16 @@ void system_board_init(void);
 #define EXT1_SPI_SERCOM_DMAC_ID_RX   SERCOM0_DMAC_ID_RX
 /** @} */
 
-/** \name Extension header #2 pin definitions
- *  @{
- */
-#define EXT2_PIN_3                PIN_PA10
-#define EXT2_PIN_4                PIN_PA11
-#define EXT2_PIN_5                PIN_PA20
-#define EXT2_PIN_6                PIN_PA21
-#define EXT2_PIN_7                PIN_PB12
-#define EXT2_PIN_8                PIN_PB13
-#define EXT2_PIN_9                PIN_PB14
-#define EXT2_PIN_10               PIN_PB15
-#define EXT2_PIN_11               PIN_PA08
-#define EXT2_PIN_12               PIN_PA09
-#define EXT2_PIN_13               PIN_PA19
-#define EXT2_PIN_14               PIN_PA18
-#define EXT2_PIN_15               PIN_PA17
-#define EXT2_PIN_16               PIN_PB22
-#define EXT2_PIN_17               PIN_PB16
-#define EXT2_PIN_18               PIN_PB23
-/** @} */
-
-/** \name Extension header #2 pin definitions by function
- *  @{
- */
-#define EXT2_PIN_ADC_0            EXT2_PIN_3
-#define EXT2_PIN_ADC_1            EXT2_PIN_4
-#define EXT2_PIN_GPIO_0           EXT2_PIN_5
-#define EXT2_PIN_GPIO_1           EXT2_PIN_6
-#define EXT2_PIN_PWM_0            EXT2_PIN_7
-#define EXT2_PIN_PWM_1            EXT2_PIN_8
-#define EXT2_PIN_IRQ              EXT2_PIN_9
-#define EXT2_PIN_I2C_SDA          EXT2_PIN_11
-#define EXT2_PIN_I2C_SCL          EXT2_PIN_12
-#define EXT2_PIN_UART_RX          EXT2_PIN_13
-#define EXT2_PIN_UART_TX          EXT2_PIN_14
-#define EXT2_PIN_SPI_SS_1         EXT2_PIN_10
-#define EXT2_PIN_SPI_SS_0         EXT2_PIN_15
-#define EXT2_PIN_SPI_MOSI         EXT2_PIN_16
-#define EXT2_PIN_SPI_MISO         EXT2_PIN_17
-#define EXT2_PIN_SPI_SCK          EXT2_PIN_18
-/** @} */
-
-/** \name Extension header #2 ADC definitions
- *  @{
- */
-#define EXT2_ADC_MODULE           ADC
-#define EXT2_ADC_0_CHANNEL        18
-#define EXT2_ADC_0_PIN            PIN_PA10B_ADC_AIN18
-#define EXT2_ADC_0_MUX            MUX_PA10B_ADC_AIN18
-#define EXT2_ADC_0_PINMUX         PINMUX_PA10B_ADC_AIN18
-#define EXT2_ADC_1_CHANNEL        19
-#define EXT2_ADC_1_PIN            PIN_PA11B_ADC_AIN19
-#define EXT2_ADC_1_MUX            MUX_PA11B_ADC_AIN19
-#define EXT2_ADC_1_PINMUX         PINMUX_PA11B_ADC_AIN19
-/** @} */
-
-/** \name Extension header #2 PWM definitions
- *  @{
- */
-#define EXT2_PWM_MODULE           TC0
-#define EXT2_PWM_0_CHANNEL        0
-#define EXT2_PWM_0_PIN            PIN_PA22E_TC0_WO0
-#define EXT2_PWM_0_MUX            MUX_PA22E_TC0_WO0
-#define EXT2_PWM_0_PINMUX         PINMUX_PA22E_TC0_WO0
-#define EXT2_PWM_1_CHANNEL        1
-#define EXT2_PWM_1_PIN            PIN_PA23E_TC0_WO1
-#define EXT2_PWM_1_MUX            MUX_PA23E_TC0_WO1
-#define EXT2_PWM_1_PINMUX         PINMUX_PA23E_TC0_WO1
-/** @} */
-
-/** \name Extension header #2 IRQ/External interrupt definitions
- *  @{
- */
-#define EXT2_IRQ_MODULE           EIC
-#define EXT2_IRQ_INPUT            14
-#define EXT2_IRQ_PIN              PIN_PB14A_EIC_EXTINT14
-#define EXT2_IRQ_MUX              MUX_PB14A_EIC_EXTINT14
-#define EXT2_IRQ_PINMUX           PINMUX_PB14A_EIC_EXTINT14
-/** @} */
-
- /** \name Extension header #2 I2C definitions
- *  @{
- */
-#define EXT2_I2C_MODULE              SERCOM2
-#define EXT2_I2C_SERCOM_PINMUX_PAD0  PINMUX_PA08D_SERCOM2_PAD0
-#define EXT2_I2C_SERCOM_PINMUX_PAD1  PINMUX_PA09D_SERCOM2_PAD1
-#define EXT2_I2C_SERCOM_DMAC_ID_TX   SERCOM2_DMAC_ID_TX
-#define EXT2_I2C_SERCOM_DMAC_ID_RX   SERCOM2_DMAC_ID_RX
-/** @} */
-
-/** \name Extension header #2 UART definitions
- *  @{
- */
-#define EXT2_UART_MODULE              SERCOM1
-#define EXT2_UART_SERCOM_MUX_SETTING  USART_RX_3_TX_2_XCK_3
-#define EXT2_UART_SERCOM_PINMUX_PAD0  PINMUX_UNUSED
-#define EXT2_UART_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
-#define EXT2_UART_SERCOM_PINMUX_PAD2  PINMUX_PA18C_SERCOM1_PAD2
-#define EXT2_UART_SERCOM_PINMUX_PAD3  PINMUX_PA19C_SERCOM1_PAD3
-#define EXT2_UART_SERCOM_DMAC_ID_TX   SERCOM1_DMAC_ID_TX
-#define EXT2_UART_SERCOM_DMAC_ID_RX   SERCOM1_DMAC_ID_RX
-/** @} */
-
-/** \name Extension header #2 SPI definitions
- *  @{
- */
-#define EXT2_SPI_MODULE              SERCOM5
-#define EXT2_SPI_SERCOM_MUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
-#define EXT2_SPI_SERCOM_PINMUX_PAD0  PINMUX_PB16C_SERCOM5_PAD0
-#define EXT2_SPI_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
-#define EXT2_SPI_SERCOM_PINMUX_PAD2  PINMUX_PB22D_SERCOM5_PAD2
-#define EXT2_SPI_SERCOM_PINMUX_PAD3  PINMUX_PB23D_SERCOM5_PAD3
-#define EXT2_SPI_SERCOM_DMAC_ID_TX   SERCOM5_DMAC_ID_TX
-#define EXT2_SPI_SERCOM_DMAC_ID_RX   SERCOM5_DMAC_ID_RX
-/** @} */
-
 /** \name Extension header #3 pin definitions
  *  @{
  */
-#define EXT3_PIN_3                PIN_PB00
-#define EXT3_PIN_4                PIN_PA01
-#define EXT3_PIN_5                PIN_PB30
-#define EXT3_PIN_6                PIN_PA15
-#define EXT3_PIN_7                PIN_PA04
-#define EXT3_PIN_8                PIN_PA05
-#define EXT3_PIN_9                PIN_PA16
-#define EXT3_PIN_10               PIN_PA27
-#define EXT3_PIN_11               PIN_PA08
-#define EXT3_PIN_12               PIN_PA09
-#define EXT3_PIN_13               PIN_PA19
-#define EXT3_PIN_14               PIN_PA18
-#define EXT3_PIN_15               PIN_PB17
+#define EXT3_PIN_5                PIN_PA15
+#define EXT3_PIN_10               PIN_PA08
+#define EXT3_PIN_11               PIN_PA16
+#define EXT3_PIN_12               PIN_PA17
+#define EXT3_PIN_15               PIN_PA14
 #define EXT3_PIN_16               PIN_PB22
-#define EXT3_PIN_17               PIN_PB16
+#define EXT3_PIN_17               PIN_PB02
 #define EXT3_PIN_18               PIN_PB23
 /** @} */
 
