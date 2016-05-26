@@ -151,7 +151,7 @@ uint32_t pio_handler_set(Pio *p_pio, uint32_t ul_id, uint32_t ul_mask,
     /* Check interrupt for this pin, if already defined, redefine it. */
 	for (i = 0; i <= gs_ul_nb_sources; i++) {
 		pSource = &(gs_interrupt_sources[i]);
-		if (pSource->id == ul_id) {
+		if (pSource->id == ul_id && pSource->mask == ul_mask) {
 			break;
 		}
 	}
