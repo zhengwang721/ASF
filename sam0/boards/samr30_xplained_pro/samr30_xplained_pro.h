@@ -109,7 +109,7 @@ void system_board_init(void);
  * boards.
  *
  *  @{ */
-#define LED_0_NAME                "LED0 (orange)"
+#define LED_0_NAME                "LED0 (yellow)"
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
