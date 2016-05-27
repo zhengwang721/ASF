@@ -91,7 +91,13 @@
 
 /** TX descriptor lists */
 COMPILER_ALIGNED(8)
+static uint8_t gs_tx_buffer_null[GMAC_TX_UNITSIZE];
+COMPILER_ALIGNED(8)
 static gmac_tx_descriptor_t gs_tx_desc_null;
+/** RX descriptors lists */
+COMPILER_ALIGNED(8)
+static uint8_t gs_rx_buffer_null[GMAC_RX_UNITSIZE];
+COMPILER_ALIGNED(8)
 static gmac_rx_descriptor_t gs_rx_desc_null;
 /**
  * GMAC driver structure.
@@ -349,8 +355,16 @@ static void gmac_low_level_init(struct netif *netif)
 	gmac_get_priority_interrupt_status(GMAC, GMAC_QUE_2);
 	gmac_get_priority_interrupt_status(GMAC, GMAC_QUE_1);
 
+	/* Set Tx Priority */
+	gs_tx_desc_null.addr = (uint32_t)gs_tx_buffer_null;
+	gs_tx_desc_null.status.val = GMAC_TXD_WRAP | GMAC_TXD_USED;
 	gmac_set_tx_priority_queue(GMAC, (uint32_t)&gs_tx_desc_null, GMAC_QUE_2);
 	gmac_set_tx_priority_queue(GMAC, (uint32_t)&gs_tx_desc_null, GMAC_QUE_1);
+	
+	/* Set Rx Priority */
+	gs_rx_desc_null.addr.val = (uint32_t)gs_rx_buffer_null & GMAC_RXD_ADDR_MASK;
+	gs_rx_desc_null.addr.val |= GMAC_RXD_WRAP;
+	gs_rx_desc_null.status.val = 0;
 	gmac_set_rx_priority_queue(GMAC, (uint32_t)&gs_rx_desc_null, GMAC_QUE_2);
 	gmac_set_rx_priority_queue(GMAC, (uint32_t)&gs_rx_desc_null, GMAC_QUE_1);
 
