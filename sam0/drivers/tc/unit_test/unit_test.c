@@ -81,6 +81,7 @@
  *  - \b SAM L22 Xplained Pro:EXTINT 2 (PB16, EXT3 pin 7)  <-----> TC0 WO1 (PB09, EXT1 pin 8)
  *  - \b SAM DA1 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC4 WO1 (PB09, EXT1 pin 13)
  *  - \b SAM C21 Xplained Pro:EXTINT 0 (PB16, EXT2 pin 9)  <-----> TC0 WO1 (PB09, EXT1 pin 3)
+ *  - \b SAM R30 Xplained Pro:EXTINT 0 (PA16, EXT1 pin 11)  <-----> TC0 WO1 (PA23, EXT1 pin 10)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a

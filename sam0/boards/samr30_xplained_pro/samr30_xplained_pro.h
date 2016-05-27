@@ -116,12 +116,12 @@ void system_board_init(void);
 #define LED0_GPIO                 LED0_PIN
 #define LED0                      LED0_PIN
 
-#define LED_0_PWM4CTRL_MODULE     TCC0
-#define LED_0_PWM4CTRL_CHANNEL    0
-#define LED_0_PWM4CTRL_OUTPUT     0
-#define LED_0_PWM4CTRL_PIN        PIN_PA22F_TCC0_WO4
-#define LED_0_PWM4CTRL_MUX        MUX_PA22F_TCC0_WO4
-#define LED_0_PWM4CTRL_PINMUX     PINMUX_PA22F_TCC0_WO4
+#define LED_0_PWM3CTRL_MODULE     TCC0
+#define LED_0_PWM3CTRL_CHANNEL    3
+#define LED_0_PWM3CTRL_OUTPUT     3
+#define LED_0_PWM3CTRL_PIN        PIN_PA19F_TCC0_WO3
+#define LED_0_PWM3CTRL_MUX        MUX_PA19F_TCC0_WO3
+#define LED_0_PWM3CTRL_PINMUX     PINMUX_PA19F_TCC0_WO3
 /** @} */
 
 /** Number of on-board LEDs */
@@ -207,15 +207,15 @@ void system_board_init(void);
 /** \name Extension header #1 PWM definitions
  *  @{
  */
-#define EXT1_PWM_MODULE           TC2
+#define EXT1_PWM_MODULE           TC0
 #define EXT1_PWM_0_CHANNEL        0
-#define EXT1_PWM_0_PIN            PIN_PB02E_TC2_WO0
-#define EXT1_PWM_0_MUX            MUX_PB02E_TC2_WO0
-#define EXT1_PWM_0_PINMUX         PINMUX_PB02E_TC2_WO0
+#define EXT1_PWM_0_PIN            PIN_PA22E_TC0_WO0
+#define EXT1_PWM_0_MUX            MUX_PA22E_TC0_WO0
+#define EXT1_PWM_0_PINMUX         PINMUX_PA22E_TC0_WO0
 #define EXT1_PWM_1_CHANNEL        1
-#define EXT1_PWM_1_PIN            PIN_PB03E_TC2_WO1
-#define EXT1_PWM_1_MUX            MUX_PB03E_TC2_WO1
-#define EXT1_PWM_1_PINMUX         PINMUX_PB03E_TC2_WO1
+#define EXT1_PWM_1_PIN            PIN_PA23E_TC0_WO1
+#define EXT1_PWM_1_MUX            MUX_PA23E_TC0_WO1
+#define EXT1_PWM_1_PINMUX         PINMUX_PA23E_TC0_WO1
 /** @} */
 
 /** \name Extension header #1 IRQ/External interrupt definitions
@@ -351,7 +351,7 @@ void system_board_init(void);
  */
 #define EXT3_SPI_MODULE              SERCOM5
 #define EXT3_SPI_SERCOM_MUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
-#define EXT3_SPI_SERCOM_PINMUX_PAD0  PINMUX_PB16C_SERCOM5_PAD0
+#define EXT3_SPI_SERCOM_PINMUX_PAD0  PINMUX_PB02D_SERCOM5_PAD0
 #define EXT3_SPI_SERCOM_PINMUX_PAD1  PINMUX_PB17C_SERCOM5_PAD1
 #define EXT3_SPI_SERCOM_PINMUX_PAD2  PINMUX_PB22D_SERCOM5_PAD2
 #define EXT3_SPI_SERCOM_PINMUX_PAD3  PINMUX_PB23D_SERCOM5_PAD3

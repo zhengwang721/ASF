@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM L21 Xplained Pro test configuration.
+ * \brief SAM R30 Xplained Pro test configuration.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
 #define CONF_GCLK1_OUTPUT_PIN PIN_PB23
 #define CONF_GCLK1_OUTPUT_PINMUX MUX_PB23H_GCLK_IO1
 
-#define CONF_EXT_WAKEUP_PIN   PIN_PA02A_RSTC_EXTWAKE2
-#define CONF_EXT_WAKEUP_PINMUX MUX_PA02A_RSTC_EXTWAKE2
+#define CONF_EXT_WAKEUP_PIN   PIN_PA06A_RSTC_EXTWAKE6
+#define CONF_EXT_WAKEUP_PINMUX MUX_PA06A_RSTC_EXTWAKE6
 
 #endif

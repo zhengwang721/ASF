@@ -58,14 +58,14 @@
 #define CONF_TEST_TCC0            TCC0
 #define CONF_TEST_TCC1            TCC1
 
-#define CONF_EIC_CHAN             4
-#define CONF_EIC_PIN              PIN_PA04A_EIC_EXTINT4
-#define CONF_EIC_MUX              MUX_PA04A_EIC_EXTINT4
+#define CONF_EIC_CHAN             3
+#define CONF_EIC_PIN              PIN_PB03A_EIC_EXTINT3
+#define CONF_EIC_MUX              MUX_PB03A_EIC_EXTINT3
 
-#define CONF_TEST_PIN_OUT         PIN_PB30E_TCC0_WO0
-#define CONF_TEST_PIN_MUX         MUX_PB30E_TCC0_WO0
+#define CONF_TEST_PIN_OUT         PIN_PA08E_TCC0_WO0
+#define CONF_TEST_PIN_MUX         MUX_PA08E_TCC0_WO0
 
-#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_4
+#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_3
 #define CONF_EVENT_USED_ID        EVSYS_ID_USER_TCC1_EV_1
 
 #define CONF_CAPTURE_CHAN_0       0
