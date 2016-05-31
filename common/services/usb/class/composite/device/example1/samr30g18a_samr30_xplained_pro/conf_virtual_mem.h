@@ -1,7 +1,10 @@
 /**
+ *
  * \file
  *
- * \brief SAM R30 Xplained Pro board configuration.
+ * \brief Virtual memory configuration file.
+ *
+ * This file contains the possible external configuration of the Virtual Memory.
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -44,10 +47,11 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-/* ID detect enabled */
-#define CONF_BOARD_USB_ID_DETECT
+#ifndef _CONF_VIRTUAL_MEM_H_
+#define _CONF_VIRTUAL_MEM_H_
 
-#endif /* CONF_BOARD_H_INCLUDED */
+//! Size of Virtual Memory on internal RAM (unit 512B)
+#define VMEM_NB_SECTOR 48 // Internal RAM 24KB (should > 20KB or PC can not format it)
+
+#endif // _CONF_VIRTUAL_MEM_H_

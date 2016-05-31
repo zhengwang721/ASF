@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM R30 Xplained Pro board configuration.
+ * \brief Example configuration
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -43,11 +43,14 @@
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#define CONF_USART_BASE           EDBG_CDC_MODULE
+#define CONF_USART_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_USART_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_USART_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_USART_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_USART_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
 
-/* ID detect enabled */
-#define CONF_BOARD_USB_ID_DETECT
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_EXAMPLE_H_INCLUDED */

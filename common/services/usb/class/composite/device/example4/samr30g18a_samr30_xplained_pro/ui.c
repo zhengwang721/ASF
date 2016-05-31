@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM R30 Xplained Pro board configuration.
+ * \brief User Interface
  *
- * Copyright (c) 2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,10 +44,104 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#include <asf.h>
+#include "ui.h"
 
-/* ID detect enabled */
-#define CONF_BOARD_USB_ID_DETECT
+void ui_init(void)
+{
+	/* Initialize LEDs */
+	LED_On(LED_0_PIN);
+}
 
-#endif /* CONF_BOARD_H_INCLUDED */
+void ui_powerdown(void)
+{
+	LED_Off(LED_0_PIN);
+}
+
+void ui_wakeup(void)
+{
+	LED_On(LED_0_PIN);
+}
+
+
+void ui_com_open(uint8_t port)
+{
+	UNUSED(port);
+}
+
+
+void ui_com_close(uint8_t port)
+{
+	UNUSED(port);
+}
+
+
+void ui_com_rx_start(void)
+{
+
+}
+
+
+void ui_com_rx_stop(void)
+{
+
+}
+
+
+void ui_com_tx_start(void)
+{
+
+}
+
+
+void ui_com_tx_stop(void)
+{
+
+}
+
+
+void ui_com_error(void)
+{
+
+}
+
+
+void ui_com_overflow(void)
+{
+
+}
+
+void ui_start_read(void)
+{
+}
+
+void ui_stop_read(void)
+{
+}
+
+void ui_start_write(void)
+{
+}
+
+void ui_stop_write(void)
+{
+}
+
+void ui_process(uint16_t framenumber)
+{
+	if ((framenumber % 1000) == 0) {
+		LED_On(LED_0_PIN);
+	}
+	if ((framenumber % 1000) == 500) {
+		LED_Off(LED_0_PIN);
+	}
+}
+
+
+/**
+ * \defgroup UI User Interface
+ *
+ * Human interface on SAML21-XPlain:
+ * - LED0 blinks when USB host has checked and enabled CDC and MSC interface
+ *
+ */

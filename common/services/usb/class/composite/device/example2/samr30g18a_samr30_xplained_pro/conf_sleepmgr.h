@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM R30 Xplained Pro board configuration.
+ * \brief Sleep manager configuration
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -44,10 +44,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SLEEPMGR_H_INCLUDED
+#define CONF_SLEEPMGR_H_INCLUDED
 
-/* ID detect enabled */
-#define CONF_BOARD_USB_ID_DETECT
+#define CONFIG_SLEEPMGR_ENABLE
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H_INCLUDED */
