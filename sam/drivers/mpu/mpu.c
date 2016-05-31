@@ -46,6 +46,11 @@
 
 #include "mpu.h"
 
+/**
+ * \defgroup sam_drivers_mpu_group MPU - Memory Protect Unit
+ * @{
+ */
+
 /** \file */
 
 /**
@@ -155,7 +160,7 @@ void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, ui
 {
 
 	/* Disable interrupt */
-	cpu_irq_disable();
+	__disable_irq();
 
 	/* Clean up data and instruction buffer */
 	__DSB();
@@ -176,5 +181,7 @@ void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, ui
 	__ISB();
 
 	/* Enable the interrupt */
-	cpu_irq_enable();
+	__enable_irq();
 }
+
+//@}

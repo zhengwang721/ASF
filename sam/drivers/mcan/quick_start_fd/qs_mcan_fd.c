@@ -3,7 +3,7 @@
  *
  * \brief SAM MCAN Quick Start for FD modue
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -282,8 +282,7 @@ static void mcan_fd_send_standard_message(uint32_t id_value, uint8_t *data)
 
 	mcan_get_tx_buffer_element_defaults(&tx_element);
 	tx_element.T0.reg |= MCAN_TX_ELEMENT_T0_STANDARD_ID(id_value);
-	tx_element.T1.reg = MCAN_TX_ELEMENT_T1_FDF | MCAN_TX_ELEMENT_T1_BRS |
-			MCAN_TX_ELEMENT_T1_DLC(MCAN_TX_ELEMENT_T1_DLC_DATA64_Val);
+	tx_element.T1.reg = MCAN_TX_ELEMENT_T1_DLC(MCAN_TX_ELEMENT_T1_DLC_DATA64_Val);
 	for (i = 0; i < CONF_MCAN_ELEMENT_DATA_SIZE; i++) {
 		tx_element.data[i] = *data;
 		data++;
@@ -308,8 +307,7 @@ static void mcan_fd_send_extended_message(uint32_t id_value, uint8_t *data)
 	mcan_get_tx_buffer_element_defaults(&tx_element);
 	tx_element.T0.reg |= MCAN_TX_ELEMENT_T0_EXTENDED_ID(id_value) |
 			MCAN_TX_ELEMENT_T0_XTD;
-	tx_element.T1.reg = MCAN_TX_ELEMENT_T1_EFC | MCAN_TX_ELEMENT_T1_FDF |
-			MCAN_TX_ELEMENT_T1_BRS |
+	tx_element.T1.reg = MCAN_TX_ELEMENT_T1_EFC | 
 			MCAN_TX_ELEMENT_T1_DLC(MCAN_TX_ELEMENT_T1_DLC_DATA64_Val);
 	for (i = 0; i < CONF_MCAN_ELEMENT_DATA_SIZE; i++) {
 		tx_element.data[i] = *data;

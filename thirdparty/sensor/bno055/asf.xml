@@ -8,6 +8,7 @@
 		<build type="header-file" subtype="api" value="bno055.h"/>
 		<build type="header-file" subtype="api" value="bno055_port.h"/>
 		<build type="include-path" value="."/>
+		<build type="header-file" value="bno055_doc.h"/>
 		<build type="doxygen-entry-point" value="bno055_sensor_group"/>
 		<require idref="common.services.basic.gpio"/>
 		<require idref="common.services.basic.clock"/>

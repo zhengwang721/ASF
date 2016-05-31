@@ -309,7 +309,7 @@ static inline bool bodvdd_is_detected(void)
  */
 static inline void bodvdd_clear_detected(void)
 {
-	SUPC->INTFLAG.reg |= SUPC_INTFLAG_BODVDDDET;
+	SUPC->INTFLAG.reg = SUPC_INTFLAG_BODVDDDET;
 	return;
 }
 

@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<project caption="Getting Started for SAM B11 CSP Xplained Pro" id="sam0.applications.getting-started.samb11csp_xplained_pro">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_example.h"/>
+		<require idref="sam0.applications.getting-started"/>
+		<require idref="board.samb11csp_xplained_pro"/>
+		<device-support value="atbtlc1000wlcsp"/>
+	</project>
+</asf>

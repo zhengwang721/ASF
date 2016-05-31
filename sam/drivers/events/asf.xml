@@ -20,9 +20,11 @@
 			interfacing to the Peripheral Event Controller for SAM.
 		</info>	
 		<build type="c-source" value="events.c"/>
-		<build type="header-file" subtype="api" value="events.h"/>
 		<build type="include-path" value="."/>
-		
+		<build type="header-file" subtype="api" value="events.h"/>
+		<build type="include-path" value="./example1"/>
+		<build type="include-path" value="./example2"/>
+
 		<build type="doxygen-entry-point" value="asfdoc_sam_drivers_events_group"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam_drivers_events_exqsg"/>
 
