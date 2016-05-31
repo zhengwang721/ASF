@@ -251,7 +251,7 @@ void ui_kbd_led(uint8_t value)
  /**
  * \defgroup UI User Interface
  *
- * Human interface on SAML21-XPlain:
+ * Human interface on SAMLR30-XPlain:
  * - LED0 blinks when USB host has checked and enabled HID Keyboard interface
  * - The SW0 opens a notepad application on Windows O.S.
  *   and sends key sequence "Atmel ARM"

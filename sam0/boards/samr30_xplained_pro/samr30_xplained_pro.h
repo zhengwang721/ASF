@@ -231,9 +231,9 @@ void system_board_init(void);
 /** \name Extension header #1 I2C definitions
  *  @{
  */
-#define EXT1_I2C_MODULE              SERCOM2
-#define EXT1_I2C_SERCOM_PINMUX_PAD0  PINMUX_PA08D_SERCOM2_PAD0
-#define EXT1_I2C_SERCOM_PINMUX_PAD1  PINMUX_PA09D_SERCOM2_PAD1
+#define EXT1_I2C_MODULE              SERCOM3
+#define EXT1_I2C_SERCOM_PINMUX_PAD0  PINMUX_PA16D_SERCOM3_PAD0
+#define EXT1_I2C_SERCOM_PINMUX_PAD1  PINMUX_PA17D_SERCOM3_PAD1
 #define EXT1_I2C_SERCOM_DMAC_ID_TX   SERCOM2_DMAC_ID_TX
 #define EXT1_I2C_SERCOM_DMAC_ID_RX   SERCOM2_DMAC_ID_RX
 /** @} */
@@ -405,14 +405,10 @@ void system_board_init(void);
 #define USB_TARGET_DM_PIN            PIN_PA24G_USB_DM
 #define USB_TARGET_DM_MUX            MUX_PA24G_USB_DM
 #define USB_TARGET_DM_PINMUX         PINMUX_PA24G_USB_DM
-#define USB_VBUS_PIN                 PIN_PA14
-#define USB_VBUS_EIC_LINE            14
-#define USB_VBUS_EIC_MUX             MUX_PA14A_EIC_EXTINT14
-#define USB_VBUS_EIC_PINMUX          PINMUX_PA14A_EIC_EXTINT14
-#define USB_ID_PIN                   PIN_PB02
-#define USB_ID_EIC_LINE              2
-#define USB_ID_EIC_MUX               MUX_PB02A_EIC_EXTINT2
-#define USB_ID_EIC_PINMUX            PINMUX_PB02A_EIC_EXTINT2
+#define USB_ID_PIN                   PIN_PA15
+#define USB_ID_EIC_LINE              15
+#define USB_ID_EIC_MUX               MUX_PA15A_EIC_EXTINT15
+#define USB_ID_EIC_PINMUX            PINMUX_PA15A_EIC_EXTINT15
 /** @} */
 
 

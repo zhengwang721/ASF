@@ -110,7 +110,7 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 #endif
 
 #if (!(SAMD21) && !(SAMR21) && !(SAML21)) && !(SAMDA1) && !(SAMR30)
-# error The current USB Host Driver supports only SAMD21/R21/L21
+# error The current USB Host Driver supports only SAMD21/R21/L21/R30
 #endif
 
 #ifdef USB_HOST_LPM_SUPPORT
