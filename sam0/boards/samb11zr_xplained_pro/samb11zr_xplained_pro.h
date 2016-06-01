@@ -95,10 +95,7 @@ void system_board_init(void);
  *  @{ */
 #define SW0_PIN                   PIN_AO_GPIO_0
 #define SW0_ACTIVE                false
-#define SW0_INACTIVE              !SW0_ACTIVE
-//#define SW0_EIC_PIN               
-//#define SW0_EIC_MUX                         
-//#define SW0_EIC_LINE              
+#define SW0_INACTIVE              !SW0_ACTIVE          
 /** @} */
 
 /**
@@ -114,35 +111,10 @@ void system_board_init(void);
 #define LED_0_INACTIVE            LED0_INACTIVE
 #define LED0_GPIO                 LED0_PIN
 #define LED0                      LED0_PIN
-
-//#define LED_0_PWM4CTRL_MODULE     TCC0
-//#define LED_0_PWM4CTRL_CHANNEL    0
-//#define LED_0_PWM4CTRL_OUTPUT     0
-//#define LED_0_PWM4CTRL_PIN        
-//#define LED_0_PWM4CTRL_MUX           
 /** @} */
 
 /** Number of on-board LEDs */
 #define LED_COUNT                 1
-
-/**
- * \name Serialflash definitions
- *
- * On board Serialflash definitions.
- *
- *  @{ */
-//#define SERIALFLASH_SPI_MODULE      
-//#define SERIALFLASH_SPI_MUX_SETTING
-//#define SERIALFLASH_SPI_PIN_PAD0
-//#define SERIALFLASH_SPI_PIN_PAD1
-//#define SERIALFLASH_SPI_PIN_PAD2
-//#define SERIALFLASH_SPI_PIN_PAD3 
-//#define SERIALFLASH_SPI_MUX_PAD0 
-//#define SERIALFLASH_SPI_MUX_PAD1 
-//#define SERIALFLASH_SPI_MUX_PAD2 
-//#define SERIALFLASH_SPI_MUX_PAD3 
-//#define SERIALFLASH_SPI_CS
-/** @} */
 
 /**
  * \name Button #0 definitions
@@ -155,9 +127,6 @@ void system_board_init(void);
 #define BUTTON_0_PIN              SW0_PIN
 #define BUTTON_0_ACTIVE           SW0_ACTIVE
 #define BUTTON_0_INACTIVE         SW0_INACTIVE
-//#define BUTTON_0_EIC_PIN          SW0_EIC_PIN
-//#define BUTTON_0_EIC_MUX          SW0_EIC_MUX
-//#define BUTTON_0_EIC_LINE         SW0_EIC_LINE
 /** @} */
 
 /** Number of on-board buttons */
@@ -208,36 +177,21 @@ void system_board_init(void);
 /** \name Extension header #1 ADC definitions
  *  @{
  */
-//#define EXT1_ADC_MODULE           
-//#define EXT1_ADC_0_CHANNEL        8
 #define EXT1_ADC_0_PIN            PIN_GPIO_MS1
-//#define EXT1_ADC_0_MUX            
-         
-//#define EXT1_ADC_1_CHANNEL        9
 #define EXT1_ADC_1_PIN            PIN_GPIO_MS2
-//#define EXT1_ADC_1_MUX      
 /** @} */
 
 /** \name Extension header #1 PWM definitions
  *  @{
  */
-//#define EXT1_PWM_MODULE           
-//#define EXT1_PWM_0_CHANNEL        0
-//#define EXT1_PWM_0_PIN            
-//#define EXT1_PWM_0_MUX            
-         
-//#define EXT1_PWM_1_CHANNEL        1
-//#define EXT1_PWM_1_PIN            
-//#define EXT1_PWM_1_MUX
+#define EXT1_PWM_0_PIN            PIN_LP_GPIO_17             
+#define EXT1_PWM_1_PIN            PIN_LP_GPIO_18           
 /** @} */
 
 /** \name Extension header #1 IRQ/External interrupt definitions
  *  @{
  */
-//#define EXT1_IRQ_MODULE           
-//#define EXT1_IRQ_INPUT            4
 #define EXT1_IRQ_PIN              PIN_AO_GPIO_0
-//#define EXT1_IRQ_MUX
 /** @} */
 
 /** \name Extension header #1 I2C definitions
@@ -248,32 +202,22 @@ void system_board_init(void);
 #define EXT1_I2C_SERCOM_PIN_PAD1        PIN_LP_GPIO_9
 #define EXT1_I2C_SERCOM_MUX_PAD0        MUX_LP_GPIO_8_I2C0_SDA
 #define EXT1_I2C_SERCOM_MUX_PAD1        MUX_LP_GPIO_9_I2C0_SCL
-//#define EXT1_I2C_SERCOM_DMAC_ID_TX
-//#define EXT1_I2C_SERCOM_DMAC_ID_RX
 /** @} */
 
 /** \name Extension header #1 UART definitions
  *  @{
  */
 #define EXT1_UART_MODULE                UART0
-//#define EXT1_UART_SERCOM_MUX_SETTING
 #define EXT1_UART_SERCOM_PIN_PAD0       PIN_LP_GPIO_2
 #define EXT1_UART_SERCOM_PIN_PAD1       PIN_LP_GPIO_3
-//#define EXT1_UART_SERCOM_PIN_PAD2
-//#define EXT1_UART_SERCOM_PIN_PAD3
 #define EXT1_UART_SERCOM_MUX_PAD0       MUX_LP_GPIO_2_UART0_RXD
 #define EXT1_UART_SERCOM_MUX_PAD1       MUX_LP_GPIO_3_UART0_TXD
-//#define EXT1_UART_SERCOM_MUX_PAD2
-//#define EXT1_UART_SERCOM_MUX_PAD3
-//#define EXT1_UART_SERCOM_DMAC_ID_TX   
-//#define EXT1_UART_SERCOM_DMAC_ID_RX   
 /** @} */
 
 /** \name Extension header #1 SPI definitions
  *  @{
  */
 #define EXT1_SPI_MODULE                 SPI0
-//#define EXT1_SPI_SERCOM_MUX_SETTING
 #define EXT1_SPI_SERCOM_PIN_PAD0        PIN_LP_GPIO_12
 #define EXT1_SPI_SERCOM_PIN_PAD1        PIN_LP_GPIO_11
 #define EXT1_SPI_SERCOM_PIN_PAD2        PIN_LP_GPIO_13
@@ -282,8 +226,6 @@ void system_board_init(void);
 #define EXT1_SPI_SERCOM_MUX_PAD1        MUX_LP_GPIO_11_SPI0_MOSI
 #define EXT1_SPI_SERCOM_MUX_PAD2        MUX_LP_GPIO_13_SPI0_MISO
 #define EXT1_SPI_SERCOM_MUX_PAD3        MUX_LP_GPIO_10_SPI0_SCK
-//#define EXT1_SPI_SERCOM_DMAC_ID_TX   
-//#define EXT1_SPI_SERCOM_DMAC_ID_RX   
 /** @} */
 
 /** \name Extension header #3 pin definitions
@@ -293,8 +235,6 @@ void system_board_init(void);
 #define EXT3_PIN_4                PIN_GPIO_MS4
 #define EXT3_PIN_5                PIN_LP_GPIO_5
 #define EXT3_PIN_6                PIN_LP_GPIO_4
-//#define EXT3_PIN_7
-//#define EXT3_PIN_8
 #define EXT3_PIN_9                PIN_AO_GPIO_1
 #define EXT3_PIN_10               PIN_AO_GPIO_2
 #define EXT3_PIN_11               PIN_LP_GPIO_14
@@ -314,8 +254,6 @@ void system_board_init(void);
 #define EXT3_PIN_ADC_1            EXT3_PIN_4
 #define EXT3_PIN_GPIO_0           EXT3_PIN_5
 #define EXT3_PIN_GPIO_1           EXT3_PIN_6
-//#define EXT3_PIN_PWM_0            EXT3_PIN_7
-//#define EXT3_PIN_PWM_1            EXT3_PIN_8
 #define EXT3_PIN_IRQ              EXT3_PIN_9
 #define EXT3_PIN_I2C_SDA          EXT3_PIN_11
 #define EXT3_PIN_I2C_SCL          EXT3_PIN_12
@@ -331,38 +269,14 @@ void system_board_init(void);
 /** \name Extension header #3 ADC definitions
  *  @{
  */
-//#define EXT3_ADC_MODULE           
-//#define EXT3_ADC_0_CHANNEL        0
 #define EXT3_ADC_0_PIN            PIN_GPIO_MS3
-//#define EXT3_ADC_0_MUX            
-         
-//#define EXT3_ADC_1_CHANNEL        1
 #define EXT3_ADC_1_PIN            PIN_GPIO_MS4
-//#define EXT3_ADC_1_MUX        
-/** @} */
-
-/** \name Extension header #3 PWM for Control definitions
- *  @{
- */
-//#define EXT3_PWM4CTRL_MODULE      
-//#define EXT3_PWM4CTRL_0_CHANNEL   0
-//#define EXT3_PWM4CTRL_0_OUTPUT    0
-//#define EXT3_PWM4CTRL_0_PIN       
-//#define EXT3_PWM4CTRL_0_MUX       
-    
-//#define EXT3_PWM4CTRL_1_CHANNEL   1
-//#define EXT3_PWM4CTRL_1_OUTPUT    1
-//#define EXT3_PWM4CTRL_1_PIN       
-//#define EXT3_PWM4CTRL_1_MUX   
 /** @} */
 
 /** \name Extension header #3 IRQ/External interrupt definitions
  *  @{
  */
-//#define EXT3_IRQ_MODULE           
-//#define EXT3_IRQ_INPUT            8
 #define EXT3_IRQ_PIN              PIN_AO_GPIO_1
-//#define EXT3_IRQ_MUX                        
 /** @} */
 
 /** \name Extension header #3 I2C definitions
@@ -373,32 +287,22 @@ void system_board_init(void);
 #define EXT3_I2C_SERCOM_PIN_PAD1        PIN_LP_GPIO_15
 #define EXT3_I2C_SERCOM_MUX_PAD0        MUX_LP_GPIO_14_I2C1_SDA
 #define EXT3_I2C_SERCOM_MUX_PAD1        MUX_LP_GPIO_15_I2C1_SCL
-//#define EXT3_I2C_SERCOM_DMAC_ID_TX   
-//#define EXT3_I2C_SERCOM_DMAC_ID_RX   
 /** @} */
 
 /** \name Extension header #3 UART definitions
  *  @{
  */
 #define EXT3_UART_MODULE                UART1
-//#define EXT3_UART_SERCOM_MUX_SETTING  
 #define EXT3_UART_SERCOM_PIN_PAD0       PIN_LP_GPIO_6
 #define EXT3_UART_SERCOM_PIN_PAD1       PIN_LP_GPIO_7
-//#define EXT3_UART_SERCOM_PIN_PAD2
-//#define EXT3_UART_SERCOM_PIN_PAD3
 #define EXT3_UART_SERCOM_MUX_PAD0       MUX_LP_GPIO_6_UART1_RXD
 #define EXT3_UART_SERCOM_MUX_PAD1       MUX_LP_GPIO_7_UART1_TXD
-//#define EXT3_UART_SERCOM_MUX_PAD2  
-//#define EXT3_UART_SERCOM_MUX_PAD3  
-//#define EXT3_UART_SERCOM_DMAC_ID_TX   
-//#define EXT3_UART_SERCOM_DMAC_ID_RX   
 /** @} */
 
 /** \name Extension header #3 SPI definitions
  *  @{
  */
 #define EXT3_SPI_MODULE                 SPI1
-//#define EXT3_SPI_SERCOM_MUX_SETTING 
 #define EXT3_SPI_SERCOM_PIN_PAD0        PIN_LP_GPIO_16
 #define EXT3_SPI_SERCOM_PIN_PAD1        PIN_LP_GPIO_19
 #define EXT3_SPI_SERCOM_PIN_PAD2        PIN_LP_GPIO_18
@@ -407,8 +311,6 @@ void system_board_init(void);
 #define EXT3_SPI_SERCOM_MUX_PAD1        MUX_LP_GPIO_19_SPI1_MOSI
 #define EXT3_SPI_SERCOM_MUX_PAD2        MUX_LP_GPIO_18_SPI1_MISO
 #define EXT3_SPI_SERCOM_MUX_PAD3        MUX_LP_GPIO_17_SPI1_SCK
-//#define EXT3_SPI_SERCOM_DMAC_ID_TX   
-//#define EXT3_SPI_SERCOM_DMAC_ID_RX   
 /** @} */
 
 /** \name Embedded debugger GPIO interface definitions
@@ -441,15 +343,12 @@ void system_board_init(void);
 #define EDBG_I2C_SERCOM_PIN_PAD1        PIN_LP_GPIO_9
 #define EDBG_I2C_SERCOM_MUX_PAD0        MUX_LP_GPIO_8_I2C0_SDA
 #define EDBG_I2C_SERCOM_MUX_PAD1        MUX_LP_GPIO_9_I2C0_SCL
-//#define EDBG_I2C_SERCOM_DMAC_ID_TX   
-//#define EDBG_I2C_SERCOM_DMAC_ID_RX   
 /** @} */
 
 /** \name Embedded debugger SPI interface definitions
  * @{
  */
 #define EDBG_SPI_MODULE                 SPI0
-//#define EDBG_SPI_SERCOM_MUX_SETTING
 #define EDBG_SPI_SERCOM_PIN_PAD0        PIN_LP_GPIO_12
 #define EDBG_SPI_SERCOM_PIN_PAD1        PIN_LP_GPIO_13
 #define EDBG_SPI_SERCOM_PIN_PAD2        PIN_LP_GPIO_11
@@ -457,16 +356,13 @@ void system_board_init(void);
 #define EDBG_SPI_SERCOM_MUX_PAD0        MUX_LP_GPIO_12_SPI0_SSN
 #define EDBG_SPI_SERCOM_MUX_PAD1        MUX_LP_GPIO_13_SPI0_MISO
 #define EDBG_SPI_SERCOM_MUX_PAD2        MUX_LP_GPIO_11_SPI0_MOSI
-#define EDBG_SPI_SERCOM_MUX_PAD3        MUX_LP_GPIO_10_SPI0_SCK
-//#define EDBG_SPI_SERCOM_DMAC_ID_TX   
-//#define EDBG_SPI_SERCOM_DMAC_ID_RX   
+#define EDBG_SPI_SERCOM_MUX_PAD3        MUX_LP_GPIO_10_SPI0_SCK 
 /** @} */
 
 /** \name Embedded debugger CDC Gateway USART interface definitions
  * @{
  */
 #define EDBG_CDC_MODULE           UART0
-//#define EDBG_CDC_SERCOM_MUX_SETTING 
 #define EDBG_CDC_SERCOM_PIN_PAD0  PIN_LP_GPIO_2
 #define EDBG_CDC_SERCOM_PIN_PAD1  PIN_LP_GPIO_3
 #define EDBG_CDC_SERCOM_PIN_PAD2  PIN_LP_GPIO_4
@@ -475,8 +371,6 @@ void system_board_init(void);
 #define EDBG_CDC_SERCOM_MUX_PAD1  MUX_LP_GPIO_3_UART0_TXD
 #define EDBG_CDC_SERCOM_MUX_PAD2  MUX_LP_GPIO_4_UART0_CTS
 #define EDBG_CDC_SERCOM_MUX_PAD3  MUX_LP_GPIO_5_UART0_RTS
-//#define EDBG_CDC_SERCOM_DMAC_ID_TX   
-//#define EDBG_CDC_SERCOM_DMAC_ID_RX   
 /** @} */
 
 /** @} */
