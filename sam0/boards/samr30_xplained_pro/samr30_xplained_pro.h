@@ -405,6 +405,10 @@ void system_board_init(void);
 #define USB_TARGET_DM_PIN            PIN_PA24G_USB_DM
 #define USB_TARGET_DM_MUX            MUX_PA24G_USB_DM
 #define USB_TARGET_DM_PINMUX         PINMUX_PA24G_USB_DM
+#define USB_VBUS_PIN                 PIN_PA07
+#define USB_VBUS_EIC_LINE            7
+#define USB_VBUS_EIC_MUX             MUX_PA07A_EIC_EXTINT7
+#define USB_VBUS_EIC_PINMUX          PINMUX_PA07A_EIC_EXTINT7
 #define USB_ID_PIN                   PIN_PA15
 #define USB_ID_EIC_LINE              15
 #define USB_ID_EIC_MUX               MUX_PA15A_EIC_EXTINT15

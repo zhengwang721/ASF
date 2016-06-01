@@ -48,13 +48,13 @@
 
 #include <board.h>
 
-// Interface configuration for SAM L21 Xplained Pro
+// Interface configuration for SAM R30 Xplained Pro
 #  define SSD1306_SPI                 EXT3_SPI_MODULE
 #  define CONFIG_SSD1306_FRAMEBUFFER
 
-#  define SSD1306_DC_PIN              EXT3_PIN_5
-#  define SSD1306_RES_PIN             EXT3_PIN_10
-#  define SSD1306_CS_PIN              EXT3_PIN_15
+#  define SSD1306_DC_PIN              EXT1_PIN_5
+#  define SSD1306_RES_PIN             EXT1_PIN_10
+#  define SSD1306_CS_PIN              EXT1_PIN_15
 
 #  define SSD1306_SPI_PINMUX_SETTING  EXT3_SPI_SERCOM_MUX_SETTING
 #  define SSD1306_SPI_PINMUX_PAD0     EXT3_SPI_SERCOM_PINMUX_PAD0

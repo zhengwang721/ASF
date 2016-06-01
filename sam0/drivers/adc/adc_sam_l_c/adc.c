@@ -158,7 +158,11 @@ void adc_get_config_defaults(struct adc_config *const config)
 	config->window.window_mode            = ADC_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
+#if SAMR30
+	config->positive_input                = ADC_POSITIVE_INPUT_PIN6;
+#else
 	config->positive_input                = ADC_POSITIVE_INPUT_PIN1;
+#endif
 	config->negative_input                = ADC_NEGATIVE_INPUT_GND;
 	config->accumulate_samples            = ADC_ACCUMULATE_DISABLE;
 	config->divide_result                 = ADC_DIVIDE_RESULT_DISABLE;
