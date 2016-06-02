@@ -110,7 +110,7 @@ void ui_process(uint16_t framenumber)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAML21-XPlain:
+ * Human interface on SAMR30-XPlain:
  * - LED0 blinks when USB host has checked and enabled PHDC interface
  * - LED0 is on when PHDC has validated association
  * - SW0 is used to send a measure

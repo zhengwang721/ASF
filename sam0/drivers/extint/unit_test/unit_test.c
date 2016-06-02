@@ -3,7 +3,7 @@
  *
  * \brief SAM External Interrupt Unit test
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -84,6 +84,8 @@
  *  - EXT1 \b Pin 9 (PC02) <-----> EXT3 Pin 5 (PC16)
  * - SAM C21 Xplained Pro
  *  - EXT1 \b Pin 9 (PB14) <-----> EXT1 Pin 10 (PB15)
+ * - SAM R30 Xplained Pro
+ *  - EXT1 \b Pin 5 (PA13) <-----> EXT1 Pin 8 (PA19)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a

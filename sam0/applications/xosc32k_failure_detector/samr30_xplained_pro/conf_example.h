@@ -51,9 +51,9 @@
 #define CONF_TC_XOSC32K               TC1
 /** Timer configured to source from the OSC32K oscillator generator */
 #define CONF_TC_OSC32K                TC4
-#define CONF_CLOCK_PIN_OUT            PIN_PA27H_GCLK_IO0
-#define CONF_CLOCK_PIN_MUX            MUX_PA27H_GCLK_IO0
-#define CONF_EVENT_GENERATOR_ID       EVSYS_ID_GEN_TC3_OVF
+#define CONF_CLOCK_PIN_OUT            PIN_PA14H_GCLK_IO0
+#define CONF_CLOCK_PIN_MUX            MUX_PA14H_GCLK_IO0
+#define CONF_EVENT_GENERATOR_ID       EVSYS_ID_GEN_TC1_OVF
 #define CONF_EVENT_USED_ID            EVSYS_ID_USER_TC4_EVU
 /** The value should be 0 or 1 */
 #define CONF_FRANGE_CAL               0
