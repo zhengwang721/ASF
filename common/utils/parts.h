@@ -998,8 +998,13 @@
  * @{
  */
 #define SAMB11G ( \
-		SAM_PART_IS_DEFINED(SAMB11G18A) \
+		SAM_PART_IS_DEFINED(SAMB11G18A) || \
+		SAM_PART_IS_DEFINED(SAMB11ZR) \
 	)
+#define BTLC1000 ( \
+		SAM_PART_IS_DEFINED(BTLC1000WLCSP) \
+	)
+
 /** @} */
 
 /**
@@ -1573,7 +1578,7 @@
 #define SAMR30 (SAMR30G || SAMR30E)
 
 /** SAMB11 Family */
-#define SAMB11 (SAMB11G)
+#define SAMB11 (SAMB11G || BTLC1000)
 
 /** SAML21 Family */
 #define SAML21 (SAML21J || SAML21G || SAML21E)

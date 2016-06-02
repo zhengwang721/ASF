@@ -2123,20 +2123,20 @@ static inline void tcc_set_ramp_index(
 		}
 		if (TCC_RAMP_INDEX_DEFAULT == ramp_index) {
 			/* Cancel pending command */
-			tcc_module->CTRLBCLR.reg = TCC_CTRLBSET_IDXCMD_DISABLE;
+			tcc_module->CTRLBCLR.reg = TCC_CTRLBSET_IDXCMD_HOLD;
 			return;
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_IDXCMD_Msk;
 		if (last_cmd == TCC_CTRLBSET_IDXCMD_DISABLE) {
 			break;
-		} else if (last_cmd == TCC_CTRLBSET_CMD(ramp_index)) {
+		} else if (last_cmd == TCC_CTRLBSET_IDXCMD(ramp_index)) {
 			/* Command have been issued */
 			return;
 		}
 	} while (1);
 
 	/* Write command to execute */
-	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD(ramp_index);
+	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_IDXCMD(ramp_index);
 }
 
 /** @} */
