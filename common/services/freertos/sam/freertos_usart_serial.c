@@ -447,7 +447,7 @@ status_code_t freertos_usart_write_packet_async(freertos_usart_if p_usart,
 
 	/* Don't do anything unless a valid USART pointer was used. */
 	if (usart_index < MAX_USARTS) {
-		return_value = freertos_obtain_peripheral_access_mutex(
+		return_value = freertos_obtain_peripheral_access_semphore(
 				&(tx_dma_control[usart_index]),
 				&block_time_ticks);
 
@@ -714,9 +714,9 @@ static void local_usart_handler(const portBASE_TYPE usart_index)
 
 		/* If the driver is supporting multi-threading, then return the access
 		mutex. */
-		if (tx_dma_control[usart_index].peripheral_access_mutex != NULL) {
+		if (tx_dma_control[usart_index].peripheral_access_sem != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[usart_index].peripheral_access_mutex,
+					tx_dma_control[usart_index].peripheral_access_sem,
 					&higher_priority_task_woken);
 		}
 
@@ -781,9 +781,9 @@ static void local_usart_handler(const portBASE_TYPE usart_index)
 		ensure the peripheral access mutex is made available to tasks. */
 		usart_reset_status(
 				all_usart_definitions[usart_index].peripheral_base_address);
-		if (tx_dma_control[usart_index].peripheral_access_mutex != NULL) {
+		if (tx_dma_control[usart_index].peripheral_access_sem != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[usart_index].peripheral_access_mutex,
+					tx_dma_control[usart_index].peripheral_access_sem,
 					&higher_priority_task_woken);
 		}
 	}

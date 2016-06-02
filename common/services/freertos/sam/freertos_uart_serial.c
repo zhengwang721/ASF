@@ -378,7 +378,7 @@ status_code_t freertos_uart_write_packet_async(freertos_uart_if p_uart,
 
 	/* Don't do anything unless a valid UART pointer was used. */
 	if (uart_index < MAX_UARTS) {
-		return_value = freertos_obtain_peripheral_access_mutex(
+		return_value = freertos_obtain_peripheral_access_semphore(
 				&(tx_dma_control[uart_index]),
 				&block_time_ticks);
 
@@ -645,9 +645,9 @@ static void local_uart_handler(const portBASE_TYPE uart_index)
 
 		/* If the driver is supporting multi-threading, then return the access
 		mutex. */
-		if (tx_dma_control[uart_index].peripheral_access_mutex != NULL) {
+		if (tx_dma_control[uart_index].peripheral_access_sem != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[uart_index].peripheral_access_mutex,
+					tx_dma_control[uart_index].peripheral_access_sem,
 					&higher_priority_task_woken);
 		}
 
@@ -715,9 +715,9 @@ static void local_uart_handler(const portBASE_TYPE uart_index)
 		ensure the peripheral access mutex is made available to tasks. */
 		uart_reset_status(
 				all_uart_definitions[uart_index].peripheral_base_address);
-		if (tx_dma_control[uart_index].peripheral_access_mutex != NULL) {
+		if (tx_dma_control[uart_index].peripheral_access_sem != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[uart_index].peripheral_access_mutex,
+					tx_dma_control[uart_index].peripheral_access_sem,
 					&higher_priority_task_woken);
 		}
 	}

@@ -118,8 +118,12 @@ void create_peripheral_control_semaphores(const uint8_t options_flags,
 	for the purpose.  Full duplex peripherals have extra configuration steps
 	that are performed separately. */
 	if ((options_flags & USE_TX_ACCESS_MUTEX) != 0) {
-		tx_dma_control->peripheral_access_mutex = xSemaphoreCreateMutex();
-		configASSERT(tx_dma_control->peripheral_access_mutex);
+		vSemaphoreCreateBinary(
+				tx_dma_control->peripheral_access_sem);
+		configASSERT(tx_dma_control->peripheral_access_sem);
+		
+		/* Ensure the binary semaphore starts with equal to 1 */
+		xSemaphoreGive(tx_dma_control->peripheral_access_sem);
 	}
 
 	/* If the transmit function is only going to return once the transmit is
@@ -272,19 +276,19 @@ uint32_t freertos_copy_bytes_from_pdc_circular_buffer(
  * Return STATUS_OK if the mutex was obtained, and ERR_TIMEOUT if the mutex
  * did not become available within max_block_time_ticks tick periods.
  */
-status_code_t freertos_obtain_peripheral_access_mutex(
+status_code_t freertos_obtain_peripheral_access_semphore(
 		freertos_dma_event_control_t *dma_event_control,
 		portTickType *max_block_time_ticks)
 {
 	status_code_t return_value = STATUS_OK;
 	xTimeOutType time_out_definition;
 
-	if (dma_event_control->peripheral_access_mutex != NULL) {
+	if (dma_event_control->peripheral_access_sem != NULL) {
 		/* Remember the time on entry. */
 		vTaskSetTimeOutState(&time_out_definition);
 
 		/* Wait to get exclusive access to the peripheral. */
-		if (xSemaphoreTake(dma_event_control->peripheral_access_mutex,
+		if (xSemaphoreTake(dma_event_control->peripheral_access_sem,
 				*max_block_time_ticks) == pdFAIL) {
 			return_value = ERR_TIMEOUT;
 		} else {

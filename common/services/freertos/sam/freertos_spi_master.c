@@ -351,7 +351,7 @@ status_code_t freertos_spi_write_packet_async(freertos_spi_if p_spi,
 
 	/* Don't do anything unless a valid SPI pointer was used. */
 	if (spi_index < MAX_SPIS) {
-		return_value = freertos_obtain_peripheral_access_mutex(
+		return_value = freertos_obtain_peripheral_access_semphore(
 				&(tx_dma_control[spi_index]), &block_time_ticks);
 
 		if (return_value == STATUS_OK) {
@@ -460,7 +460,7 @@ status_code_t freertos_spi_read_packet_async(freertos_spi_if p_spi,
 	if (spi_index < MAX_SPIS) {
 		/* Because the peripheral is half duplex, there is only one access mutex
 		and the rx uses the tx mutex. */
-		return_value = freertos_obtain_peripheral_access_mutex(
+		return_value = freertos_obtain_peripheral_access_semphore(
 				&(tx_dma_control[spi_index]), &block_time_ticks);
 
 		if (return_value == STATUS_OK) {
@@ -593,7 +593,7 @@ status_code_t freertos_spi_full_duplex_packet_async(freertos_spi_if p_spi,
 	if (spi_index < MAX_SPIS) {
 		/* Because the peripheral is half duplex, there is only one access mutex
 		and the rx uses the tx mutex. */
-		return_value = freertos_obtain_peripheral_access_mutex(
+		return_value = freertos_obtain_peripheral_access_semphore(
 				&(tx_dma_control[spi_index]), &block_time_ticks);
 
 		if (return_value == STATUS_OK) {
@@ -667,9 +667,9 @@ static void local_spi_handler(const portBASE_TYPE spi_index)
 
 		/* If the driver is supporting multi-threading, then return the access
 		mutex. */
-		if (tx_dma_control[spi_index].peripheral_access_mutex != NULL) {
+		if (tx_dma_control[spi_index].peripheral_access_sem != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[spi_index].peripheral_access_mutex,
+					tx_dma_control[spi_index].peripheral_access_sem,
 					&higher_priority_task_woken);
 		}
 
@@ -689,9 +689,9 @@ static void local_spi_handler(const portBASE_TYPE spi_index)
 		/* If the driver is supporting multi-threading, then return the access
 		mutex.  NOTE: As a reception is performed by first performing a
 		transmission, the SPI receive function uses the tx access semaphore. */
-		if (tx_dma_control[spi_index].peripheral_access_mutex != NULL) {
+		if (tx_dma_control[spi_index].peripheral_access_sem != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[spi_index].peripheral_access_mutex,
+					tx_dma_control[spi_index].peripheral_access_sem,
 					&higher_priority_task_woken);
 		}
 
@@ -712,9 +712,9 @@ static void local_spi_handler(const portBASE_TYPE spi_index)
 		spi_disable_interrupt(spi_port, SPI_IDR_ENDTX);
 		spi_disable_interrupt(spi_port, SPI_IDR_ENDRX);
 
-		if (tx_dma_control[spi_index].peripheral_access_mutex != NULL) {
+		if (tx_dma_control[spi_index].peripheral_access_sem != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[spi_index].peripheral_access_mutex,
+					tx_dma_control[spi_index].peripheral_access_sem,
 					&higher_priority_task_woken);
 		}
 
