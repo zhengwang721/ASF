@@ -3,7 +3,7 @@
  *
  * \brief SAM Control Area Network (CAN) Low Level Driver
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -518,6 +518,8 @@ struct can_config {
 	enum can_timeout_mode timeout_mode;
 	/** Timeout enable. */
 	bool timeout_enable;
+	/** Transceiver Delay Compensation enable. */		
+	bool tdc_enable;
 	/** Transmitter Delay Compensation Offset : 0x0-0x7F */
 	uint8_t delay_compensation_offset;
 	/** Transmitter Delay Compensation Filter Window Length : 0x0-0x7F */
@@ -605,6 +607,7 @@ static inline void can_get_config_defaults(
 	config->timeout_period = 0xFFFF;
 	config->timeout_mode = CAN_TIMEOUT_CONTINUES;
 	config->timeout_enable = false;
+	config->tdc_enable = false;
 	config->delay_compensation_offset = 0;
 	config->delay_compensation_filter_window_length = 0;
 	config->nonmatching_frames_action_standard = CAN_NONMATCHING_FRAMES_REJECT;

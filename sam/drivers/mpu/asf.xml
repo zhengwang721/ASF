@@ -4,13 +4,13 @@
 			<build type="c-source" value="mpu.c"/>
 			<build type="header-file" subtype="api" value="mpu.h"/>
 			<build type="include-path" value="."/>
-			<build type="doxygen-entry-point" value="sam_drivers_mpu_group"/>
+			<require idref="sam.utils"/>
+			<require idref="common.services.basic.clock"/>
 			<device-support value="samv71"/>
 			<device-support value="samv70"/>
 			<device-support value="same70"/>
 			<device-support value="sams70"/>
-			<require idref="sam.utils"/>
-			<require idref="common.services.basic.clock"/>
+			<build type="doxygen-entry-point" value="sam_drivers_mpu_group"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 		</module>
 	</select-by-device>

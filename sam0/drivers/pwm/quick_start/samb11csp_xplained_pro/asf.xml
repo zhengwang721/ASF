@@ -1,0 +1,10 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAM B11 CSP PWM driver" id="sam0.drivers.pwm.quick_start.samb11csp_xplained_pro">
+		<info type="gui-flag" value="move-to-root"/>
+		<require idref="board.samb11csp_xplained_pro"/>
+		<require idref="sam0.drivers.pwm.quick_start"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<device-support value="atbtlc1000wlcsp"/>
+	</project>
+</asf>

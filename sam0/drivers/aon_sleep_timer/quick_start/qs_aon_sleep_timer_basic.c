@@ -3,7 +3,7 @@
  *
  * \brief SAM AON Sleep Timer Driver Quick Start for SAMB11
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -98,7 +98,7 @@ static void configure_aon_sleep_timer_callback(void)
 	//! [setup_register_callback]
 
 	//! [enable_IRQ]
-	NVIC_EnableIRQ(AON_SLEEP_TIMER_IRQn);
+	NVIC_EnableIRQ(AON_SLEEP_TIMER0_IRQn);
 	//! [enable_IRQ]
 }
 

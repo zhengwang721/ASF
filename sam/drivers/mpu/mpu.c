@@ -3,7 +3,7 @@
  *
  * \brief SAMV70/SAMV71/SAME70/SAMS70-XULTRA board mpu config.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,6 +45,11 @@
  */
 
 #include "mpu.h"
+
+/**
+ * \defgroup sam_drivers_mpu_group MPU - Memory Protect Unit
+ * @{
+ */
 
 /** \file */
 
@@ -178,3 +183,5 @@ void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, ui
 	/* Enable the interrupt */
 	__enable_irq();
 }
+
+//@}
