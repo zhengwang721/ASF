@@ -632,6 +632,22 @@ void can_init(struct can_module *const module_inst, Can *hw,
 		struct can_config *config);
 
 /**
+ * \brief Set CAN baudrate.
+ *
+ * \param[in]  hw          Pointer to the CAN module instance
+ * \param[in]  baudrate    CAN baudrate
+ */
+void can_set_baudrate(Can *hw, uint32_t baudrate);
+
+/**
+ * \brief Set CAN_FD baudrate.
+ *
+ * \param[in]  hw          Pointer to the CAN module instance
+ * \param[in]  baudrate    CAN_FD baudrate
+ */
+void can_fd_set_baudrate(Can *hw, uint32_t baudrate);
+
+/**
  * \brief Start CAN module communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
