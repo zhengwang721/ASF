@@ -158,9 +158,10 @@ uint32_t mpu_cal_mpu_region_size(uint32_t dw_actual_size_in_bytes)
  */
 void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, uint32_t dw_region_attr)
 {
+    volatile irqflags_t flags;
 
-	/* Disable interrupt */
-	__disable_irq();
+	/* After saving the enabled interrupt flags, disable interrupt */
+	flags = cpu_irq_save();
 
 	/* Clean up data and instruction buffer */
 	__DSB();
@@ -180,8 +181,8 @@ void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, ui
 	__DSB();
 	__ISB();
 
-	/* Enable the interrupt */
-	__enable_irq();
+	/* Enable the saved interrupt */
+	cpu_irq_restore(flags);
 }
 
 //@}
