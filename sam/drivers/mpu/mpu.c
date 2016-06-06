@@ -160,7 +160,7 @@ void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, ui
 {
     volatile irqflags_t flags;
 
-	/* After saving the enabled interrupt flags, disable interrupt */
+	/* Get and clear the global interrupt flags */
 	flags = cpu_irq_save();
 
 	/* Clean up data and instruction buffer */
@@ -181,7 +181,7 @@ void mpu_update_regions(uint32_t dw_region_num, uint32_t dw_region_base_addr, ui
 	__DSB();
 	__ISB();
 
-	/* Enable the saved interrupt */
+	/* Restore global interrupt flags */
 	cpu_irq_restore(flags);
 }
 
