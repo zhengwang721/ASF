@@ -71,7 +71,7 @@
  * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
- *  - SAM D20/D21/R21/L21/L22/DA1/C21 Xplained Pro board
+ *  - SAM D20/D21/R21/L21/L22/DA1/C21/R30 Xplained Pro board
  *
  * \section appdoc_sam0_tc_unit_test_setup Setup
  * The following connections has to be made using wires:
