@@ -845,10 +845,10 @@ static inline void can_rx_clear_buffer_status(
 		struct can_module *const module_inst, uint32_t index)
 {
 	if (index < 32) {
-		module_inst->hw->NDAT1.reg |= (1 << index);
+		module_inst->hw->NDAT1.reg = (1 << index);
 	} else {
 		index -= 32;
-		module_inst->hw->NDAT2.reg |= (1 << index);
+		module_inst->hw->NDAT2.reg = (1 << index);
 	}
 }
 

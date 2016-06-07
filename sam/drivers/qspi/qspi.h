@@ -3,7 +3,7 @@
  *
  * \brief Quad Serial Peripheral Interface (QSPI) driver for SAM.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -291,9 +291,9 @@ static inline void qspi_set_clock_polarity(Qspi *qspi, uint32_t polarity)
 {
 	assert(qspi);
 	if (polarity) {
-		qspi->QSPI_SCR |= QSPI_SCR_CPOL;
+		qspi->QSPI_SCR = QSPI_SCR_CPOL;
 	} else {
-		qspi->QSPI_SCR &= (~QSPI_SCR_CPOL);
+		qspi->QSPI_SCR = (~QSPI_SCR_CPOL);
 	}
 }
 
@@ -307,9 +307,9 @@ static inline void qspi_set_clock_phase(Qspi *qspi, uint32_t phase)
 {
 	assert(qspi);
 	if (phase) {
-		qspi->QSPI_SCR |= QSPI_SCR_CPHA;
+		qspi->QSPI_SCR = QSPI_SCR_CPHA;
 	} else {
-		qspi->QSPI_SCR &= (~QSPI_SCR_CPHA);
+		qspi->QSPI_SCR = (~QSPI_SCR_CPHA);
 	}
 }
 
