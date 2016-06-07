@@ -164,7 +164,7 @@ static inline void qspi_set_minimum_inactive_qcs_delay(Qspi *qspi, uint8_t uc_dl
 {
 	assert(qspi);
 	uint32_t mask = qspi->QSPI_MR & (~QSPI_MR_DLYBCT_Msk);
-	qspi->QSPI_MR = mask | QSPI_MR_DLYBCT(uc_dlybct);
+	qspi->QSPI_MR = mask | QSPI_MR_DLYCS(uc_dlybct);
 }
 
 /**
@@ -177,7 +177,7 @@ static inline void qspi_set_delay_between_consecutive_transfers(Qspi *qspi, uint
 {
 	assert(qspi);
 	uint32_t mask = qspi->QSPI_MR & (~QSPI_MR_DLYCS_Msk);
-	qspi->QSPI_MR = mask | QSPI_MR_DLYCS(uc_dlycs);
+	qspi->QSPI_MR = mask | QSPI_MR_DLYBCT(uc_dlycs);
 }
 
 /**
