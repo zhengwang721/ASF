@@ -2461,9 +2461,44 @@ at_ble_status_t otau_get_device_info_request_handler(void *params)
 	
 	if(ofm_get_device_info(&device_info.dev_info) == AT_BLE_SUCCESS)
 	{
+		uint16_t resume_page_no = 0;
+		uint16_t resume_block_no = 0;
+		section_id_t resume_section_id;
+		
 		device_info.resp.cmd = AT_OTAU_GET_DEVICE_INFO_RESP;
 		device_info.resp.length = (sizeof(device_info_resp_t) - 2);
 		
+		device_info.otau_fw_version.major_number = 0xFF;
+		device_info.otau_fw_version.minor_number = 0xFF;
+		device_info.otau_fw_version.build_number = 0xFFFF;		
+		
+		if((otau_download_status(&resume_page_no, &resume_block_no, &resume_section_id, false)) == AT_BLE_SUCCESS)
+		{
+			/* Device needs to resume the firmware */
+			image_meta_data_t meta_data;
+			if(ofm_read_meta_data((void *)&meta_data, OTAU_IMAGE_META_DATA_ID) == AT_BLE_SUCCESS)
+			{
+				uint32_t otau_firmware_ver = 0;
+				uint32_t device_firmware_ver = 0;
+				
+				otau_firmware_ver = (meta_data.dev_info.fw_version.major_number << 24);
+				otau_firmware_ver |= (meta_data.dev_info.fw_version.minor_number << 16);
+				otau_firmware_ver |= (meta_data.dev_info.fw_version.build_number);
+				
+				device_firmware_ver = (device_info.dev_info.fw_version.major_number << 24);
+				device_firmware_ver |= (device_info.dev_info.fw_version.minor_number << 16);
+				device_firmware_ver |= (device_info.dev_info.fw_version.build_number);
+				/* Valid Firmware version needs to be present in the meta data */
+				if ((otau_firmware_ver != 0xFFFFFFFF) && (otau_firmware_ver != 0x00000000) && (otau_firmware_ver > device_firmware_ver))
+				{
+					device_info.otau_fw_version.major_number = meta_data.dev_info.fw_version.major_number;
+					device_info.otau_fw_version.minor_number = meta_data.dev_info.fw_version.minor_number;
+					device_info.otau_fw_version.build_number = meta_data.dev_info.fw_version.build_number;
+				}
+			}			
+		}
+
+			
 		if(otau_send_indication(otau_gatt_service.conn_hanle,
 		otau_gatt_service.chars[OTAU_INDICATION_CHAR_IDX].char_val_handle,
 		(uint8_t *)&device_info,

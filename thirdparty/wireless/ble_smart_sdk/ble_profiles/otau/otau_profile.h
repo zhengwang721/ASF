@@ -58,7 +58,6 @@ extern "C" {
 
 #define DBG_OTAU		ALL_UNUSED //DBG_LOG
 #define DBG_OTAU_CONT	ALL_UNUSED //DBG_LOG_CONT
-#define OTAU_INFO		ALL_UNUSED //DBG_LOG
 #define OTAU_LOG		DBG_LOG
 
 /****************************************************************************************
@@ -569,6 +568,7 @@ typedef struct device_info_resp
 {
 	otau_resp_t resp;
 	device_info_t dev_info;
+	firmware_version_t otau_fw_version;
 }device_info_resp_t;
 
 typedef struct otau_pause_process
