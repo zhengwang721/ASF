@@ -135,176 +135,176 @@ void system_board_init(void);
 /** \name Extension header #1 pin definitions
  *  @{
  */
-#define EXT1_PIN_3                PIN_GPIO_MS1
-#define EXT1_PIN_4                PIN_GPIO_MS2
-#define EXT1_PIN_5                PIN_LP_GPIO_4
-#define EXT1_PIN_6                PIN_AO_GPIO_2
-#define EXT1_PIN_9                PIN_AO_GPIO_0
-#define EXT1_PIN_10               PIN_LP_GPIO_5
-#define EXT1_PIN_11               PIN_LP_GPIO_8
-#define EXT1_PIN_12               PIN_LP_GPIO_9
-#define EXT1_PIN_13               PIN_LP_GPIO_2
-#define EXT1_PIN_14               PIN_LP_GPIO_3
-#define EXT1_PIN_15               PIN_LP_GPIO_12
-#define EXT1_PIN_16               PIN_LP_GPIO_11
-#define EXT1_PIN_17               PIN_LP_GPIO_13
-#define EXT1_PIN_18               PIN_LP_GPIO_10
+#define EXT1_PIN_3               PIN_GPIO_MS1
+#define EXT1_PIN_4               PIN_GPIO_MS2
+#define EXT1_PIN_5               PIN_LP_GPIO_4
+#define EXT1_PIN_6               PIN_AO_GPIO_2
+#define EXT1_PIN_9               PIN_AO_GPIO_0
+#define EXT1_PIN_10              PIN_LP_GPIO_5
+#define EXT1_PIN_11              PIN_LP_GPIO_8
+#define EXT1_PIN_12              PIN_LP_GPIO_9
+#define EXT1_PIN_13              PIN_LP_GPIO_2
+#define EXT1_PIN_14              PIN_LP_GPIO_3
+#define EXT1_PIN_15              PIN_LP_GPIO_12
+#define EXT1_PIN_16              PIN_LP_GPIO_11
+#define EXT1_PIN_17              PIN_LP_GPIO_13
+#define EXT1_PIN_18              PIN_LP_GPIO_10
 /** @} */
 
 /** \name Extension header #1 pin definitions by function
  *  @{
  */
-#define EXT1_PIN_ADC_0            EXT1_PIN_3
-#define EXT1_PIN_ADC_1            EXT1_PIN_4
-#define EXT1_PIN_GPIO_1           EXT1_PIN_5
-#define EXT1_PIN_GPIO_2           EXT1_PIN_6
-#define EXT1_PIN_IRQ              EXT1_PIN_9
-#define EXT1_PIN_I2C_SDA          EXT1_PIN_11
-#define EXT1_PIN_I2C_SCL          EXT1_PIN_12
-#define EXT1_PIN_UART_RX          EXT1_PIN_13
-#define EXT1_PIN_UART_TX          EXT1_PIN_14
-#define EXT1_PIN_SPI_SS_1         EXT1_PIN_10
-#define EXT1_PIN_SPI_SS_0         EXT1_PIN_15
-#define EXT1_PIN_SPI_MOSI         EXT1_PIN_16
-#define EXT1_PIN_SPI_MISO         EXT1_PIN_17
-#define EXT1_PIN_SPI_SCK          EXT1_PIN_18
+#define EXT1_PIN_ADC_0           EXT1_PIN_3
+#define EXT1_PIN_ADC_1           EXT1_PIN_4
+#define EXT1_PIN_GPIO_1          EXT1_PIN_5
+#define EXT1_PIN_GPIO_2          EXT1_PIN_6
+#define EXT1_PIN_IRQ             EXT1_PIN_9
+#define EXT1_PIN_I2C_SDA         EXT1_PIN_11
+#define EXT1_PIN_I2C_SCL         EXT1_PIN_12
+#define EXT1_PIN_UART_RX         EXT1_PIN_13
+#define EXT1_PIN_UART_TX         EXT1_PIN_14
+#define EXT1_PIN_SPI_SS_1        EXT1_PIN_10
+#define EXT1_PIN_SPI_SS_0        EXT1_PIN_15
+#define EXT1_PIN_SPI_MOSI        EXT1_PIN_16
+#define EXT1_PIN_SPI_MISO        EXT1_PIN_17
+#define EXT1_PIN_SPI_SCK         EXT1_PIN_18
 /** @} */
 
 /** \name Extension header #1 ADC definitions
  *  @{
  */
-#define EXT1_ADC_0_PIN            PIN_GPIO_MS1
-#define EXT1_ADC_1_PIN            PIN_GPIO_MS2
+#define EXT1_ADC_0_PIN           PIN_GPIO_MS1
+#define EXT1_ADC_1_PIN           PIN_GPIO_MS2
 /** @} */
 
 /** \name Extension header #1 IRQ/External interrupt definitions
  *  @{
  */
-#define EXT1_IRQ_PIN              PIN_AO_GPIO_0
+#define EXT1_IRQ_PIN             PIN_AO_GPIO_0
 /** @} */
 
 /** \name Extension header #1 I2C definitions
  *  @{
  */
-#define EXT1_I2C_MODULE                 I2C0
-#define EXT1_I2C_SERCOM_PIN_PAD0        PIN_LP_GPIO_8
-#define EXT1_I2C_SERCOM_PIN_PAD1        PIN_LP_GPIO_9
-#define EXT1_I2C_SERCOM_MUX_PAD0        MUX_LP_GPIO_8_I2C0_SDA
-#define EXT1_I2C_SERCOM_MUX_PAD1        MUX_LP_GPIO_9_I2C0_SCL
+#define EXT1_I2C_MODULE          I2C0
+#define EXT1_I2C_PIN_PAD0        PIN_LP_GPIO_8
+#define EXT1_I2C_PIN_PAD1        PIN_LP_GPIO_9
+#define EXT1_I2C_MUX_PAD0        MUX_LP_GPIO_8_I2C0_SDA
+#define EXT1_I2C_MUX_PAD1        MUX_LP_GPIO_9_I2C0_SCL
 /** @} */
 
 /** \name Extension header #1 UART definitions
  *  @{
  */
-#define EXT1_UART_MODULE                UART0
-#define EXT1_UART_SERCOM_PIN_PAD0       PIN_LP_GPIO_2
-#define EXT1_UART_SERCOM_PIN_PAD1       PIN_LP_GPIO_3
-#define EXT1_UART_SERCOM_MUX_PAD0       MUX_LP_GPIO_2_UART0_RXD
-#define EXT1_UART_SERCOM_MUX_PAD1       MUX_LP_GPIO_3_UART0_TXD
+#define EXT1_UART_MODULE         UART0
+#define EXT1_UART_PIN_PAD0       PIN_LP_GPIO_2
+#define EXT1_UART_PIN_PAD1       PIN_LP_GPIO_3
+#define EXT1_UART_MUX_PAD0       MUX_LP_GPIO_2_UART0_RXD
+#define EXT1_UART_MUX_PAD1       MUX_LP_GPIO_3_UART0_TXD
 /** @} */
 
 /** \name Extension header #1 SPI definitions
  *  @{
  */
-#define EXT1_SPI_MODULE                 SPI0
-#define EXT1_SPI_SERCOM_PIN_PAD0        PIN_LP_GPIO_12
-#define EXT1_SPI_SERCOM_PIN_PAD1        PIN_LP_GPIO_11
-#define EXT1_SPI_SERCOM_PIN_PAD2        PIN_LP_GPIO_13
-#define EXT1_SPI_SERCOM_PIN_PAD3        PIN_LP_GPIO_10
-#define EXT1_SPI_SERCOM_MUX_PAD0        MUX_LP_GPIO_12_SPI0_SSN
-#define EXT1_SPI_SERCOM_MUX_PAD1        MUX_LP_GPIO_11_SPI0_MOSI
-#define EXT1_SPI_SERCOM_MUX_PAD2        MUX_LP_GPIO_13_SPI0_MISO
-#define EXT1_SPI_SERCOM_MUX_PAD3        MUX_LP_GPIO_10_SPI0_SCK
+#define EXT1_SPI_MODULE          SPI0
+#define EXT1_SPI_PIN_PAD0        PIN_LP_GPIO_12
+#define EXT1_SPI_PIN_PAD1        PIN_LP_GPIO_11
+#define EXT1_SPI_PIN_PAD2        PIN_LP_GPIO_13
+#define EXT1_SPI_PIN_PAD3        PIN_LP_GPIO_10
+#define EXT1_SPI_MUX_PAD0        MUX_LP_GPIO_12_SPI0_SSN
+#define EXT1_SPI_MUX_PAD1        MUX_LP_GPIO_11_SPI0_MOSI
+#define EXT1_SPI_MUX_PAD2        MUX_LP_GPIO_13_SPI0_MISO
+#define EXT1_SPI_MUX_PAD3        MUX_LP_GPIO_10_SPI0_SCK
 /** @} */
 
 /** \name Extension header #3 pin definitions
  *  @{
  */
-#define EXT3_PIN_3                PIN_GPIO_MS3
-#define EXT3_PIN_4                PIN_GPIO_MS4
-#define EXT3_PIN_5                PIN_LP_GPIO_20
-#define EXT3_PIN_9                PIN_AO_GPIO_1
-#define EXT3_PIN_11               PIN_LP_GPIO_14
-#define EXT3_PIN_12               PIN_LP_GPIO_15
-#define EXT3_PIN_13               PIN_LP_GPIO_6
-#define EXT3_PIN_14               PIN_LP_GPIO_7
-#define EXT3_PIN_15               PIN_LP_GPIO_16
-#define EXT3_PIN_16               PIN_LP_GPIO_19
-#define EXT3_PIN_17               PIN_LP_GPIO_18
-#define EXT3_PIN_18               PIN_LP_GPIO_17
+#define EXT3_PIN_3               PIN_GPIO_MS3
+#define EXT3_PIN_4               PIN_GPIO_MS4
+#define EXT3_PIN_5               PIN_LP_GPIO_20
+#define EXT3_PIN_9               PIN_AO_GPIO_1
+#define EXT3_PIN_11              PIN_LP_GPIO_14
+#define EXT3_PIN_12              PIN_LP_GPIO_15
+#define EXT3_PIN_13              PIN_LP_GPIO_6
+#define EXT3_PIN_14              PIN_LP_GPIO_7
+#define EXT3_PIN_15              PIN_LP_GPIO_16
+#define EXT3_PIN_16              PIN_LP_GPIO_19
+#define EXT3_PIN_17              PIN_LP_GPIO_18
+#define EXT3_PIN_18              PIN_LP_GPIO_17
 /** @} */
 
 /** \name Extension header #3 pin definitions by function
  *  @{
  */
-#define EXT3_PIN_ADC_0            EXT3_PIN_3
-#define EXT3_PIN_ADC_1            EXT3_PIN_4
-#define EXT3_PIN_GPIO_1           EXT3_PIN_5
-#define EXT3_PIN_IRQ              EXT3_PIN_9
-#define EXT3_PIN_I2C_SDA          EXT3_PIN_11
-#define EXT3_PIN_I2C_SCL          EXT3_PIN_12
-#define EXT3_PIN_UART_RX          EXT3_PIN_13
-#define EXT3_PIN_UART_TX          EXT3_PIN_14
-#define EXT3_PIN_SPI_SS_0         EXT3_PIN_15
-#define EXT3_PIN_SPI_MOSI         EXT3_PIN_16
-#define EXT3_PIN_SPI_MISO         EXT3_PIN_17
-#define EXT3_PIN_SPI_SCK          EXT3_PIN_18
+#define EXT3_PIN_ADC_0           EXT3_PIN_3
+#define EXT3_PIN_ADC_1           EXT3_PIN_4
+#define EXT3_PIN_GPIO_1          EXT3_PIN_5
+#define EXT3_PIN_IRQ             EXT3_PIN_9
+#define EXT3_PIN_I2C_SDA         EXT3_PIN_11
+#define EXT3_PIN_I2C_SCL         EXT3_PIN_12
+#define EXT3_PIN_UART_RX         EXT3_PIN_13
+#define EXT3_PIN_UART_TX         EXT3_PIN_14
+#define EXT3_PIN_SPI_SS_0        EXT3_PIN_15
+#define EXT3_PIN_SPI_MOSI        EXT3_PIN_16
+#define EXT3_PIN_SPI_MISO        EXT3_PIN_17
+#define EXT3_PIN_SPI_SCK         EXT3_PIN_18
 /** @} */
 
 /** \name Extension header #3 ADC definitions
  *  @{
  */
-#define EXT3_ADC_0_PIN            PIN_GPIO_MS3
-#define EXT3_ADC_1_PIN            PIN_GPIO_MS4
+#define EXT3_ADC_0_PIN           PIN_GPIO_MS3
+#define EXT3_ADC_1_PIN           PIN_GPIO_MS4
 /** @} */
 
 /** \name Extension header #3 IRQ/External interrupt definitions
  *  @{
  */
-#define EXT3_IRQ_PIN              PIN_AO_GPIO_1
+#define EXT3_IRQ_PIN             PIN_AO_GPIO_1
 /** @} */
 
 /** \name Extension header #3 I2C definitions
  *  @{
  */
-#define EXT3_I2C_MODULE                 I2C1
-#define EXT3_I2C_SERCOM_PIN_PAD0        PIN_LP_GPIO_14
-#define EXT3_I2C_SERCOM_PIN_PAD1        PIN_LP_GPIO_15
-#define EXT3_I2C_SERCOM_MUX_PAD0        MUX_LP_GPIO_14_I2C1_SDA
-#define EXT3_I2C_SERCOM_MUX_PAD1        MUX_LP_GPIO_15_I2C1_SCL
+#define EXT3_I2C_MODULE          I2C1
+#define EXT3_I2C_PIN_PAD0        PIN_LP_GPIO_14
+#define EXT3_I2C_PIN_PAD1        PIN_LP_GPIO_15
+#define EXT3_I2C_MUX_PAD0        MUX_LP_GPIO_14_I2C1_SDA
+#define EXT3_I2C_MUX_PAD1        MUX_LP_GPIO_15_I2C1_SCL
 /** @} */
 
 /** \name Extension header #3 UART definitions
  *  @{
  */
-#define EXT3_UART_MODULE                UART1
-#define EXT3_UART_SERCOM_PIN_PAD0       PIN_LP_GPIO_6
-#define EXT3_UART_SERCOM_PIN_PAD1       PIN_LP_GPIO_7
-#define EXT3_UART_SERCOM_MUX_PAD0       MUX_LP_GPIO_6_UART1_RXD
-#define EXT3_UART_SERCOM_MUX_PAD1       MUX_LP_GPIO_7_UART1_TXD
+#define EXT3_UART_MODULE         UART1
+#define EXT3_UART_PIN_PAD0       PIN_LP_GPIO_6
+#define EXT3_UART_PIN_PAD1       PIN_LP_GPIO_7
+#define EXT3_UART_MUX_PAD0       MUX_LP_GPIO_6_UART1_RXD
+#define EXT3_UART_MUX_PAD1       MUX_LP_GPIO_7_UART1_TXD
 /** @} */
 
 /** \name Extension header #3 SPI definitions
  *  @{
  */
-#define EXT3_SPI_MODULE                 SPI1
-#define EXT3_SPI_SERCOM_PIN_PAD0        PIN_LP_GPIO_16
-#define EXT3_SPI_SERCOM_PIN_PAD1        PIN_LP_GPIO_19
-#define EXT3_SPI_SERCOM_PIN_PAD2        PIN_LP_GPIO_18
-#define EXT3_SPI_SERCOM_PIN_PAD3        PIN_LP_GPIO_17
-#define EXT3_SPI_SERCOM_MUX_PAD0        MUX_LP_GPIO_16_SPI1_SSN
-#define EXT3_SPI_SERCOM_MUX_PAD1        MUX_LP_GPIO_19_SPI1_MOSI
-#define EXT3_SPI_SERCOM_MUX_PAD2        MUX_LP_GPIO_18_SPI1_MISO
-#define EXT3_SPI_SERCOM_MUX_PAD3        MUX_LP_GPIO_17_SPI1_SCK
+#define EXT3_SPI_MODULE          SPI1
+#define EXT3_SPI_PIN_PAD0        PIN_LP_GPIO_16
+#define EXT3_SPI_PIN_PAD1        PIN_LP_GPIO_19
+#define EXT3_SPI_PIN_PAD2        PIN_LP_GPIO_18
+#define EXT3_SPI_PIN_PAD3        PIN_LP_GPIO_17
+#define EXT3_SPI_MUX_PAD0        MUX_LP_GPIO_16_SPI1_SSN
+#define EXT3_SPI_MUX_PAD1        MUX_LP_GPIO_19_SPI1_MOSI
+#define EXT3_SPI_MUX_PAD2        MUX_LP_GPIO_18_SPI1_MISO
+#define EXT3_SPI_MUX_PAD3        MUX_LP_GPIO_17_SPI1_SCK
 /** @} */
 
 /** \name Embedded debugger GPIO interface definitions
  * @{
  */
-#define EDBG_GPIO0_PIN                  PIN_LP_GPIO_22
-#define EDBG_GPIO1_PIN                  PIN_LP_GPIO_23
-#define EDBG_GPIO2_PIN                  PIN_LP_GPIO_19
-#define EDBG_GPIO3_PIN                  PIN_LP_GPIO_20
+#define EDBG_GPIO0_PIN           PIN_LP_GPIO_22
+#define EDBG_GPIO1_PIN           PIN_LP_GPIO_23
+#define EDBG_GPIO2_PIN           PIN_LP_GPIO_19
+#define EDBG_GPIO3_PIN           PIN_LP_GPIO_20
 /** @} */
 
 /** \name Embedded debugger USART interface definitions
@@ -314,48 +314,48 @@ void system_board_init(void);
 #define EDBG_UART_RX_PIN          -1 /* Not available on this board */
 #define EDBG_UART_RX_MUX          -1 /* Not available on this board */
 
-#define EDBG_UART_RX_SERCOM_PAD   -1 /* Not available on this board */
+#define EDBG_UART_RX_PAD          -1 /* Not available on this board */
 #define EDBG_UART_TX_PIN          -1 /* Not available on this board */
 #define EDBG_UART_TX_MUX          -1 /* Not available on this board */
-#define EDBG_UART_TX_SERCOM_PAD   -1 /* Not available on this board */
+#define EDBG_UART_TX_PAD          -1 /* Not available on this board */
 /** @} */
 
 /** \name Embedded debugger I2C interface definitions
  * @{
  */
-#define EDBG_I2C_MODULE                 I2C0
-#define EDBG_I2C_SERCOM_PIN_PAD0        PIN_LP_GPIO_8
-#define EDBG_I2C_SERCOM_PIN_PAD1        PIN_LP_GPIO_9
-#define EDBG_I2C_SERCOM_MUX_PAD0        MUX_LP_GPIO_8_I2C0_SDA
-#define EDBG_I2C_SERCOM_MUX_PAD1        MUX_LP_GPIO_9_I2C0_SCL
+#define EDBG_I2C_MODULE        	 I2C0
+#define EDBG_I2C_PIN_PAD0        PIN_LP_GPIO_8
+#define EDBG_I2C_PIN_PAD1        PIN_LP_GPIO_9
+#define EDBG_I2C_MUX_PAD0        MUX_LP_GPIO_8_I2C0_SDA
+#define EDBG_I2C_MUX_PAD1        MUX_LP_GPIO_9_I2C0_SCL
 /** @} */
 
 /** \name Embedded debugger SPI interface definitions
  * @{
  */
-#define EDBG_SPI_MODULE                 SPI0
-#define EDBG_SPI_SERCOM_PIN_PAD0		PIN_LP_GPIO_4
-#define EDBG_SPI_SERCOM_PIN_PAD1        PIN_LP_GPIO_13
-#define EDBG_SPI_SERCOM_PIN_PAD2        PIN_LP_GPIO_11
-#define EDBG_SPI_SERCOM_PIN_PAD3        PIN_LP_GPIO_10
-#define EDBG_SPI_SERCOM_MUX_PAD0		MUX_LP_GPIO_4_SPI0_SSN
-#define EDBG_SPI_SERCOM_MUX_PAD1        MUX_LP_GPIO_13_SPI0_MISO
-#define EDBG_SPI_SERCOM_MUX_PAD2        MUX_LP_GPIO_11_SPI0_MOSI
-#define EDBG_SPI_SERCOM_MUX_PAD3        MUX_LP_GPIO_10_SPI0_SCK
+#define EDBG_SPI_MODULE        	 SPI0
+#define EDBG_SPI_PIN_PAD0        PIN_LP_GPIO_4
+#define EDBG_SPI_PIN_PAD1        PIN_LP_GPIO_13
+#define EDBG_SPI_PIN_PAD2        PIN_LP_GPIO_11
+#define EDBG_SPI_PIN_PAD3        PIN_LP_GPIO_10
+#define EDBG_SPI_MUX_PAD0        MUX_LP_GPIO_4_SPI0_SSN
+#define EDBG_SPI_MUX_PAD1        MUX_LP_GPIO_13_SPI0_MISO
+#define EDBG_SPI_MUX_PAD2        MUX_LP_GPIO_11_SPI0_MOSI
+#define EDBG_SPI_MUX_PAD3        MUX_LP_GPIO_10_SPI0_SCK
 /** @} */
 
 /** \name Embedded debugger CDC Gateway USART interface definitions
  * @{
  */
-#define EDBG_CDC_MODULE           UART0
-#define EDBG_CDC_SERCOM_PIN_PAD0  PIN_LP_GPIO_2
-#define EDBG_CDC_SERCOM_PIN_PAD1  PIN_LP_GPIO_3
-#define EDBG_CDC_SERCOM_PIN_PAD2  PIN_LP_GPIO_4
-#define EDBG_CDC_SERCOM_PIN_PAD3  PIN_LP_GPIO_5
-#define EDBG_CDC_SERCOM_MUX_PAD0  MUX_LP_GPIO_2_UART0_RXD
-#define EDBG_CDC_SERCOM_MUX_PAD1  MUX_LP_GPIO_3_UART0_TXD
-#define EDBG_CDC_SERCOM_MUX_PAD2  MUX_LP_GPIO_4_UART0_CTS
-#define EDBG_CDC_SERCOM_MUX_PAD3  MUX_LP_GPIO_5_UART0_RTS
+#define EDBG_CDC_MODULE        	 UART0
+#define EDBG_CDC_PIN_PAD0        PIN_LP_GPIO_2
+#define EDBG_CDC_PIN_PAD1        PIN_LP_GPIO_3
+#define EDBG_CDC_PIN_PAD2        PIN_LP_GPIO_4
+#define EDBG_CDC_PIN_PAD3        PIN_LP_GPIO_5
+#define EDBG_CDC_MUX_PAD0        MUX_LP_GPIO_2_UART0_RXD
+#define EDBG_CDC_MUX_PAD1        MUX_LP_GPIO_3_UART0_TXD
+#define EDBG_CDC_MUX_PAD2        MUX_LP_GPIO_4_UART0_CTS
+#define EDBG_CDC_MUX_PAD3        MUX_LP_GPIO_5_UART0_RTS
 /** @} */
 
 /** @} */
