@@ -270,10 +270,10 @@ uint32_t freertos_copy_bytes_from_pdc_circular_buffer(
 
 /*
  * For internal use only.
- * If a peripheral access mutex is not defined, just return STATUS_OK and take
+ * If a peripheral access semphore is not defined, just return STATUS_OK and take
  * no other action.
- * If a peripheral access mutex is defined, attempt to obtain the mutex.
- * Return STATUS_OK if the mutex was obtained, and ERR_TIMEOUT if the mutex
+ * If a peripheral access semphore is defined, attempt to obtain the semphore.
+ * Return STATUS_OK if the semphore was obtained, and ERR_TIMEOUT if the semphore
  * did not become available within max_block_time_ticks tick periods.
  */
 status_code_t freertos_obtain_peripheral_access_semphore(
