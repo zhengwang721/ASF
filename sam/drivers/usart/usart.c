@@ -4,7 +4,7 @@
  * \brief Universal Synchronous Asynchronous Receiver Transmitter (USART) driver
  * for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -645,6 +645,7 @@ void usart_reset_nack(Usart *p_usart)
 	p_usart->US_CR = US_CR_RSTNACK;
 }
 
+#if (!SAM4L)
 /**
  * \brief Check if one receive buffer is filled.
  *
@@ -696,6 +697,7 @@ uint32_t usart_is_tx_buf_empty(Usart *p_usart)
 {
 	return (p_usart->US_CSR & US_CSR_TXBUFE) > 0;
 }
+#endif
 
 /**
  * \brief Get the total number of errors that occur during an ISO7816 transfer.
