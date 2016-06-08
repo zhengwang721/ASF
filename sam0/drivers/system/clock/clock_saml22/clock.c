@@ -3,7 +3,7 @@
  *
  * \brief SAM L22 Clock Driver
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1047,9 +1047,9 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
-	/* If CPU frequency is less than 12MHz, scale down performance level to PL0 */
+	/* If CPU frequency is less than 8MHz, scale down performance level to PL0 */
 	uint32_t cpu_freq = system_cpu_clock_get_hz();
-	if (cpu_freq <= 12000000) {
+	if (cpu_freq <= 8000000) {
 		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_0);
 	}
 }
