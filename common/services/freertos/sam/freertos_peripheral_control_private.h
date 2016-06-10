@@ -5,7 +5,7 @@
  * \brief Generic FreeRTOS peripheral control functions
  *
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,6 +48,14 @@
 
 #ifndef FREERTOS_PRIVATE_PERIPHERAL_CONTROL_INCLUDED
 #define FREERTOS_PRIVATE_PERIPHERAL_CONTROL_INCLUDED
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
 
 /* Contains the information needed to control circular buffer reception using
 the PDC. */
@@ -108,5 +116,13 @@ void create_peripheral_control_semaphores(const uint8_t options_flags,
 		freertos_dma_event_control_t *rx_dma_control);
 void configure_interrupt_controller(const enum IRQn peripheral_irq,
 		uint32_t interrupt_priority);
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond
 
 #endif /* FREERTOS_PRIVATE_PERIPHERAL_CONTROL_INCLUDED */

@@ -29,7 +29,7 @@
 			<require idref="common.services.delay"/>
 
 			<!-- Generator options -->
-			<build type="doxygen-entry-point" value="ov7740_CMOS_image_sensor_group"/>
+			<build type="doxygen-entry-point" value="ov7740_cmos_image_sensor_group"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
 		</module>
 		<module type="component" id="sam.components.cmos_image_sensor.ov7740#1" caption="OV7740 CMOS image sensor">
@@ -64,7 +64,7 @@
 			<require idref="common.services.delay"/>
 
 			<!-- Generator options -->
-			<build type="doxygen-entry-point" value="ov7740_CMOS_image_sensor_group"/>
+			<build type="doxygen-entry-point" value="ov7740_cmos_image_sensor_group"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samv71"/>
 		</module>
 	</select-by-device>

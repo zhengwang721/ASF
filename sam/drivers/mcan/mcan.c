@@ -47,6 +47,7 @@
 #include "mcan.h"
 #include "pmc.h"
 #include <string.h>
+#include <sysclk.h>
 
 /** @cond 0 */
 /**INDENT-OFF**/
@@ -168,9 +169,12 @@ static void _mcan_set_configuration(Mcan *hw, struct mcan_config *config)
 			MCAN_FBTP_FSJW(CONF_MCAN_FBTP_FSJW_VALUE) |
 			MCAN_FBTP_FTSEG1(CONF_MCAN_FBTP_FTSEG1_VALUE) |
 			MCAN_FBTP_FTSEG2(CONF_MCAN_FBTP_FTSEG2_VALUE) |
-			MCAN_FBTP_TDC |
 			MCAN_FBTP_TDCO(config->delay_compensation_offset);
 
+	if (config->tdc_enable) {
+		hw->MCAN_FBTP |= MCAN_FBTP_TDC_ENABLED;
+	}
+	
 	hw->MCAN_RWD |= MCAN_RWD_WDC(config->watchdog_configuration);
 
 	if (config->transmit_pause) {
@@ -276,6 +280,50 @@ void mcan_init(struct mcan_module *const module_inst, Mcan *hw,
 	hw->MCAN_ILE = MCAN_ILE_EINT0 | MCAN_ILE_EINT1;
 	hw->MCAN_TXBTIE = 0xFFFFFFFFul;
 	hw->MCAN_TXBCIE = 0xFFFFFFFFul;
+}
+
+/**
+ * \brief Set MCAN baudrate.
+ *
+ * \param[in]  hw          Pointer to the MCAN module instance
+ * \param[in]  baudrate    MCAN baudrate
+ */
+void mcan_set_baudrate(Mcan *hw, uint32_t baudrate)
+{
+	uint32_t gclk_mcan_value;
+	uint32_t mcan_nbtp_nbrp_value;
+	uint32_t mcan_nbtp_nsgw_value = 3, mcan_nbtp_ntseg1_value = 10, mcan_nbtp_ntseg2_value = 7;
+
+	gclk_mcan_value = sysclk_get_peripheral_hz();
+
+	mcan_nbtp_nbrp_value = gclk_mcan_value / baudrate / (3 + mcan_nbtp_ntseg1_value + mcan_nbtp_ntseg2_value);
+	
+	hw->MCAN_BTP = MCAN_BTP_BRP(mcan_nbtp_nbrp_value) |
+			MCAN_BTP_SJW(mcan_nbtp_nsgw_value) |
+			MCAN_BTP_TSEG1(mcan_nbtp_ntseg1_value) |
+			MCAN_BTP_TSEG2(mcan_nbtp_ntseg2_value);
+}
+
+/**
+ * \brief Set MCAN_FD baudrate.
+ *
+ * \param[in]  hw          Pointer to the MCAN_FD module instance
+ * \param[in]  baudrate    MCAN_FD baudrate
+ */
+void mcan_fd_set_baudrate(Mcan *hw, uint32_t baudrate)
+{
+	uint32_t gclk_mcan_fd_value;
+	uint32_t mcan_fd_dbtp_dbrp_value;
+	uint32_t mcan_fd_dbtp_dsgw_value = 3, mcan_fd_dbtp_dtseg1_value = 9, mcan_fd_dbtp_dtseg2_value = 3;
+
+	gclk_mcan_fd_value = sysclk_get_peripheral_hz();
+	
+	mcan_fd_dbtp_dbrp_value = gclk_mcan_fd_value / baudrate / (3 + mcan_fd_dbtp_dtseg1_value + mcan_fd_dbtp_dtseg2_value);
+	
+	hw->MCAN_FBTP = MCAN_FBTP_FBRP(mcan_fd_dbtp_dbrp_value) |
+			MCAN_FBTP_FSJW(mcan_fd_dbtp_dsgw_value) |
+			MCAN_FBTP_FTSEG1(mcan_fd_dbtp_dtseg1_value) |
+			MCAN_FBTP_FTSEG2(mcan_fd_dbtp_dtseg2_value);
 }
 
 /**
@@ -455,7 +503,7 @@ void mcan_disable_test_mode(struct mcan_module *const module_inst)
  *
  * \return status code.
  */
-enum status_code mcan_set_rx_standand_filter(
+enum status_code mcan_set_rx_standard_filter(
 		struct mcan_module *const module_inst,
 		struct mcan_standard_message_filter_element *sd_filter, uint32_t index)
 {

@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS Peripheral Control API Functions
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -132,6 +132,14 @@
 
 #include "FreeRTOS.h"
 #include "semphr.h"
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
 
 /**
  * \ingroup freertos_service_group
@@ -276,5 +284,13 @@ typedef struct freertos_peripheral_options {
 	 */
 	uint8_t options_flags; 
 } freertos_peripheral_options_t;
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond
 
 #endif /* FREERTOS_PERIPHERAL_CONTROL_INCLUDED */

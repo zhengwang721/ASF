@@ -90,7 +90,7 @@
 			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
 			<build type="module-config" subtype="path" value="module_config/samd21"/>
 			<build type="doxygen-entry-point" value="winc3400_group"/>
-			<build type="doxygen-quick-start" value="winc3400_quickstart"/>
+		<!-- 	<build type="doxygen-quick-start" value="winc3400_quickstart"/>		 -->
 			<device-support value="samd21"/>
 			<require idref="sam0.drivers.port"/>
 			<require idref="sam0.drivers.sercom.spi"/>
