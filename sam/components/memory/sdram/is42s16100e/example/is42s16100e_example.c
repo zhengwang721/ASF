@@ -3,7 +3,7 @@
  *
  * \brief SDRAMC on EBI example for SAM.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -310,7 +310,9 @@ int main(void)
 
 	/* Test external SDRAM access */
 	puts("Test external SDRAM access. \r");
-
+	
+	SCB_CleanInvalidateDCache();
+	
 	if (sdram_access_test() == SDRAMC_OK) {
 		puts("SDRAM access is successful.\n\r");
 	} else {
