@@ -630,65 +630,6 @@
 /** @} */
 
 /**
- * \defgroup tiny_part_macros_group tinyAVR parts
- *
- * @{
- */
-
-/**
- * \name tinyAVR groups
- * @{
- */
-
-/** Devices added to complete tinyAVR offering.
- *  Please do not use this group symbol as it is not intended
- *  to be permanent: the devices should be regrouped.
- */
-#define TINY_UNCATEGORIZED ( \
-		AVR8_PART_IS_DEFINED(ATtiny10)    || \
-		AVR8_PART_IS_DEFINED(ATtiny13)    || \
-		AVR8_PART_IS_DEFINED(ATtiny13A)   || \
-		AVR8_PART_IS_DEFINED(ATtiny1634)  || \
-		AVR8_PART_IS_DEFINED(ATtiny167)   || \
-		AVR8_PART_IS_DEFINED(ATtiny20)    || \
-		AVR8_PART_IS_DEFINED(ATtiny2313)  || \
-		AVR8_PART_IS_DEFINED(ATtiny2313A) || \
-		AVR8_PART_IS_DEFINED(ATtiny24)    || \
-		AVR8_PART_IS_DEFINED(ATtiny24A)   || \
-		AVR8_PART_IS_DEFINED(ATtiny25)    || \
-		AVR8_PART_IS_DEFINED(ATtiny26)    || \
-		AVR8_PART_IS_DEFINED(ATtiny261)   || \
-		AVR8_PART_IS_DEFINED(ATtiny261A)  || \
-		AVR8_PART_IS_DEFINED(ATtiny4)     || \
-		AVR8_PART_IS_DEFINED(ATtiny40)    || \
-		AVR8_PART_IS_DEFINED(ATtiny4313)  || \
-		AVR8_PART_IS_DEFINED(ATtiny43U)   || \
-		AVR8_PART_IS_DEFINED(ATtiny44)    || \
-		AVR8_PART_IS_DEFINED(ATtiny44A)   || \
-		AVR8_PART_IS_DEFINED(ATtiny45)    || \
-		AVR8_PART_IS_DEFINED(ATtiny461)   || \
-		AVR8_PART_IS_DEFINED(ATtiny461A)  || \
-		AVR8_PART_IS_DEFINED(ATtiny48)    || \
-		AVR8_PART_IS_DEFINED(ATtiny5)     || \
-		AVR8_PART_IS_DEFINED(ATtiny828)   || \
-		AVR8_PART_IS_DEFINED(ATtiny84)    || \
-		AVR8_PART_IS_DEFINED(ATtiny84A)   || \
-		AVR8_PART_IS_DEFINED(ATtiny85)    || \
-		AVR8_PART_IS_DEFINED(ATtiny861)   || \
-		AVR8_PART_IS_DEFINED(ATtiny861A)  || \
-		AVR8_PART_IS_DEFINED(ATtiny87)    || \
-		AVR8_PART_IS_DEFINED(ATtiny88)    || \
-		AVR8_PART_IS_DEFINED(ATtiny9)        \
-	)
-
-/** @} */
-
-/** tinyAVR product line */
-#define TINY (TINY_UNCATEGORIZED)
-
-/** @} */
-
-/**
  * \defgroup sam_part_macros_group SAM parts
  * @{
  */
@@ -985,8 +926,13 @@
  * @{
  */
 #define SAMB11G ( \
-		SAM_PART_IS_DEFINED(SAMB11G18A) \
+		SAM_PART_IS_DEFINED(SAMB11G18A) || \
+		SAM_PART_IS_DEFINED(SAMB11ZR) \
 	)
+#define BTLC1000 ( \
+		SAM_PART_IS_DEFINED(BTLC1000WLCSP) \
+	)
+
 /** @} */
 
 /**
@@ -1557,7 +1503,7 @@
 #define SAMR21 (SAMR21G || SAMR21E)
 
 /** SAMB11 Family */
-#define SAMB11 (SAMB11G)
+#define SAMB11 (SAMB11G || BTLC1000)
 
 /** SAML21 Family */
 #define SAML21 (SAML21J || SAML21G || SAML21E)

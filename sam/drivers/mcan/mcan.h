@@ -668,6 +668,8 @@ static inline void mcan_get_config_defaults(
 
 void mcan_init(struct mcan_module *const module_inst, Mcan *hw,
 		struct mcan_config *config);
+void mcan_set_baudrate(Mcan *hw, uint32_t baudrate);
+void mcan_fd_set_baudrate(Mcan *hw, uint32_t baudrate);
 void mcan_start(struct mcan_module *const module_inst);
 void mcan_stop(struct mcan_module *const module_inst);
 void mcan_enable_fd_mode(struct mcan_module *const module_inst);
@@ -860,7 +862,7 @@ static inline void mcan_get_standard_message_filter_element_default(
 			MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;
 }
 
-enum status_code mcan_set_rx_standand_filter(
+enum status_code mcan_set_rx_standard_filter(
 		struct mcan_module *const module_inst,
 		struct mcan_standard_message_filter_element *sd_filter, uint32_t index);
 
@@ -1176,6 +1178,19 @@ static inline void mcan_clear_interrupt_status(
 #endif
 
 /** @} */
+
+/**
+ * \page asfdoc_sam_mcan_exqsg Examples for MCAN Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_sam_mcan_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that a QSG can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_sam_mcan_module_overview
+ *
+ */
 
 #endif /* CAN_H_INCLUDED */
 

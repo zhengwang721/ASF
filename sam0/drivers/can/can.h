@@ -635,6 +635,22 @@ void can_init(struct can_module *const module_inst, Can *hw,
 		struct can_config *config);
 
 /**
+ * \brief Set CAN baudrate.
+ *
+ * \param[in]  hw          Pointer to the CAN module instance
+ * \param[in]  baudrate    CAN baudrate
+ */
+void can_set_baudrate(Can *hw, uint32_t baudrate);
+
+/**
+ * \brief Set CAN_FD baudrate.
+ *
+ * \param[in]  hw          Pointer to the CAN module instance
+ * \param[in]  baudrate    CAN_FD baudrate
+ */
+void can_fd_set_baudrate(Can *hw, uint32_t baudrate);
+
+/**
  * \brief Start CAN module communication.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
@@ -920,7 +936,7 @@ static inline void can_get_standard_message_filter_element_default(
  *  \retval STATUS_OK   Set the correct standard message filter.
  *  \retval STATUS_ERR_INVALID_ARG The parameter is not correct.
  */
-enum status_code can_set_rx_standand_filter(
+enum status_code can_set_rx_standard_filter(
 		struct can_module *const module_inst,
 		struct can_standard_message_filter_element *sd_filter, uint32_t index);
 
@@ -1256,9 +1272,9 @@ enum can_interrupt_source {
 	/** Watchdog Interrupt Interrupt Enable. */
 	CAN_WATCHDOG = CAN_IE_WDIE,
 	/** Protocol Error in Arbitration Phase Enable. */
-	CAN_PROTOCAL_ERROR_ARBITRATION = CAN_IE_PEAE,
+	CAN_PROTOCOL_ERROR_ARBITRATION = CAN_IE_PEAE,
 	/** Protocol Error in Data Phase Enable. */
-	CAN_PROTOCAL_ERROR_DATA = CAN_IE_PEDE,
+	CAN_PROTOCOL_ERROR_DATA = CAN_IE_PEDE,
 	/** Access to Reserved Address Enable. */
 	CAN_ACCESS_RESERVED_ADDRESS = CAN_IE_ARAE,
 };

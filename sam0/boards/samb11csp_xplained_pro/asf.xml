@@ -1,0 +1,18 @@
+<asf xmlversion="1.0">
+	<board id="board.samb11csp_xplained_pro" vendor="Atmel" caption="SAM B11 CSP Xplained Pro">
+		<build type="define" name="BOARD" value="SAMB11CSP_XPLAINED_PRO"/>
+		<build type="define" name="__BTLC1000WLCSP__" value=""/>
+		<build type="include-path" value="."/>
+		<build type="include-path" value=".."/>
+		<require idref="sam0.utils.cmsis.samb11.source.template"/>
+		<require idref="common.utils"/>
+		<require idref="common.boards"/>
+		<device-support value="atbtlc1000wlcsp"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/samb11csp_xplained_pro_sram.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/samb11csp_xplained_pro_sram.mac" toolchain="iarewarm"/>
+		<build type="header-file" value="samb11csp_xplained_pro.h"/>
+		<build type="c-source" value="board_init.c"/>
+		<build type="module-config" subtype="path" value="board_config"/>
+		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
+	</board>
+</asf>
