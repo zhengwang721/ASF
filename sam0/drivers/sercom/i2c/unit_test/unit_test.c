@@ -97,8 +97,8 @@
  *  - \b PA12 (EXT2 PIN11) <-----> PB30 (EXT2 PIN7) 
  *  - \b PA13 (EXT2 PIN12) <-----> PB31 (EXT2 PIN8)
  * - SAM R30 Xplained Pro board
- *  - \b PA22 (EXT1 PIN9) <-----> PA16 (EXT2 PIN11)
- *  - \b PA23 (EXT1 PIN10) <-----> PA17 (EXT2 PIN12)
+ *  - \b PA22 (EXT1 PIN9) <-----> PA16 (EXT1 PIN11)
+ *  - \b PA23 (EXT1 PIN10) <-----> PA17 (EXT1 PIN12)
  *
  * To run the test:
  *  - Connect the supported Xplained Pro board to the computer using a
