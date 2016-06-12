@@ -1850,6 +1850,10 @@
 #define US_CSR_LIN_ITER             (0x1u << US_CSR_LIN_ITER_Pos)
 #define   US_CSR_LIN_ITER_0         (0x0u << 10) /**< \brief (US_CSR_LIN) Maximum number of repetitions has not been reached since the last RSIT */
 #define   US_CSR_LIN_ITER_1         (0x1u << 10) /**< \brief (US_CSR_LIN) Maximum number of repetitions has been reached since the last RSIT */
+#define US_CSR_LIN_RXBUFF_Pos       12           /**< \brief (US_CSR_LIN) Reception Buffer Full */
+#define US_CSR_LIN_RXBUFF           (0x1u << US_CSR_LIN_RXBUFF_Pos)
+#define   US_CSR_LIN_RXBUFF_0       (0x0u << 12) /**< \brief (US_CSR_LIN) The signal Buffer Full from the Receive PDC channel is inactive */
+#define   US_CSR_LIN_RXBUFF_1       (0x1u << 12) /**< \brief (US_CSR_LIN) The signal Buffer Full from the Receive PDC channel is active */
 #define US_CSR_LIN_NACK_Pos         13           /**< \brief (US_CSR_LIN) Non Acknowledge or LIN Break Sent or LIN Break Received */
 #define US_CSR_LIN_NACK             (0x1u << US_CSR_LIN_NACK_Pos)
 #define   US_CSR_LIN_NACK_0         (0x0u << 13) /**< \brief (US_CSR_LIN) No Non Acknowledge has not been detected since the last RSTNACK */
@@ -1948,6 +1952,10 @@
 #define   US_CSR_SPI_SLAVE_UNRE_0   (0x0u << 10) /**< \brief (US_CSR_SPI_SLAVE) No SPI underrun error has occurred since the last RSTSTA */
 #define   US_CSR_SPI_SLAVE_UNRE_1   (0x1u << 10) /**< \brief (US_CSR_SPI_SLAVE) At least one SPI underrun error has occurred since the last RSTSTA */
 #define US_CSR_SPI_SLAVE_NACK_Pos   13           /**< \brief (US_CSR_SPI_SLAVE) Non Acknowledge */
+#define US_CSR_SPI_SLAVE_RXBUFF_Pos 12           /**< \brief (US_CSR_SPI_SLAVE) Reception Buffer Full */
+#define US_CSR_SPI_SLAVE_RXBUFF     (0x1u << US_CSR_SPI_SLAVE_RXBUFF_Pos)
+#define   US_CSR_SPI_SLAVE_RXBUFF_0 (0x0u << 12) /**< \brief (US_CSR_SPI_SLAVE) The signal Buffer Full from the Receive PDC channel is inactive */
+#define   US_CSR_SPI_SLAVE_RXBUFF_1 (0x1u << 12) /**< \brief (US_CSR_SPI_SLAVE) The signal Buffer Full from the Receive PDC channel is active */
 #define US_CSR_SPI_SLAVE_NACK       (0x1u << US_CSR_SPI_SLAVE_NACK_Pos)
 #define   US_CSR_SPI_SLAVE_NACK_0   (0x0u << 13) /**< \brief (US_CSR_SPI_SLAVE) No Non Acknowledge has not been detected since the last RSTNACK */
 #define   US_CSR_SPI_SLAVE_NACK_1   (0x1u << 13) /**< \brief (US_CSR_SPI_SLAVE) At least one Non Acknowledge has been detected since the last RSTNACK */
@@ -2022,6 +2030,10 @@
 #define US_CSR_USART_ITER           (0x1u << US_CSR_USART_ITER_Pos)
 #define   US_CSR_USART_ITER_0       (0x0u << 10) /**< \brief (US_CSR_USART) Maximum number of repetitions has not been reached since the last RSIT */
 #define   US_CSR_USART_ITER_1       (0x1u << 10) /**< \brief (US_CSR_USART) Maximum number of repetitions has been reached since the last RSIT */
+#define US_CSR_USART_RXBUFF_Pos     12           /**< \brief (US_CSR_USART) Reception Buffer Full */
+#define US_CSR_USART_RXBUFF         (0x1u << US_CSR_USART_RXBUFF_Pos)
+#define   US_CSR_USART_RXBUFF_0     (0x0u << 12) /**< \brief (US_CSR_USART) The signal Buffer Full from the Receive PDC channel is inactive */
+#define   US_CSR_USART_RXBUFF_1     (0x1u << 12) /**< \brief (US_CSR_USART) The signal Buffer Full from the Receive PDC channel is active */
 #define US_CSR_USART_NACK_Pos       13           /**< \brief (US_CSR_USART) Non Acknowledge */
 #define US_CSR_USART_NACK           (0x1u << US_CSR_USART_NACK_Pos)
 #define   US_CSR_USART_NACK_0       (0x0u << 13) /**< \brief (US_CSR_USART) No Non Acknowledge has not been detected since the last RSTNACK */
@@ -2109,6 +2121,10 @@
 #define US_CSR_ITER                 (0x1u << US_CSR_ITER_Pos)
 #define   US_CSR_ITER_0             (0x0u << 10) /**< \brief (US_CSR) Maximum number of repetitions has not been reached since the last RSIT */
 #define   US_CSR_ITER_1             (0x1u << 10) /**< \brief (US_CSR) Maximum number of repetitions has been reached since the last RSIT */
+#define US_CSR_RXBUFF_Pos           12           /**< \brief (US_CSR) Reception Buffer Full */
+#define US_CSR_RXBUFF               (0x1u << US_CSR_RXBUFF_Pos)
+#define   US_CSR_RXBUFF_0           (0x0u << 12) /**< \brief (US_CSR) The signal Buffer Full from the Receive PDC channel is inactive */
+#define   US_CSR_RXBUFF_1           (0x1u << 12) /**< \brief (US_CSR) The signal Buffer Full from the Receive PDC channel is active */
 #define US_CSR_NACK_Pos             13           /**< \brief (US_CSR) Non Acknowledge or LIN Break Sent or LIN Break Received */
 #define US_CSR_NACK                 (0x1u << US_CSR_NACK_Pos)
 #define   US_CSR_NACK_0             (0x0u << 13) /**< \brief (US_CSR) No Non Acknowledge has not been detected since the last RSTNACK */

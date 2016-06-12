@@ -645,6 +645,19 @@ void usart_reset_nack(Usart *p_usart)
 	p_usart->US_CR = US_CR_RSTNACK;
 }
 
+/**
+ * \brief Check if both receive buffers are full.
+ *
+ * \param p_usart Pointer to a USART instance.
+ *
+ * \retval 1 Receive buffers are full.
+ * \retval 0 Receive buffers are not full.
+ */
+uint32_t usart_is_rx_buf_full(Usart *p_usart)
+{
+	return (p_usart->US_CSR & US_CSR_RXBUFF) > 0;
+}
+
 #if (!SAM4L)
 /**
  * \brief Check if one receive buffer is filled.
@@ -670,19 +683,6 @@ uint32_t usart_is_rx_buf_end(Usart *p_usart)
 uint32_t usart_is_tx_buf_end(Usart *p_usart)
 {
 	return (p_usart->US_CSR & US_CSR_ENDTX) > 0;
-}
-
-/**
- * \brief Check if both receive buffers are full.
- *
- * \param p_usart Pointer to a USART instance.
- *
- * \retval 1 Receive buffers are full.
- * \retval 0 Receive buffers are not full.
- */
-uint32_t usart_is_rx_buf_full(Usart *p_usart)
-{
-	return (p_usart->US_CSR & US_CSR_RXBUFF) > 0;
 }
 
 /**
