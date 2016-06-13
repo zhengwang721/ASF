@@ -59,6 +59,8 @@ extern "C" {
 
 /* PCK5 ID,assigned to MCAN module */
 #define PMC_PCK_5               5
+/* Get a value of 2 to 15 bit. */
+#define BIT_2_TO_15_MASK         0x0000fffc
 
 /* Message ram definition. */
 COMPILER_ALIGNED(4)
@@ -100,36 +102,34 @@ static struct mcan_extended_message_filter_element mcan1_rx_extended_filter[CONF
 static void _mcan_message_memory_init(Mcan *hw)
 {
 	if (hw == MCAN0) {
-		hw->MCAN_SIDFC = (uint32_t)mcan0_rx_standard_filter |
+		hw->MCAN_SIDFC = ((uint32_t)mcan0_rx_standard_filter & BIT_2_TO_15_MASK) |
 				MCAN_SIDFC_LSS(CONF_MCAN0_RX_STANDARD_ID_FILTER_NUM);
-		hw->MCAN_XIDFC = (uint32_t)mcan0_rx_extended_filter |
+		hw->MCAN_XIDFC = ((uint32_t)mcan0_rx_extended_filter & BIT_2_TO_15_MASK) |
 				MCAN_XIDFC_LSE(CONF_MCAN0_RX_EXTENDED_ID_FILTER_NUM);
-		hw->MCAN_RXF0C = (uint32_t)mcan0_rx_fifo_0 |
+		hw->MCAN_RXF0C = ((uint32_t)mcan0_rx_fifo_0 & BIT_2_TO_15_MASK) |
 				MCAN_RXF0C_F0S(CONF_MCAN0_RX_FIFO_0_NUM);
-		hw->MCAN_RXF1C = (uint32_t)mcan0_rx_fifo_1 |
+		hw->MCAN_RXF1C = ((uint32_t)mcan0_rx_fifo_1 & BIT_2_TO_15_MASK) |
 				MCAN_RXF1C_F1S(CONF_MCAN0_RX_FIFO_1_NUM);
-		hw->MCAN_RXBC = (uint32_t)mcan0_rx_buffer |
-				MCAN_RXF0C_F0S(CONF_MCAN0_RX_BUFFER_NUM);
-		hw->MCAN_TXBC = (uint32_t)mcan0_tx_buffer |
+		hw->MCAN_RXBC = ((uint32_t)mcan0_rx_buffer & BIT_2_TO_15_MASK);
+		hw->MCAN_TXBC = ((uint32_t)mcan0_tx_buffer & BIT_2_TO_15_MASK) |
 				MCAN_TXBC_NDTB(CONF_MCAN0_TX_BUFFER_NUM) |
 				MCAN_TXBC_TFQS(CONF_MCAN0_TX_FIFO_QUEUE_NUM);
-		hw->MCAN_TXEFC = (uint32_t)mcan0_tx_event_fifo |
+		hw->MCAN_TXEFC = ((uint32_t)mcan0_tx_event_fifo & BIT_2_TO_15_MASK) |
 				MCAN_TXEFC_EFS(CONF_MCAN0_TX_EVENT_FIFO);
 	} else if (hw == MCAN1) {
-		hw->MCAN_SIDFC = (uint32_t)mcan1_rx_standard_filter |
+		hw->MCAN_SIDFC = ((uint32_t)mcan1_rx_standard_filter & BIT_2_TO_15_MASK) |
 				MCAN_SIDFC_LSS(CONF_MCAN1_RX_STANDARD_ID_FILTER_NUM);
-		hw->MCAN_XIDFC = (uint32_t)mcan1_rx_extended_filter |
+		hw->MCAN_XIDFC = ((uint32_t)mcan1_rx_extended_filter & BIT_2_TO_15_MASK) |
 				MCAN_XIDFC_LSE(CONF_MCAN1_RX_EXTENDED_ID_FILTER_NUM);
-		hw->MCAN_RXF0C = (uint32_t)mcan1_rx_fifo_0 |
+		hw->MCAN_RXF0C = ((uint32_t)mcan1_rx_fifo_0 & BIT_2_TO_15_MASK) |
 				MCAN_RXF0C_F0S(CONF_MCAN1_RX_FIFO_0_NUM);
-		hw->MCAN_RXF1C = (uint32_t)mcan1_rx_fifo_1 |
+		hw->MCAN_RXF1C = ((uint32_t)mcan1_rx_fifo_1 & BIT_2_TO_15_MASK) |
 				MCAN_RXF1C_F1S(CONF_MCAN1_RX_FIFO_1_NUM);
-		hw->MCAN_RXBC = (uint32_t)mcan1_rx_buffer |
-				MCAN_RXF0C_F0S(CONF_MCAN1_RX_BUFFER_NUM);
-		hw->MCAN_TXBC = (uint32_t)mcan1_tx_buffer |
+		hw->MCAN_RXBC = ((uint32_t)mcan1_rx_buffer & BIT_2_TO_15_MASK);
+		hw->MCAN_TXBC = ((uint32_t)mcan1_tx_buffer & BIT_2_TO_15_MASK) |
 				MCAN_TXBC_NDTB(CONF_MCAN1_TX_BUFFER_NUM) |
 				MCAN_TXBC_TFQS(CONF_MCAN1_TX_FIFO_QUEUE_NUM);
-		hw->MCAN_TXEFC = (uint32_t)mcan1_tx_event_fifo |
+		hw->MCAN_TXEFC = ((uint32_t)mcan1_tx_event_fifo & BIT_2_TO_15_MASK) |
 				MCAN_TXEFC_EFS(CONF_MCAN1_TX_EVENT_FIFO);
 	}
 
