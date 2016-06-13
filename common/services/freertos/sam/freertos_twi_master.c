@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS Peripheral Control API For the TWI
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
