@@ -3,7 +3,7 @@
  *
  * \brief Top header file for SAML22
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,6 +55,8 @@
   #include "saml22g17a.h"
 #elif defined(__SAML22G18A__) || defined(__ATSAML22G18A__)
   #include "saml22g18a.h"
+#elif defined(__SAML22G18AU__) || defined(__ATSAML22G18AU__)
+  #include "saml22g18au.h"
 #elif defined(__SAML22J16A__) || defined(__ATSAML22J16A__)
   #include "saml22j16a.h"
 #elif defined(__SAML22J17A__) || defined(__ATSAML22J17A__)

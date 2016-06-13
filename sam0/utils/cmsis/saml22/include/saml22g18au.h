@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Header file for SAML22G16A
+ * \brief Header file for SAML22G18AU
  *
  * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
@@ -41,13 +41,13 @@
  *
  */
 
-#ifndef _SAML22G16A_
-#define _SAML22G16A_
+#ifndef _SAML22G18AU_
+#define _SAML22G18AU_
 
 /**
  * \ingroup SAML22_definitions
- * \addtogroup SAML22G16A_definitions SAML22G16A definitions
- * This file defines all structures and symbols for SAML22G16A:
+ * \addtogroup SAML22G18AU_definitions SAML22G18AU definitions
+ * This file defines all structures and symbols for SAML22G18AU:
  *   - registers and bitfields
  *   - peripheral base address
  *   - peripheral ID
@@ -84,9 +84,9 @@ typedef volatile       uint8_t  RwReg8;  /**< Read-Write  8-bit register (volati
 #endif
 
 /* ************************************************************************** */
-/**  CMSIS DEFINITIONS FOR SAML22G16A */
+/**  CMSIS DEFINITIONS FOR SAML22G18AU */
 /* ************************************************************************** */
-/** \defgroup SAML22G16A_cmsis CMSIS Definitions */
+/** \defgroup SAML22G18AU_cmsis CMSIS Definitions */
 /*@{*/
 
 /** Interrupt Number Definition */
@@ -98,31 +98,31 @@ typedef enum IRQn
   SVCall_IRQn              = -5, /**< 11 Cortex-M0+ SV Call Interrupt           */
   PendSV_IRQn              = -2, /**< 14 Cortex-M0+ Pend SV Interrupt           */
   SysTick_IRQn             = -1, /**< 15 Cortex-M0+ System Tick Interrupt       */
-  /******  SAML22G16A-specific Interrupt Numbers ***********************/
-  SYSTEM_IRQn              =  0, /**<  0 SAML22G16A System Interrupts */
-  WDT_IRQn                 =  1, /**<  1 SAML22G16A Watchdog Timer (WDT) */
-  RTC_IRQn                 =  2, /**<  2 SAML22G16A Real-Time Counter (RTC) */
-  EIC_IRQn                 =  3, /**<  3 SAML22G16A External Interrupt Controller (EIC) */
-  FREQM_IRQn               =  4, /**<  4 SAML22G16A Frequency Meter (FREQM) */
-  USB_IRQn                 =  5, /**<  5 SAML22G16A Universal Serial Bus (USB) */
-  NVMCTRL_IRQn             =  6, /**<  6 SAML22G16A Non-Volatile Memory Controller (NVMCTRL) */
-  DMAC_IRQn                =  7, /**<  7 SAML22G16A Direct Memory Access Controller (DMAC) */
-  EVSYS_IRQn               =  8, /**<  8 SAML22G16A Event System Interface (EVSYS) */
-  SERCOM0_IRQn             =  9, /**<  9 SAML22G16A Serial Communication Interface 0 (SERCOM0) */
-  SERCOM1_IRQn             = 10, /**< 10 SAML22G16A Serial Communication Interface 1 (SERCOM1) */
-  SERCOM2_IRQn             = 11, /**< 11 SAML22G16A Serial Communication Interface 2 (SERCOM2) */
-  SERCOM3_IRQn             = 12, /**< 12 SAML22G16A Serial Communication Interface 3 (SERCOM3) */
-  TCC0_IRQn                = 15, /**< 15 SAML22G16A Timer Counter Control (TCC0) */
-  TC0_IRQn                 = 16, /**< 16 SAML22G16A Basic Timer Counter 0 (TC0) */
-  TC1_IRQn                 = 17, /**< 17 SAML22G16A Basic Timer Counter 1 (TC1) */
-  TC2_IRQn                 = 18, /**< 18 SAML22G16A Basic Timer Counter 2 (TC2) */
-  TC3_IRQn                 = 19, /**< 19 SAML22G16A Basic Timer Counter 3 (TC3) */
-  ADC_IRQn                 = 20, /**< 20 SAML22G16A Analog Digital Converter (ADC) */
-  AC_IRQn                  = 21, /**< 21 SAML22G16A Analog Comparators (AC) */
-  PTC_IRQn                 = 22, /**< 22 SAML22G16A Peripheral Touch Controller (PTC) */
-  SLCD_IRQn                = 23, /**< 23 SAML22G16A Segment Liquid Crystal Display Controller (SLCD) */
-  AES_IRQn                 = 24, /**< 24 SAML22G16A Advanced Encryption Standard (AES) */
-  TRNG_IRQn                = 25, /**< 25 SAML22G16A True Random Generator (TRNG) */
+  /******  SAML22G18AU-specific Interrupt Numbers ***********************/
+  SYSTEM_IRQn              =  0, /**<  0 SAML22G18AU System Interrupts */
+  WDT_IRQn                 =  1, /**<  1 SAML22G18AU Watchdog Timer (WDT) */
+  RTC_IRQn                 =  2, /**<  2 SAML22G18AU Real-Time Counter (RTC) */
+  EIC_IRQn                 =  3, /**<  3 SAML22G18AU External Interrupt Controller (EIC) */
+  FREQM_IRQn               =  4, /**<  4 SAML22G18AU Frequency Meter (FREQM) */
+  USB_IRQn                 =  5, /**<  5 SAML22G18AU Universal Serial Bus (USB) */
+  NVMCTRL_IRQn             =  6, /**<  6 SAML22G18AU Non-Volatile Memory Controller (NVMCTRL) */
+  DMAC_IRQn                =  7, /**<  7 SAML22G18AU Direct Memory Access Controller (DMAC) */
+  EVSYS_IRQn               =  8, /**<  8 SAML22G18AU Event System Interface (EVSYS) */
+  SERCOM0_IRQn             =  9, /**<  9 SAML22G18AU Serial Communication Interface 0 (SERCOM0) */
+  SERCOM1_IRQn             = 10, /**< 10 SAML22G18AU Serial Communication Interface 1 (SERCOM1) */
+  SERCOM2_IRQn             = 11, /**< 11 SAML22G18AU Serial Communication Interface 2 (SERCOM2) */
+  SERCOM3_IRQn             = 12, /**< 12 SAML22G18AU Serial Communication Interface 3 (SERCOM3) */
+  TCC0_IRQn                = 15, /**< 15 SAML22G18AU Timer Counter Control (TCC0) */
+  TC0_IRQn                 = 16, /**< 16 SAML22G18AU Basic Timer Counter 0 (TC0) */
+  TC1_IRQn                 = 17, /**< 17 SAML22G18AU Basic Timer Counter 1 (TC1) */
+  TC2_IRQn                 = 18, /**< 18 SAML22G18AU Basic Timer Counter 2 (TC2) */
+  TC3_IRQn                 = 19, /**< 19 SAML22G18AU Basic Timer Counter 3 (TC3) */
+  ADC_IRQn                 = 20, /**< 20 SAML22G18AU Analog Digital Converter (ADC) */
+  AC_IRQn                  = 21, /**< 21 SAML22G18AU Analog Comparators (AC) */
+  PTC_IRQn                 = 22, /**< 22 SAML22G18AU Peripheral Touch Controller (PTC) */
+  SLCD_IRQn                = 23, /**< 23 SAML22G18AU Segment Liquid Crystal Display Controller (SLCD) */
+  AES_IRQn                 = 24, /**< 24 SAML22G18AU Advanced Encryption Standard (AES) */
+  TRNG_IRQn                = 25, /**< 25 SAML22G18AU True Random Generator (TRNG) */
 
   PERIPH_COUNT_IRQn        = 26  /**< Number of peripheral IDs */
 } IRQn_Type;
@@ -235,9 +235,9 @@ void TRNG_Handler                ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAML22G16A */
+/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAML22G18AU */
 /* ************************************************************************** */
-/** \defgroup SAML22G16A_api Peripheral Software API */
+/** \defgroup SAML22G18AU_api Peripheral Software API */
 /*@{*/
 
 #include "component/ac.h"
@@ -272,9 +272,9 @@ void TRNG_Handler                ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  REGISTERS ACCESS DEFINITIONS FOR SAML22G16A */
+/**  REGISTERS ACCESS DEFINITIONS FOR SAML22G18AU */
 /* ************************************************************************** */
-/** \defgroup SAML22G16A_reg Registers Access Definitions */
+/** \defgroup SAML22G18AU_reg Registers Access Definitions */
 /*@{*/
 
 #include "instance/ac.h"
@@ -315,9 +315,9 @@ void TRNG_Handler                ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  PERIPHERAL ID DEFINITIONS FOR SAML22G16A */
+/**  PERIPHERAL ID DEFINITIONS FOR SAML22G18AU */
 /* ************************************************************************** */
-/** \defgroup SAML22G16A_id Peripheral Ids Definitions */
+/** \defgroup SAML22G18AU_id Peripheral Ids Definitions */
 /*@{*/
 
 // Peripheral instances on HPB0 bridge
@@ -366,9 +366,9 @@ void TRNG_Handler                ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  BASE ADDRESS DEFINITIONS FOR SAML22G16A */
+/**  BASE ADDRESS DEFINITIONS FOR SAML22G18AU */
 /* ************************************************************************** */
-/** \defgroup SAML22G16A_base Peripheral Base Address Definitions */
+/** \defgroup SAML22G18AU_base Peripheral Base Address Definitions */
 /*@{*/
 
 #if defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)
@@ -560,23 +560,23 @@ void TRNG_Handler                ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  PORT DEFINITIONS FOR SAML22G16A */
+/**  PORT DEFINITIONS FOR SAML22G18AU */
 /* ************************************************************************** */
-/** \defgroup SAML22G16A_port PORT Definitions */
+/** \defgroup SAML22G18AU_port PORT Definitions */
 /*@{*/
 
-#include "pio/saml22g16a.h"
+#include "pio/saml22g18au.h"
 /*@}*/
 
 /* ************************************************************************** */
-/**  MEMORY MAPPING DEFINITIONS FOR SAML22G16A */
+/**  MEMORY MAPPING DEFINITIONS FOR SAML22G18AU */
 /* ************************************************************************** */
 
-#define FLASH_SIZE            0x10000UL /* 64 kB */
+#define FLASH_SIZE            0x40000UL /* 256 kB */
 #define FLASH_PAGE_SIZE       64
-#define FLASH_NB_OF_PAGES     1024
+#define FLASH_NB_OF_PAGES     4096
 #define FLASH_USER_PAGE_SIZE  64
-#define HSRAM_SIZE            0x2000UL /* 8 kB */
+#define HSRAM_SIZE            0x8000UL /* 32 kB */
 
 #define FLASH_ADDR            (0x00000000u) /**< FLASH base address */
 #define FLASH_USER_PAGE_ADDR  (0x00800000u) /**< FLASH_USER_PAGE base address */
@@ -586,12 +586,12 @@ void TRNG_Handler                ( void );
 #define HPB2_ADDR             (0x42000000u) /**< HPB2 base address */
 #define PPB_ADDR              (0xE0000000u) /**< PPB base address */
 
-#define DSU_DID_RESETVALUE    0x1082000CU
-#define NVMCTRL_RWW_EEPROM_SIZE 0x800UL /* 2 kB */
+#define DSU_DID_RESETVALUE    0x1082000FU
+#define NVMCTRL_RWW_EEPROM_SIZE 0x2000UL /* 8 kB */
 #define PORT_GROUPS           2
 
 /* ************************************************************************** */
-/**  ELECTRICAL DEFINITIONS FOR SAML22G16A */
+/**  ELECTRICAL DEFINITIONS FOR SAML22G18AU */
 /* ************************************************************************** */
 
 
@@ -601,4 +601,4 @@ void TRNG_Handler                ( void );
 
 /*@}*/
 
-#endif /* SAML22G16A_H */
+#endif /* SAML22G18AU_H */
