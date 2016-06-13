@@ -8,7 +8,6 @@
 		</info>
 		<build type="distribute" subtype="file" value="Makefile.avr.in" toolchain="avrgcc"/>
 		<device-support value="mega" />
-		<device-support value="tiny" />
 		<device-support value="xmega" />
 	</module>
 </asf>

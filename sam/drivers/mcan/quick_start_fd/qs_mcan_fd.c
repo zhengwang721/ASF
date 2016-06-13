@@ -189,7 +189,7 @@ static void mcan_set_standard_filter_0(void)
 	sd_filter.S0.bit.SFEC =
 			MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STRXBUF_Val;
 
-	mcan_set_rx_standand_filter(&mcan_instance, &sd_filter,
+	mcan_set_rx_standard_filter(&mcan_instance, &sd_filter,
 			MCAN_RX_STANDARD_FILTER_INDEX_0);
 	mcan_enable_interrupt(&mcan_instance, MCAN_RX_BUFFER_NEW_MESSAGE);
 }
@@ -205,7 +205,7 @@ static void mcan_set_standard_filter_1(void)
 	mcan_get_standard_message_filter_element_default(&sd_filter);
 	sd_filter.S0.bit.SFID1 = MCAN_RX_STANDARD_FILTER_ID_1;
 
-	mcan_set_rx_standand_filter(&mcan_instance, &sd_filter,
+	mcan_set_rx_standard_filter(&mcan_instance, &sd_filter,
 			MCAN_RX_STANDARD_FILTER_INDEX_1);
 	mcan_enable_interrupt(&mcan_instance, MCAN_RX_FIFO_0_NEW_MESSAGE);
 }
@@ -395,7 +395,7 @@ void MCAN1_Handler(void)
 			|| (status & MCAN_FORMAT_ERROR)) {
 		mcan_clear_interrupt_status(&mcan_instance, MCAN_ACKNOWLEDGE_ERROR
 				| MCAN_FORMAT_ERROR);
-		printf("Protocal error, please double check the clock in two boards. \r\n\r\n");
+		printf("Protocol error, please double check the clock in two boards. \r\n\r\n");
 	}
 
 	if (status & MCAN_BUS_OFF) {
