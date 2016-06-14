@@ -6,7 +6,7 @@
  *
  * This file defines a useful set of functions for the SLCD on SAM devices.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -125,7 +125,6 @@ void slcd_get_config_defaults(struct slcd_config *config)
 	config->enable_low_resistance = false;
 	config->bias_buffer_duration = 0;
 	config->enable_bias_buffer = false;
-	config->enable_ext_bias = false;
 }
 
 /**
@@ -162,8 +161,7 @@ enum status_code slcd_init(struct slcd_config *const config)
 	SLCD->CTRLB.reg = SLCD_CTRLB_BBD(config->bias_buffer_duration)
   					| (config->enable_bias_buffer << SLCD_CTRLB_BBEN_Pos)
   					| SLCD_CTRLB_LRD(config->low_resistance_duration)
-  					| (config->enable_low_resistance << SLCD_CTRLB_LREN_Pos)
-  					| (config->enable_ext_bias << SLCD_CTRLB_EXTBIAS_Pos);
+  					| (config->enable_low_resistance << SLCD_CTRLB_LREN_Pos);
 
 
     SLCD->CTRLC.reg |= SLCD_CTRLC_LPPM(CONF_SLCD_POWER_MODE) | SLCD_CTRLC_CTST(0x0F);
