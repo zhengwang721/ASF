@@ -540,15 +540,10 @@ void slcd_set_display_memory(void)
  */
 void slcd_set_seg_data(uint8_t seg_data,uint8_t byte_offset,uint8_t seg_mask)
 {
-	uint32_t temp = SLCD->ISDATA.reg;
-
-	temp &= (~ SLCD_ISDATA_SDATA(0xff)) | (~ SLCD_ISDATA_OFF(0x3f));
-
-	SLCD->ISDATA.reg = SLCD_ISDATA_SDATA(seg_data)
+	SLCD->ISDATA.reg |= SLCD_ISDATA_SDATA(seg_data)
 					 | SLCD_ISDATA_OFF(byte_offset)
 					 | SLCD_ISDATA_SDMASK(seg_mask);
 
-	SLCD->ISDATA.reg = temp;
 	while (slcd_get_char_writing_status()) {
 	}
 }
