@@ -117,7 +117,7 @@ void create_peripheral_control_semaphores(const uint8_t options_flags,
 	peripherals need only use a single access mutex, and the Tx semaphore is used
 	for the purpose.  Full duplex peripherals have extra configuration steps
 	that are performed separately. */
-	if ((options_flags & USE_TX_ACCESS_MUTEX) != 0) {
+	if ((options_flags & USE_TX_ACCESS_SEM) != 0) {
 		vSemaphoreCreateBinary(
 				tx_dma_control->peripheral_access_sem);
 		configASSERT(tx_dma_control->peripheral_access_sem);
