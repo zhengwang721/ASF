@@ -1454,6 +1454,10 @@ uint32_t tcc_get_status(
 	if (status_flags & TCC_STATUS_STOP) {
 		status |= TCC_STATUS_STOPPED;
 	}
+	/* Check for TCC RAMP index */
+	if (status_flags & TCC_STATUS_IDX) {
+		status |= TCC_STATUS_RAMP_CYCLE_INDEX;
+	}
 	return status;
 }
 
