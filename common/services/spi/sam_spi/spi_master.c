@@ -111,7 +111,7 @@ void spi_master_setup_device(Spi *p_spi, struct spi_device *device,
 		spi_flags_t flags, uint32_t baud_rate, board_spi_select_id_t sel_id)
 {
 #if (SAM4L)
-    int16_t baud_div = spi_calc_baudrate_div(baud_rate, sysclk_get_cpu_hz());
+    int16_t baud_div = spi_calc_baudrate_div(baud_rate, sysclk_get_pba_hz());
 #else
 	int16_t baud_div = spi_calc_baudrate_div(baud_rate, sysclk_get_peripheral_hz());
 #endif
