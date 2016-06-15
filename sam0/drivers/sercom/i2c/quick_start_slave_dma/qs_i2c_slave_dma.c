@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Slave with DMA Quick Start Guide
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -96,7 +96,7 @@ struct dma_resource i2c_dma_resource;
 
 // [transfer_descriptor]
 COMPILER_ALIGNED(16)
-DmacDescriptor i2c_dma_descriptor;
+DmacDescriptor i2c_dma_descriptor SECTION_DMAC_DESCRIPTOR;
 // [transfer_descriptor]
 
 // [config_dma_resource]
