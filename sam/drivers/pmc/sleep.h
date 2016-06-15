@@ -85,7 +85,6 @@ extern "C" {
 #if (!(SAMG51 || SAMG53 || SAMG54))
 # define  SAM_PM_SMODE_BACKUP     5 /**< Backup Mode */
 #endif
-#endif
 
 /** (SCR) Sleep deep bit */
 #define SCR_SLEEPDEEP   (0x1 <<  2)
