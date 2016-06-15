@@ -113,7 +113,7 @@ void create_peripheral_control_semaphores(const uint8_t options_flags,
 		freertos_dma_event_control_t *rx_dma_control)
 {
 	/* If the tx driver is to be thread aware then create an access control
-	semaphore.  An Rx access mutes is not created in this function as half duplex
+	semaphore.  An Rx access mutex is not created in this function as half duplex
 	peripherals need only use a single access mutex, and the Tx semaphore is used
 	for the purpose.  Full duplex peripherals have extra configuration steps
 	that are performed separately. */
