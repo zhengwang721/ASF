@@ -799,10 +799,10 @@ static inline void mcan_rx_clear_buffer_status(
 		struct mcan_module *const module_inst, uint32_t index)
 {
 	if (index < 32) {
-		module_inst->hw->MCAN_NDAT1 |= (1 << index);
+		module_inst->hw->MCAN_NDAT1 = (1 << index);
 	} else {
 		index -= 32;
-		module_inst->hw->MCAN_NDAT2 |= (1 << index);
+		module_inst->hw->MCAN_NDAT2 = (1 << index);
 	}
 }
 
