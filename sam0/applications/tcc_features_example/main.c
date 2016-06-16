@@ -290,7 +290,7 @@ void pattern_generation(void)
 	}
 	TCC0->INTFLAG.reg = TCC_INTFLAG_MC0;
 	TCC0->PATTB.reg = TCC_PATTB_PGEB(0x0F) | TCC_PATTB_PGVB(sm_pattern[i++]);
-	while (TCC0->SYNCBUSY.reg) {
+	while (TCC0->SYNCBUSY.reg & TCC_SYNCBUSY_PATT) {
 	}
 }
 #endif
