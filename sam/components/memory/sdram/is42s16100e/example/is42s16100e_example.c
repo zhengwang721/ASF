@@ -300,7 +300,7 @@ int main(void)
 		puts("-F- Systick configuration error.\r");
 	}
 
-	/* Enable SMC peripheral clock */
+	/* Enable SDRAMC peripheral clock */
 	pmc_enable_periph_clk(ID_SDRAMC);
 
 	/* Complete SDRAM configuration */
