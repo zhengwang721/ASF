@@ -61,6 +61,7 @@
 #include "otau_service.h"
 #include "otau_profile.h"
 #include "button.h"
+#include "aon_sleep_timer_basic.h"
 
 /* === GLOBALS ============================================================ */
 
@@ -78,6 +79,8 @@ at_ble_handle_t bat_connection_handle;
 volatile bool button_pressed = false;
 volatile bool otau_paused = false;
 
+void resume_cb(void);
+
 static void otau_image_nofification_handler (firmware_version_t *new_firmware_ver,
 											firmware_version_t *old_firmware_ver, 
 											bool *permission);
@@ -85,6 +88,15 @@ static void otau_image_switch_handler (firmware_version_t *fw_version, bool *per
 static void otau_progress_handler (uint8_t section_id, uint8_t completed);
 
 static void app_button_callback(void);
+
+/**
+ * \Timer callback handler called on timer expiry
+ */
+static void aon_sleep_timer_callback(void)
+{
+	timer_cb_done = true;
+	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
+}
 
 /**
  * \Timer callback handler called on timer expiry
@@ -139,6 +151,7 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 	timer_cb_done = false;
 	flag = true;
 	hw_timer_stop();
+	aon_sleep_timer_service_stop();
 	battery_service_advertise();
 	
 	#if OTAU_FEATURE
@@ -176,7 +189,22 @@ static at_ble_status_t ble_notification_confirmed_app_event(void *param)
 /* Callback registered for AT_BLE_CHARACTERISTIC_CHANGED event from stack */
 static at_ble_status_t ble_char_changed_app_event(void *param)
 {
+	uint16_t device_listening;
 	at_ble_characteristic_changed_t *char_handle = (at_ble_characteristic_changed_t *)param;
+	
+	if(bas_service_handler.serv_chars.client_config_handle == char_handle->char_handle)
+	{
+		device_listening = char_handle->char_new_value[1]<<8| char_handle->char_new_value[0];
+		if(!device_listening)
+		{
+			aon_sleep_timer_service_stop();
+		}
+		else
+		{
+			aon_sleep_timer_service_init(1);
+			aon_sleep_timer_service_start(aon_sleep_timer_callback);
+		}
+	}
 	return bat_char_changed_event(char_handle->conn_handle,&bas_service_handler, char_handle, &flag);
 }
 
@@ -214,6 +242,14 @@ static const ble_event_callback_t battery_app_gatt_server_cb[] = {
 	NULL,
 	NULL
 };
+
+#include "ofid.h"
+void resume_cb(void)
+{
+	init_port_list();
+	serial_console_init();	
+	ofid_init(NULL);
+}
 
 #if OTAU_FEATURE
 
@@ -292,18 +328,10 @@ int main(void)
 	platform_driver_init();
 	acquire_sleep_lock();
 
-	/* Initialize the button */
-	button_init();
-	button_register_callback(app_button_callback);
-	
+
 	/* Initialize serial console */
 	serial_console_init();
-	
-	/* Initialize the hardware timer */
-	hw_timer_init();
-	
-	/* Register the callback */
-	hw_timer_register_callback(timer_callback_handler);
+
 	
 	DBG_LOG("Initializing Battery Service Application");
 	
@@ -359,11 +387,14 @@ int main(void)
 									BLE_GATT_SERVER_EVENT_TYPE,
 									battery_app_gatt_server_cb);
 	
+	register_resume_callback(resume_cb);
+	
+	release_sleep_lock();
+	
 	/* Capturing the events  */ 
 	while (1) {
 		/* BLE Event Task */
-		ble_event_task(BLE_EVENT_TIMEOUT);
-		
+		ble_event_task(BLE_EVENT_TIMEOUT);		
 	#if OTAU_FEATURE
 		if (button_pressed)
 		{

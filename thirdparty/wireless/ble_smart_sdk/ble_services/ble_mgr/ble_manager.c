@@ -158,9 +158,11 @@ static void init_global_var(void)
 /** @brief function to get event from stack */
 at_ble_status_t ble_event_task(uint32_t timeout)
 {
+	release_sleep_lock();
 	at_ble_status_t status = at_ble_event_get(&event, ble_event_params, timeout);
+	acquire_sleep_lock();
     if (status == AT_BLE_SUCCESS) 
-    {
+    {		
             ble_event_manager(event, ble_event_params);
             return AT_BLE_SUCCESS;
     }
@@ -1320,7 +1322,7 @@ at_ble_status_t ble_pair_key_request_handler (void *params)
                   DBG_LOG_CONT("%c",passkey[idx]);
           }		
           
-          if(!(at_ble_pair_key_reply(pair_key->handle, pair_key_request.type, passkey)) == AT_BLE_SUCCESS)
+          if(!((at_ble_pair_key_reply(pair_key->handle, pair_key_request.type, passkey)) == AT_BLE_SUCCESS))
           {
                   DBG_LOG("Pair-key reply failed");
           }
