@@ -23,6 +23,7 @@
 			<device-support value="saml22"/>
 			<device-support value="samc20"/>
 			<device-support value="samc21"/>
+			<device-support value="samr30"/>
 		</module>
 	</select-by-device>
 
@@ -42,9 +43,8 @@
 			</info>
 
 			<build type="include-path" value="."/>
-			<build type="header-file" value="events_common.h"/>
+			<build type="header-file" subtype="api" value="events.h"/>
 
-			<build type="define" name="EVENTS_INTERRUPT_HOOKS_MODE" value="false"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_events_group"/>
 
 			<require idref="sam0.drivers.events.common"/>
