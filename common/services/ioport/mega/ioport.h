@@ -4,7 +4,7 @@
  * \brief MEGA and MEGA_RF architecture specific IOPORT service implementation
  * header file.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,12 +71,17 @@
 #define IOPORT_PORTG    6
 #endif
 
-#if MEGA_XX0
-#define IOPORT_PORTH    7
-#define IOPORT_PORTI    8
-#define IOPORT_PORTJ    9
-#define IOPORT_PORTK    10
-#define IOPORT_PORTL    11
+#if MEGA_XX0_1
+#define IOPORT_PORTH    74
+#define IOPORT_PORTJ    75
+#define IOPORT_PORTK    76
+#define IOPORT_PORTL    77
+
+// base address for ports with addresses greater 0x100
+#define IOPORT_BASE_ADDRESS_XXX 0x24
+
+// first port with address greater 0x100
+#define IOPORT_PORT_XXX IOPORT_PORTH
 #endif
 /** @} */
 
@@ -96,7 +101,7 @@
 /** @} */
 
 typedef uint8_t ioport_mode_t;
-typedef uint8_t ioport_pin_t;
+typedef uint16_t ioport_pin_t;
 typedef uint8_t ioport_port_t;
 typedef uint8_t ioport_port_mask_t;
 
@@ -169,8 +174,12 @@ __always_inline static inline ioport_port_t arch_ioport_pin_to_port_id(
  */
 __always_inline static PORT_t *arch_ioport_port_to_base(uint8_t port)
 {
-	return (PORT_t *)((uintptr_t)(IOPORT_BASE_ADDRESS +
-	       (port * IOPORT_PORT_OFFSET)));
+#ifdef IOPORT_BASE_ADDRESS_XXX
+    return (PORT_t *)((uintptr_t)((port >= IOPORT_PORT_XXX ?
+			IOPORT_BASE_ADDRESS_XXX : IOPORT_BASE_ADDRESS) + (port * IOPORT_PORT_OFFSET)));
+#else
+	return (PORT_t *)((uintptr_t)(IOPORT_BASE_ADDRESS + (port * IOPORT_PORT_OFFSET)));
+#endif
 }
 
 /**
