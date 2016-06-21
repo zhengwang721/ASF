@@ -3,7 +3,7 @@
  *
  * \brief SAM System related functionality
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -244,14 +244,14 @@ enum system_peripheral {
 	PERIPHERAL_EFUSE5,
 	/** EFUSE6 */
 	PERIPHERAL_EFUSE6,
+	/** PWM0 */
+	PERIPHERAL_PWM0,
 	/** PWM1 */
 	PERIPHERAL_PWM1,
 	/** PWM2 */
 	PERIPHERAL_PWM2,
 	/** PWM3 */
 	PERIPHERAL_PWM3,
-	/** PWM4 */
-	PERIPHERAL_PWM4,
 	/** PMU Sensor ADC */
 	PERIPHERAL_ADC,
 	/** SPI0 SCK Phase Internal */
