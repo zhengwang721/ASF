@@ -330,7 +330,7 @@ enum status_code pwm_init(enum pwm_device_select device_select, \
 {
 	uint32_t reg_value = 0;
 
-	if ((device_select == 0) || (device_select > PWM4)) {
+	if ((device_select == 0) || (device_select > PWM3)) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
@@ -394,22 +394,22 @@ void pwm_enable(enum pwm_device_select device_select)
 {
 	switch (device_select) {
 		case PWM0:
-			system_clock_peripheral_enable(PERIPHERAL_PWM1);
+			system_clock_peripheral_enable(PERIPHERAL_PWM0);
 			LPMCU_MISC_REGS0->PWM0_CTRL.reg |= LPMCU_MISC_REGS_PWM0_CTRL_PWM_EN;
 			break;
 
 		case PWM1:
-			system_clock_peripheral_enable(PERIPHERAL_PWM2);
+			system_clock_peripheral_enable(PERIPHERAL_PWM1);
 			LPMCU_MISC_REGS0->PWM1_CTRL.reg |= LPMCU_MISC_REGS_PWM1_CTRL_PWM_EN;
 			break;
 
 		case PWM2:
-			system_clock_peripheral_enable(PERIPHERAL_PWM3);
+			system_clock_peripheral_enable(PERIPHERAL_PWM2);
 			LPMCU_MISC_REGS0->PWM2_CTRL.reg |= LPMCU_MISC_REGS_PWM2_CTRL_PWM_EN;
 			break;
 
 		case PWM3:
-			system_clock_peripheral_enable(PERIPHERAL_PWM4);
+			system_clock_peripheral_enable(PERIPHERAL_PWM3);
 			LPMCU_MISC_REGS0->PWM3_CTRL.reg |= LPMCU_MISC_REGS_PWM3_CTRL_PWM_EN;
 			break;
 	}
@@ -426,22 +426,22 @@ void pwm_disable(enum pwm_device_select device_select)
 {
 	switch (device_select) {
 		case PWM0:
-			system_clock_peripheral_disable(PERIPHERAL_PWM1);
+			system_clock_peripheral_disable(PERIPHERAL_PWM0);
 			LPMCU_MISC_REGS0->PWM0_CTRL.reg &= ~LPMCU_MISC_REGS_PWM0_CTRL_PWM_EN;
 			break;
 
 		case PWM1:
-			system_clock_peripheral_disable(PERIPHERAL_PWM2);
+			system_clock_peripheral_disable(PERIPHERAL_PWM1);
 			LPMCU_MISC_REGS0->PWM1_CTRL.reg &= ~LPMCU_MISC_REGS_PWM1_CTRL_PWM_EN;
 			break;
 
 		case PWM2:
-			system_clock_peripheral_disable(PERIPHERAL_PWM3);
+			system_clock_peripheral_disable(PERIPHERAL_PWM2);
 			LPMCU_MISC_REGS0->PWM2_CTRL.reg &= ~LPMCU_MISC_REGS_PWM2_CTRL_PWM_EN;
 			break;
 
 		case PWM3:
-			system_clock_peripheral_disable(PERIPHERAL_PWM4);
+			system_clock_peripheral_disable(PERIPHERAL_PWM3);
 			LPMCU_MISC_REGS0->PWM3_CTRL.reg &= ~LPMCU_MISC_REGS_PWM3_CTRL_PWM_EN;
 			break;
 	}
