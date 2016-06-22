@@ -75,6 +75,8 @@ static at_ble_addr_t ble_peripheral_dev_address;
 
 at_ble_connected_t connected_state_info;
 
+extern volatile bool ulp_enabled;
+
 const ble_event_callback_t *ble_mgr_gap_event_cb[MAX_GAP_EVENT_SUBSCRIBERS];
 const ble_event_callback_t *ble_mgr_gatt_client_event_cb[MAX_GATT_CLIENT_SUBSCRIBERS];
 const ble_event_callback_t *ble_mgr_gatt_server_event_cb[MAX_GATT_SERVER_SUBSCRIBERS];
@@ -158,9 +160,15 @@ static void init_global_var(void)
 /** @brief function to get event from stack */
 at_ble_status_t ble_event_task(uint32_t timeout)
 {
-	release_sleep_lock();
+	if (ulp_enabled)
+	{
+		release_sleep_lock();
+	}	
 	at_ble_status_t status = at_ble_event_get(&event, ble_event_params, timeout);
-	acquire_sleep_lock();
+	if (ulp_enabled)
+	{
+		acquire_sleep_lock();
+	}	
     if (status == AT_BLE_SUCCESS) 
     {		
             ble_event_manager(event, ble_event_params);

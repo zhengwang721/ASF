@@ -57,9 +57,12 @@
  */
 ofid_op_status_t ofid_init(void *param)
 {
+	spi_flash_turn_on();
+	spi_flash_clock_init();
 	spi_flash_init();
 	return AT_OFID_OP_SUCESS;		
 }
+
 
 /**@brief Deinitialize the OTA flash driver interface layer
  *

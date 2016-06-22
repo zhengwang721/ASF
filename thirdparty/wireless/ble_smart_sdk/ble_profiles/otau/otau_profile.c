@@ -684,6 +684,23 @@ at_ble_status_t otau_profile_init(void *params)
 	return status;
 }
 
+/** @brief otau_restore_from_sleep restore the SPI and Flash once the device wakes up from sleep
+ *
+ *	@param[in] params of type void * reserved for future use
+ *	@return	returns AT_BLE_SUCCESS on success or at_ble_err_status_t on failure
+ */
+at_ble_status_t otau_restore_from_sleep(void *params)
+{
+	at_ble_status_t status = AT_BLE_FAILURE;	
+	
+	if(ofid_init(params) == AT_OFID_OP_SUCESS)
+	{
+		status = AT_BLE_SUCCESS;
+	}
+	
+	return status;
+}
+
 /** @brief otau_service_define defines the OTAU service and creates the database for OTAU profile
  *
  *	@param[in] params of type otau_service_config_t
@@ -2528,17 +2545,14 @@ at_ble_status_t otau_char_changed_handler(void *params)
 	characteristic_changed = (at_ble_characteristic_changed_t *)params;
 	
 	new_cccd = otau_characteritics_changed_handler(&otau_gatt_service, characteristic_changed);
-	
-	if (new_cccd == CCCD_INDICATION_ENABLED)
+
+	/* OTAU CCCD Write for Notification/Indication enabled or disabled */
+	if ((new_cccd == CCCD_NOTIFICATION_INDICATION_DISABLED) || \
+		(new_cccd == CCCD_NOTIFICATION_ENABLED) || \
+		(new_cccd == CCCD_INDICATION_ENABLED))
 	{
-		/* Indication enabled */
-		status = AT_BLE_SUCCESS;
-	}
-	else if ((new_cccd == CCCD_NOTIFICATION_INDICATION_DISABLED) || 
-			 (new_cccd == CCCD_NOTIFICATION_ENABLED))
-	{
-		/* Indication disabled */
-		status = AT_BLE_SUCCESS;
+		/* OTAU CCCD Update status */
+		status = characteristic_changed->status;
 	}
 	
 	if ((new_cccd == CCCD_WRITE_UNUSED) && (characteristic_changed->status == AT_BLE_SUCCESS))

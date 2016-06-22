@@ -76,18 +76,17 @@ bool volatile timer_cb_done = false;
 bool volatile flag = true;
 bool volatile battery_flag = true;
 at_ble_handle_t bat_connection_handle;
-volatile bool button_pressed = false;
 volatile bool otau_paused = false;
+volatile bool button_pressed = false;
+volatile bool ulp_enabled = true;
 
-void resume_cb(void);
+void ulp_to_active_resume_cb(void);
 
 static void otau_image_nofification_handler (firmware_version_t *new_firmware_ver,
 											firmware_version_t *old_firmware_ver, 
 											bool *permission);
 static void otau_image_switch_handler (firmware_version_t *fw_version, bool *permission);
 static void otau_progress_handler (uint8_t section_id, uint8_t completed);
-
-static void app_button_callback(void);
 
 /**
  * \Timer callback handler called on timer expiry
@@ -96,20 +95,6 @@ static void aon_sleep_timer_callback(void)
 {
 	timer_cb_done = true;
 	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
-}
-
-/**
- * \Timer callback handler called on timer expiry
- */
-static void timer_callback_handler(void)
-{
-	timer_cb_done = true;
-	send_plf_int_msg_ind(USER_TIMER_CALLBACK, TIMER_EXPIRED_CALLBACK_TYPE_DETECT, NULL, 0);
-}
-
-static void app_button_callback(void)
-{
-	button_pressed = true;
 }
 
 /* Advertisement data set and Advertisement start */
@@ -243,12 +228,13 @@ static const ble_event_callback_t battery_app_gatt_server_cb[] = {
 	NULL
 };
 
-#include "ofid.h"
-void resume_cb(void)
+void ulp_to_active_resume_cb(void)
 {
 	init_port_list();
-	serial_console_init();	
-	ofid_init(NULL);
+	serial_console_init();
+	#if OTAU_FEATURE
+	otau_restore_from_sleep(NULL);
+	#endif		
 }
 
 #if OTAU_FEATURE
@@ -387,9 +373,7 @@ int main(void)
 									BLE_GATT_SERVER_EVENT_TYPE,
 									battery_app_gatt_server_cb);
 	
-	register_resume_callback(resume_cb);
-	
-	release_sleep_lock();
+	register_resume_callback(ulp_to_active_resume_cb);
 	
 	/* Capturing the events  */ 
 	while (1) {

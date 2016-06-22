@@ -654,6 +654,13 @@ BLE_PACK_RESET
  */
 at_ble_status_t otau_profile_init(void *params);
 
+/** @brief otau_restore_from_sleep restore the SPI and Flash once the device wakes up from sleep
+ *
+ *	@param[in] params of type void * reserved for future use
+ *	@return	returns AT_BLE_SUCCESS on success or at_ble_err_status_t on failure
+ */
+at_ble_status_t otau_restore_from_sleep(void *params);
+
 /** @brief otau_service_define defines the services and creates the database for OTAU profile
  *	@param[in] params of type otau_service_config_t
  *	@return	returns AT_BLE_SUCCESS on success or at_ble_err_status_t on failure
