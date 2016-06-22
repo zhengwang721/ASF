@@ -78,7 +78,6 @@ bool volatile battery_flag = true;
 at_ble_handle_t bat_connection_handle;
 volatile bool otau_paused = false;
 volatile bool button_pressed = false;
-volatile bool ulp_enabled = true;
 
 void ulp_to_active_resume_cb(void);
 
@@ -233,7 +232,10 @@ void ulp_to_active_resume_cb(void)
 	init_port_list();
 	serial_console_init();
 	#if OTAU_FEATURE
-	otau_restore_from_sleep(NULL);
+	if(ble_get_ulp_status() == BLE_ULP_MODE_SET)
+	{
+		otau_restore_from_sleep(NULL);
+	}
 	#endif		
 }
 
@@ -374,6 +376,8 @@ int main(void)
 									battery_app_gatt_server_cb);
 	
 	register_resume_callback(ulp_to_active_resume_cb);
+	
+	ble_set_ulp_mode(BLE_ULP_MODE_SET);
 	
 	/* Capturing the events  */ 
 	while (1) {

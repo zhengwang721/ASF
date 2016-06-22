@@ -212,6 +212,11 @@ typedef enum ble_peripheral_state {
 	PERIPHERAL_DISCONNECTED_STATE,
 }ble_peripheral_state_t;
 
+typedef enum ble_ulp_mode {
+	BLE_ULP_MODE_CLEAR,
+	BLE_ULP_MODE_SET
+}ble_ulp_mode_t;
+
 typedef at_ble_status_t (*ble_event_callback_t) (void *params);
 
 /** @brief event timeout */
@@ -1667,6 +1672,10 @@ at_ble_status_t ble_undefined_event_handler(void *params);
 bool ble_mgr_events_callback_handler(ble_mgr_event_cb_t event_cb_type,
 							ble_mgr_event_t event_type,
 							const ble_event_callback_t *ble_event_handler);
+							
+at_ble_status_t ble_set_ulp_mode(ble_ulp_mode_t mode);
+
+ble_ulp_mode_t ble_get_ulp_status(void);
 #endif /*__BLE_MANAGER_H__*/
 // </h>
 
