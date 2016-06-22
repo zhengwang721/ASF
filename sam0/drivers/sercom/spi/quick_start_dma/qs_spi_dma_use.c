@@ -3,7 +3,7 @@
  *
  * \brief SAM Sercom SPI Driver with DMA Quick Start
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -87,8 +87,8 @@ static volatile bool transfer_rx_is_done = false;
 
 //! [dma_transfer_descriptor]
 COMPILER_ALIGNED(16)
-DmacDescriptor example_descriptor_tx;
-DmacDescriptor example_descriptor_rx;
+DmacDescriptor example_descriptor_tx SECTION_DMAC_DESCRIPTOR;
+DmacDescriptor example_descriptor_rx SECTION_DMAC_DESCRIPTOR;
 //! [dma_transfer_descriptor]
 
 //! [setup]

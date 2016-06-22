@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Master with DMA Quick Start Guide
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -100,7 +100,7 @@ static volatile bool transfer_is_done = false;
 
 //! [transfer_descriptor]
 COMPILER_ALIGNED(16)
-DmacDescriptor example_descriptor;
+DmacDescriptor example_descriptor SECTION_DMAC_DESCRIPTOR;
 //! [transfer_descriptor]
 
 //! [transfer_done]
