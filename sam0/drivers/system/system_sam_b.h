@@ -220,12 +220,12 @@ enum system_peripheral {
 	PERIPHERAL_ARM_GATED_PCLK,
 	/** ARM BLE 8K Retention Memory */
 	PERIPHERAL_ARM_BLE,
+	/** Quad Decoder 0 */
+	PERIPHERAL_QDEC0,
 	/** Quad Decoder 1 */
 	PERIPHERAL_QDEC1,
 	/** Quad Decoder 2 */
 	PERIPHERAL_QDEC2,
-	/** Quad Decoder 3 */
-	PERIPHERAL_QDEC3,
 	/** I2C1 Core */
 	PERIPHERAL_I2C1_CORE,
 	/** Low Power Clock Calibration Core */
