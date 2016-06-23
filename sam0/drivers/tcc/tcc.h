@@ -1853,7 +1853,7 @@ static inline void tcc_set_count_direction(
 	/* Get a pointer to the module's hardware instance */
 	Tcc *const tcc_module = module_inst->hw;
 
-	while (tcc_module->SYNCBUSY.reg) {
+	while (tcc_module->SYNCBUSY.reg & TCC_SYNCBUSY_CTRLB) {
 		/* Wait for sync */
 	}
 
@@ -1883,7 +1883,7 @@ static inline void tcc_toggle_count_direction(
 	/* Get a pointer to the module's hardware instance */
 	Tcc *const tcc_module = module_inst->hw;
 
-	while (tcc_module->SYNCBUSY.reg) {
+	while (tcc_module->SYNCBUSY.reg & TCC_SYNCBUSY_CTRLB) {
 		/* Wait for sync */
 	}
 	bool dir_value_1 = tcc_module->CTRLBSET.bit.DIR;
@@ -1938,7 +1938,7 @@ static inline void tcc_stop_counter(
 
 	/* Wait until last command is done */
 	do {
-		while (tcc_module->SYNCBUSY.reg) {
+		while (tcc_module->SYNCBUSY.reg & TCC_SYNCBUSY_CTRLB) {
 			/* Wait for sync */
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_CMD_Msk;
@@ -1977,7 +1977,7 @@ static inline void tcc_restart_counter(
 
 	/* Wait until last command is done */
 	do {
-		while (tcc_module->SYNCBUSY.reg) {
+		while (tcc_module->SYNCBUSY.reg & TCC_SYNCBUSY_CTRLB) {
 			/* Wait for sync */
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_CMD_Msk;
