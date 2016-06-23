@@ -71,14 +71,14 @@
 #define IOPORT_PORTG    6
 #endif
 
-#if MEGA_XX0_1
+#if MEGA_XX0
 #define IOPORT_PORTH    74
 #define IOPORT_PORTJ    75
 #define IOPORT_PORTK    76
 #define IOPORT_PORTL    77
 
 // base address for ports with addresses greater 0x100
-#define IOPORT_BASE_ADDRESS_XXX 0x24
+#define IOPORT_BASE_ADDRESS_XXX 0x22
 
 // first port with address greater 0x100
 #define IOPORT_PORT_XXX IOPORT_PORTH
@@ -101,7 +101,7 @@
 /** @} */
 
 typedef uint8_t ioport_mode_t;
-typedef uint16_t ioport_pin_t;
+typedef uint8_t ioport_pin_t;
 typedef uint8_t ioport_port_t;
 typedef uint8_t ioport_port_mask_t;
 
