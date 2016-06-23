@@ -3,7 +3,7 @@
  *
  * \brief SAM PWM Driver for SAMB11
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,13 +53,13 @@ static uint32_t _pwm_reg_output_polarity(enum pwm_device_select device_select)
 {
 	switch (device_select) {
 		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_OUTPUT_POLARITY;
+			return LPMCU_MISC_REGS_PWM0_CTRL_OUTPUT_POLARITY;
 		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_OUTPUT_POLARITY;
+			return LPMCU_MISC_REGS_PWM1_CTRL_OUTPUT_POLARITY;
 		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_OUTPUT_POLARITY;
+			return LPMCU_MISC_REGS_PWM2_CTRL_OUTPUT_POLARITY;
 		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_OUTPUT_POLARITY;
+			return LPMCU_MISC_REGS_PWM3_CTRL_OUTPUT_POLARITY;
 
 		default:
 			return 0;
@@ -73,13 +73,13 @@ static uint32_t _pwm_reg_agcdata_fmt(enum pwm_device_select device_select)
 {
 	switch (device_select) {
 		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_FMT;
+			return LPMCU_MISC_REGS_PWM0_CTRL_AGCDATA_FMT;
 		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_FMT;
+			return LPMCU_MISC_REGS_PWM1_CTRL_AGCDATA_FMT;
 		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_FMT;
+			return LPMCU_MISC_REGS_PWM2_CTRL_AGCDATA_FMT;
 		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_FMT;
+			return LPMCU_MISC_REGS_PWM3_CTRL_AGCDATA_FMT;
 
 		default:
 			return 0;
@@ -93,13 +93,17 @@ static uint32_t _pwm_reg_sample_method(enum pwm_device_select device_select, boo
 {
 	switch (device_select) {
 		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_SAMPLE_METHOD(value);
+			return (LPMCU_MISC_REGS_PWM0_CTRL_SAMPLE_METHOD &
+					((value) << LPMCU_MISC_REGS_PWM0_CTRL_SAMPLE_METHOD_Pos));
 		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_SAMPLE_METHOD(value);
+			return (LPMCU_MISC_REGS_PWM1_CTRL_SAMPLE_METHOD &
+					((value) << LPMCU_MISC_REGS_PWM1_CTRL_SAMPLE_METHOD_Pos));
 		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_SAMPLE_METHOD(value);
+			return (LPMCU_MISC_REGS_PWM2_CTRL_SAMPLE_METHOD &
+					((value) << LPMCU_MISC_REGS_PWM2_CTRL_SAMPLE_METHOD_Pos));
 		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_SAMPLE_METHOD(value);
+			return (LPMCU_MISC_REGS_PWM3_CTRL_SAMPLE_METHOD & 
+					((value) << LPMCU_MISC_REGS_PWM3_CTRL_SAMPLE_METHOD_Pos));
 
 		default:
 			return 0;
@@ -113,13 +117,13 @@ static uint32_t _pwm_reg_period(enum pwm_device_select device_select, enum pwm_p
 {
 	switch (device_select) {
 		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD(value);
+			return LPMCU_MISC_REGS_PWM0_CTRL_PWM_PERIOD(value);
 		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD(value);
+			return LPMCU_MISC_REGS_PWM1_CTRL_PWM_PERIOD(value);
 		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD(value);
+			return LPMCU_MISC_REGS_PWM2_CTRL_PWM_PERIOD(value);
 		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD(value);
+			return LPMCU_MISC_REGS_PWM3_CTRL_PWM_PERIOD(value);
 
 		default:
 			return 0;
@@ -143,13 +147,13 @@ static uint32_t _pwm_reg_agcdata_in(
 	}
 	switch (device_select) {
 		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN(agcdata_in);
+			return LPMCU_MISC_REGS_PWM0_CTRL_AGCDATA_IN(agcdata_in);
 		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN(agcdata_in);
+			return LPMCU_MISC_REGS_PWM1_CTRL_AGCDATA_IN(agcdata_in);
 		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN(agcdata_in);
+			return LPMCU_MISC_REGS_PWM2_CTRL_AGCDATA_IN(agcdata_in);
 		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN(agcdata_in);
+			return LPMCU_MISC_REGS_PWM3_CTRL_AGCDATA_IN(agcdata_in);
 
 		default:
 			return 0;
@@ -163,13 +167,13 @@ static uint32_t _pwm_reg_clock_sel(enum pwm_device_select device_select, enum pw
 {
 	switch (device_select) {
 		case PWM1:
-			return LPMCU_MISC_REGS_PWM_1_CONTROL_CLOCK_SEL(value);
+			return LPMCU_MISC_REGS_PWM0_CTRL_CLOCK_SEL(value);
 		case PWM2:
-			return LPMCU_MISC_REGS_PWM_2_CONTROL_CLOCK_SEL(value);
+			return LPMCU_MISC_REGS_PWM1_CTRL_CLOCK_SEL(value);
 		case PWM3:
-			return LPMCU_MISC_REGS_PWM_3_CONTROL_CLOCK_SEL(value);
+			return LPMCU_MISC_REGS_PWM2_CTRL_CLOCK_SEL(value);
 		case PWM4:
-			return LPMCU_MISC_REGS_PWM_4_CONTROL_CLOCK_SEL(value);
+			return LPMCU_MISC_REGS_PWM3_CTRL_CLOCK_SEL(value);
 
 		default:
 			return 0;
@@ -223,34 +227,34 @@ void pwm_set_duty_cycle(enum pwm_device_select device_select, \
 
 	switch(device_select) {
 		case PWM1:
-			agcdata_format = LPMCU_MISC_REGS0->PWM_1_CONTROL.bit.AGCDATA_FMT;
-			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= \
-					~LPMCU_MISC_REGS_PWM_1_CONTROL_AGCDATA_IN_Msk;
-			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= \
+			agcdata_format = LPMCU_MISC_REGS0->PWM0_CTRL.bit.AGCDATA_FMT;
+			LPMCU_MISC_REGS0->PWM0_CTRL.reg &= \
+					~LPMCU_MISC_REGS_PWM0_CTRL_AGCDATA_IN_Msk;
+			LPMCU_MISC_REGS0->PWM0_CTRL.reg |= \
 					_pwm_reg_agcdata_in(device_select, agcdata_format, duty_cycle);
 			break;
 
 		case PWM2:
-			agcdata_format = LPMCU_MISC_REGS0->PWM_2_CONTROL.bit.AGCDATA_FMT;
-			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= \
-					~LPMCU_MISC_REGS_PWM_2_CONTROL_AGCDATA_IN_Msk;
-			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg |= \
+			agcdata_format = LPMCU_MISC_REGS0->PWM1_CTRL.bit.AGCDATA_FMT;
+			LPMCU_MISC_REGS0->PWM1_CTRL.reg &= \
+					~LPMCU_MISC_REGS_PWM1_CTRL_AGCDATA_IN_Msk;
+			LPMCU_MISC_REGS0->PWM1_CTRL.reg |= \
 					_pwm_reg_agcdata_in(device_select, agcdata_format, duty_cycle);
 			break;
 
 		case PWM3:
-			agcdata_format = LPMCU_MISC_REGS0->PWM_3_CONTROL.bit.AGCDATA_FMT;
-			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= \
-					~LPMCU_MISC_REGS_PWM_3_CONTROL_AGCDATA_IN_Msk;
-			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg |= \
+			agcdata_format = LPMCU_MISC_REGS0->PWM2_CTRL.bit.AGCDATA_FMT;
+			LPMCU_MISC_REGS0->PWM2_CTRL.reg &= \
+					~LPMCU_MISC_REGS_PWM2_CTRL_AGCDATA_IN_Msk;
+			LPMCU_MISC_REGS0->PWM2_CTRL.reg |= \
 					_pwm_reg_agcdata_in(device_select, agcdata_format, duty_cycle);
 			break;
 
 		case PWM4:
-			agcdata_format = LPMCU_MISC_REGS0->PWM_4_CONTROL.bit.AGCDATA_FMT;
-			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= \
-					~LPMCU_MISC_REGS_PWM_4_CONTROL_AGCDATA_IN_Msk;
-			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg |= \
+			agcdata_format = LPMCU_MISC_REGS0->PWM3_CTRL.bit.AGCDATA_FMT;
+			LPMCU_MISC_REGS0->PWM3_CTRL.reg &= \
+					~LPMCU_MISC_REGS_PWM3_CTRL_AGCDATA_IN_Msk;
+			LPMCU_MISC_REGS0->PWM3_CTRL.reg |= \
 					_pwm_reg_agcdata_in(device_select, agcdata_format, duty_cycle);
 			break;
 	}
@@ -277,27 +281,27 @@ void pwm_set_period(enum pwm_device_select device_select, \
 
 	switch(device_select) {
 		case PWM1:
-			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= \
-					~LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_PERIOD_Msk;
-			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= reg_value;
+			LPMCU_MISC_REGS0->PWM0_CTRL.reg &= \
+					~LPMCU_MISC_REGS_PWM0_CTRL_PWM_PERIOD_Msk;
+			LPMCU_MISC_REGS0->PWM0_CTRL.reg |= reg_value;
 			break;
 
 		case PWM2:
-			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= \
-					~LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_PERIOD_Msk;
-			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg |= reg_value;
+			LPMCU_MISC_REGS0->PWM1_CTRL.reg &= \
+					~LPMCU_MISC_REGS_PWM1_CTRL_PWM_PERIOD_Msk;
+			LPMCU_MISC_REGS0->PWM1_CTRL.reg |= reg_value;
 			break;
 
 		case PWM3:
-			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= \
-					~LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_PERIOD_Msk;
-			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg |= reg_value;
+			LPMCU_MISC_REGS0->PWM2_CTRL.reg &= \
+					~LPMCU_MISC_REGS_PWM2_CTRL_PWM_PERIOD_Msk;
+			LPMCU_MISC_REGS0->PWM2_CTRL.reg |= reg_value;
 			break;
 
 		case PWM4:
-			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= \
-					~LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_PERIOD_Msk;
-			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg |= reg_value;
+			LPMCU_MISC_REGS0->PWM3_CTRL.reg &= \
+					~LPMCU_MISC_REGS_PWM3_CTRL_PWM_PERIOD_Msk;
+			LPMCU_MISC_REGS0->PWM3_CTRL.reg |= reg_value;
 			break;
 	}
 }
@@ -347,19 +351,19 @@ enum status_code pwm_init(enum pwm_device_select device_select, \
 
 	switch(device_select) {
 		case PWM1:
-			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM0_CTRL.reg = reg_value;
 			break;
 
 		case PWM2:
-			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM1_CTRL.reg = reg_value;
 			break;
 
 		case PWM3:
-			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM2_CTRL.reg = reg_value;
 			break;
 
 		case PWM4:
-			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg = reg_value;
+			LPMCU_MISC_REGS0->PWM3_CTRL.reg = reg_value;
 			break;
 	}
 
@@ -385,22 +389,22 @@ void pwm_enable(enum pwm_device_select device_select)
 	switch (device_select) {
 		case PWM1:
 			system_clock_peripheral_enable(PERIPHERAL_PWM1);
-			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg |= LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_EN;
+			LPMCU_MISC_REGS0->PWM0_CTRL.reg |= LPMCU_MISC_REGS_PWM0_CTRL_PWM_EN;
 			break;
 
 		case PWM2:
 			system_clock_peripheral_enable(PERIPHERAL_PWM2);
-			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg |= LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_EN;
+			LPMCU_MISC_REGS0->PWM1_CTRL.reg |= LPMCU_MISC_REGS_PWM1_CTRL_PWM_EN;
 			break;
 
 		case PWM3:
 			system_clock_peripheral_enable(PERIPHERAL_PWM3);
-			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg |= LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_EN;
+			LPMCU_MISC_REGS0->PWM2_CTRL.reg |= LPMCU_MISC_REGS_PWM2_CTRL_PWM_EN;
 			break;
 
 		case PWM4:
 			system_clock_peripheral_enable(PERIPHERAL_PWM4);
-			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg |= LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_EN;
+			LPMCU_MISC_REGS0->PWM3_CTRL.reg |= LPMCU_MISC_REGS_PWM3_CTRL_PWM_EN;
 			break;
 	}
 }
@@ -417,22 +421,22 @@ void pwm_disable(enum pwm_device_select device_select)
 	switch (device_select) {
 		case PWM1:
 			system_clock_peripheral_disable(PERIPHERAL_PWM1);
-			LPMCU_MISC_REGS0->PWM_1_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_1_CONTROL_PWM_EN;
+			LPMCU_MISC_REGS0->PWM0_CTRL.reg &= ~LPMCU_MISC_REGS_PWM0_CTRL_PWM_EN;
 			break;
 
 		case PWM2:
 			system_clock_peripheral_disable(PERIPHERAL_PWM2);
-			LPMCU_MISC_REGS0->PWM_2_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_2_CONTROL_PWM_EN;
+			LPMCU_MISC_REGS0->PWM1_CTRL.reg &= ~LPMCU_MISC_REGS_PWM1_CTRL_PWM_EN;
 			break;
 
 		case PWM3:
 			system_clock_peripheral_disable(PERIPHERAL_PWM3);
-			LPMCU_MISC_REGS0->PWM_3_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_3_CONTROL_PWM_EN;
+			LPMCU_MISC_REGS0->PWM2_CTRL.reg &= ~LPMCU_MISC_REGS_PWM2_CTRL_PWM_EN;
 			break;
 
 		case PWM4:
 			system_clock_peripheral_disable(PERIPHERAL_PWM4);
-			LPMCU_MISC_REGS0->PWM_4_CONTROL.reg &= ~LPMCU_MISC_REGS_PWM_4_CONTROL_PWM_EN;
+			LPMCU_MISC_REGS0->PWM3_CTRL.reg &= ~LPMCU_MISC_REGS_PWM3_CTRL_PWM_EN;
 			break;
 	}
 }

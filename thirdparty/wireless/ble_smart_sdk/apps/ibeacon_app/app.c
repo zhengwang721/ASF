@@ -56,6 +56,8 @@
 #include <string.h>
 #include <conf_console_serial.h>
 #include "platform.h"
+#include <common.h>
+#include <spi_flash.h>
 #ifndef NULL
 #define NULL ((void *)0)
 #endif
@@ -72,16 +74,15 @@
 
 
 #define APP_STACK_SIZE	(1024)
-#define BEACON_IDENTIFIER (0x49)
+#define BEACON_IDENTIFIER (0x13)
 static uint8_t adv_data[31];
 static uint8_t scan_rsp_data[31];
 struct uart_module uart_instance;
 at_ble_init_config_t pf_cfg;
 volatile unsigned char app_stack_patch[APP_STACK_SIZE];
 
-volatile uint32_t 	event_pool_memory[256] 		= {0};
-volatile uint32_t 	event_params_memory[1024] 	= {0};
-
+volatile uint8_t 	event_pool_memory[256] 		= {0};
+volatile uint8_t 	event_params_memory[1024] 	= {0};
 
 void ble_init(void);
 int main(void);
@@ -95,15 +96,15 @@ static void configure_uart(void)
 	uart_get_config_defaults(&config_uart);
 
 	config_uart.baud_rate = 115200;
-	config_uart.pin_number_pad[0] = EDBG_CDC_SERCOM_PIN_PAD0;
-	config_uart.pin_number_pad[1] = EDBG_CDC_SERCOM_PIN_PAD1;
-	config_uart.pin_number_pad[2] = EDBG_CDC_SERCOM_PIN_PAD2;
-	config_uart.pin_number_pad[3] = EDBG_CDC_SERCOM_PIN_PAD3;
+	config_uart.pin_number_pad[0] = EDBG_CDC_PIN_PAD0;
+	config_uart.pin_number_pad[1] = EDBG_CDC_PIN_PAD1;
+	config_uart.pin_number_pad[2] = EDBG_CDC_PIN_PAD2;
+	config_uart.pin_number_pad[3] = EDBG_CDC_PIN_PAD3;
 	
-	config_uart.pinmux_sel_pad[0] = EDBG_CDC_SERCOM_MUX_PAD0;
-	config_uart.pinmux_sel_pad[1] = EDBG_CDC_SERCOM_MUX_PAD1;
-	config_uart.pinmux_sel_pad[2] = EDBG_CDC_SERCOM_MUX_PAD2;
-	config_uart.pinmux_sel_pad[3] = EDBG_CDC_SERCOM_MUX_PAD3;
+	config_uart.pinmux_sel_pad[0] = EDBG_CDC_MUX_PAD0;
+	config_uart.pinmux_sel_pad[1] = EDBG_CDC_MUX_PAD1;
+	config_uart.pinmux_sel_pad[2] = EDBG_CDC_MUX_PAD2;
+	config_uart.pinmux_sel_pad[3] = EDBG_CDC_MUX_PAD3;
 
 	stdio_serial_init(&uart_instance, CONF_STDIO_USART_MODULE, &config_uart);
 }
@@ -112,6 +113,7 @@ static void resume_cb(void)
 {
 	init_port_list();
 	configure_uart();
+	spi_flash_turn_off();//for power consumption.
 }
 
 static at_ble_status_t app_init(void)
@@ -195,56 +197,75 @@ int main(void)
 	register_resume_callback(resume_cb);
 	release_sleep_lock();
 	
-	while(1) {
-		while((status = at_ble_event_get(&event, params, (uint32_t)-1)) == AT_BLE_SUCCESS)
+
+	while((status = at_ble_event_get(&event, params, (uint32_t)-1)) == AT_BLE_SUCCESS)
+	{
+		acquire_sleep_lock();
+		switch(event)
 		{
-			acquire_sleep_lock();
-			switch(event)
+			case AT_BLE_CONNECTED:
 			{
-				case AT_BLE_CONNECTED:
+				volatile at_ble_connected_t *conn_params = (at_ble_connected_t *)((void *)params);
+				PRINT_H1("AT_BLE_CONNECTED:\r\n");
+				if (AT_BLE_SUCCESS == conn_params->conn_status)
 				{
-					volatile at_ble_connected_t *conn_params = (at_ble_connected_t *)((void *)params);
-					PRINT_H1("AT_BLE_CONNECTED:\r\n");
-					if (AT_BLE_SUCCESS == conn_params->conn_status)
-					{
-						PRINT_H2("Device connected:\r\n");
-						PRINT_H3("Conn. handle : 0x%04X\r\n", conn_params->handle);
-						PRINT_H3("Address      : 0x%02X%02X%02X%02X%02X%02X\r\n",
-							conn_params->peer_addr.addr[5],
-							conn_params->peer_addr.addr[4],
-							conn_params->peer_addr.addr[3],
-							conn_params->peer_addr.addr[2],
-							conn_params->peer_addr.addr[1],
-							conn_params->peer_addr.addr[0]
-						);
-					}
-					else
-					{
-						PRINT_H2("Unable to connect to device:\r\n");
-						PRINT_H3("Status : %d\r\n", conn_params->conn_status);
-					}
+					PRINT_H2("Device connected:\r\n");
+					PRINT_H3("Conn. handle : 0x%04X\r\n", conn_params->handle);
+					PRINT_H3("Address      : 0x%02X%02X%02X%02X%02X%02X\r\n",
+						conn_params->peer_addr.addr[5],
+						conn_params->peer_addr.addr[4],
+						conn_params->peer_addr.addr[3],
+						conn_params->peer_addr.addr[2],
+						conn_params->peer_addr.addr[1],
+						conn_params->peer_addr.addr[0]
+					);
+				PRINT_H3("Conn.Interval: 0x%04X\r\n", conn_params->conn_params.con_interval);
+				PRINT_H3("Conn. Latency: 0x%04X\r\n", conn_params->conn_params.con_latency);
+				PRINT_H3("Supr. Timeout: 0x%04X\r\n", conn_params->conn_params.sup_to);
 				}
-				break;
-
-				case AT_BLE_DISCONNECTED:
+				else
 				{
-					at_ble_disconnected_t *disconn_params = (at_ble_disconnected_t *)((void *)params);
-					PRINT_H1("AT_BLE_DISCONNECTED:\r\n");
-					PRINT_H2("Device disconnected:\r\n");
-					PRINT_H3("Conn. handle : 0x%04X\r\n", disconn_params->handle);
-					PRINT_H3("Reason       : 0x%02X\r\n", disconn_params->reason);
-					PRINT_H2("Start Advertising again\r\n");
-					status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 1600, 0, 0);
-					PRINT_H3("Status : %d\r\n", status);
+					PRINT_H2("Unable to connect to device:\r\n");
+					PRINT_H3("Status : %d\r\n", conn_params->conn_status);
 				}
-				break;
-
-				default:
-				break;
-
 			}
-			release_sleep_lock();
+			break;
+		case AT_BLE_MTU_CHANGED_INDICATION:
+		{
+			at_ble_mtu_changed_ind_t *args = (at_ble_mtu_changed_ind_t *)((void *)params);
+			PRINT_H1("AT_BLE_MTU_CHANGED_INDICATION\r\n");
+			PRINT_H2("New MTU for Conn. Handle 0x%02X is 0x%04X\r\n", args->conhdl, args->mtu_value);
 		}
+		break;
+		case AT_BLE_CONN_PARAM_UPDATE_DONE:
+		{
+			at_ble_conn_param_update_done_t *args = (at_ble_conn_param_update_done_t *)((void *)params);
+			PRINT_H1("AT_BLE_CONN_PARAM_UPDATE_DONE\r\n");
+			PRINT_H2("New Parameters Update for Conn. handle 0x%02X:\r\n", args->handle);
+			PRINT_H3("Conn. Interval    : 0x%04X\r\n",args->con_intv);
+			PRINT_H3("Conn. Latency     : 0x%04X\r\n",args->con_latency);
+			PRINT_H3("Conn. Sup. Timeout: 0x%04X\r\n",args->superv_to);
+		}
+		break;
+			case AT_BLE_DISCONNECTED:
+			{
+				at_ble_disconnected_t *disconn_params = (at_ble_disconnected_t *)((void *)params);
+				PRINT_H1("AT_BLE_DISCONNECTED:\r\n");
+				PRINT_H2("Device disconnected:\r\n");
+				PRINT_H3("Conn. handle : 0x%04X\r\n", disconn_params->handle);
+				PRINT_H3("Reason       : 0x%02X\r\n", disconn_params->reason);
+				PRINT_H2("Start Advertising again\r\n");
+				status = at_ble_adv_start(AT_BLE_ADV_TYPE_UNDIRECTED, AT_BLE_ADV_GEN_DISCOVERABLE, NULL, AT_BLE_ADV_FP_ANY, 1600, 0, 0);
+				PRINT_H3("Status : %d\r\n", status);
+			}
+			break;
+
+			default:
+				PRINT_H1("default: 0x%04X\r\n",event);
+			break;
+
+		}
+		release_sleep_lock();
 	}
 
 __EXIT:

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_class_marks_example" caption="Cortex-M4 CMSIS DSP Class Marks Example on SAM4">
+	<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_class_marks_example" caption="CMSIS DSP Class Marks Example">
 		<info type="description" value="summary">
 			Example code to calculate Minimum, Maximum Mean, std and variance of marks obtained in a class.
 		</info>

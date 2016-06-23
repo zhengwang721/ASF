@@ -1486,6 +1486,9 @@ static bool sd_mmc_spi_card_init(void)
 static bool sd_mmc_mci_card_init(void)
 {
 	uint8_t v2 = 0;
+#ifdef SDIO_SUPPORT_ENABLE
+	uint8_t data = 0x08;
+#endif
 
 	// In first, try to install SD/SDIO card
 	sd_mmc_card->type = CARD_TYPE_SD;
@@ -1495,6 +1498,11 @@ static bool sd_mmc_mci_card_init(void)
 
 	// Card need of 74 cycles clock minimum to start
 	driver_send_clock();
+
+#ifdef SDIO_SUPPORT_ENABLE
+	/* CMD52 Reset SDIO */
+	sdio_cmd52(SDIO_CMD52_WRITE_FLAG, SDIO_CIA,SDIO_CCCR_IOA, 0, &data);
+#endif
 
 	// CMD0 - Reset all cards to idle state.
 	if (!driver_send_cmd(SDMMC_MCI_CMD0_GO_IDLE_STATE, 0)) {
@@ -1739,7 +1747,7 @@ static bool sd_mmc_mci_install_mmc(void)
 void sd_mmc_init(void)
 {
 	//! Enable the PMC clock for the card detect pins
-#if (defined SD_MMC_0_CD_GPIO) && (!defined SAM4L)
+#if (defined SD_MMC_0_CD_GPIO) && (SAM) && (!SAM4L)
 # include "pmc.h"
 # define SD_MMC_ENABLE_CD_PIN(slot, unused) \
 	pmc_enable_periph_clk(SD_MMC_##slot##_CD_PIO_ID);
@@ -1747,7 +1755,7 @@ void sd_mmc_init(void)
 # undef SD_MMC_ENABLE_CD_PIN
 #endif
 	//! Enable the PMC clock for the card write protection pins
-#if (defined SD_MMC_0_WP_GPIO) && (!defined SAM4L)
+#if (defined SD_MMC_0_WP_GPIO) && (SAM) && (!SAM4L)
 # include "pmc.h"
 # define SD_MMC_ENABLE_WP_PIN(slot, unused) \
 	pmc_enable_periph_clk(SD_MMC_##slot##_WP_PIO_ID);

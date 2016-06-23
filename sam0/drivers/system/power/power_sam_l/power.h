@@ -3,7 +3,7 @@
  *
  * \brief SAM L21/L22 Power functionality
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -321,7 +321,7 @@ struct system_voltage_regulator_config {
 	enum system_voltage_regulator_sel  regulator_sel;
 	/** Low power efficiency */
 	enum system_voltage_regulator_low_power_efficiency low_power_efficiency;
-#if SAML22
+#if SAML22 || SAML21XXXB
 	/** Run in standby in performance level 0. */
 	bool run_in_standby_pl0;
 #endif
@@ -384,7 +384,7 @@ static inline void system_voltage_regulator_get_config_defaults(
 	config->run_in_standby       = false;
 	config->regulator_sel        = SYSTEM_VOLTAGE_REGULATOR_LDO;
 	config->low_power_efficiency = SYSTEM_VOLTAGE_REGULATOR_LOW_POWER_EFFICIENCY_DEFAULT;
-#if SAML22
+#if SAML22 || SAML21XXXB
 	config->run_in_standby_pl0   = false;
 #endif
 }
@@ -408,7 +408,7 @@ static inline void system_voltage_regulator_set_config(
 #if (SAML21XXXB)
 	SUPC->VREG.bit.LPEFF    = config->low_power_efficiency;
 #endif
-#if SAML22
+#if SAML22 || SAML21XXXB
 	SUPC->VREG.bit.STDBYPL0 = config->run_in_standby_pl0;
 #endif
 	while(!(SUPC->STATUS.reg & SUPC_STATUS_VREGRDY)) {
@@ -809,7 +809,7 @@ static inline enum status_code system_switch_performance_level(
 		return STATUS_OK;
 	}
 
-#if SAML22
+#if SAML22 || SAML21XXXB
 	if (PM->PLCFG.reg & PM_PLCFG_PLDIS) {
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -828,7 +828,7 @@ static inline enum status_code system_switch_performance_level(
 	return STATUS_OK;
 }
 
-#if SAML22
+#if SAML22 || SAML21XXXB
 /**
  * \brief Enable performance level switch.
  *

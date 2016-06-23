@@ -9,6 +9,7 @@
 		<require idref="sam0.components.smart_card.quick_start"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
+		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
 		<device-support value="atsaml22n18a"/>
 		<config name="config.sam0.drivers.sercom.usart" value="polled"/>
