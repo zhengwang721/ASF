@@ -71,7 +71,7 @@ extern "C" {
 /* SDRAM IS42S16100E configuration */
 const sdramc_memory_dev_t SDRAM_ISSI_IS42S16100E = {
 	22, /* Block1 is at the bit 22, 2+8+11+1. */
-	0,  /*
+	0x30,  /*
 	     * This configures the SDRAM with the following parameters in the
 	     *mode register:
 	     * - bits 0 to 2: burst length: 1 (000b);

@@ -1166,7 +1166,7 @@ Pdc *pio_capture_get_pdc_base(const Pio *p_pio)
 #endif
 #endif
 
-#if (SAM4C || SAM4CP || SAM4CM || SAMG55)
+#if (SAM4C || SAM4CP || SAM4CM || SAMG55 || SAMV71 || SAMV70 || SAME70 || SAMS70)
 /**
  * \brief Set PIO IO drive.
  *
