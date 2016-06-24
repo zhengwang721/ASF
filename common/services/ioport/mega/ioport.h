@@ -98,7 +98,7 @@
 /** @} */
 
 typedef uint8_t ioport_mode_t;
-typedef uint8_t ioport_pin_t;
+typedef uint16_t ioport_pin_t;
 typedef uint8_t ioport_port_t;
 typedef uint8_t ioport_port_mask_t;
 
@@ -177,7 +177,7 @@ __always_inline static PORT_t *arch_ioport_port_to_base(uint8_t port)
 	} else 
 #endif
 	{
-	    return (PORT_t *)((uintptr_t)(IOPORT_BASE_ADDRESS + (port * IOPORT_PORT_OFFSET)));		
+	    return (PORT_t *)((uintptr_t)(IOPORT_BASE_ADDRESS + (port * IOPORT_PORT_OFFSET)));
 	}
 }
 
