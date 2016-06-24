@@ -701,6 +701,20 @@ at_ble_status_t otau_restore_from_sleep(void *params)
 	return status;
 }
 
+/** @brief otau_firmware_version gets the OTAU Firmware version
+ *
+ *	@param[in] params of type firmware_version_t
+ *	@return	returns AT_BLE_SUCCESS on success or at_ble_err_status_t on failure
+ */
+at_ble_status_t otau_firmware_version(firmware_version_t *fw_version)
+{
+	at_ble_status_t status = AT_BLE_SUCCESS;	
+	fw_version->major_number = OTAU_MAJOR_VERSION;
+	fw_version->minor_number = OTAU_MINOR_VERSION;
+	fw_version->build_number = OTAU_BUILD_NUMBER;
+	return status;
+}
+
 /** @brief otau_service_define defines the OTAU service and creates the database for OTAU profile
  *
  *	@param[in] params of type otau_service_config_t
@@ -1695,9 +1709,37 @@ at_ble_status_t otau_pause_request_handler(void *params)
 	
 	if (pause_req->req.cmd == AT_OTAU_PAUSE_OTAU_REQUEST)
 	{		
-		otau_pause_resp_t pause_response;
+		otau_pause_resp_t pause_response;		
+		image_meta_data_t meta_data;
+		
 		pause_response.resp.cmd = AT_OTAU_PAUSE_OTAU_RESP;
 		
+		if(ofm_read_meta_data((void *)&meta_data, OTAU_IMAGE_META_DATA_ID) == AT_BLE_SUCCESS)
+		{
+			uint32_t data_len = 0;
+			uint32_t percent = 0;
+			uint16_t resume_block = 0;
+			uint16_t resume_page = 0;
+			section_id_t resume_section_id = 0;
+			
+			if (otau_download_status(&resume_page, &resume_block, &resume_section_id, false) == AT_BLE_SUCCESS)
+			{
+				DBG_OTAU("Pause at section id:%d", resume_section_id);
+				if (resume_section_id == 0x03)
+				{
+					/* Check the percentage */
+					memcpy((uint8_t *)&data_len, meta_data.app_downloaded_info.size, 3);
+					memcpy((uint8_t *)&percent, meta_data.app_section.size, 3);
+					percent = ((data_len * 100)/percent);
+					if (percent > 98)
+					{
+						pause_response.resp.cmd = AT_OTAU_CMD_FAILED;
+						DBG_OTAU("Pause Declined");
+					}
+				}				
+			}						
+		}
+				
 		if(otau_send_indication(otau_gatt_service.conn_hanle,
 		otau_gatt_service.chars[OTAU_INDICATION_CHAR_IDX].char_val_handle,
 		(uint8_t *)&pause_response,
@@ -1705,9 +1747,12 @@ at_ble_status_t otau_pause_request_handler(void *params)
 		{	
 			DBG_OTAU("OTAU Pause Response Sent");
 			/* Update only Pause State here */
-			otau_process_status.pstate = otau_process_status.cstate;
-			otau_process_status.cstate = OTAU_PAUSE_STATE;
-			status = AT_BLE_SUCCESS;
+			if (pause_response.resp.cmd == AT_OTAU_PAUSE_OTAU_RESP)
+			{
+				otau_process_status.pstate = otau_process_status.cstate;
+				otau_process_status.cstate = OTAU_PAUSE_STATE;				
+			}
+			status = AT_BLE_SUCCESS;			
 		}
 	}
 	
@@ -2553,6 +2598,15 @@ at_ble_status_t otau_char_changed_handler(void *params)
 	{
 		/* OTAU CCCD Update status */
 		status = characteristic_changed->status;
+		if (new_cccd == CCCD_INDICATION_ENABLED)
+		{
+			ble_set_ulp_mode(BLE_ULP_MODE_CLEAR);
+		}
+		else
+		{
+			ble_set_ulp_mode(BLE_ULP_MODE_SET);
+		}
+		
 	}
 	
 	if ((new_cccd == CCCD_WRITE_UNUSED) && (characteristic_changed->status == AT_BLE_SUCCESS))

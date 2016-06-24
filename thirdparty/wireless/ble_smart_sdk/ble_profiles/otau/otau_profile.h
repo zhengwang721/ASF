@@ -66,6 +66,11 @@ extern "C" {
 /* OTAU Length field size */
 #define OTAU_FRAME_LEN_SIZE		(2)
 
+/* OTAU Module version */
+#define OTAU_MAJOR_VERSION		(1) /* 8-bit OTAU module major number */
+#define OTAU_MINOR_VERSION		(0) /* 8-bit OTAU module minor number */
+#define OTAU_BUILD_NUMBER		(0x0000) /* 16-bit OTAU module build number */
+
 typedef struct otau_service_config
 {
 	/* Set the permission for each OTAU characteristics */
@@ -666,6 +671,13 @@ at_ble_status_t otau_restore_from_sleep(void *params);
  *	@return	returns AT_BLE_SUCCESS on success or at_ble_err_status_t on failure
  */
 at_ble_status_t otau_service_define(void *params);
+
+/** @brief otau_firmware_version gets the OTAU Firmware version
+ *
+ *	@param[in] params of type firmware_version_t
+ *	@return	returns AT_BLE_SUCCESS on success or at_ble_err_status_t on failure
+ */
+at_ble_status_t otau_firmware_version(firmware_version_t *fw_version);
 
 /** @brief otau_disconnect_event_handler disconnects with the peer device called by the
  *			ble manager. OTAU state needs to be changed and status has to be modified.
