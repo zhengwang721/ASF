@@ -1,0 +1,22 @@
+<asf xmlversion="1.0">
+	<module type="application" id="sam0.applications.tcc_examples" caption="SAM L22 TCC Examples">
+		<info type="description" value="summary">
+		Example application for SAM L22 TCC module demonstrating TCC features like circular buffer, DTI, SWAP, pattern generation.
+		</info>
+
+		<info type="keyword" value="technology">
+			<keyword value="Timers"/>
+		</info>
+
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="c-source" value="main.c"/>
+		<build type="include-path" value="."/>
+		<require idref="sam0.drivers.tcc"/>
+		<require idref="sam0.drivers.port"/>
+		<require idref="sam0.drivers.events"/>
+		<require idref="sam0.drivers.extint"/>
+		<require idref ="sam0.drivers.sercom.usart"/>
+		<require idref="sam0.utils.stdio.stdio_serial"/>
+		<device-support value="saml22"/>
+	</module>
+</asf>

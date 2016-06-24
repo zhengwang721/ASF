@@ -610,6 +610,16 @@
 			<build type="linker-config" subtype="aux-script" value="samd10/iar/samd10d14am_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd10d14am"/>
 		</module>
+		<module type="build-specific" caption="Linker script for SAMD10D14AU" id="sam0.utils.linker_scripts#atsamd10d14au">
+			<info type="description" value="summary">
+			Linker script for the SAMD10D14AU device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd10/gcc/samd10d14au_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd10/gcc/samd10d14au_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd10/iar/samd10d14au_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd10/iar/samd10d14au_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd10d14au"/>
+		</module>
 
 		<module type="build-specific" caption="Linker script for SAMD11C14A" id="sam0.utils.linker_scripts#atsamd11c14a">
 			<info type="description" value="summary">
@@ -640,6 +650,16 @@
 			<build type="linker-config" subtype="script" value="samd11/iar/samd11d14am_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="samd11/iar/samd11d14am_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamd11d14am"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMD11D14AU" id="sam0.utils.linker_scripts#atsamd11d14au">
+			<info type="description" value="summary">
+			Linker script for the SAMD11D14AU device.
+			</info>
+			<build type="linker-config" subtype="script" value="samd11/gcc/samd11d14au_flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samd11/gcc/samd11d14au_sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samd11/iar/samd11d14au_flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samd11/iar/samd11d14au_sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamd11d14au"/>
 		</module>
 
 		<module type="build-specific" caption="Linker script for SAML21E18A" id="sam0.utils.linker_scripts#atsaml21e18a">
@@ -1206,6 +1226,8 @@
 			<build type="linker-config" subtype="script" value="samb11/iar/samb11g18a_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="samb11/iar/samb11g18a_sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamb11g18a"/>
+			<device-support value="atbtlc1000wlcsp"/>
+			<device-support value="atsamb11zr"/>
 		</module>
 	</select-by-device>
 </asf>

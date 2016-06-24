@@ -8,6 +8,7 @@
 		<require idref="board.saml22_xplained_pro"/>
 		<require idref="sam0.drivers.events.unit_test"/>
 		<config name="config.sam0.drivers.tc" value="polled"/>
+		<config name="config.sam0.drivers.events" value="polled"/>
 		<config name="config.sam0.drivers.rtc" value="count_polled"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

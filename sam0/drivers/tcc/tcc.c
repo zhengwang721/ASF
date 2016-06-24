@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC - Timer Counter for Control Applications Driver
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -969,6 +969,9 @@ uint32_t tcc_get_count_value(
 		if (TCC_CTRLBSET_CMD_NONE == last_cmd) {
 			/* Issue read command and break */
 			tcc_module->CTRLBSET.bit.CMD = TCC_CTRLBSET_CMD_READSYNC_Val;
+			while (tcc_module->SYNCBUSY.bit.CTRLB) {
+				/* Wait for sync */
+			}
 			break;
 		} else if (TCC_CTRLBSET_CMD_READSYNC == last_cmd) {
 			/* Command have been issued */
@@ -1450,6 +1453,10 @@ uint32_t tcc_get_status(
 	/* Check for TCC count stop */
 	if (status_flags & TCC_STATUS_STOP) {
 		status |= TCC_STATUS_STOPPED;
+	}
+	/* Check for TCC RAMP index */
+	if (status_flags & TCC_STATUS_IDX) {
+		status |= TCC_STATUS_RAMP_CYCLE_INDEX;
 	}
 	return status;
 }

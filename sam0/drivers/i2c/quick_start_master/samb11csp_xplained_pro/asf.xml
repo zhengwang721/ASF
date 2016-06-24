@@ -1,0 +1,11 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAM B11 CSP I2C Driver (Master Polled)" id="sam0.drivers.i2c.quick_start_master.samb11csp_xplained_pro">
+		<info type="gui-flag" value="move-to-root"/>
+		<require idref="board.samb11csp_xplained_pro"/>
+		<require idref="sam0.drivers.i2c.quick_start_master"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<device-support value="atbtlc1000wlcsp"/>
+		<config name="config.sam0.drivers.i2c.master" value="polled"/>
+	</project>
+</asf>

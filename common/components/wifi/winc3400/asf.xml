@@ -1,0 +1,103 @@
+<asf xmlversion="1.0">
+	<select-by-device id="common.components.wifi.winc3400" caption="WINC3400 (Wi-Fi) Host Driver v1.0.2">
+		<info type="description" value="summary">
+			The Atmel SmartConnect WINC3400 is an IEEE 802.11 b/g/n/BLE4.0 IOT network controller SoC. It is the ideal add-On to existing MCU solutions bringing WiFi and BLE Network capabilities through UART or SPI-to-WiFi interface. The WINC3400 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+		</info>
+		<module type="service" id="common.components.wifi.winc3400#1" caption="WINC3400 (Wi-Fi) Host Driver v1.0.2 - SAMD21 implementation">
+			<info type="description" value="summary">
+				The Atmel SmartConnect WINC3400 is an IEEE 802.11 b/g/n/BLE4.0 IOT network controller SoC. It is the ideal add-On to existing MCU solutions bringing WiFi and BLE Network capabilities through UART or SPI-to-WiFi interface. The WINC3400 connects to any Atmel AVR or SMART MCU with minimal resource requirements.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Wireless"/>
+			</info>
+			<build type="include-path" value="."/>
+
+			<build type="header-file" value="bsp/include/nm_bsp.h"/>
+			<build type="header-file" value="bsp/include/nm_bsp_internal.h"/>
+			<build type="header-file" value="bsp/include/nm_bsp_samd21.h"/>
+			<build type="c-source" value="bsp/source/nm_bsp_samd21.c"/>
+
+			<build type="header-file" value="bus_wrapper/include/nm_bus_wrapper.h"/>
+			<build type="c-source" value="bus_wrapper/source/nm_bus_wrapper_samd21.c"/>
+
+			<build type="header-file" value="common/include/nm_common.h"/>
+			<build type="header-file" value="common/include/nm_debug.h"/>
+			<build type="c-source" value="common/source/nm_common.c"/>
+
+			<build type="header-file" value="driver/include/m2m_ate_mode.h"/>
+			<build type="header-file" value="driver/include/m2m_crypto.h"/>
+			<build type="header-file" value="driver/include/m2m_ota.h"/>
+			<build type="header-file" value="driver/include/m2m_periph.h"/>
+			<build type="header-file" value="driver/include/m2m_types.h"/>
+			<build type="header-file" value="driver/include/m2m_wifi.h"/>
+			<build type="c-source" value="driver/source/m2m_ate_mode.c"/>
+			<build type="c-source" value="driver/source/m2m_crypto.c"/>
+			<build type="c-source" value="driver/source/m2m_hif.c"/>
+			<build type="header-file" value="driver/source/m2m_hif.h"/>
+			<build type="c-source" value="driver/source/m2m_ota.c"/>
+			<build type="c-source" value="driver/source/m2m_periph.c"/>
+			<build type="c-source" value="driver/source/m2m_wifi.c"/>
+			<build type="c-source" value="driver/source/nmasic.c"/>
+			<build type="header-file" value="driver/source/nmasic.h"/>
+			<build type="c-source" value="driver/source/nmbus.c"/>
+			<build type="header-file" value="driver/source/nmbus.h"/>
+			<build type="c-source" value="driver/source/nmdrv.c"/>
+			<build type="header-file" value="driver/source/nmdrv.h"/>
+			<build type="c-source" value="driver/source/nmspi.c"/>
+			<build type="header-file" value="driver/source/nmspi.h"/>
+			<build type="c-source" value="driver/source/nmi2c.c"/>
+			<build type="header-file" value="driver/source/nmi2c.h"/>
+			<build type="c-source" value="driver/source/nmuart.c"/>
+			<build type="header-file" value="driver/source/nmuart.h"/>
+
+			<build type="header-file" value="programmer/programmer.h"/>
+
+			<build type="header-file" value="socket/include/socket.h"/>
+			<build type="header-file" value="socket/include/m2m_socket_host_if.h"/>
+			<build type="c-source" value="socket/source/socket.c"/>
+			<build type="header-file" value="socket/source/socket_internal.h"/>
+
+			<build type="header-file" value="spi_flash/include/spi_flash.h"/>
+			<build type="header-file" value="spi_flash/include/spi_flash_map.h"/>
+			<build type="c-source" value="spi_flash/source/spi_flash.c"/>
+			
+			<build type="library" subtype="user" value="ble/libat_ble_api_cm0.a"/>
+			<build type="c-source" value="ble/ble_services/ble_mgr/ble_manager.c"/>
+			<build type="header-file" value="ble/ble_services/ble_mgr/ble_manager.h"/>
+			<build type="header-file" value="ble/ble_stack/include/atts_task.h"/>
+			<build type="header-file" value="ble/ble_stack/include/cmn_defs.h"/>
+			<build type="header-file" value="ble/ble_stack/include/dbg_task.h"/>
+			<build type="header-file" value="ble/ble_stack/include/device.h"/>
+			<build type="header-file" value="ble/ble_stack/include/diss_task.h"/>
+			<build type="header-file" value="ble/ble_stack/include/error.h"/>
+			<build type="header-file" value="ble/ble_stack/include/event.h"/>
+			<build type="header-file" value="ble/ble_stack/include/gapc_task.h"/>
+			<build type="header-file" value="ble/ble_stack/include/gapm_task.h"/>
+			<build type="header-file" value="ble/ble_stack/include/gattc_task.h"/>
+			<build type="header-file" value="ble/ble_stack/include/gattm_task.h"/>
+			<build type="header-file" value="ble/ble_stack/include/htpt_task.h"/>
+			<build type="header-file" value="ble/ble_stack/include/ll_if.h"/>
+			<build type="header-file" value="ble/ble_stack/include/smpc_task.h"/>
+			<build type="header-file" value="ble/ble_stack/include/wifiprov_task.h"/>
+			<build type="header-file" value="ble/include/at_ble_api.h"/>
+			<build type="header-file" value="ble/platform/include/platform.h"/>
+			<build type="header-file" value="ble/platform/include/timer.h"/>
+			<build type="header-file" value="ble/utils/ble_utils.h"/>
+
+			<build type="module-config" subtype="required-header-file" value="conf_winc.h"/>
+			<build type="module-config" subtype="path" value="module_config/samd21"/>
+			<build type="doxygen-entry-point" value="winc3400_group"/>
+		<!-- 	<build type="doxygen-quick-start" value="winc3400_quickstart"/>		 -->
+			<device-support value="samd21"/>
+			<require idref="sam0.drivers.port"/>
+			<require idref="sam0.drivers.sercom.spi"/>
+			<require idref="common2.services.delay"/>
+			<require idref="sam0.drivers.extint"/>
+			<require idref="sam0.drivers.system"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
+		</module>
+	</select-by-device>
+</asf>

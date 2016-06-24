@@ -6,6 +6,11 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="htpt_app.h"/>
 		<build type="c-source" value="htpt_app.c"/>
+		<require idref="thirdparty.wireless.ble_sdk.ble_services.device_information"/>
+		<build type="define" name="NENABLE_PTS" value="false"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_PERIPHERAL"/>
+		<build type="define" name="ATT_DB_MEMORY" value=""/>
+		<build type="define" name="HTPT_SERVICE" value=""/>
 		<require idref="thirdparty.wireless.ble_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_sdk.src"/>

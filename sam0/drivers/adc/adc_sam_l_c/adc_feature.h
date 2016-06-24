@@ -3,7 +3,7 @@
  *
  * \brief SAM ADC functionality
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,7 +56,7 @@ extern "C" {
 #endif
 
 /*@{*/
-#if (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+#if (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** Output Driver Strength Selection feature support. */
 #  define FEATURE_ADC_SUPPORT_MASTER_SLAVE
 #endif
@@ -414,13 +414,13 @@ enum adc_interrupt_flag {
 enum adc_oversampling_and_decimation {
 	/** Don't use oversampling and decimation mode */
 	ADC_OVERSAMPLING_AND_DECIMATION_DISABLE = 0,
-	/** 1 bit resolution increase */
+	/** 1-bit resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_1BIT,
-	/** 2 bits resolution increase */
+	/** 2-bit resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_2BIT,
-	/** 3 bits resolution increase */
+	/** 3-bit resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_3BIT,
-	/** 4 bits resolution increase */
+	/** 4-bit resolution increase */
 	ADC_OVERSAMPLING_AND_DECIMATION_4BIT
 };
 

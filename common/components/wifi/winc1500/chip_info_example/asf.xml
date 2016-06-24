@@ -36,7 +36,6 @@
 			<device-support value="sam4s"/>
 			<device-support value="samg53"/>
 			<device-support value="samg55"/>
-			<device-support value="same70"/>
 
 			<!-- Required modules -->
 			<require idref="common.components.wifi.winc1500"/>

@@ -3,7 +3,7 @@
  *
  * \brief SAM UART Quick Start
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,16 +78,16 @@ static void configure_uart(void)
 //! [setup_config_defaults]
 
 //! [setup_change_config]
-	config_uart.baud_rate = 38400;
-	config_uart.pin_number_pad[0] = EDBG_CDC_SERCOM_PIN_PAD0;
-	config_uart.pin_number_pad[1] = EDBG_CDC_SERCOM_PIN_PAD1;
-	config_uart.pin_number_pad[2] = EDBG_CDC_SERCOM_PIN_PAD2;
-	config_uart.pin_number_pad[3] = EDBG_CDC_SERCOM_PIN_PAD3;
+	config_uart.baud_rate = 115200;
+	config_uart.pin_number_pad[0] = EDBG_CDC_PIN_PAD0;
+	config_uart.pin_number_pad[1] = EDBG_CDC_PIN_PAD1;
+	config_uart.pin_number_pad[2] = EDBG_CDC_PIN_PAD2;
+	config_uart.pin_number_pad[3] = EDBG_CDC_PIN_PAD3;
 	
-	config_uart.pinmux_sel_pad[0] = EDBG_CDC_SERCOM_MUX_PAD0;
-	config_uart.pinmux_sel_pad[1] = EDBG_CDC_SERCOM_MUX_PAD1;
-	config_uart.pinmux_sel_pad[2] = EDBG_CDC_SERCOM_MUX_PAD2;
-	config_uart.pinmux_sel_pad[3] = EDBG_CDC_SERCOM_MUX_PAD3;
+	config_uart.pinmux_sel_pad[0] = EDBG_CDC_MUX_PAD0;
+	config_uart.pinmux_sel_pad[1] = EDBG_CDC_MUX_PAD1;
+	config_uart.pinmux_sel_pad[2] = EDBG_CDC_MUX_PAD2;
+	config_uart.pinmux_sel_pad[3] = EDBG_CDC_MUX_PAD3;
 //! [setup_change_config]
 
 //! [setup_set_config]
@@ -100,6 +100,12 @@ static void configure_uart(void)
 
 int main(void)
 {
+	/**
+	 * For make this QS work, disable the systick to stop task switch.
+	 * Should not do it if you want the BLE functions.
+	 */
+	SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+
 	system_clock_config(CLOCK_RESOURCE_XO_26_MHZ, CLOCK_FREQ_26_MHZ);
 
 //! [setup_init]
