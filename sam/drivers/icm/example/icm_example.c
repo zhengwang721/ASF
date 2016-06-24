@@ -115,7 +115,7 @@ volatile uint32_t message_sha_0[16] = {
 };
 
 /* Memory region1 main list area, string "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq" */
-volatile uint32_t message_sha_1_main[32] = {
+volatile uint32_t message_sha_1_main[16] = {
 	0x64636261,
 	0x65646362,
 	0x66656463,
