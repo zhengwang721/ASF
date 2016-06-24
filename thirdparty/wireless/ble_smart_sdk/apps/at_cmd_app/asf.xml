@@ -8,6 +8,7 @@
 		<build type="header-file" value="at_cmd.h"/>
 		<build type="c-source" value="at_cmd_app.c"/>
 		<build type="c-source" value="at_cmd.c"/>
+		<build type="define" name="OTAU_FEATURE" value="false"/>
 		
 		<build type="distribute" subtype="user-file" value="Atmel-42693-ATSAMB11-BluSDK-SMART-AT-CMD-Getting-Started-Guide_UserGuide.pdf"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>
