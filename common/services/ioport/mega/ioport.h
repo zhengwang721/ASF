@@ -78,10 +78,7 @@
 #define IOPORT_PORTL    77
 
 // base address for ports with addresses greater 0x100
-#define IOPORT_BASE_ADDRESS_XXX 0x22
-
-// first port with address greater 0x100
-#define IOPORT_PORT_XXX IOPORT_PORTH
+#define IOPORT_BASE_ADDRESS_H 0x100
 #endif
 /** @} */
 
@@ -174,12 +171,14 @@ __always_inline static inline ioport_port_t arch_ioport_pin_to_port_id(
  */
 __always_inline static PORT_t *arch_ioport_port_to_base(uint8_t port)
 {
-#ifdef IOPORT_BASE_ADDRESS_XXX
-    return (PORT_t *)((uintptr_t)((port >= IOPORT_PORT_XXX ?
-			IOPORT_BASE_ADDRESS_XXX : IOPORT_BASE_ADDRESS) + (port * IOPORT_PORT_OFFSET)));
-#else
-	return (PORT_t *)((uintptr_t)(IOPORT_BASE_ADDRESS + (port * IOPORT_PORT_OFFSET)));
+#ifdef IOPORT_BASE_ADDRESS_H	
+	if (port >= IOPORT_PORTH) {
+	    return (PORT_t *)((uintptr_t)(IOPORT_BASE_ADDRESS_H  + ((port - IOPORT_PORTH) * IOPORT_PORT_OFFSET)));	
+	} else 
 #endif
+	{
+	    return (PORT_t *)((uintptr_t)(IOPORT_BASE_ADDRESS + (port * IOPORT_PORT_OFFSET)));		
+	}
 }
 
 /**
