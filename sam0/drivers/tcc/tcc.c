@@ -929,7 +929,7 @@ enum status_code tcc_set_count_value(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	while (tcc_module->SYNCBUSY.bit.COUNT) {
+	while (tcc_module->SYNCBUSY.reg & TCC_SYNCBUSY_COUNT) {
 		/* Wait for sync */
 	}
 
@@ -962,14 +962,14 @@ uint32_t tcc_get_count_value(
 
 	/* Wait last command done */
 	do {
-		while (tcc_module->SYNCBUSY.bit.CTRLB) {
+		while (tcc_module->SYNCBUSY.reg & TCC_SYNCBUSY_CTRLB) {
 			/* Wait for sync */
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_CMD_Msk;
 		if (TCC_CTRLBSET_CMD_NONE == last_cmd) {
 			/* Issue read command and break */
 			tcc_module->CTRLBSET.bit.CMD = TCC_CTRLBSET_CMD_READSYNC_Val;
-			while (tcc_module->SYNCBUSY.bit.CTRLB) {
+			while (tcc_module->SYNCBUSY.reg & TCC_SYNCBUSY_CTRLB) {
 				/* Wait for sync */
 			}
 			break;
@@ -979,7 +979,7 @@ uint32_t tcc_get_count_value(
 		}
 	} while (1);
 
-	while (tcc_module->SYNCBUSY.bit.COUNT) {
+	while (tcc_module->SYNCBUSY.reg & TCC_SYNCBUSY_COUNT) {
 		/* Wait for sync */
 	}
 	return (tcc_module->COUNT.reg);
