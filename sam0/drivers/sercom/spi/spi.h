@@ -1059,6 +1059,11 @@ static inline void spi_disable(
 		/* Wait until the synchronization is complete */
 	}
 
+	/* Disbale interrupt */
+	spi_module->INTENCLR.reg = SERCOM_SPI_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	spi_module->INTFLAG.reg = SERCOM_SPI_INTFLAG_MASK;
+
 	/* Disable SPI */
 	spi_module->CTRLA.reg &= ~SERCOM_SPI_CTRLA_ENABLE;
 }

@@ -1786,6 +1786,11 @@ static inline void tcc_disable(
 		/* Wait for sync */
 	}
 
+	/* Disbale interrupt */
+	tcc_module->INTENCLR.reg = TCC_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	tcc_module->INTFLAG.reg = TCC_INTFLAG_MASK;
+
 	/* Disable the TCC module */
 	tcc_module->CTRLA.reg  &= ~TC_CTRLA_ENABLE;
 }

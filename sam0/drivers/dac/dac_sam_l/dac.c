@@ -301,6 +301,11 @@ void dac_disable(
 		/* Wait until the synchronization is complete */
 	}
 
+	/* Disbale interrupt */
+	dac_module->INTENCLR.reg = DAC_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	dac_module->INTFLAG.reg = DAC_INTFLAG_MASK;
+
 	/* Disable DAC */
 	dac_module->CTRLA.reg &= ~DAC_CTRLA_ENABLE;
 }

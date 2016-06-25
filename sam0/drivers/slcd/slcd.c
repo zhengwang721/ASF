@@ -198,6 +198,8 @@ void slcd_enable(void)
  */
 void slcd_disable(void)
 {
+	SLCD->INTENCLR.reg = SLCD_INTENCLR_MASK;
+	SLCD->INTFLAG.reg = SLCD_INTFLAG_MASK;
 	SLCD->CTRLA.reg &= ~(SLCD_CTRLA_ENABLE);
 	while (slcd_is_syncing()) {
 		/* Wait for synchronization */
