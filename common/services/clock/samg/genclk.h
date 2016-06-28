@@ -107,11 +107,11 @@ enum genclk_divider {
 #if SAMG55
 	GENCLK_PCK_PRES_1  = PMC_PCK_PRES(0), //!< Set PCK clock prescaler to 1
 	GENCLK_PCK_PRES_2  = PMC_PCK_PRES(1), //!< Set PCK clock prescaler to 2
-	GENCLK_PCK_PRES_4  = PMC_PCK_PRES(2), //!< Set PCK clock prescaler to 4
-	GENCLK_PCK_PRES_8  = PMC_PCK_PRES(3), //!< Set PCK clock prescaler to 8
-	GENCLK_PCK_PRES_16 = PMC_PCK_PRES(4), //!< Set PCK clock prescaler to 16
-	GENCLK_PCK_PRES_32 = PMC_PCK_PRES(5), //!< Set PCK clock prescaler to 32
-	GENCLK_PCK_PRES_64 = PMC_PCK_PRES(6), //!< Set PCK clock prescaler to 64
+	GENCLK_PCK_PRES_4  = PMC_PCK_PRES(3), //!< Set PCK clock prescaler to 4
+	GENCLK_PCK_PRES_8  = PMC_PCK_PRES(7), //!< Set PCK clock prescaler to 8
+	GENCLK_PCK_PRES_16 = PMC_PCK_PRES(15), //!< Set PCK clock prescaler to 16
+	GENCLK_PCK_PRES_32 = PMC_PCK_PRES(31), //!< Set PCK clock prescaler to 32
+	GENCLK_PCK_PRES_64 = PMC_PCK_PRES(63), //!< Set PCK clock prescaler to 64
 #else
 	GENCLK_PCK_PRES_1  = PMC_MCKR_PRES_CLK_1, //!< Set PCK clock prescaler to 1
 	GENCLK_PCK_PRES_2  = PMC_MCKR_PRES_CLK_2, //!< Set PCK clock prescaler to 2
