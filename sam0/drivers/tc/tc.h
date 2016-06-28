@@ -3,7 +3,7 @@
  *
  * \brief SAM TC - Timer Counter Driver
  *
- * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1277,6 +1277,11 @@ static inline void tc_disable(
 	while (tc_is_syncing(module_inst)) {
 		/* Wait for sync */
 	}
+
+	/* Disbale interrupt */
+	tc_module->INTENCLR.reg = TC_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	tc_module->INTFLAG.reg = TC_INTFLAG_MASK;
 
 	/* Disable TC module */
 	tc_module->CTRLA.reg  &= ~TC_CTRLA_ENABLE;

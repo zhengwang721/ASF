@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog Comparator Driver
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -873,6 +873,11 @@ static inline void ac_disable(
 	while (ac_is_syncing(module_inst)) {
 		/* Wait until synchronization is complete */
 	}
+
+	/* Disbale interrupt */
+	ac_module->INTENCLR.reg = AC_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	ac_module->INTFLAG.reg = AC_INTFLAG_MASK;
 
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg &= ~AC_CTRLA_ENABLE;
