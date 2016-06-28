@@ -51,11 +51,11 @@ static const uint32_t crc_data[10] = {
 	0x55555555, 0x66666666, 0x77777777, 0x88888888,0x99999999
 };
 const uint32_t expected_crc = 0xf8ee400b;
+static 	uint32_t crc_result;
 
 int main(void)
 {
 	enum status_code status;
-	uint32_t crc;
 
 	system_init();
 	system_peripheral_unlock(SYSTEM_PERIPHERAL_ID(DSU),
@@ -63,15 +63,15 @@ int main(void)
 
 	dsu_crc32_init();
 
-	crc = 0xFFFFFFFF;
-	status = dsu_crc32_cal((const uint32_t)crc_data,sizeof(crc_data),&crc);
+	crc_result = 0xFFFFFFFF;
+	status = dsu_crc32_cal((const uint32_t)crc_data,sizeof(crc_data),&crc_result);
 	if (status != STATUS_OK) {
 		while (1);
 	}
 
-	crc = ~crc;
+	crc_result = ~crc_result;
 
-	if (crc != expected_crc) {
+	if (crc_result != expected_crc) {
 		while (1);
 	}
 

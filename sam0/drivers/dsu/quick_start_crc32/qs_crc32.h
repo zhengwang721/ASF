@@ -44,10 +44,9 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-/** \page asfdoc_sam0_crc32_basic_use_case Quick Start Guide for AES - Basic
+/** \page asfdoc_sam0_crc32_basic_use_case Quick Start Guide for DSU CRC32 - Basic
  *
  * The supported board list:
- *    - SAM D20 Xplained Pro
  *    - SAM D21 Xplained Pro
  *
  * This example demonstrates how to use the CRC32 driver.

@@ -65,7 +65,6 @@ extern "C" {
  *  - DSU (Device Service Unit)
  *
  * The following devices can use this module:
- *  - Atmel | SMART SAM D20
  *  - Atmel | SMART SAM D21
  *
  * The outline of this documentation is as follows:

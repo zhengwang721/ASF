@@ -23,7 +23,7 @@
 		<build type="doxygen-entry-point" value="asfdoc_sam0_drivers_crc32_group "/>
 		<build type="doxygen-example-path" value="quick_start_crc32"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_drivers_crc32_exqsg"/>
-		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 
 	</module>
 </asf>

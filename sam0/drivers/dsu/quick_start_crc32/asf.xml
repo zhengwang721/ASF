@@ -6,7 +6,7 @@
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="qs_crc32.c"/>
 		<build type="include-path" value="."/>
-		<device-support value="samd21"/>
+		<device-support value="sam0"/>
 		<require idref="sam0.drivers.dsu_crc32"/>
 		<require idref="sam0.drivers.pac"/>
 		<require idref="sam0.drivers.system"/>
