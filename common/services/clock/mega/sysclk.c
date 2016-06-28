@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,7 +60,7 @@ void sysclk_init(void)
 	uint8_t i;
 	/* Turn off all peripheral clocks that can be turned off. */
 	for (i = 0; i < NUMBER_OF_POWER_REG; i++) {
-		*(reg++) = 0xFF;
+		*(reg++) = 0xFB;
 	}
 #endif
 #if !MEGA_UNSPECIFIED && !MEGA_XX
