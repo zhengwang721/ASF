@@ -3,7 +3,7 @@
  *
  * \brief SAM Low Power Application
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -139,6 +139,9 @@ static struct events_resource event;
 
 /* DMA buffer length */
 #define BUFFER_LEN 10
+
+/* MCU revision number */
+#define _SYSTEM_MCU_REVISION_B 1
 
 /* DMA resource and descriptor */
 struct dma_resource example_resource;
@@ -460,13 +463,20 @@ static void test_idle_mode(void)
  */
 static void test_standby_mode_dynamic_power_sleepwalking(void)
 {
+	/* Get MCU revision */
+	uint32_t rev = system_get_device_id();
+
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
 
 	printf("System will enter STANDBY mode:Dynamic Power SleepWalking\r\n");
 
 	/* When entering standby mode, the FDPLL is still running even if not
 	 *	requested by any module causing extra consumption. Errata reference:12244
 	 */
-	test_active_mode(SYSTEM_PERFORMANCE_LEVEL_0);
+	if (rev < _SYSTEM_MCU_REVISION_B) {
+		test_active_mode(SYSTEM_PERFORMANCE_LEVEL_0);
+	}
 
 	memset(adc_rslt, 0, sizeof(adc_rslt));
 	configure_event();
@@ -484,7 +494,9 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 	 * In Standby mode, when Power Domain 1 is power gated,
 	 * devices can show higher consumption than expected.
 	*/
-	config.power_domain = SYSTEM_POWER_DOMAIN_PD01;
+	if (rev < _SYSTEM_MCU_REVISION_B) {
+		config.power_domain = SYSTEM_POWER_DOMAIN_PD01;
+	}
 
 	system_standby_set_config(&config);
 
@@ -493,9 +505,11 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 	 * the main voltage regulator is used instead of the low power regulator,
 	 * causing higher power consumption.
 	*/
-	if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
-		uint32_t *const tmp = (void *)(0x4000141C);
-		*tmp |= (1 << 8);
+	if (rev < _SYSTEM_MCU_REVISION_B) {
+		if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
+			uint32_t *const tmp = (void *)(0x4000141C);
+			*tmp |= (1 << 8);
+		}
 	}
 	dma_start_transfer_job(&example_resource);
 
@@ -521,9 +535,11 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 	 * the main voltage regulator is used instead of the low power regulator,
 	 * causing higher power consumption.
 	*/
-	if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
-		uint32_t *const tmp = (void *)(0x4000141C);
-		*tmp &= ~(1 << 8);
+	if (rev < _SYSTEM_MCU_REVISION_B) {
+		if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
+			uint32_t *const tmp = (void *)(0x4000141C);
+			*tmp &= ~(1 << 8);
+		}
 	}
 
 }
@@ -533,13 +549,20 @@ static void test_standby_mode_dynamic_power_sleepwalking(void)
 */
 static void test_standby_mode_static_power_sleepwalking(void)
 {
+	/* Get MCU revision */
+	uint32_t rev = system_get_device_id();
+
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
 
 	printf("System will enter STANDBY mode:static power sleepwalking.\r\n");
 
 	/* When entering standby mode, the FDPLL is still running even if not
 	 *	requested by any module causing extra consumption. Errata reference:12244
 	 */
-	test_active_mode(SYSTEM_PERFORMANCE_LEVEL_0);
+	if (rev < _SYSTEM_MCU_REVISION_B) {
+		test_active_mode(SYSTEM_PERFORMANCE_LEVEL_0);
+	}
 
 	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_XOSC32K);
 
@@ -548,7 +571,9 @@ static void test_standby_mode_static_power_sleepwalking(void)
 		level 0, the chip cannot wake-up from standby mode because the
 		VCORERDY status is stuck at 0. Errata reference: 13551
 	*/
-	SUPC->VREG.bit.SEL = SUPC_VREG_SEL_LDO_Val;
+	if (rev < _SYSTEM_MCU_REVISION_B) {
+		SUPC->VREG.bit.SEL = SUPC_VREG_SEL_LDO_Val;
+	}
 
 	struct system_standby_config config;
 	system_standby_get_config_defaults(&config);
@@ -571,9 +596,11 @@ static void test_standby_mode_static_power_sleepwalking(void)
 	 * the main voltage regulator is used instead of the low power regulator,
 	 * causing higher power consumption.
 	*/
-	if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
-		uint32_t *const tmp = (void *)(0x4000141C);
-		*tmp |= (1 << 8);
+	if (rev < _SYSTEM_MCU_REVISION_B) {
+		if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
+			uint32_t *const tmp = (void *)(0x4000141C);
+			*tmp |= (1 << 8);
+		}
 	}
 
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
@@ -595,9 +622,11 @@ static void test_standby_mode_static_power_sleepwalking(void)
 	 * the main voltage regulator is used instead of the low power regulator,
 	 * causing higher power consumption.
 	*/
-	if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
-		uint32_t *const tmp = (void *)(0x4000141C);
-		*tmp &= ~(1 << 8);
+	if (rev < _SYSTEM_MCU_REVISION_B) {
+		if (system_get_performance_level() == SYSTEM_PERFORMANCE_LEVEL_0) {
+			uint32_t *const tmp = (void *)(0x4000141C);
+			*tmp &= ~(1 << 8);
+		}
 	}
 
 	SUPC->VREG.bit.SEL = SUPC_VREG_SEL_BUCK_Val;

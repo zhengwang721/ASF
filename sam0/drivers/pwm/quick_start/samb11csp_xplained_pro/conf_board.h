@@ -46,7 +46,7 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-#define CONF_PWM           PWM1
+#define CONF_PWM           PWM0
 #define CONF_PWM_OUT_PIN   PIN_LP_GPIO_0
 #define CONF_PWM_OUT_MUX   PINMUX_LP_GPIO_0_M_PWM0_OUT
 
