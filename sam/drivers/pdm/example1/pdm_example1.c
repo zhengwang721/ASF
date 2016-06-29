@@ -3,7 +3,7 @@
  *
  * \brief  Pulse Density Modulation Interface Controller Example
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -87,11 +87,11 @@
 #define PRESCALER (48000000/(2*1000000))-1
 
 /* Globally available PDMIC module struct */
-struct pdm_instance pdm;
+static struct pdm_instance pdm;
 /* Two buffers to store the PCM data */
-int16_t audio_buffer[2][PCM_BUF_SIZE];
+static int16_t audio_buffer[2][PCM_BUF_SIZE];
 /* Global variable to say which of the buffers should be used */
-uint8_t select;
+static uint8_t select;
  
  
  /* Function to initalize the PDC transfer */
