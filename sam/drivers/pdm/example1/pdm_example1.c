@@ -91,7 +91,7 @@ static struct pdm_instance pdm;
 /* Two buffers to store the PCM data */
 static int16_t audio_buffer[2][PCM_BUF_SIZE];
 /* Global variable to say which of the buffers should be used */
-static uint8_t select;
+static uint8_t buffer_index = 0;
  
  
  /* Function to initalize the PDC transfer */
@@ -102,7 +102,7 @@ static uint8_t select;
 	 pdmic_pdc = pdmic_get_pdc_base(PDMIC0);
 	 
 	 /* Set buffer address and size */
-	 packet.ul_addr = (uint32_t)&(audio_buffer[select][0]);
+	 packet.ul_addr = (uint32_t)&(audio_buffer[buffer_index][0]);
 	 packet.ul_size = PCM_BUF_SIZE;
 
 	 /* Initialize and enable PDC */
@@ -114,7 +114,7 @@ static uint8_t select;
 static void buffer_callback(const struct pdm_instance *const module)
 {
 	/* Toggle which buffer to fill */
-	select ^= 1;
+	buffer_index ^= 1;
 	/* Configure PDC to fill next buffer */
 	init_pdc();
 	/* Re-enable interrupt */
