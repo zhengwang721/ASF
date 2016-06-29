@@ -324,7 +324,7 @@ int main(void)
 	board_init();
 
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
-	cpu_hz = sysclk_get_cpu_hz();
+	cpu_hz = sysclk_get_peripheral_hz();
 
 	/* Define all the test cases */
 	DEFINE_TEST_CASE(usart_async_test, NULL, run_usart_async_test, NULL,

@@ -265,7 +265,7 @@ int main(void)
 	sysclk_enable_peripheral_clock(ISO7816_USART_ID);
 
 	/* Configure ISO7816 driver. */
-	iso7816_init(&conf_iso7816_t, sysclk_get_cpu_hz(), PIN_ISO7816_RST_IDX);
+	iso7816_init(&conf_iso7816_t, sysclk_get_peripheral_hz(), PIN_ISO7816_RST_IDX);
 
 	/* Read ATR. */
 	iso7816_warm_reset();
