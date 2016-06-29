@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Driver (Count Mode)
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -131,6 +131,11 @@ void rtc_count_disable(struct rtc_module *const module)
 	while (rtc_count_is_syncing(module)) {
 		/* Wait for synchronization */
 	}
+
+	/* Disbale interrupt */
+	rtc_module->MODE0.INTENCLR.reg = RTC_MODE0_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	rtc_module->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_MASK;
 
 	/* Disable RTC module. */
 	rtc_module->MODE0.CTRL.reg &= ~RTC_MODE0_CTRL_ENABLE;
