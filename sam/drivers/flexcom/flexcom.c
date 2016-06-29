@@ -65,6 +65,10 @@ extern "C" {
  */
 void flexcom_enable(Flexcom *p_flexcom)
 {
+#if SAMG55
+    #define PMC_PCK_PRES_CLK_1  PMC_PCK_PRES(0)
+#endif
+
 	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
 	/* Enable PMC clock for FLEXCOM */
 #ifdef ID_FLEXCOM7
@@ -72,11 +76,7 @@ void flexcom_enable(Flexcom *p_flexcom)
 		sysclk_enable_peripheral_clock(ID_FLEXCOM7);
 		/* Enable PCK output */
 		pmc_disable_pck(PMC_PCK_7);
-#if SAMG55
-        pmc_switch_pck_to_mck(PMC_PCK_7, PMC_PCK_PRES(0));
-#else
 		pmc_switch_pck_to_mck(PMC_PCK_7, PMC_PCK_PRES_CLK_1);
-#endif
 		pmc_enable_pck(PMC_PCK_7);
 	} else
 #endif
