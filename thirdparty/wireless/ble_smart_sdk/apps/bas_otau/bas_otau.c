@@ -123,8 +123,27 @@ static at_ble_status_t battery_service_advertise(void)
 /* Callback registered for AT_BLE_PAIR_DONE event from stack */
 static at_ble_status_t ble_paired_app_event(void *param)
 {
-	timer_cb_done = false;	
-	hw_timer_start(BATTERY_UPDATE_INTERVAL);
+	at_ble_pair_done_t *pair_done = (at_ble_pair_done_t *)param;
+	if(pair_done->status == AT_BLE_SUCCESS)
+	{
+		timer_cb_done = false;
+		aon_sleep_timer_service_init(1);
+		aon_sleep_timer_service_start(aon_sleep_timer_callback);
+	}
+	ALL_UNUSED(param);
+	return AT_BLE_SUCCESS;
+}
+
+/* Callback registered for AT_BLE_ENCRYPTION_STATUS_CHANGED event from stack */
+static at_ble_status_t ble_encryption_status_changed_app_event(void *param)
+{
+	at_ble_encryption_status_changed_t *encryption_status_changed = (at_ble_encryption_status_changed_t *)param;
+	if(encryption_status_changed->status == AT_BLE_SUCCESS)
+	{
+		timer_cb_done = false;
+		aon_sleep_timer_service_init(1);
+		aon_sleep_timer_service_start(aon_sleep_timer_callback);
+	}
 	ALL_UNUSED(param);
 	return AT_BLE_SUCCESS;
 }
@@ -134,7 +153,6 @@ static at_ble_status_t ble_disconnected_app_event(void *param)
 {
 	timer_cb_done = false;
 	flag = true;
-	hw_timer_stop();
 	aon_sleep_timer_service_stop();
 	battery_service_advertise();
 	
@@ -173,22 +191,7 @@ static at_ble_status_t ble_notification_confirmed_app_event(void *param)
 /* Callback registered for AT_BLE_CHARACTERISTIC_CHANGED event from stack */
 static at_ble_status_t ble_char_changed_app_event(void *param)
 {
-	uint16_t device_listening;
 	at_ble_characteristic_changed_t *char_handle = (at_ble_characteristic_changed_t *)param;
-	
-	if(bas_service_handler.serv_chars.client_config_handle == char_handle->char_handle)
-	{
-		device_listening = char_handle->char_new_value[1]<<8| char_handle->char_new_value[0];
-		if(!device_listening)
-		{
-			aon_sleep_timer_service_stop();
-		}
-		else
-		{
-			aon_sleep_timer_service_init(1);
-			aon_sleep_timer_service_start(aon_sleep_timer_callback);
-		}
-	}
 	return bat_char_changed_event(char_handle->conn_handle,&bas_service_handler, char_handle, &flag);
 }
 
@@ -207,7 +210,7 @@ static const ble_event_callback_t battery_app_gap_cb[] = {
 	NULL,
 	NULL,
 	NULL,
-	ble_paired_app_event,
+	ble_encryption_status_changed_app_event,
 	NULL,
 	NULL,
 	NULL,
