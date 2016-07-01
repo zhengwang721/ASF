@@ -134,7 +134,7 @@ enum tc45_cc_channel_mask_enable_t {
 	TC45_CCACAPT = TC45_CCAMODE_CAPT_gc,
 	/* ! Channel B Enable mask */
 	TC45_CCBCOMP = TC45_CCBMODE_COMP_gc,
-	TC45_CCBCAPT = TC45_CCCMODE_CAPT_gc,
+	TC45_CCBCAPT = TC45_CCBMODE_CAPT_gc,
 	/* ! Channel C Enable mask */
 	TC45_CCCCOMP = TC45_CCCMODE_COMP_gc,
 	TC45_CCCCAPT = TC45_CCCMODE_CAPT_gc,
