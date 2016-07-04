@@ -874,6 +874,11 @@ static inline void ac_disable(
 		/* Wait until synchronization is complete */
 	}
 
+	/* Disbale interrupt */
+	ac_module->INTENCLR.reg = AC_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	ac_module->INTFLAG.reg = AC_INTFLAG_MASK;
+
 	/* Write the new comparator module control configuration */
 	ac_module->CTRLA.reg &= ~AC_CTRLA_ENABLE;
 }

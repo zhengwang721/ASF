@@ -1173,6 +1173,12 @@ static inline void usart_disable(
 	/* Disable Global interrupt for module */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
 #endif
+
+	/* Disbale interrupt */
+	usart_hw->INTENCLR.reg = SERCOM_USART_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	usart_hw->INTFLAG.reg = SERCOM_USART_INTFLAG_MASK;
+
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 

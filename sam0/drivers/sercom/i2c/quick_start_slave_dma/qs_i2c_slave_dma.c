@@ -100,7 +100,7 @@ struct dma_resource i2c_dma_resource;
 
 // [transfer_descriptor]
 COMPILER_ALIGNED(16)
-DmacDescriptor i2c_dma_descriptor;
+DmacDescriptor i2c_dma_descriptor SECTION_DMAC_DESCRIPTOR;
 // [transfer_descriptor]
 
 // [config_dma_resource]

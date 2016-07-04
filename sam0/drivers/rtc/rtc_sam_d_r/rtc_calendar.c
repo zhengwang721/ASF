@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Driver (Calendar Mode)
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -131,6 +131,11 @@ void rtc_calendar_disable(struct rtc_module *const module)
 	while (rtc_calendar_is_syncing(module)) {
 		/* Wait for synchronization */
 	}
+
+	/* Disbale interrupt */
+	rtc_module->MODE2.INTENCLR.reg = RTC_MODE2_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_MASK;
 
 	/* Disable RTC module. */
 	rtc_module->MODE2.CTRL.reg &= ~RTC_MODE2_CTRL_ENABLE;

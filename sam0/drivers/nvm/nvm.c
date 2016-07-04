@@ -614,6 +614,7 @@ enum status_code nvm_read_buffer(
  * \retval STATUS_ERR_BAD_ADDRESS  The requested row address was outside the
  *                                 acceptable range of the NVM memory region or
  *                                 not aligned to the start of a row
+ * \retval STATUS_ABORTED          NVM erased error
  */
 enum status_code nvm_erase_row(
 		const uint32_t row_address)
@@ -670,6 +671,11 @@ enum status_code nvm_erase_row(
 #endif
 
 	while (!nvm_is_ready()) {
+	}
+
+	/* There existed error in NVM erase operation */
+	if ((enum nvm_error)(nvm_module->STATUS.reg & NVM_ERRORS_MASK) != NVM_ERROR_NONE) {
+		return STATUS_ABORTED;
 	}
 
 	return STATUS_OK;

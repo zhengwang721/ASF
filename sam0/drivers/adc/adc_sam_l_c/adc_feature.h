@@ -56,7 +56,7 @@ extern "C" {
 #endif
 
 /*@{*/
-#if (SAML22) || (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
+#if (SAMC20) || (SAMC21) || defined(__DOXYGEN__)
 /** Output Driver Strength Selection feature support. */
 #  define FEATURE_ADC_SUPPORT_MASTER_SLAVE
 #endif

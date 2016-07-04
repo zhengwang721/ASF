@@ -1278,6 +1278,11 @@ static inline void tc_disable(
 		/* Wait for sync */
 	}
 
+	/* Disbale interrupt */
+	tc_module->INTENCLR.reg = TC_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	tc_module->INTFLAG.reg = TC_INTFLAG_MASK;
+
 	/* Disable TC module */
 	tc_module->CTRLA.reg  &= ~TC_CTRLA_ENABLE;
 }

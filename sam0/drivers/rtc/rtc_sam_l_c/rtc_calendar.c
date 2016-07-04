@@ -142,6 +142,11 @@ void rtc_calendar_disable(struct rtc_module *const module)
 		/* Wait for synchronization */
 	}
 
+	/* Disbale interrupt */
+	rtc_module->MODE2.INTENCLR.reg = RTC_MODE2_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_MASK;
+
 	/* Disable RTC module. */
 	rtc_module->MODE2.CTRLA.reg &= ~RTC_MODE2_CTRLA_ENABLE;
 

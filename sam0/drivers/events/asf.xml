@@ -43,8 +43,9 @@
 			</info>
 
 			<build type="include-path" value="."/>
-			<build type="header-file" subtype="api" value="events.h"/>
+			<build type="header-file" value="events_common.h"/>
 
+			<build type="define" name="EVENTS_INTERRUPT_HOOKS_MODE" value="false"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_events_group"/>
 
 			<require idref="sam0.drivers.events.common"/>

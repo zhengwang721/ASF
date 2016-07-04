@@ -668,6 +668,8 @@ static inline void mcan_get_config_defaults(
 
 void mcan_init(struct mcan_module *const module_inst, Mcan *hw,
 		struct mcan_config *config);
+void mcan_set_baudrate(Mcan *hw, uint32_t baudrate);
+void mcan_fd_set_baudrate(Mcan *hw, uint32_t baudrate);
 void mcan_start(struct mcan_module *const module_inst);
 void mcan_stop(struct mcan_module *const module_inst);
 void mcan_enable_fd_mode(struct mcan_module *const module_inst);
@@ -797,10 +799,10 @@ static inline void mcan_rx_clear_buffer_status(
 		struct mcan_module *const module_inst, uint32_t index)
 {
 	if (index < 32) {
-		module_inst->hw->MCAN_NDAT1 |= (1 << index);
+		module_inst->hw->MCAN_NDAT1 = (1 << index);
 	} else {
 		index -= 32;
-		module_inst->hw->MCAN_NDAT2 |= (1 << index);
+		module_inst->hw->MCAN_NDAT2 = (1 << index);
 	}
 }
 
@@ -860,7 +862,7 @@ static inline void mcan_get_standard_message_filter_element_default(
 			MCAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;
 }
 
-enum status_code mcan_set_rx_standand_filter(
+enum status_code mcan_set_rx_standard_filter(
 		struct mcan_module *const module_inst,
 		struct mcan_standard_message_filter_element *sd_filter, uint32_t index);
 
