@@ -68,9 +68,11 @@
  *
  * This application has been tested on following boards:
  * - SAM L21  Xplained Pro
+ * - SAM R30  Xplained Pro
  *
  * \section appdoc_sam0_low_power_setup Hardware Setup
- * This application use AIN0(PA02, EXT1 pin10) as ADC input channel.
+ * This application of SAML21 use AIN0(PA02, EXT1 pin10) and
+ * SAMR30 use (AIN6(PA06, EXT1 pin3)) as ADC input channel.
  * BUTTON0 is used to wake up system from standby mode and IDLE mode.
  * BUTTON0 is used as an external wake up pin to wake up system from BACKUP mode,
  * the wakeup pin level is low.
@@ -580,7 +582,7 @@ static void test_standby_mode_static_power_sleepwalking(void)
 	config.enable_dpgpd0       = false;
 	config.enable_dpgpd1       = false;
 	config.power_domain        = SYSTEM_POWER_DOMAIN_DEFAULT;
-#if (SAML21XXXB)
+#if (SAML21XXXB) || (SAMR30)
 	config.vregs_mode          = SYSTEM_SYSTEM_VREG_SWITCH_AUTO;
 #else
 	config.disable_avregsd     = false;
@@ -703,10 +705,10 @@ int main(void)
 
 	/* BOD33 disabled */
 	SUPC->BOD33.reg &= ~SUPC_BOD33_ENABLE;
-
+#ifndef SAMR30
 	/* VDDCORE is supplied BUCK converter */
 	SUPC->VREG.bit.SEL = SUPC_VREG_SEL_BUCK_Val;
-
+#endif
 	delay_init();
 	configure_usart();
 	configure_extint_channel();

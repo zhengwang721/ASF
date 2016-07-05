@@ -11,5 +11,6 @@
 		<require idref="common2.services.delay"/>
 		<device-support value="saml21"/>
 		<device-support value="saml22"/>
+		<device-support value="samr30"/>
 	</module>
 </asf>
