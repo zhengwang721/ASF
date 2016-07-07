@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file conf_sio2host.h
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,37 +40,22 @@
  * \asf_license_stop
  */
 
-/**
- * \page license License
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
 
- #include "asf.h"
- # include "performance_main.h"
-int main(void)
-{
-	irq_initialize_vectors();
-#if SAMD || SAMR21 || SAML21 || SAMR30
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
+/** Since MCPS.DATA.indication requires max no of bytes of around 150 bytes than
+ * all other primitives,the Maximum Buffer size is kept as 156 bytes */#define SERIAL_RX_BUF_SIZE_HOST    156
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();
-#endif
+#define USART_HOST                 EDBG_CDC_MODULE
+#define HOST_SERCOM_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define HOST_SERCOM_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define HOST_SERCOM_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define HOST_SERCOM_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define HOST_SERCOM_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
 
-	performance_analyzer_init();
-
-	cpu_irq_enable();
-
-	/* Endless while loop */
-	while (1) {
-		performance_analyzer_task();
-	}
-}
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(0, USART_HOST_ISR_VECT); \
+	USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
+#endif /* CONF_SIO2HOST_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief Module configuration
  *
- * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,39 +38,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+#ifndef CONF_PERF_ANALYZER_H_INCLUDED
+#define CONF_PERF_ANALYZER_H_INCLUDED
 
- #include "asf.h"
- # include "performance_main.h"
-int main(void)
-{
-	irq_initialize_vectors();
-#if SAMD || SAMR21 || SAML21 || SAMR30
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
+/* Application default channel (DEFAULT_CHANNEL in app_init.h)
+ * = 0(First Channel in Sub-GHz) + DEFAULT_CHANNEL_OFFSET */
+#define DEFAULT_CHANNEL_OFFSET           (1)
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();
-#endif
+#define DEFAULT_PAGE                     (0)
 
-	performance_analyzer_init();
+#define ENABLE_ANTENNA_1                 (1)
+#define ENABLE_ANTENNA_2                 (2)
 
-	cpu_irq_enable();
+#define ANT_SELECTED                                      ENABLE_ANTENNA_1
+#define ENABLE_ANTENNA_DIVERSITY              false
 
-	/* Endless while loop */
-	while (1) {
-		performance_analyzer_task();
-	}
-}
+#endif /* CONF_PERF_ANALYZER_H_INCLUDED */

@@ -85,6 +85,7 @@
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
 		<device-support value="saml21"/>
+		<device-support value="samr30"/>
 		<device-support value="atmega256rfr2"/>
 		<device-support value="atmega2564rfr2"/>
 		<device-support value="atmega128rfa1"/>
@@ -101,6 +102,7 @@
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
 		<device-support value="saml21"/>
+		<device-support value="samr30"/>
 	</device-alias-map>
 	<device-alias-map name="avr2025_mac_pal_spi_common_support">
 		<device-support value="atxmega256a3u"/>
@@ -116,6 +118,7 @@
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
 		<device-support value="saml21"/>
+		<device-support value="samr30"/>
 	</device-alias-map>
 	<device-alias-map name="avr2025_mac_pal_soc_support">
 		<device-support value="atmega128rfa1"/>

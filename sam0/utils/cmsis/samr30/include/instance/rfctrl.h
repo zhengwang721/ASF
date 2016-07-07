@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief Instance description for RFCTRL
  *
- * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,39 +38,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
- #include "asf.h"
- # include "performance_main.h"
-int main(void)
-{
-	irq_initialize_vectors();
-#if SAMD || SAMR21 || SAML21 || SAMR30
-	system_init();
-	delay_init();
+#ifndef _SAMR30_RFCTRL_INSTANCE_
+#define _SAMR30_RFCTRL_INSTANCE_
+
+/* ========== Register definition for RFCTRL peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#define REG_RFCTRL_FECFG           (0x42003C00U) /**< \brief (RFCTRL) Front-end control bus configuration */
 #else
-	sysclk_init();
+#define REG_RFCTRL_FECFG           (*(RwReg16*)0x42003C00U) /**< \brief (RFCTRL) Front-end control bus configuration */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();
-#endif
+/* ========== Instance parameters for RFCTRL peripheral ========== */
+#define RFCTRL_FBUSMSB              5       
 
-	performance_analyzer_init();
-
-	cpu_irq_enable();
-
-	/* Endless while loop */
-	while (1) {
-		performance_analyzer_task();
-	}
-}
+#endif /* _SAMR30_RFCTRL_INSTANCE_ */

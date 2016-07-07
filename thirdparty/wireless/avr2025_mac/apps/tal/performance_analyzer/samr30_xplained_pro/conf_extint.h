@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief SAM R30 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,39 +38,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+/*
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
- #include "asf.h"
- # include "performance_main.h"
-int main(void)
-{
-	irq_initialize_vectors();
-#if SAMD || SAMR21 || SAML21 || SAMR30
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
-
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();
+/** 
+ * Define which clock type is used to clock EIC peripheral:
+ *     - EXTINT_CLK_GCLK
+ *     - EXTINT_CLK_ULP32K
+ *
+ * EXTINT_CLK_ULP32K is available for SAM L21/C21.
+ */
+#define EXTINT_CLOCK_SELECTION   EXTINT_CLK_ULP32K
+ 
+/**
+ * Define which GCLK source is used when selecting EXTINT_CLK_GCLK type.
+ */
+#if (EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 #endif
 
-	performance_analyzer_init();
-
-	cpu_irq_enable();
-
-	/* Endless while loop */
-	while (1) {
-		performance_analyzer_task();
-	}
-}
+#endif

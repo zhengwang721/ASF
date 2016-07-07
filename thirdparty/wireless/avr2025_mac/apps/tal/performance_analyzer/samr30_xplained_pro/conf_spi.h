@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief SAM R30 SPI configuration
  *
- * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,39 +38,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
- #include "asf.h"
- # include "performance_main.h"
-int main(void)
-{
-	irq_initialize_vectors();
-#if SAMD || SAMR21 || SAML21 || SAMR30
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
+#  define AT86RFX_SPI_BAUDRATE             4000000UL
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      false
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();
-#endif
-
-	performance_analyzer_init();
-
-	cpu_irq_enable();
-
-	/* Endless while loop */
-	while (1) {
-		performance_analyzer_task();
-	}
-}
+#endif /* CONF_SPI_H_INCLUDED */
