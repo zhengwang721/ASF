@@ -389,6 +389,12 @@ uint32_t rtc_count_get_count(struct rtc_module *const module)
 		while (rtc_count_is_syncing(module)) {
 			/* Wait for synchronization */
 		}
+	} else if (!(rtc_module->MODE0.READREQ.reg & RTC_READREQ_RCONT)){
+		rtc_module->MODE0.READREQ.reg |= RTC_READREQ_RCONT | RTC_READREQ_RREQ;
+		 /* wait that the first Read request finishes */
+		while (rtc_count_is_syncing(module)) {
+			/* Wait for synchronization */
+		}
 	}
 
 	/* Read value based on mode. */
