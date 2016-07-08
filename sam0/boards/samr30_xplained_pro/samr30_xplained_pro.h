@@ -106,7 +106,7 @@ void system_board_init(void);
 #define SW0_EIC_PIN               PIN_PA28A_EIC_EXTINT8
 #define SW0_EIC_MUX               MUX_PA28A_EIC_EXTINT8
 #define SW0_EIC_PINMUX            PINMUX_PA28A_EIC_EXTINT8
-#define SW0_EIC_LINE              2
+#define SW0_EIC_LINE              8
 /** @} */
 
 /**
