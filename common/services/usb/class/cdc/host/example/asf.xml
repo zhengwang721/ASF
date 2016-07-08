@@ -72,6 +72,7 @@
 			<device-support value="samd21"/>
 			<device-support value="saml21"/>
 			<device-support value="samda1"/>
+			<device-support value="samr30"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.usb.class.cdc.host.example#3" caption="USB Host CDC Example">
