@@ -516,6 +516,12 @@ void rtc_calendar_get_time(
 		while (rtc_calendar_is_syncing(module)) {
 			/* Wait for synchronization */
 		}
+	} else if (!(rtc_module->MODE2.READREQ.reg & RTC_READREQ_RCONT)){
+		rtc_module->MODE2.READREQ.reg |= RTC_READREQ_RCONT | RTC_READREQ_RREQ;
+		 /* wait that the first Read request finishes */
+		while (rtc_calendar_is_syncing(module)) {
+			/* Wait for synchronization */
+		}
 	}
 
 	/* Read value. */
