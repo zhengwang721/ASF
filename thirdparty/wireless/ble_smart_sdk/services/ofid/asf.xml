@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_smart_sdk.services.ofid" caption="BLE_SMART_STACK driver - OTA Flash Interface Driver">
+	<module type="service" id="thirdparty.wireless.ble_smart_sdk.services.ofid" caption="BLE_SMART_STACK driver - OTA Flash Interface Driver">
 		<info type="description" value="summary">
 		</info>
 		

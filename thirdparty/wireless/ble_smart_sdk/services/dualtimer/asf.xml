@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_smart_sdk.services.dualtimer" caption="BLE_SMART_STACK driver - dualtimer">
+	<module type="service" id="thirdparty.wireless.ble_smart_sdk.services.dualtimer" caption="BLE_SMART_STACK driver - dualtimer">
 		<info type="description" value="summary">
 		</info>
-		
+		<info type="gui-flag" value="hidden" />
 		<build type="include-path"  value="./"/>
 		<build type="header-file"   value="timer_hw.h"/> 
 		<build type="c-source" value="timer_hw.c"/>

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Phone Alert Status Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.phone_alert_status.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Phone Alert Status Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.phone_alert_status.samb11_xplained_pro" force-caption="true" force-description="true" workspace-name="phone_alert_status_samb11_xplained_pro">
 		<info type="description" value="summary">
 		Phone Alert Status Application for BLE stack.
 		</info>	
