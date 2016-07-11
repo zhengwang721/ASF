@@ -5,7 +5,7 @@
 		</info>	
 		<build type="include-path" value="."/>
 		<build type="c-source" value="app.c"/>
-		
+		<build type="define" name="OTAU_FEATURE" value="false"/>
 		<build type="distribute" subtype="user-file" value="Atmel-42599-ATSAMB11-BluSDK-SMART-iBeacon-Getting-Started-Guide_UserGuide.pdf"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>
   		<require idref="thirdparty.wireless.ble_smart_sdk.lib"/>

@@ -8,6 +8,7 @@
 		<build type="c-source" value="multirole_multiconnect.c"/>
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_ALL"/>
 		<build type="define" name="USE_SCAN_SOFT_FILTER" value=""/>
+		<build type="define" name="OTAU_FEATURE" value="false"/>
 		
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.pxp_monitor"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.battery"/>

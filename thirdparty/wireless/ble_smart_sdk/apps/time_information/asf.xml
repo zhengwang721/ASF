@@ -9,6 +9,8 @@
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_PERIPHERAL"/>
 		<build type="define" name="NENABLE_PTS" value=""/>
 		<build type="define" name="TP_ANDROID" value=""/>
+		<build type="define" name="OTAU_FEATURE" value="false"/>
+		
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.time_info"/>
 		<build type="distribute" subtype="user-file" value="Atmel-42604-ATSAMB11-BluSDK-SMART-Time-Information-Profile-Getting-Started-Guide_UserGuide.pdf"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>
