@@ -581,15 +581,12 @@ void pio_configure_interrupt(Pio *p_pio, const uint32_t ul_mask,
 /**
  * \brief Enable the given interrupt source.
  * The PIO must be configured as an NVIC interrupt source as well.
- * The status register of the corresponding PIO controller is cleared
- * prior to enabling the interrupt.
  *
  * \param p_pio Pointer to a PIO instance.
  * \param ul_mask Interrupt sources bit map.
  */
 void pio_enable_interrupt(Pio *p_pio, const uint32_t ul_mask)
 {
-	p_pio->PIO_ISR;
 	p_pio->PIO_IER = ul_mask;
 }
 
@@ -605,11 +602,11 @@ void pio_disable_interrupt(Pio *p_pio, const uint32_t ul_mask)
 }
 
 /**
- * \brief Read PIO interrupt status.
+ * \brief Read and clear PIO interrupt status.
  *
  * \param p_pio Pointer to a PIO instance.
  *
- * \return The interrupt status mask value.
+ * \return The interrupt status value.
  */
 uint32_t pio_get_interrupt_status(const Pio *p_pio)
 {
