@@ -13,6 +13,7 @@
 		
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.battery"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.otau"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.device_information"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
