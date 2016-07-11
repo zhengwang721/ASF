@@ -1423,7 +1423,7 @@ static inline void convert_16_bit_to_byte_address(uint64_t value, uint8_t *data)
 
 
 #if (defined __GNUC__)
-  #define nop() do { __asm__ __volatile__ ("nop"); } while (0)
+  #define nop() __asm__ __volatile__ ("nop")
 #elif (defined __ICCAVR32__)
   #define nop() __no_operation()
 #endif

@@ -3,7 +3,7 @@
  *
  * \brief Commonly used includes, types and macros.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -346,7 +346,7 @@ typedef unsigned long long int  U64;  //!< 64-bit unsigned integer.
                            ((U64)Swap32((U64)(u64)) << 32)))
 						   
 #if (defined __GNUC__)
-  #define nop() do { __asm__ __volatile__ ("nop"); } while (0)
+  #define nop() __asm__ __volatile__ ("nop")
 #elif (defined __ICCAVR__)
   #define nop() __no_operation()
 #endif
