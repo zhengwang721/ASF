@@ -1078,7 +1078,7 @@ static at_ble_status_t otau_download_status(uint16_t *resume_page_no,
  */
 at_ble_status_t otau_image_notify_request_handler(void *params)
 {
-	at_ble_status_t status = AT_BLE_FAILURE;	
+	at_ble_status_t status = AT_BLE_FAILURE;
 	image_notification_req_t *image_notification = NULL;
 	
 	OTAU_CHECK_NULL(params);
@@ -1149,9 +1149,7 @@ at_ble_status_t otau_image_notify_request_handler(void *params)
 			image_notification_resp_t image_notify_response; //For correct request
 			uint16_t resume_page_no;
 			uint16_t resume_block_no;
-			section_id_t resume_section_id;
-			
-			
+			section_id_t resume_section_id;	
 			
 			image_notify_response.fw_ver = dev_info.fw_version;
 			image_notify_response.hardware_version = dev_info.hw_version;
@@ -1461,8 +1459,15 @@ at_ble_status_t otau_page_data_request_handler(void *params)
 		uint32_t percent = 0;
 		/* Check page no and calculate the address to update */
 		/* Check the section id */
+		
+		if (((page_data_notify_req->req.length-4) >  dev_flash_info.page_size) || ((page_data_notify_req->req.length-4) == 0))
+		{
+			DBG_OTAU("Invalid image page size");
+			return AT_BLE_FAILURE;
+		}
+		
 		if(page_data_notify_req->section_id == 0x01)
-		{			
+		{		
 			memcpy((uint8_t *)&data_len, meta_data.patch_downloaded_info.size, 3);
 			data_len += (page_data_notify_req->req.length - 4);
 			memcpy(meta_data.patch_downloaded_info.size, (uint8_t *)&data_len, 3);

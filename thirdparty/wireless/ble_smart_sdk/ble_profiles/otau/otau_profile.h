@@ -67,7 +67,9 @@ extern "C" {
 #define OTAU_FRAME_LEN_SIZE		(2)
 
 /* OTAU Module version */
-#define OTAU_MAJOR_VERSION		(1) /* 8-bit OTAU module major number */
+#define OTAU_MAJOR_VERSION		(1)
+
+ /* 8-bit OTAU module major number */
 #define OTAU_MINOR_VERSION		(0) /* 8-bit OTAU module minor number */
 #define OTAU_BUILD_NUMBER		(0x0000) /* 16-bit OTAU module build number */
 

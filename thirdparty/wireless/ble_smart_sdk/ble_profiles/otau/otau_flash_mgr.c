@@ -355,7 +355,7 @@ at_ble_status_t ofm_otau_meta_data_update(void *params)
 	ofid_info.data_buf = (uint8_t *)&current_meta_data;
 	ofid_info.flash_addr = meta_loc.current_image_data_addr;
 	if (ofid_read_metadeta(&ofid_info) == AT_OFID_OP_SUCESS)
-	{		
+	{	
 		/* First Update it in backup sector */
 		/* Erase sector */
 		ofid_info.flash_addr = meta_loc.current_image_data_addr + FLASH_SECTOR_SIZE;
@@ -431,6 +431,30 @@ static void check_nupdate_metadata_address(void)
 	}
 }
 
+static void ofm_restore_metadata(void)
+{
+	/* Erase the actual image section */
+	if(ofm_erase_memory(flash_inst->metadata_addr, FLASH_SECTOR_SIZE) == AT_BLE_SUCCESS)
+	{
+		/* Read the page by page from backup location and store it */
+		uint32_t b_idx;
+		uint8_t page_buf[flash_inst->page_size];
+		
+		for (b_idx = 0; b_idx < FLASH_SECTOR_SIZE; b_idx = b_idx + flash_inst->page_size)
+		{
+			if(ofm_read_page(0x01, (flash_inst->metadata_addr + FLASH_SECTOR_SIZE + b_idx), page_buf, flash_inst->page_size) == AT_BLE_SUCCESS)
+			{
+				if(ofm_write_page(0x01, (flash_inst->metadata_addr + b_idx), page_buf, flash_inst->page_size) == AT_BLE_SUCCESS)
+				{
+					DBG_OTAU("Restoring the metadata From:%d To:%d", 
+							(flash_inst->metadata_addr + FLASH_SECTOR_SIZE + b_idx),
+							(flash_inst->metadata_addr + b_idx));								
+				}
+			}
+		}					
+	}
+}
+
 /** @brief compute_image_meta_loc This function will locate the correct metadata address 
  *			device will reads the meta data and compute the meta data location 
  *			of OTAU and current running image meta data location
@@ -443,9 +467,9 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 {
 	at_ble_status_t status = AT_BLE_FAILURE;
 	uint8_t read_buf[sizeof(image_meta_data_t)];
-	uint32_t idx;
+	int32_t idx;
 	image_meta_data_t *meta_data_info = (image_meta_data_t *)read_buf;
-	firmware_version_t fw_ver[TOTAL_META_DATA_SECTIONS];	
+	firmware_version_t fw_ver[TOTAL_META_DATA_SECTIONS];
 	ofid_data_info_t meta_data;	
 	uint8_t completed_download_meta_data[TOTAL_META_DATA_SECTIONS] = {false, false};
 	
@@ -465,7 +489,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 		
 		if(ofid_read_metadeta(&meta_data) == AT_OFID_OP_SUCESS)
 		{
-			image_crc_t crc = 0;			
+			image_crc_t crc = 0;
 			
 		 /* Check whether valid meta data present */
 		 if ( meta_data_info->len == (sizeof(image_meta_data_t) - sizeof(meta_data_info->len)) )
@@ -560,14 +584,22 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 			 else
 			 {
 				 DBG_OTAU("meta data header crc calculation failed: %ld, meta_data_info->header_crc:0x%4X, calc crc:0x%4X", idx, meta_data_info->header_crc, crc);
+
+				/* It must be  present in the backup location of metadata restore the metadata to main metadata location */
+				
+				ofm_restore_metadata();
+				idx--;
+				
 			 }
 		   }
 		   else
 		   {
 			   DBG_OTAU("meta data not found: %ld", idx);
+			   ofm_restore_metadata();
+			   idx--;
 		   }
 		}			
-	}	
+	}
 	
 	/* Get the current running image */
 	if (completed_download_meta_data[0] && completed_download_meta_data[1])
@@ -577,7 +609,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 			/* Running image at lower part meta data */
 			/* Swap first and second part */
 			DBG_OTAU("Swap @Device Fw major");
-			swap_meta_data_locations();				
+			swap_meta_data_locations();
 		}
 		else if(fw_ver[0].minor_number < fw_ver[1].minor_number)
 		{

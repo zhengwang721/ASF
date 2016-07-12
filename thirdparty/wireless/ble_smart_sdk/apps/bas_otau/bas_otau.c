@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief Battery Information Service - Application
+* \brief OTAU reference application (Battery and Device Information Service)
 *
 * Copyright (c) 2016 Atmel Corporation. All rights reserved.
 *
@@ -61,6 +61,9 @@
 #include "otau_service.h"
 #include "otau_profile.h"
 #include "button.h"
+#ifdef DEVICE_INFORMATION_SERVICE
+#include "device_info.h"
+#endif
 #include "aon_sleep_timer_basic.h"
 
 /* === GLOBALS ============================================================ */
@@ -71,6 +74,10 @@
 	
 uint8_t db_mem[1024] = {0};
 bat_gatt_service_handler_t bas_service_handler;
+
+#ifdef DEVICE_INFORMATION_SERVICE
+dis_gatt_service_handler_t dis_service_handler;
+#endif
 
 bool volatile timer_cb_done = false;
 bool volatile flag = true;
@@ -364,7 +371,17 @@ int main(void)
 		otau_profile_init(&otau_config);
 		
 #endif /* OTAU_FEATURE */
+
+#ifdef DEVICE_INFORMATION_SERVICE
+	/* Initialize the dis */
+	dis_init_service(&dis_service_handler);
 	
+	/* Define the primary service in the GATT server database */
+	if ((status = dis_primary_service_define(&dis_service_handler)) != AT_BLE_SUCCESS)
+	{
+		DBG_LOG("Device Information Service definition failed,reason %x",status);
+	}
+#endif
 	
 	battery_service_advertise();
 	
