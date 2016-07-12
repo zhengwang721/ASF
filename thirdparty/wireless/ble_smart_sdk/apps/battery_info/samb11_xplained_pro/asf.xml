@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Battery Service Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.battery_info.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Battery Service Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.battery_info.samb11_xplained_pro" force-caption="true" force-description="true" workspace-name="battery_info_samb11_xplained_pro">
 		<info type="description" value="summary">
 		Battery Service Application for BLE stack.
 		</info>	

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="BLE-Startup Template - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.startup_template.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="BLE-Startup Template - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.startup_template.samb11_xplained_pro" force-caption="true" force-description="true" workspace-name="startup_template_samb11_xplained_pro">
 		<info type="description" value="summary">
 		Startup Template for BLE stack.
 		</info>	

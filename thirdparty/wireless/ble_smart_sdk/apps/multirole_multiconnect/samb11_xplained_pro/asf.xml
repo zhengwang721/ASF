@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="BLE Multirole Multiconnect Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.multirole_multiconnect.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="BLE Multirole Multiconnect Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.multirole_multiconnect.samb11_xplained_pro" force-caption="true" force-description="true" workspace-name="multirole_multiconnect_samb11_xplained_pro">
 		<info type="description" value="summary">
 		BLE Multirole Multiconnect Application for BLE stack.
 		</info>	

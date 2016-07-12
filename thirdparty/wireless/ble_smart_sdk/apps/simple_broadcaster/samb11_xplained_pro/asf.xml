@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Simple Broadcaster Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.simple_broadcaster.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Simple Broadcaster Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.simple_broadcaster.samb11_xplained_pro" force-caption="true" force-description="true" workspace-name="simple_broadcaster_samb11_xplained_pro">
 		<info type="description" value="summary">
 		Simple Broadcaster Application for BLE stack.
 		</info>	

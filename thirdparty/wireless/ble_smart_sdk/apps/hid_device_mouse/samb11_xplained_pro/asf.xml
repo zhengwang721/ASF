@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="BLE-HID Mouse Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_mouse.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="BLE-HID Mouse Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_mouse.samb11_xplained_pro" force-caption="true" force-description="true" workspace-name="hid_device_mouse_samb11_xplained_pro">
 		<info type="description" value="summary">
 		BLE-HID Mouse Application for BLE stack.
 		</info>	
