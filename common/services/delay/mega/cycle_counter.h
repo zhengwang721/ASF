@@ -86,7 +86,10 @@ extern "C" {
 __always_optimize
 static inline void __portable_avr_delay_cycles(unsigned long n)
 {
-	do { barrier(); } while (--n);
+	while (n) {
+		barrier();
+		n--;
+	}
 }
 
 #if !defined(__DELAY_CYCLE_INTRINSICS__)
