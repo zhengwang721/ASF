@@ -471,7 +471,8 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 	image_meta_data_t *meta_data_info = (image_meta_data_t *)read_buf;
 	firmware_version_t fw_ver[TOTAL_META_DATA_SECTIONS];
 	ofid_data_info_t meta_data;	
-	uint8_t completed_download_meta_data[TOTAL_META_DATA_SECTIONS] = {false, false};
+	uint8_t completed_download_meta_data[TOTAL_META_DATA_SECTIONS] = {0, 0};
+	uint8_t meta_data_total_section[TOTAL_META_DATA_SECTIONS] = {0, 0};
 	
 	memset((uint8_t *)&fw_ver[0], 0xFF, sizeof(firmware_version_t));
 	memset((uint8_t *)&fw_ver[1], 0xFF, sizeof(firmware_version_t));
@@ -500,13 +501,12 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 			if (crc == meta_data_info->header_crc)
 			{
 				memcpy((uint8_t *)&fw_ver[idx], (uint8_t *)&meta_data_info->dev_info.fw_version, sizeof(firmware_version_t));
-				
+				meta_data_total_section[idx] = meta_data_info->dev_info.total_sections;
 				uint32_t idxs;				
 				for (idxs = 0; idxs < meta_data_info->dev_info.total_sections; idxs++)
 				{
 					uint32_t section_image_size = 0;
-					uint32_t downloaded_section_image_size = 0;
-					completed_download_meta_data[idx] = false;					
+					uint32_t downloaded_section_image_size = 0;			
 					
 					/* Patch section present in the image */
 					if(meta_data_info->patch_section.section_id == (idxs+1))
@@ -516,7 +516,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 						if ((section_image_size) && (section_image_size == downloaded_section_image_size))
 						{
 							DBG_OTAU("Patch T:%d, S:%d", idx, section_image_size);
-							completed_download_meta_data[idx] = true;
+							completed_download_meta_data[idx]++;
 						}
 						else
 						{
@@ -533,7 +533,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 						if ((section_image_size) && (section_image_size == downloaded_section_image_size))
 						{
 							DBG_OTAU("Patch Header T:%d, S:%d", idx, section_image_size);
-							completed_download_meta_data[idx] = true;
+							completed_download_meta_data[idx]++;
 						}
 						else
 						{
@@ -551,7 +551,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 						if ((section_image_size) && (section_image_size == downloaded_section_image_size))
 						{
 							DBG_OTAU("App T:%d, S:%d", idx, section_image_size);
-							completed_download_meta_data[idx] = true;
+							completed_download_meta_data[idx]++;
 						}
 						else
 						{
@@ -602,7 +602,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 	}
 	
 	/* Get the current running image */
-	if (completed_download_meta_data[0] && completed_download_meta_data[1])
+	if ((completed_download_meta_data[0] == meta_data_total_section[0]) && (completed_download_meta_data[1]  == meta_data_total_section[1]))
 	{
 		if(fw_ver[0].major_number < fw_ver[1].major_number)
 		{
@@ -622,7 +622,7 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 			swap_meta_data_locations();	
 		}
 	}
-	else if (completed_download_meta_data[1])
+	else if (completed_download_meta_data[1] == meta_data_total_section[1])
 	{
 		DBG_OTAU("Swap @completed meta data idx1");
 		swap_meta_data_locations();
@@ -725,8 +725,8 @@ static at_ble_status_t compute_image_meta_loc(void *params)
 	return status;
 }
 
-/** @brief ofm_write_page Function will call the flash api's to write the 
- *			page in case of the input parameters are correct 
+/** @brief ofm_write_page Function will call the flash API's to write the 
+ *			page in case of the input parameters are correct
  *
  *	@param[in] section_id section id of the flash memory needs to be updated
  *	@param[in] addr starting address of the page
