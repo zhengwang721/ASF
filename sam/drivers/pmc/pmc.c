@@ -1079,7 +1079,7 @@ bool pmc_is_cpck_enabled(void)
  */
 void pmc_enable_cpbmck(void)
 {
-	PMC->PMC_SCER = PMC_SCER_CPCK | PMC_SCER_CPKEY_PASSWD;
+	PMC->PMC_SCER = PMC_SCER_CPBMCK | PMC_SCER_CPKEY_PASSWD;
 }
 
 /**
@@ -1087,7 +1087,7 @@ void pmc_enable_cpbmck(void)
  */
 void pmc_disable_cpbmck(void)
 {
-	PMC->PMC_SCDR = PMC_SCDR_CPCK | PMC_SCDR_CPKEY_PASSWD;
+	PMC->PMC_SCDR = PMC_SCDR_CPBMCK | PMC_SCDR_CPKEY_PASSWD;
 }
 
 /**
