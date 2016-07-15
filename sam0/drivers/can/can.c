@@ -92,8 +92,7 @@ static void _can_message_memory_init(Can *hw)
 				CAN_RXF0C_F0S(CONF_CAN0_RX_FIFO_0_NUM);
 		hw->RXF1C.reg = CAN_RXF1C_F1SA((uint32_t)can0_rx_fifo_1) |
 				CAN_RXF1C_F1S(CONF_CAN0_RX_FIFO_1_NUM);
-		hw->RXBC.reg = CAN_RXBC_RBSA((uint32_t)can0_rx_buffer) |
-				CAN_RXF0C_F0S(CONF_CAN0_RX_BUFFER_NUM);
+		hw->RXBC.reg = CAN_RXBC_RBSA((uint32_t)can0_rx_buffer);
 		hw->TXBC.reg = CAN_TXBC_TBSA((uint32_t)can0_tx_buffer) |
 				CAN_TXBC_NDTB(CONF_CAN0_TX_BUFFER_NUM) |
 				CAN_TXBC_TFQS(CONF_CAN0_TX_FIFO_QUEUE_NUM);
@@ -108,8 +107,7 @@ static void _can_message_memory_init(Can *hw)
 				CAN_RXF0C_F0S(CONF_CAN1_RX_FIFO_0_NUM);
 		hw->RXF1C.reg = CAN_RXF1C_F1SA((uint32_t)can1_rx_fifo_1) |
 				CAN_RXF1C_F1S(CONF_CAN1_RX_FIFO_1_NUM);
-		hw->RXBC.reg = CAN_RXBC_RBSA((uint32_t)can1_rx_buffer) |
-				CAN_RXF0C_F0S(CONF_CAN1_RX_BUFFER_NUM);
+		hw->RXBC.reg = CAN_RXBC_RBSA((uint32_t)can1_rx_buffer);
 		hw->TXBC.reg = CAN_TXBC_TBSA((uint32_t)can1_tx_buffer) |
 				CAN_TXBC_NDTB(CONF_CAN1_TX_BUFFER_NUM) |
 				CAN_TXBC_TFQS(CONF_CAN1_TX_FIFO_QUEUE_NUM);

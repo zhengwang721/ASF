@@ -33,6 +33,7 @@
 			<device-support value="samd21"/>
 			<device-support value="saml21"/>
 			<device-support value="samda1"/>
+			<device-support value="samr30"/>
 			<build type="header-file" value="conf_usb_host.h"/>
 			<build type="header-file" value="ui.h"/>
 			<build type="header-file" value="main.h"/>

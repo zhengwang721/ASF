@@ -147,7 +147,7 @@ extern "C" {
  * freertos_peripheral_options_t structure passed as a parameter to an 
  * initialization function to indicate that writes to the
  * peripheral being initialized must be thread aware.  When this bit is set the
- * FreeRTOS peripheral driver will use a mutex (internally within the driver) to
+ * FreeRTOS peripheral driver will use a binary semphore (internally within the driver) to
  * ensure only one FreeRTOS task can perform a write to the peripheral at any
  * one time.  Examples use cases are provided in the FreeRTOS peripheral control 
  * examples that are included in the Atmel ASF distribution, in the application
@@ -155,7 +155,7 @@ extern "C" {
  * quick start references for the FreeRTOS peripheral control initialization 
  * functions in this online documentation.
  */
-#define USE_TX_ACCESS_MUTEX		0x01
+#define USE_TX_ACCESS_SEM		0x01
 
 /**
  * \ingroup freertos_service_group
@@ -279,7 +279,7 @@ typedef struct freertos_peripheral_options {
 	/**
 	 * Individual bits in the options_flags value configure an aspect of the 
 	 * driver's behavior, where valid bits (which are documented as part of the
-	 * \ref freertos_service_group documentation) are USE_TX_ACCESS_MUTEX, 
+	 * \ref freertos_service_group documentation) are USE_TX_ACCESS_SEM, 
 	 * USE_RX_ACCESS_MUTEX, WAIT_TX_COMPLETE, WAIT_RX_COMPLETE.
 	 */
 	uint8_t options_flags; 

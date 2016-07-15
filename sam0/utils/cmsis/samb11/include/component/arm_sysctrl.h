@@ -729,8 +729,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union { 
   struct {
-    uint32_t :2;                        /**< bit:   0..1  Reserved */
-    uint32_t PRI_14:22;                 /**< bit:  2..23  Priority of system handler 14, PendSV    */
+    uint32_t :22;                       /**< bit:   0..21  Reserved */
+    uint32_t PRI_14:2;                  /**< bit:  22..23  Priority of system handler 14, PendSV    */
     uint32_t :6;                        /**< bit: 24..29  Reserved */
     uint32_t PRI_15:2;                  /**< bit: 30..31  Priority of system handler 15, SysTick   */
   } bit;                                /**< Structure used for bit  access */

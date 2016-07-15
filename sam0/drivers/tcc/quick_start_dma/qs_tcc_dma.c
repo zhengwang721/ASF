@@ -59,7 +59,7 @@ uint16_t compare_values[3] = {
 struct dma_resource compare_dma_resource;
 //! [compare_dma_resource]
 //! [compare_dma_descriptor]
-COMPILER_ALIGNED(16) DmacDescriptor compare_dma_descriptor;
+COMPILER_ALIGNED(16) DmacDescriptor compare_dma_descriptor SECTION_DMAC_DESCRIPTOR;
 //! [compare_dma_descriptor]
 //! [compare_variables]
 
@@ -69,7 +69,7 @@ uint16_t capture_values[3] = {0, 0, 0};
 struct dma_resource capture_dma_resource;
 //! [capture_dma_resource]
 //! [capture_dma_descriptor]
-COMPILER_ALIGNED(16) DmacDescriptor capture_dma_descriptor;
+COMPILER_ALIGNED(16) DmacDescriptor capture_dma_descriptor SECTION_DMAC_DESCRIPTOR;
 //! [capture_dma_descriptor]
 //! [capture_event_resource]
 struct events_resource capture_event_resource;

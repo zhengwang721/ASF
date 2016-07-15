@@ -37,6 +37,7 @@
 		<device-support value="samd21exxl"/>
 		<device-support value="samd21gxxl"/>
 		<device-support value="samda1"/>
+		<device-support value="samr30"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.nvm"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
