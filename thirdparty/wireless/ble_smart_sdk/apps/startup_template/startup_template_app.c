@@ -97,7 +97,8 @@ int main(void)
 	/* initialize the BLE chip  and Set the Device Address */
 	ble_device_init(NULL);
 	
-	release_sleep_lock();
+	/* Set ULP mode */
+	ble_set_ulp_mode(BLE_ULP_MODE_SET);
 	
 	
 	while(true)
