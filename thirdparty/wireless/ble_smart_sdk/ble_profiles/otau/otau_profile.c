@@ -768,6 +768,7 @@ at_ble_status_t otau_disconnect_event_handler(void *params)
 	/* Check the OTAU manager is disconnected */
 	if (disconnect_param->handle == otau_gatt_service.conn_hanle)
 	{
+		ble_set_ulp_mode(BLE_ULP_MODE_SET);
 		/* set connection handle to default handle */
 		otau_gatt_service.conn_hanle = DEFAULT_CONNECTION_HANDLE;		
 	
