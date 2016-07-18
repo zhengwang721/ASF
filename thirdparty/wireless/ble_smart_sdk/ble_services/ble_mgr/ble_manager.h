@@ -62,6 +62,10 @@
 #define BLE_DEVICE_ROLE BLE_ROLE_ALL
 #endif
 
+#ifndef OTAU_FEATURE
+#define OTAU_FEATURE false
+#endif
+
 #if OTAU_FEATURE
 #ifndef BLE_DEVICE_NAME
 #define BLE_DEVICE_NAME				"ATMEL-OTA"

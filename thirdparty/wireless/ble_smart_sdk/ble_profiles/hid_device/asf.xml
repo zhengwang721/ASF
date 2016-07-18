@@ -7,6 +7,7 @@
   		<build type="c-source"      value="hid_device.c"/>
 		<build type="define" name="HID_DEVICE" value=""/>
 		<build type="define" name="HID_GATT_SERVER" value=""/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.ble_manager"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.hid"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.device_information"/>
 		
