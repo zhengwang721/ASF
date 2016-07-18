@@ -91,6 +91,13 @@ void system_board_init(void);
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
 
+/** \name LED1 definitions
+ *  @{ */
+#define LED1_PIN                  PIN_PA18
+#define LED1_ACTIVE               false
+#define LED1_INACTIVE             !LED1_ACTIVE
+/** @} */
+
 /** \name SW0 definitions
  *  @{ */
 #define SW0_PIN                   PIN_PA28
@@ -124,8 +131,30 @@ void system_board_init(void);
 #define LED_0_PWM3CTRL_PINMUX     PINMUX_PA19F_TCC0_WO3
 /** @} */
 
+/**
+ * \name LED #1 definitions
+ *
+ * Wrapper macros for LED0, to ensure common naming across all Xplained Pro
+ * boards.
+ *
+ *  @{ */
+#define LED_1_NAME                "LED1 (Green)"
+#define LED_1_PIN                 LED1_PIN
+#define LED_1_ACTIVE              LED1_ACTIVE
+#define LED_1_INACTIVE            LED1_INACTIVE
+#define LED1_GPIO                 LED1_PIN
+#define LED1                      LED1_PIN
+
+#define LED_1_PWM2CTRL_MODULE     TCC0
+#define LED_1_PWM2CTRL_CHANNEL    0
+#define LED_1_PWM2CTRL_OUTPUT     0
+#define LED_1_PWM2CTRL_PIN        PIN_PA18F_TCC0_WO2
+#define LED_1_PWM2CTRL_MUX        MUX_PA18F_TCC0_WO2
+#define LED_1_PWM2CTRL_PINMUX     PINMUX_PA18F_TCC0_WO2
+/** @} */
+
 /** Number of on-board LEDs */
-#define LED_COUNT                 1
+#define LED_COUNT                 2
 
 
 /**
@@ -415,33 +444,48 @@ void system_board_init(void);
 #define USB_ID_EIC_PINMUX            PINMUX_PA15A_EIC_EXTINT15
 /** @} */
 
+#define RF_SPI_MODULE              SERCOM4
+#define RF_SPI_SERCOM_MUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
+#define RF_SPI_SERCOM_PINMUX_PAD0  PINMUX_PC19F_SERCOM4_PAD0
+#define RF_SPI_SERCOM_PINMUX_PAD1  PINMUX_PB31F_SERCOM4_PAD1
+#define RF_SPI_SERCOM_PINMUX_PAD2  PINMUX_PB30F_SERCOM4_PAD2
+#define RF_SPI_SERCOM_PINMUX_PAD3  PINMUX_PC18F_SERCOM4_PAD3
+
+
+#define RF_IRQ_MODULE           EIC
+#define RF_IRQ_INPUT            0
+#define RF_IRQ_PIN              PIN_PB00A_EIC_EXTINT0
+#define RF_IRQ_MUX              MUX_PB00A_EIC_EXTINT0
+#define RF_IRQ_PINMUX           PINMUX_PB00A_EIC_EXTINT0
+
 
 /** \name 802.15.4 TRX Interface definitions for EXT1
  * @{
  */
-#ifndef EXT2_CONFIG
-#define AT86RFX_SPI                  EXT1_SPI_MODULE
-#define AT86RFX_RST_PIN              EXT1_PIN_7
-#define AT86RFX_MISC_PIN             EXT1_PIN_12
-#define AT86RFX_IRQ_PIN              EXT1_PIN_9
-#define AT86RFX_SLP_PIN              EXT1_PIN_10
-#define AT86RFX_SPI_CS               EXT1_PIN_15
-#define AT86RFX_SPI_MOSI             EXT1_PIN_16
-#define AT86RFX_SPI_MISO             EXT1_PIN_17
-#define AT86RFX_SPI_SCK              EXT1_PIN_18
-#define AT86RFX_CSD                  EXT1_PIN_5
-#define AT86RFX_CPS                  EXT1_PIN_8
 
-#define AT86RFX_SPI_SERCOM_MUX_SETTING   EXT1_SPI_SERCOM_MUX_SETTING
-#define AT86RFX_SPI_SERCOM_PINMUX_PAD0   EXT1_SPI_SERCOM_PINMUX_PAD0
+#define AT86RFX_SPI                  SERCOM4
+#define AT86RFX_RST_PIN              PIN_PB15
+#define AT86RFX_IRQ_PIN              PIN_PB00
+#define AT86RFX_SLP_PIN              PIN_PA20
+#define AT86RFX_SPI_CS               PIN_PB31
+#define AT86RFX_SPI_MOSI             PIN_PB30
+#define AT86RFX_SPI_MISO             PIN_PC19
+#define AT86RFX_SPI_SCK              PIN_PC18
+#define PIN_RFCTRL1                  PIN_PA09
+#define PIN_RFCTRL2                  PIN_PA12
+#define RFCTRL_CFG_ANT_DIV           4
+
+
+#define AT86RFX_SPI_SERCOM_MUX_SETTING   RF_SPI_SERCOM_MUX_SETTING
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD0   RF_SPI_SERCOM_PINMUX_PAD0
 #define AT86RFX_SPI_SERCOM_PINMUX_PAD1   PINMUX_UNUSED
-#define AT86RFX_SPI_SERCOM_PINMUX_PAD2   EXT1_SPI_SERCOM_PINMUX_PAD2
-#define AT86RFX_SPI_SERCOM_PINMUX_PAD3   EXT1_SPI_SERCOM_PINMUX_PAD3
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD2   RF_SPI_SERCOM_PINMUX_PAD2
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD3   RF_SPI_SERCOM_PINMUX_PAD3
 
-#define AT86RFX_IRQ_CHAN       EXT1_IRQ_INPUT
-#define AT86RFX_IRQ_PINMUX     EXT1_IRQ_PINMUX
+#define AT86RFX_IRQ_CHAN       RF_IRQ_INPUT
+#define AT86RFX_IRQ_PINMUX     RF_IRQ_PINMUX
 
-#endif
+
 /** Enables the transceiver main interrupt. */
 #define ENABLE_TRX_IRQ()     \
 		extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT)

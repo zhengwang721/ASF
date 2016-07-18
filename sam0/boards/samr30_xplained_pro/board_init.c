@@ -65,6 +65,11 @@ void system_board_init(void)
 	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(LED_0_PIN, &pin_conf);
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+	
+	/* Configure LEDs as outputs, turn them off */
+	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(LED_1_PIN, &pin_conf);
+	port_pin_set_output_level(LED_1_PIN, LED_1_INACTIVE);
 
 	/* Set buttons as inputs */
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
@@ -86,5 +91,25 @@ void system_board_init(void)
 	port_pin_set_output_level(AT86RFX_SLP_PIN, true);
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
 	port_pin_set_config(AT86RFX_SPI_MISO, &pin_conf);
+	
+	/* SAMR30 Antenna Diversity Configuration */
+
+	MCLK->APBCMASK.reg |= (1<<MCLK_APBCMASK_RFCTRL_Pos);
+		
+	/*Pins  PA12/RFCTRL2 and PA09/RFCTRL1 are used as DIG1 and DIG2 pins respectively in SAMR30 Xplained Pro*/	
+	
+	/* FECTRL register is Written with value 4 => F2CFG = 00 and F1CFG = 01 */	
+	REG_RFCTRL_FECFG = RFCTRL_CFG_ANT_DIV;
+	
+	struct system_pinmux_config config_pinmux;
+	system_pinmux_get_config_defaults(&config_pinmux);
+	
+	/*MUX Position is 'F' i.e 5 for FECTRL Function and is same for all  FECTRL supported pins
+	 * as provided in the data sheet */
+	config_pinmux.mux_position = MUX_PA09F_RFCTRL_FECTRL1 ;
+	
+	config_pinmux.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;	
+	system_pinmux_pin_set_config(PIN_RFCTRL1, &config_pinmux);
+	system_pinmux_pin_set_config(PIN_RFCTRL2, &config_pinmux);
 #endif	
 }

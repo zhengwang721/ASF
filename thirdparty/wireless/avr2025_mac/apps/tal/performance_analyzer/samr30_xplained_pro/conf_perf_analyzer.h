@@ -1,9 +1,9 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief Common Hardware Timer configuration
+ * \brief Module configuration
  *
- * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,64 +38,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_PERF_ANALYZER_H_INCLUDED
+#define CONF_PERF_ANALYZER_H_INCLUDED
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+/* Application default channel (DEFAULT_CHANNEL in app_init.h)
+ * = 0(First Channel in Sub-GHz) + DEFAULT_CHANNEL_OFFSET */
+#define DEFAULT_CHANNEL_OFFSET           (1)
 
-/* ! \name Configuration for XMEGA */
-/* ! @{ */
-#if (XMEGA)
-#define TIMER     (&TCC0)
-#endif /* XMEGA */
-/* ! @} */
+#define DEFAULT_PAGE                     (0)
 
-/* ! \name Configuration for UC3 */
-/* ! @{ */
-#if (UC3)
-#define TIMER                (&AVR32_TC0)
-#define TIMER_CHANNEL_ID     0
-#endif /* UC3 */
-/* ! @} */
+#define ENABLE_ANTENNA_1                 (1)
+#define ENABLE_ANTENNA_2                 (2)
 
-/* ! \name Configuration for SAM4L */
-/* ! @{ */
-#if (SAM4L)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     (0)
-#endif /* SAM4L */
+#define ANT_SELECTED                                      ENABLE_ANTENNA_1
+#define ENABLE_ANTENNA_DIVERSITY              false
 
-#if (SAM4S || SAM4E)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
-#define ID_TC                (ID_TC0)
-#endif /* SAM4S */
-/* ! @} */
-
-/* ! \name Configuration for MEGARF */
-/* ! @{ */
-#if (MEGA_RF)
-#define TIMER     (&TCCR1A)
-#endif /* MEGA_RF */
-/* ! @} */
-/* ! \name Configuration for SAMD20 */
-/* ! @{ */
-#if (SAMD20)
-#define TIMER     (TC0)
-#endif /* SAMD */
-/* ! @} */
-/* ! \name Configuration for SAMD21/SAMR21 */
-/* ! @{ */
-#if (SAMD21 || SAMR21)
-#define TIMER                (TC3)
-#define TIMER_CHANNEL_ID     0
-#endif
-/* ! @} */
-/* ! \name Configuration for SAML21 */
-/* ! @{ */
-#if (SAML21 || SAMR30)
-#define TIMER      (TC0)
-#endif
-/* ! @} */
-
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+#endif /* CONF_PERF_ANALYZER_H_INCLUDED */
