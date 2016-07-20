@@ -377,7 +377,9 @@ typedef union {
     uint32_t TCC2_:1;          /*!< bit:      7  TCC2 APB Clock Enable              */
     uint32_t TC0_:1;           /*!< bit:      8  TC0 APB Clock Enable               */
     uint32_t TC1_:1;           /*!< bit:      9  TC1 APB Clock Enable               */
-    uint32_t :22;              /*!< bit: 10..31  Reserved                           */
+    uint32_t :5;               /*!< bit: 10.. 14  Reserved                           */
+	uint32_t RFCTRL_:1;        /*!< bit:      15  TC1 APB Clock Enable               */
+	uint32_t :16;               /*!< bit: 16..32  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } MCLK_APBCMASK_Type;
@@ -406,6 +408,8 @@ typedef union {
 #define MCLK_APBCMASK_TC0           (0x1ul << MCLK_APBCMASK_TC0_Pos)
 #define MCLK_APBCMASK_TC1_Pos       9            /**< \brief (MCLK_APBCMASK) TC1 APB Clock Enable */
 #define MCLK_APBCMASK_TC1           (0x1ul << MCLK_APBCMASK_TC1_Pos)
+#define MCLK_APBCMASK_RFCTRL_Pos    15            /**< \brief (MCLK_APBCMASK) TC1 APB Clock Enable */
+#define MCLK_APBCMASK_RFCTRL        (0x1ul << MCLK_APBCMASK_RFCTRL_Pos)
 #define MCLK_APBCMASK_MASK          0x000003FFul /**< \brief (MCLK_APBCMASK) MASK Register */
 
 /* -------- MCLK_APBDMASK : (MCLK Offset: 0x20) (R/W 32) APBD Mask -------- */

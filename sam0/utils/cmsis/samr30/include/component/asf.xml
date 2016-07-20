@@ -21,6 +21,7 @@
 		<build type="header-file" value="port.h"/>
 		<build type="header-file" value="rtc.h"/>
 		<build type="header-file" value="rstc.h"/>
+		<build type="header-file" value="rfctrl.h"/>
 		<build type="header-file" value="sercom.h"/>
 		<build type="header-file" value="supc.h"/>
 		<build type="header-file" value="tal.h"/>

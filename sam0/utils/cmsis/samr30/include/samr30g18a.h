@@ -259,6 +259,7 @@ void PTC_Handler                 ( void );
 #include "component/port.h"
 #include "component/rstc.h"
 #include "component/rtc.h"
+#include "component/rfctrl.h"
 #include "component/sercom.h"
 #include "component/supc.h"
 #include "component/tal.h"
@@ -292,6 +293,7 @@ void PTC_Handler                 ( void );
 #include "instance/port.h"
 #include "instance/rstc.h"
 #include "instance/rtc.h"
+#include "instance/rfctrl.h"
 #include "instance/sercom0.h"
 #include "instance/sercom1.h"
 #include "instance/sercom2.h"
@@ -399,6 +401,7 @@ void PTC_Handler                 ( void );
 #define PORT_IOBUS                    (0x60000000UL) /**< \brief (PORT) IOBUS Base Address */
 #define RSTC                          (0x40000800UL) /**< \brief (RSTC) APB Base Address */
 #define RTC                           (0x40002000UL) /**< \brief (RTC) APB Base Address */
+#define RFCTRL                        (0x42003C00UL) /**< \brief (RFCTRL) APB Base Address */
 #define SERCOM0                       (0x42000000UL) /**< \brief (SERCOM0) APB Base Address */
 #define SERCOM1                       (0x42000400UL) /**< \brief (SERCOM1) APB Base Address */
 #define SERCOM2                       (0x42000800UL) /**< \brief (SERCOM2) APB Base Address */
@@ -493,6 +496,10 @@ void PTC_Handler                 ( void );
 #define PTC_GCLK_ID       33
 #define PTC_INST_NUM      1                          /**< \brief (PTC) Number of instances */
 #define PTC_INSTS         { PTC }                    /**< \brief (PTC) Instances List */
+
+#define RFCTRL            ((Rfctrl     *)0x42003C00U) /**< \brief (RSTC) APB Base Address */
+#define RFCTRL_INST_NUM     1                          /**< \brief (RSTC) Number of instances */
+#define RFCTRL_INSTS        { RFCTRL }                   /**< \brief (RSTC) Instances List */
 
 #define RSTC              ((Rstc     *)0x40000800UL) /**< \brief (RSTC) APB Base Address */
 #define RSTC_INST_NUM     1                          /**< \brief (RSTC) Number of instances */
