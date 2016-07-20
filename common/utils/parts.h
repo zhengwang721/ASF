@@ -962,19 +962,6 @@
 /** @} */
 
 /**
- * \name SAMD09 series
- * @{
- */
-#define SAMD09C ( \
-		SAM_PART_IS_DEFINED(SAMD09C13A) \
-	)
-
-#define SAMD09D ( \
-		SAM_PART_IS_DEFINED(SAMD09D14A) \
-	)
-/** @} */
-
-/**
  * \name SAMD10 series
  * @{
  */
