@@ -13,7 +13,7 @@
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.link_loss"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.tx_power"/>
 
-	<!-- 	<build type="doxygen-entry-point" value="ble_smart_stack_group"/>		 -->
+		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
 		<device-support-alias value="ble_smart_stack_lib_support"/>
 		
 	</module>

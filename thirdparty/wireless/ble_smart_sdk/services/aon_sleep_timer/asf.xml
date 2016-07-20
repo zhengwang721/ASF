@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_smart_sdk.services.aon_sleep_timer" caption="BLE_SMART_STACK driver - aon sleep timer">
+	<module type="service" id="thirdparty.wireless.ble_smart_sdk.services.aon_sleep_timer" caption="BLE_SMART_STACK driver - aon sleep timer">
 		<info type="description" value="summary">
 		</info>
-		
+		<info type="gui-flag" value="hidden" />
 		<build type="include-path"  value="./"/>
 		<build type="header-file"   value="aon_sleep_timer_basic.h"/> 
 		<build type="c-source" value="aon_sleep_timer_basic.c"/>

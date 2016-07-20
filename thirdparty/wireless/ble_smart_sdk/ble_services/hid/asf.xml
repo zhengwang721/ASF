@@ -5,7 +5,6 @@
 		<build type="include-path"  value="./"/>
   		<build type="header-file"   value="hid.h"/>
   		<build type="c-source"      value="hid.c"/>
-  		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.ble_manager"/>
   		<build type="define" name="HID_SERVICE" value=""/>
 
 		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>

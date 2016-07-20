@@ -1,0 +1,18 @@
+<asf xmlversion="1.0">
+	<module type="component" id="thirdparty.wireless.ble_smart_sdk.ble_profiles.otau" caption="BLE-OTAU Profile">
+		<info type="description" value="summary">
+		</info>
+		<build type="include-path"  value="./"/>
+  		<build type="header-file"   value="otau_profile.h"/>
+  		<build type="c-source"      value="otau_profile.c"/>
+  		<build type="header-file"   value="otau_flash_mgr.h"/>
+  		<build type="c-source"      value="otau_flash_mgr.c"/>  		
+  		<build type="define" name="OTAU_PROFILE" value=""/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.otau"/>
+
+		<build type="doxygen-entry-point" value="ble_smart_stack_group"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+		
+	</module>
+ 
+</asf>

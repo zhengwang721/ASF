@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="BLE-HID Keyboard Application" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_keyboard">
+	<module type="application" caption="BLE-HID Keyboard Application" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_keyboard">
 		<info type="description" value="summary">
 		BLE-HID Keyboard Application for BLE stack
 		</info>
@@ -12,6 +12,7 @@
         <build type="define" name="ATT_DB_MEMORY" value=""/>
 		<build type="define" name="NENABLE_PTS" value=""/>
 		<build type="define" name="NENABLE_ULP" value=""/>
+		<build type="define" name="OTAU_FEATURE" value="false"/>
 		
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.hid_device"/>
 		<build type="distribute" subtype="user-file" value="Atmel-42602-ATSAMB11-BluSDK-SMART-HID-Keyboard-Device-Getting-Started-Guide_UserGuide.pdf"/>

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="BLE-HID Mouse Application" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_mouse">
+	<module type="application" caption="BLE-HID Mouse Application" id="thirdparty.wireless.ble_smart_sdk.apps.hid_device_mouse">
 		<info type="description" value="summary">
 		BLE-HID Mouse Application for BLE stack
 		</info>
@@ -10,7 +10,8 @@
         <build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_PERIPHERAL"/>
         <build type="define" name="HID_MOUSE_DEVICE" value=""/>
         <build type="define" name="ATT_DB_MEMORY" value=""/>
-	<build type="define" name="NENABLE_PTS" value=""/>
+		<build type="define" name="OTAU_FEATURE" value="false"/>
+		<build type="define" name="NENABLE_PTS" value=""/>
 		
 		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.hid_device"/>
 

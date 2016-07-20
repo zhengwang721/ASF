@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Device Information Service Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.device_info.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="Device Information Service Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.device_info.samb11_xplained_pro" force-caption="true" force-description="true" workspace-name="device_info_samb11_xplained_pro">
 		<info type="description" value="summary">
 		Device Information Service Application for BLE stack.
 		</info>	

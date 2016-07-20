@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" caption="HTPT TEMPERATURE SENSOR APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.htpt_temperature_sensor">
+	<module type="application" caption="HTPT TEMPERATURE SENSOR APPLICATION" id="thirdparty.wireless.ble_smart_sdk.apps.htpt_temperature_sensor">
 		<info type="description" value="summary">
 		HTPT Temperature Sensor application for BLE stack
 		</info>
@@ -11,6 +11,7 @@
 		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_PERIPHERAL"/>
 		<build type="define" name="ATT_DB_MEMORY" value=""/>
 		<build type="define" name="HTPT_SERVICE" value=""/>
+		<build type="define" name="OTAU_FEATURE" value="false"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.lib"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.inc"/>
 		<require idref="thirdparty.wireless.ble_smart_sdk.src"/>

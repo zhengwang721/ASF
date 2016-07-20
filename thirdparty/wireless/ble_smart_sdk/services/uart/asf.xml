@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.ble_smart_sdk.services.uart" caption="BLE_SMART_STACK driver - uart">
+	<module type="service" id="thirdparty.wireless.ble_smart_sdk.services.uart" caption="BLE_SMART_STACK driver - uart">
 		<info type="description" value="summary">
 		</info>
-		
+		<info type="gui-flag" value="hidden" />
 		<build type="include-path"  value="./"/>
 		<build type="header-file"   value="console_serial.h"/> 
 		<build type="c-source" value="console_serial.c"/>

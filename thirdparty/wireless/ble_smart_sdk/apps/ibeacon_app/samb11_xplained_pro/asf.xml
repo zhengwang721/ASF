@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="iBeacon Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.ibeacon_app.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="iBeacon Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.ibeacon_app.samb11_xplained_pro" force-caption="true" force-description="true" workspace-name="ibeacon_app_samb11_xplained_pro">
 		<info type="description" value="summary">
 		iBeacon Application for BLE stack.
 		</info>	
@@ -9,14 +9,6 @@
 		<build type="header-file" value="../../config/samb11/conf_board.h"/>
 		<build type="header-file" value="../../config/samb11/conf_dualtimer.h"/>
 		<build type="header-file" value="../../config/samb11/conf_console_serial.h"/>
-
-  		<require idref="thirdparty.wireless.ble_smart_sdk.lib"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.inc"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.src"/>
-
-		<require idref="thirdparty.wireless.ble_smart_sdk.services.uart"/>
-		<require idref="thirdparty.wireless.ble_smart_sdk.services.gpio"/>
-		<require idref="sam0.drivers.spi_flash"/>
 
 		<require idref="board.samb11_xplained_pro"/>
 		

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="BLE-Observer Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.ble_observer.samb11_xplained_pro" force-caption="true" force-description="true">
+	<project caption="BLE-Observer Application - SAM B11 Xplained Pro" id="thirdparty.wireless.ble_smart_sdk.apps.ble_observer.samb11_xplained_pro" force-caption="true" force-description="true" workspace-name="ble_observer_samb11_xplained_pro">
 		<info type="description" value="summary">
 		BLE-Observer Application for BLE stack.
 		</info>	
