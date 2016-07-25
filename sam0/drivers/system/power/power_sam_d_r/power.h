@@ -52,6 +52,10 @@
 extern "C" {
 #endif
 
+/* MCU revision number */
+#define _SYSTEM_MCU_REVISION_D 3
+#define _SYSTEM_MCU_REVISION_E 4
+
 /**
  * \addtogroup asfdoc_sam0_system_group
  * @{
@@ -173,10 +177,31 @@ static inline void system_voltage_reference_disable(
 static inline enum status_code system_set_sleepmode(
 	const enum system_sleepmode sleep_mode)
 {
+
+#if (SAMD20 || SAMD21 || SAMR21)
+
+	/* Get MCU revision */
+	uint32_t rev = system_get_device_id();
+
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
+
 #if (SAMD20)
-	/* Errata 13140: Make sure that the Flash does not power all the way down
-	 * when in sleep mode. This errata has been fixed as of revision D of SAMD21 */
-	NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
+	if (rev < _SYSTEM_MCU_REVISION_E) {
+		/* Errata 13140: Make sure that the Flash does not power all the way down
+		 * when in sleep mode. */
+		NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
+	}
+#endif
+
+#if (SAMD21 || SAMR21)
+	if (rev < _SYSTEM_MCU_REVISION_D) {
+		/* Errata 13140: Make sure that the Flash does not power all the way down
+		 * when in sleep mode. */
+		NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
+	}
+#endif
+
 #endif
 
 	switch (sleep_mode) {
