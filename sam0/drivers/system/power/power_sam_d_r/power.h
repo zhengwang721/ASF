@@ -181,7 +181,7 @@ static inline enum status_code system_set_sleepmode(
 #if (SAMD20 || SAMD21 || SAMR21)
 
 	/* Get MCU revision */
-	uint32_t rev = system_get_device_id();
+	uint32_t rev = DSU->DID.reg;
 
 	rev &= DSU_DID_REVISION_Msk;
 	rev = rev >> DSU_DID_REVISION_Pos;
