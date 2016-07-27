@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -558,6 +558,7 @@ void rtc_set_calibration(Rtc *p_rtc, uint32_t ul_direction_ppm,
 		ul_temp &= (~RTC_MR_NEGPPM);
 	}
 
+	ul_temp &= (~RTC_MR_CORRECTION_Msk);
 	ul_temp |= RTC_MR_CORRECTION(ul_correction);
 
 	if (ul_range_ppm) {
