@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -224,12 +224,12 @@ uint32_t rtc_set_time(Rtc *p_rtc, uint32_t ul_hour, uint32_t ul_minute,
 			((ul_second % BCD_FACTOR) << RTC_TIMR_SEC_Pos);
 
 	/* Update time register. Check the spec for the flow. */
+	while ((p_rtc->RTC_SR & RTC_SR_SEC) != RTC_SR_SEC);
 	p_rtc->RTC_CR |= RTC_CR_UPDTIM;
 	while ((p_rtc->RTC_SR & RTC_SR_ACKUPD) != RTC_SR_ACKUPD);
 	p_rtc->RTC_SCCR = RTC_SCCR_ACKCLR;
 	p_rtc->RTC_TIMR = ul_time;
 	p_rtc->RTC_CR &= (~RTC_CR_UPDTIM);
-	p_rtc->RTC_SCCR |= RTC_SCCR_SECCLR;
 
 	return (p_rtc->RTC_VER & RTC_VER_NVTIM);
 }
@@ -374,14 +374,12 @@ uint32_t rtc_set_date(Rtc *p_rtc, uint32_t ul_year, uint32_t ul_month,
 			((ul_day % BCD_FACTOR) << RTC_CALR_DATE_Pos);
 
 	/* Update calendar register. Check the spec for the flow. */
+	while ((p_rtc->RTC_SR & RTC_SR_SEC) != RTC_SR_SEC);
 	p_rtc->RTC_CR |= RTC_CR_UPDCAL;
 	while ((p_rtc->RTC_SR & RTC_SR_ACKUPD) != RTC_SR_ACKUPD);
-
 	p_rtc->RTC_SCCR = RTC_SCCR_ACKCLR;
 	p_rtc->RTC_CALR = ul_date;
 	p_rtc->RTC_CR &= (~RTC_CR_UPDCAL);
-	/* Clear SECENV in SCCR */
-	p_rtc->RTC_SCCR |= RTC_SCCR_SECCLR;
 
 	return (p_rtc->RTC_VER & RTC_VER_NVCAL);
 }
