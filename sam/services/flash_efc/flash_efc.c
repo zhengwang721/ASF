@@ -111,7 +111,7 @@ extern "C" {
 # define IFLASH_PAGE_SIZE     IFLASH0_PAGE_SIZE
 /* Internal flash lock region size. */
 # define IFLASH_LOCK_REGION_SIZE     IFLASH0_LOCK_REGION_SIZE
-#elif (SAM3SD8)
+#elif (SAM3S8 || SAM3SD8)
 /* The max GPNVM number. */
 # define GPNVM_NUM_MAX        3
 /* Internal flash page size. */
@@ -195,7 +195,7 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 		us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
 		us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 	}
-#elif (SAM3SD8)
+#elif (SAM3S8 || SAM3SD8)
 	p_efc = EFC;
 	us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
 	us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
@@ -502,7 +502,7 @@ uint32_t flash_erase_all(uint32_t ul_address)
 	return FLASH_RC_OK;
 }
 
-#if SAM3SD8
+#if (SAM3S8 || SAM3SD8)
 /**
  * \brief Erase the flash by plane.
  *
