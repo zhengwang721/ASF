@@ -556,6 +556,7 @@ void rtc_set_calibration(Rtc *p_rtc, uint32_t ul_direction_ppm,
 		ul_temp &= (~RTC_MR_NEGPPM);
 	}
 
+	ul_temp &= (~RTC_MR_CORRECTION_Msk);
 	ul_temp |= RTC_MR_CORRECTION(ul_correction);
 
 	if (ul_range_ppm) {
