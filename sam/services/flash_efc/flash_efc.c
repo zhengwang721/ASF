@@ -124,6 +124,9 @@ extern "C" {
 #elif (SAMG)
 /* The max GPNVM number SAMG. */
 # define GPNVM_NUM_MAX        8
+#elif (SAMV71 || SAMV70 || SAMS70 || SAME70)
+/* The max GPNVM number SAMV/S/E. */
+# define GPNVM_NUM_MAX        9
 #else
 /* The max GPNVM number. */
 # define GPNVM_NUM_MAX        2
