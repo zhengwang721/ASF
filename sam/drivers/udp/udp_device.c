@@ -609,9 +609,6 @@ void udd_disable(void)
 
 	udd_detach();
 
-	udd_disable_periph_ck();
-	sysclk_disable_usb();
-
 #ifndef UDD_NO_SLEEP_MGR
 	sleepmgr_unlock_mode(UDP_SLEEP_MODE_USB_SUSPEND);
 #endif
