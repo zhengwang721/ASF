@@ -60,8 +60,8 @@ struct bitopt_hdr {
 static const uint8_t bitmask[9] = { 0x00, 0x80, 0xc0, 0xe0, 0xf0,
 				 0xf8, 0xfc, 0xfe, 0xff };
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else

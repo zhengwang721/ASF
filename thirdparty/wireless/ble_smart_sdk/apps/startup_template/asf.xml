@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+	<module type="application" caption="BLE-Startup Template" id="thirdparty.wireless.ble_smart_sdk.apps.startup_template">
+		<info type="description" value="summary">
+		Startup Template for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="startup_template_app.h"/>
+		<build type="c-source" value="startup_template_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_ALL"/>
+		<build type="define" name="OTAU_FEATURE" value="false"/>
+		
+		<require idref="thirdparty.wireless.ble_smart_sdk.ble_services.ble_manager"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+		
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+			<keyword value="BLE"/>
+			<keyword value="Bluetooth"/>
+		</info>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

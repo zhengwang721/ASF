@@ -3,7 +3,7 @@
  *
  * \brief Embedded Flash service for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -105,11 +105,12 @@ uint32_t flash_get_page_count_per_region(const uint32_t *pul_flash_descriptor);
 uint32_t flash_get_region_count(const uint32_t *pul_flash_descriptor);
 uint32_t flash_erase_all(uint32_t ul_address);
 
-#if SAM3SD8
+#if (SAM3S8 || SAM3SD8)
 uint32_t flash_erase_plane(uint32_t ul_address);
 #endif
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
+	 SAMV71 || SAMV70 || SAMS70 || SAME70)
 uint32_t flash_erase_page(uint32_t ul_address, uint8_t uc_page_num);
 uint32_t flash_erase_sector(uint32_t ul_address);
 #endif
@@ -128,7 +129,8 @@ uint32_t flash_enable_security_bit(void);
 uint32_t flash_is_security_bit_enabled(void);
 uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size);
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM || \
+	 SAMV71 || SAMV70 || SAMS70 || SAME70)
 uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size);
 uint32_t flash_write_user_signature(const void *p_buffer, uint32_t ul_size);
 uint32_t flash_erase_user_signature(void);

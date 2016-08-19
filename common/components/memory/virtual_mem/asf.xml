@@ -18,6 +18,8 @@
 		<device-support value="samr21"/>
 		<device-support value="saml21"/>
 		<device-support value="samda1"/>
+		<device-support value="saml22"/>
+		<device-support value="samr30"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>
 </asf>

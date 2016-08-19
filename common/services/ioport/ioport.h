@@ -4,7 +4,7 @@
  * \brief Common IOPORT service main header file for AVR, UC3 and ARM
  *        architectures.
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -132,7 +132,7 @@ enum ioport_sense {
 #elif SAM
 # if SAM4L
 #  include "sam/ioport_gpio.h"
-# elif (SAMD20 | SAMD21)
+# elif (SAMD20 | SAMD21 | SAML21)
 #  include "sam0/ioport.h"
 # else
 #  include "sam/ioport_pio.h"
@@ -289,7 +289,7 @@ static inline void ioport_set_pin_level(ioport_pin_t pin, bool level)
  * \param level Level of the pins to be modified
  */
 static inline void ioport_set_port_level(ioport_port_t port,
-		ioport_port_mask_t mask, ioport_port_mask_t level)
+		ioport_port_mask_t mask, enum ioport_value level)
 {
 	arch_ioport_set_port_level(port, mask, level);
 }

@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<project caption="AVR remorse example for the ATmega324pb" id="mega.applications.mega_remorse_example.atmega324pb_xplained_pro">
+		<info type="description" value="summary">
+		ATmega324pb xplained pro remorse application
+		</info>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="header-file" value="conf_usart.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="include-path" value="."/>
+		<require idref="board.atmega324pb_x_plained_pro"/>
+		<require idref="mega.applications.mega_remorse_example"/>
+		<generator value="as5_8"/>
+		<generator value="doxygen"/>
+		<device-support value="atmega324pb"/>
+	</project>
+</asf>

@@ -168,8 +168,8 @@ struct pkt_scan_reply {
 static int
 send_packet_chan(int broadcast);
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else

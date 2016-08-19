@@ -3,7 +3,7 @@
  *
  * \brief SAM USART in SPI mode driver functions.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -137,7 +137,11 @@ void usart_spi_setup_device(Usart *p_usart, struct usart_spi_device *device,
 	opt.channel_mode = US_MR_CHMODE_NORMAL;
 	
 	/* Initialize the USART module as SPI master. */
-	usart_init_spi_master(p_usart, &opt, sysclk_get_cpu_hz());
+#if (SAM4L)
+	usart_init_spi_master(p_usart, &opt, sysclk_get_pba_hz());
+#else
+	usart_init_spi_master(p_usart, &opt, sysclk_get_peripheral_hz());
+#endif
 
 	usart_enable_rx(p_usart);
 	usart_enable_tx(p_usart);
@@ -303,7 +307,9 @@ uint32_t usart_spi_is_tx_ready(Usart *p_usart)
  */
 uint32_t usart_spi_is_rx_full(Usart *p_usart)
 {
+#if (!SAMV71 && !SAMV70 && !SAME70 && !SAMS70)
 	return usart_is_rx_buf_full(p_usart);
+#endif
 }
 
 /*! \brief Enable the USART for the specified USART in SPI mode.

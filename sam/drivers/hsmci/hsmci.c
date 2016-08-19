@@ -3,7 +3,7 @@
  *
  * \brief SAM HSMCI driver
  *
- * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -106,6 +106,13 @@
 #  ifndef CONF_HSMCI_DMA_CHANNEL
 #    define CONF_HSMCI_DMA_CHANNEL 0
 #  endif
+#elif (SAMV70 || SAMV71 || SAME70 || SAMS70)
+  // XDMAC is used for transfer
+#  include "xdmac.h"
+#  define XDMAC_HW_ID_HSMCI    0
+#  ifndef CONF_HSMCI_XDMAC_CHANNEL
+#    define CONF_HSMCI_XDMAC_CHANNEL 0
+#  endif
 #else
 #  error Not supported device
 #endif
@@ -142,6 +149,11 @@ static void hsmci_reset(void)
 #ifdef HSMCI_SR_DMADONE
 	HSMCI->HSMCI_DMA = 0;
 #endif
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+#ifdef HSMCI_DMA_DMAEN
+	HSMCI->HSMCI_DMA = 0;
+#endif
+#endif
 	// Enable the HSMCI
 	HSMCI->HSMCI_CR = HSMCI_CR_PWSEN | HSMCI_CR_MCIEN;
 }
@@ -154,7 +166,7 @@ static void hsmci_reset(void)
  */
 static void hsmci_set_speed(uint32_t speed, uint32_t mck)
 {
-#if (SAM4E)
+#if (SAM4E || SAMV70 || SAMV71 || SAME70 || SAMS70)
 	uint32_t clkdiv = 0;
 	uint32_t clkodd = 0;
 	// clock divider, represent (((clkdiv << 1) + clkodd) + 2)
@@ -305,6 +317,13 @@ void hsmci_init(void)
 	pmc_enable_periph_clk(ID_DMAC);
 #endif
 
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+#ifdef HSMCI_DMA_DMAEN
+	// Enable clock for DMA controller
+	pmc_enable_periph_clk(ID_XDMAC);
+#endif
+#endif
+
 	// Set the Data Timeout Register to 2 Mega Cycles
 	HSMCI->HSMCI_DTOR = HSMCI_DTOR_DTOMUL_1048576 | HSMCI_DTOR_DTOCYC(2);
 	// Set Completion Signal Timeout to 2 Mega Cycles
@@ -348,7 +367,7 @@ void hsmci_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width, bool h
 		HSMCI->HSMCI_CFG &= ~HSMCI_CFG_HSMODE;
 	}
 
-	hsmci_set_speed(clock, sysclk_get_cpu_hz());
+	hsmci_set_speed(clock, sysclk_get_peripheral_hz());
 
 	switch (slot) {
 	case 0:
@@ -414,6 +433,12 @@ bool hsmci_send_cmd(sdmmc_cmd_def_t cmd, uint32_t arg)
 	// Disable PDC for HSMCI
 	HSMCI->HSMCI_MR &= ~HSMCI_MR_PDCMODE;
 #endif
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+#ifdef HSMCI_DMA_DMAEN
+	// Disable DMA for HSMCI
+	HSMCI->HSMCI_DMA = 0;
+#endif
+#endif
 	HSMCI->HSMCI_BLKR = 0;
 	return hsmci_send_cmd_execute(0, cmd, arg);
 }
@@ -464,6 +489,17 @@ bool hsmci_adtc_start(sdmmc_cmd_def_t cmd, uint32_t arg, uint16_t block_size, ui
 	}
 #endif
 
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+#ifdef HSMCI_DMA_DMAEN
+	if (access_block) {
+		// Enable DMA for HSMCI
+		HSMCI->HSMCI_DMA = HSMCI_DMA_DMAEN;
+	} else {
+		// Disable DMA for HSMCI
+		HSMCI->HSMCI_DMA = 0;
+	}
+#endif
+#endif
 	// Enabling Read/Write Proof allows to stop the HSMCI Clock during
 	// read/write  access if the internal FIFO is full.
 	// This will guarantee data integrity, not bandwidth.
@@ -892,3 +928,128 @@ bool hsmci_wait_end_of_write_blocks(void)
 	return true;
 }
 #endif // HSMCI_MR_PDCMODE
+
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+#ifdef HSMCI_DMA_DMAEN
+bool hsmci_start_read_blocks(void *dest, uint16_t nb_block)
+{
+	xdmac_channel_config_t p_cfg = {0, 0, 0, 0, 0, 0, 0, 0};
+	uint32_t nb_data;
+
+	Assert(nb_block);
+	Assert(dest);
+
+	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+
+	nb_data = nb_block * hsmci_block_size;
+
+	p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+					| XDMAC_CC_MBSIZE_SINGLE
+					| XDMAC_CC_DSYNC_PER2MEM
+					| XDMAC_CC_CSIZE_CHK_1
+					| XDMAC_CC_DWIDTH_WORD
+					| XDMAC_CC_SIF_AHB_IF1
+					| XDMAC_CC_DIF_AHB_IF0
+					| XDMAC_CC_SAM_FIXED_AM
+					| XDMAC_CC_DAM_INCREMENTED_AM
+					| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+	p_cfg.mbr_ubc = nb_data / 4;
+	p_cfg.mbr_sa = (uint32_t)&(HSMCI->HSMCI_FIFO[0]);
+	p_cfg.mbr_da = (uint32_t)dest;
+	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
+	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+	hsmci_transfert_pos += nb_data;
+	return true;
+}
+
+bool hsmci_wait_end_of_read_blocks(void)
+{
+	uint32_t sr;
+	uint32_t dma_sr;
+	// Wait end of transfer
+	// Note: no need of timeout, because it is include in HSMCI
+	do {
+		sr = HSMCI->HSMCI_SR;
+		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
+				HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			hsmci_debug("%s: DMA sr 0x%08x error\n\r",
+					__func__, sr);
+			hsmci_reset();
+			// Disable XDMAC
+			xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+			return false;
+		}
+		if (((uint32_t)hsmci_block_size * hsmci_nb_block) > hsmci_transfert_pos) {
+			// It is not the end of all transfers
+			// then just wait end of DMA
+			dma_sr = xdmac_channel_get_interrupt_status(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+			if (dma_sr & XDMAC_CIS_BIS) {
+				return true;
+			}
+		}
+	} while (!(sr & HSMCI_SR_XFRDONE));
+	return true;
+}
+
+bool hsmci_start_write_blocks(const void *src, uint16_t nb_block)
+{
+	xdmac_channel_config_t p_cfg = {0, 0, 0, 0, 0, 0, 0, 0};
+	uint32_t nb_data;
+
+	Assert(nb_block);
+	Assert(dest);
+
+	xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+
+	nb_data = nb_block * hsmci_block_size;
+
+	p_cfg.mbr_cfg = XDMAC_CC_TYPE_PER_TRAN
+					| XDMAC_CC_MBSIZE_SINGLE
+					| XDMAC_CC_DSYNC_MEM2PER
+					| XDMAC_CC_CSIZE_CHK_1
+					| XDMAC_CC_DWIDTH_WORD
+					| XDMAC_CC_SIF_AHB_IF0
+					| XDMAC_CC_DIF_AHB_IF1
+					| XDMAC_CC_SAM_INCREMENTED_AM
+					| XDMAC_CC_DAM_FIXED_AM
+					| XDMAC_CC_PERID(CONF_HSMCI_XDMAC_CHANNEL);
+	p_cfg.mbr_ubc = nb_data / 4;
+	p_cfg.mbr_sa = (uint32_t)src;
+	p_cfg.mbr_da = (uint32_t)&(HSMCI->HSMCI_FIFO[0]);
+	xdmac_configure_transfer(XDMAC, CONF_HSMCI_XDMAC_CHANNEL, &p_cfg);
+	xdmac_channel_enable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+	hsmci_transfert_pos += nb_data;
+	return true;
+}
+
+bool hsmci_wait_end_of_write_blocks(void)
+{
+	uint32_t sr;
+	uint32_t dma_sr;
+	// Wait end of transfer
+	// Note: no need of timeout, because it is include in HSMCI
+	do {
+		sr = HSMCI->HSMCI_SR;
+		if (sr & (HSMCI_SR_UNRE | HSMCI_SR_OVRE | \
+		HSMCI_SR_DTOE | HSMCI_SR_DCRCE)) {
+			hsmci_debug("%s: DMA sr 0x%08x error\n\r",
+			__func__, sr);
+			hsmci_reset();
+			// Disable XDMAC
+			xdmac_channel_disable(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+			return false;
+		}
+		if (((uint32_t)hsmci_block_size * hsmci_nb_block) > hsmci_transfert_pos) {
+			// It is not the end of all transfers
+			// then just wait end of DMA
+			dma_sr = xdmac_channel_get_interrupt_status(XDMAC, CONF_HSMCI_XDMAC_CHANNEL);
+			if (dma_sr & XDMAC_CIS_BIS) {
+				return true;
+			}
+		}
+	} while (!(sr & HSMCI_SR_XFRDONE));
+
+	return true;
+}
+#endif // HSMCI_DMA_DMAEN
+#endif

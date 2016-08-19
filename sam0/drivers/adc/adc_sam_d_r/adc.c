@@ -96,7 +96,7 @@ void adc_get_config_defaults(struct adc_config *const config)
 #if SAMR21
 	config->positive_input                = ADC_POSITIVE_INPUT_PIN6 ;
 #else
-  config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
+ 	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
 #endif
 	config->negative_input                = ADC_NEGATIVE_INPUT_GND ;
 	config->accumulate_samples            = ADC_ACCUMULATE_DISABLE;
@@ -174,7 +174,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 
 	/* Pinmapping table for AINxx -> GPIO pin number */
 	const uint32_t pinmapping[] = {
-#if (SAMD20E) || (SAMD21E)|| (SAMDA0E) || (SAMDA1E)
+#if (SAMD20E) || (SAMD21E)|| (SAMDA1E)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -185,7 +185,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
-#elif (SAMD20G) || (SAMD21G)|| (SAMDA0G) || (SAMDA1G)
+#elif (SAMD20G) || (SAMD21G)|| (SAMDA1G)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -196,7 +196,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
-#elif (SAMD20J) || (SAMD21J)|| (SAMDA0J) || (SAMDA1J)
+#elif (SAMD20J) || (SAMD21J)|| (SAMDA1J)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -229,7 +229,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
-#elif (SAMD10C) || (SAMD11C)
+#elif (SAMD09C) || (SAMD10C) || (SAMD11C)
 			PIN_PA02B_ADC_AIN0,  PIN_INVALID_ADC_AIN,
 			PIN_PA04B_ADC_AIN2,  PIN_PA05B_ADC_AIN3,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
@@ -240,7 +240,18 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
-#elif (SAMD10DS) || (SAMD11DS)
+#elif (SAMD09D)
+			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
+			PIN_PA04B_ADC_AIN2,  PIN_PA05B_ADC_AIN3,
+			PIN_PA06B_ADC_AIN4,  PIN_PA07B_ADC_AIN5,
+			PIN_PA14B_ADC_AIN6,  PIN_PA15B_ADC_AIN7,
+			PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+#elif (SAMD10DS) || (SAMD10DU) || (SAMD11DS) || (SAMD11DU)
 			PIN_PA02B_ADC_AIN0,  PIN_INVALID_ADC_AIN,
 			PIN_PA04B_ADC_AIN2,  PIN_PA05B_ADC_AIN3,
 			PIN_PA06B_ADC_AIN4,  PIN_PA07B_ADC_AIN5,
@@ -477,7 +488,7 @@ static enum status_code _adc_set_config(
 					(config->window.window_lower_value > 511 ||
 					config->window.window_lower_value < -512 ||
 					config->window.window_upper_value > 511 ||
-					config->window.window_upper_value > -512)) {
+					config->window.window_upper_value < -512)) {
 				/* Invalid value */
 				return STATUS_ERR_INVALID_ARG;
 			} else if (config->window.window_lower_value > 1023 ||

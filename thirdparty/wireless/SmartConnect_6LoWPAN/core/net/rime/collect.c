@@ -211,8 +211,8 @@ struct {
 
 /* Debug definition: draw routing tree in Cooja. */
 #define DRAW_TREE 0
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else

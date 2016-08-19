@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Unit test
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,20 +72,33 @@
  * The following kit is required for carrying out the test:
  *  - SAM D21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM L22 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM DA1 Xplained Pro board
+ *  - SAM C21 Xplained Pro board
+ *  - SAM D20 Xplained Pro board
+ *  - SAM R30 Xplained Pro board
  *
  * \section asfdoc_sam0_i2c_unit_test_setup Setup
  * The following connections has to be made using wires:
- * - SAM D21/DA1 Xplained Pro board
+ * - SAM D21/DA1/D20 Xplained Pro board
  *  - \b PB02 (EXT1 PIN7) <-----> PA08 (EXT2 PIN11) 
  *  - \b PB03 (EXT1 PIN8) <-----> PA09 (EXT2 PIN12)
  * - SAM L21 Xplained Pro board
  *  - \b PA12 (EXT1 PIN7) <-----> PA08 (EXT2 PIN11) 
  *  - \b PA13 (EXT1 PIN8) <-----> PA09 (EXT2 PIN12)
+ * - SAM L22 Xplained Pro board
+ *  - \b PB30 (EXT1 PIN11) <-----> PA12 (EXT2 PIN14) 
+ *  - \b PB31 (EXT1 PIN12) <-----> PA13 (EXT2 PIN13)
  * - SAM R21 Xplained Pro board
  *  - \b PA16 (EXT1 PIN11) <-----> PB02 (EXT1 PIN17) 
  *  - \b PA17 (EXT1 PIN12) <-----> PB03 (EXT1 PIN15)
+ * - SAM C21 Xplained Pro board
+ *  - \b PA12 (EXT2 PIN11) <-----> PB30 (EXT2 PIN7) 
+ *  - \b PA13 (EXT2 PIN12) <-----> PB31 (EXT2 PIN8)
+ * - SAM R30 Xplained Pro board
+ *  - \b PA22 (EXT1 PIN9) <-----> PA16 (EXT1 PIN11)
+ *  - \b PA23 (EXT1 PIN10) <-----> PA17 (EXT1 PIN12)
  *
  * To run the test:
  *  - Connect the supported Xplained Pro board to the computer using a
@@ -232,11 +245,15 @@ static void run_i2c_init_test(const struct test_case *test)
 			"I2C master initialization failed");
 	i2c_master_enable(&i2c_master_instance);
 
-	/* slave init testing */	
+	/* slave init testing */
 	i2c_slave_get_config_defaults(&config_i2c_slave);
 	config_i2c_slave.address        = SLAVE_ADDRESS;
 	config_i2c_slave.address_mode   = I2C_SLAVE_ADDRESS_MODE_MASK;
 	config_i2c_slave.buffer_timeout = 10000;
+#if SAMR30
+	config_i2c_slave.pinmux_pad0    = CONF_SLAVE_SDA_PINMUX;
+	config_i2c_slave.pinmux_pad1    = CONF_SLAVE_SCK_PINMUX;
+#endif	
 	status = i2c_slave_init(&i2c_slave_instance, CONF_I2C_SLAVE_MODULE, &config_i2c_slave);
 	/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
@@ -325,9 +342,6 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	} while (timeout_cycles > 0);
 	test_assert_true(test, timeout_cycles > 0,
                          "i2c master write without stop failed");
-	
-	/* use i2c_master_send_stop to complete master writing */
-	i2c_master_send_stop(&i2c_master_instance);
 	
 	/* wait the master read to finish */
 	master_packet.data = master_read_buffer;

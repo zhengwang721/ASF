@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Count Unit test
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,8 +71,13 @@
  * The following kit is required for carrying out the test:
  *  - SAM D21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM L22 Xplained Pro board
+ *  - SAM L22 Xplained Pro B board
  *  - SAM R21 Xplained Pro board
  *  - SAM DA1 Xplained Pro board
+ *  - SAM C21 Xplained Pro board
+ *  - SAM D20 Xplained Pro board
+ *  - SAM R30 Xplained Pro board
  *  
  * \section asfdoc_sam0_rtc_unit_test_setup Setup
  *
@@ -115,7 +120,7 @@ struct rtc_module rtc_inst;
 volatile bool interrupt_flag = false;
 
 
-void rtc_count_match_callback(void)
+static void rtc_count_match_callback(void)
 {
 	/* Do something on RTC compare1 match here */
 	interrupt_flag = true;

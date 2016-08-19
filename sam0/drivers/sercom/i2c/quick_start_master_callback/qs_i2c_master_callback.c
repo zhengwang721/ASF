@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Master Quick Start Guide with Callbacks
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -101,11 +101,15 @@ void configure_i2c(void)
 	/* Change buffer timeout to something longer */
 	//! [conf_change]
 	config_i2c_master.buffer_timeout = 65535;
+#if SAMR30
+	config_i2c_master.pinmux_pad0    = CONF_MASTER_SDA_PINMUX;
+	config_i2c_master.pinmux_pad1    = CONF_MASTER_SCK_PINMUX;
+#endif
 	//! [conf_change]
 
 	/* Initialize and enable device with config */
 	//! [init_module]
-	while(i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master)     \
+	while(i2c_master_init(&i2c_master_instance, CONF_I2C_MASTER_MODULE, &config_i2c_master)     \
 			!= STATUS_OK);
 	//! [init_module]
 
@@ -161,6 +165,9 @@ int main(void)
 	while (true) {
 		/* Infinite loop */
 		if (!port_pin_get_input_level(BUTTON_0_PIN)) {
+		  	while (!port_pin_get_input_level(BUTTON_0_PIN)) {
+		  		/* Waiting for button steady */	
+		  	}
 			/* Send every other packet with reversed data */
 			//! [revert_order]
 			if (wr_packet.data[0] == 0x00) {

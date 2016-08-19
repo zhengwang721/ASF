@@ -50,11 +50,11 @@
 
 #define MAX_DESTINATIONS NBR_TABLE_CONF_MAX_NEIGHBORS
 
-#define UPD_PING_DEBUG 1
+#define _DEBUG_ 1
 
 #define DATALEN 4
 
-#ifndef UDP_PING_DEBUG
+#ifndef _DEBUG_
 #define UDP_PING_DEBUG 1
 #endif
 

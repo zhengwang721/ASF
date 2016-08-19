@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_matrix_example" caption="Cortex-M4 CMSIS DSP Matrix Example on SAM4">
+	<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_matrix_example" caption="CMSIS DSP Matrix Examples">
 		<info type="description" value="summary">
-			Example code demonstrating least square fit to data using matrix functions on SAM4.
+			Example code demonstrating least square fit to data using matrix functions.
 		</info>
 		<build type="c-source" value="arm_matrix_example_f32.c"/>
 		<build type="c-source" value="math_helper.c"/>
@@ -10,6 +10,8 @@
 		<build type="include-path" value="."/>
 		<device-support value="sam4"/>
 		<device-support value="samg"/>
+		<device-support value="samv71"/>
+		<device-support value="same70"/>
 		<require idref="thirdparty.cmsis.license"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

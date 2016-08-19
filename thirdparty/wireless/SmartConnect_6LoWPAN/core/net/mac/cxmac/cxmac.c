@@ -163,8 +163,8 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #define PRINTDEBUG(...) printf(__VA_ARGS__)

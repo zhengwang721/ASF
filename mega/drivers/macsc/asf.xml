@@ -18,6 +18,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.ioport"/>
 		<require idref="mega.drivers.usart"/>
-		<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+		<generator value="doxygen-module" default-mcu="unspecified-megarf"/>
 	</module>
 </asf>

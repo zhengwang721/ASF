@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_convolution_example" caption="Cortex-M4 CMSIS DSP Convolution Example on SAM4">
+	<module type="application" id="sam.utils.cmsis.dsp_lib.examples.arm_convolution_example" caption="CMSIS DSP Convolution Example">
 		<info type="description" value="summary">
-			Example code demonstrating Convolution of two input signals using Fast Fourier Transform (FFT) on SAM4.
+			Example code demonstrating Convolution of two input signals using Fast Fourier Transform (FFT).
 		</info>
 		<build type="c-source" value="arm_convolution_example_f32.c"/>
 		<build type="c-source" value="math_helper.c"/>
@@ -10,6 +10,8 @@
 		<build type="include-path" value="."/>
 		<device-support value="sam4"/>
 		<device-support value="samg"/>
+		<device-support value="samv71"/>
+		<device-support value="same70"/>
 		<info type="gui-flag" value="move-to-root"/>
 		<require idref="thirdparty.cmsis.license"/>
 	</module>

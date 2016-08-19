@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+	<module type="application" caption="Blood Pressure Sensor Application" id="thirdparty.wireless.ble_smart_sdk.apps.blood_pressure">
+		<info type="description" value="summary">
+		Blood Pressure Sensor Application for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="blp_sensor_app.h"/>
+		<build type="c-source" value="blp_sensor_app.c"/>
+		<build type="define" name="BLE_DEVICE_ROLE" value="BLE_ROLE_PERIPHERAL"/>
+		<build type="define" name="NENABLE_PTS" value=""/>
+		<build type="define" name="ATT_DB_MEMORY" value=""/>
+		<build type="define" name="OTAU_FEATURE" value="false"/>
+		
+		<require idref="thirdparty.wireless.ble_smart_sdk.ble_profiles.blp_sensor"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42613-ATSAMB11-BluSDK-SMART-Blood-Pressure-Profile-Getting-Started-Guide_UserGuide.pdf"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

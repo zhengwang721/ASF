@@ -3,7 +3,7 @@
  *
  * \brief SAM Power related functionality
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,6 +52,10 @@
 extern "C" {
 #endif
 
+/* MCU revision number */
+#define _SYSTEM_MCU_REVISION_D 3
+#define _SYSTEM_MCU_REVISION_E 4
+
 /**
  * \addtogroup asfdoc_sam0_system_group
  * @{
@@ -64,9 +68,9 @@ extern "C" {
  * device.
  */
 enum system_voltage_reference {
-	/** Temperature sensor voltage reference. */
+	/** Temperature sensor voltage reference */
 	SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE,
-	/** Bandgap voltage reference. */
+	/** Bandgap voltage reference */
 	SYSTEM_VOLTAGE_REFERENCE_BANDGAP,
 };
 
@@ -77,13 +81,13 @@ enum system_voltage_reference {
  * different sleep modes can be found in \ref asfdoc_sam0_system_module_overview_sleep_mode.
  */
 enum system_sleepmode {
-	/** IDLE 0 sleep mode. */
+	/** IDLE 0 sleep mode */
 	SYSTEM_SLEEPMODE_IDLE_0,
-	/** IDLE 1 sleep mode. */
+	/** IDLE 1 sleep mode */
 	SYSTEM_SLEEPMODE_IDLE_1,
-	/** IDLE 2 sleep mode. */
+	/** IDLE 2 sleep mode */
 	SYSTEM_SLEEPMODE_IDLE_2,
-	/** Standby sleep mode. */
+	/** Standby sleep mode */
 	SYSTEM_SLEEPMODE_STANDBY,
 };
 
@@ -173,10 +177,31 @@ static inline void system_voltage_reference_disable(
 static inline enum status_code system_set_sleepmode(
 	const enum system_sleepmode sleep_mode)
 {
-#if (SAMD20 || SAMD21)
-	/* Errata: Make sure that the Flash does not power all the way down
-	 * when in sleep mode. */
-	NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
+
+#if (SAMD20 || SAMD21 || SAMR21)
+
+	/* Get MCU revision */
+	uint32_t rev = DSU->DID.reg;
+
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
+
+#if (SAMD20)
+	if (rev < _SYSTEM_MCU_REVISION_E) {
+		/* Errata 13140: Make sure that the Flash does not power all the way down
+		 * when in sleep mode. */
+		NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
+	}
+#endif
+
+#if (SAMD21 || SAMR21)
+	if (rev < _SYSTEM_MCU_REVISION_D) {
+		/* Errata 13140: Make sure that the Flash does not power all the way down
+		 * when in sleep mode. */
+		NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
+	}
+#endif
+
 #endif
 
 	switch (sleep_mode) {

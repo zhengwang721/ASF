@@ -2,7 +2,7 @@
 	<project caption="WINC1500 MAC Address Example for SAMD21 XPlained Pro" id="common.components.wifi.winc1500.mac_address_example.samd21_xplained_pro">
 		<!-- Summary Description -->
 		<info type="description" value="summary">
-			This example demonstrates the use of the WINC1500 with the SAMD21 Xplained Pro board to retrieve the MAC Address of the Wi-Fi module.
+			This example demonstrates how to retrieve the MAC address of the WINC1500 Wi-Fi module.
 		</info>
 
 		<!-- Source -->

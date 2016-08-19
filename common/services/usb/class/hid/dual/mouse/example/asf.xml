@@ -29,6 +29,10 @@
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
 			<device-support value="sam4l"/>
+			<device-support value="samv71"/>
+			<device-support value="samv70"/>
+			<device-support value="same70"/>
+			<device-support value="sams70"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="common.services.usb.class.host"/>
@@ -52,6 +56,7 @@
 			<device-support value="samd21"/>
 			<device-support value="saml21"/>
 			<device-support value="samda1"/>
+			<device-support value="samr30"/>
 			<require idref="sam0.drivers.system"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="common.services.usb.class.host"/>

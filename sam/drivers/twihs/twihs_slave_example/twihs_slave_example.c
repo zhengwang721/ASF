@@ -52,6 +52,8 @@
  *
  * This package can be used with the following setup:
  *  - SAMG53 Xplained Pro kit
+ *  - SAMV71 Xplained Ultra kit
+ *  - SAME70 Xplained kit
  *
  * In addition, another device will be needed to act as the TWI master. The
  * twi_eeprom_example can be used for that, in which case a second kit
@@ -212,7 +214,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 
 	/* Configure console UART. */

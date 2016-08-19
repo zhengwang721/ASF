@@ -26,6 +26,8 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom.polled"/>
 			<require idref="sam0.drivers.system"/>
+			
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 		</module>
 
 		<module type="driver" id="sam0.drivers.sercom.i2c.master#callback" caption="SERCOM I2C - Master Mode I2C (Callback APIs)">
@@ -50,6 +52,8 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom.callback"/>
 			<require idref="sam0.drivers.system"/>
+			
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 		</module>
 	</select-by-config>
 
@@ -80,6 +84,8 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom.polled"/>
 			<require idref="sam0.drivers.system"/>
+			
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 		</module>
 
 		<module type="driver" id="sam0.drivers.sercom.i2c.slave#callback" caption="SERCOM I2C - Slave Mode I2C (Callback APIs)">
@@ -104,6 +110,8 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.sercom.callback"/>
 			<require idref="sam0.drivers.system"/>
+			
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 		</module>
 	</select-by-config>
 
@@ -120,11 +128,15 @@
 			<build type="c-source" value="i2c_sam0/i2c_master.c"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
-			<device-support value="samda0"/>
+			<device-support value="saml22"/>
 			<device-support value="samda1"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
+			<device-support value="samr30"/>
 		</module>
 	</select-by-device>
 
@@ -143,11 +155,15 @@
 			<build type="c-source" value="i2c_sam0/i2c_master_interrupt.c"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
-			<device-support value="samda0"/>
+			<device-support value="saml22"/>
 			<device-support value="samda1"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
+			<device-support value="samr30"/>
 		</module>
 	</select-by-device>
 
@@ -164,11 +180,15 @@
 			<build type="c-source" value="i2c_sam0/i2c_slave.c"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
-			<device-support value="samda0"/>
+			<device-support value="saml22"/>
 			<device-support value="samda1"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
+			<device-support value="samr30"/>
 		</module>
 	</select-by-device>
 
@@ -187,11 +207,15 @@
 			<build type="c-source" value="i2c_sam0/i2c_slave_interrupt.c"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
-			<device-support value="samda0"/>
+			<device-support value="saml22"/>
 			<device-support value="samda1"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
+			<device-support value="samr30"/>
 		</module>
 	</select-by-device>
 

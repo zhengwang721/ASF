@@ -6,7 +6,7 @@
  *
  * This file defines a useful set of functions for the AES on SAM devices.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -138,6 +138,12 @@ void aes_disable(struct aes_module *const module)
 {
 	Assert(module);
 	Assert(module->hw);
+
+	/* Disbale interrupt */
+	module->hw->INTENCLR.reg = AES_INTENCLR_MASK;
+	/* Clear interrupt flag */
+	module->hw->INTFLAG.reg = AES_INTFLAG_MASK;
+
 	module->hw->CTRLA.reg &= (~AES_CTRLA_ENABLE);
 }
 
@@ -226,7 +232,7 @@ void aes_write_key(
 }
 
 /**
- * \brief Write the initialization vector (for the CBC, CFB, OFB, CTR & GCM
+ * \brief Write the initialization vector (for the CBC, CFB, OFB, CTR, and GCM
  * cipher modes).
  *
  * \param[in] module  Pointer to the software instance struct

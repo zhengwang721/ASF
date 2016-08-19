@@ -42,8 +42,8 @@
 #include <string.h>
 #include <stdio.h>
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
@@ -150,7 +150,7 @@ seek_read(int fd, unsigned int offset, char *buf, int len)
 {
   cfs_seek(fd, offset, CFS_SEEK_SET);
   cfs_read(fd, buf, len);
-#if DEBUG
+#if _DEBUG_
   {
     int i;
     PRINTF("seek_read: Read len %d from offset %d\n",
@@ -160,7 +160,7 @@ seek_read(int fd, unsigned int offset, char *buf, int len)
     }
     printf("\n");
   }
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
 }
 /*---------------------------------------------------------------------------*/
 /*

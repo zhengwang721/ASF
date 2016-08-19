@@ -9,17 +9,21 @@
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
+			<device-support value="samd09"/>
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
-			<device-support value="samda0"/>
 			<device-support value="samda1"/>
 		</module>
-		<module type="meta" id="sam0.drivers.events.common#sam_l" caption="EVSYS - Event System Common">
+		<module type="meta" id="sam0.drivers.events.common#sam_l_c" caption="EVSYS - Event System Common">
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="events.h"/>
-			<build type="include-path" value="events_sam_l"/>
-			<build type="c-source" value="events_sam_l/events.c"/>
+			<build type="include-path" value="events_sam_l_c"/>
+			<build type="c-source" value="events_sam_l_c/events.c"/>
 			<device-support value="saml21"/>
+			<device-support value="saml22"/>
+			<device-support value="samc20"/>
+			<device-support value="samc21"/>
+			<device-support value="samr30"/>
 		</module>
 	</select-by-device>
 
@@ -39,8 +43,9 @@
 			</info>
 
 			<build type="include-path" value="."/>
-			<build type="header-file" subtype="api" value="events.h"/>
+			<build type="header-file" value="events_common.h"/>
 
+			<build type="define" name="EVENTS_INTERRUPT_HOOKS_MODE" value="false"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_events_group"/>
 
 			<require idref="sam0.drivers.events.common"/>

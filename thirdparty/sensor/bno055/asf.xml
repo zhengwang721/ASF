@@ -1,0 +1,22 @@
+<asf xmlversion="1.0">
+	<module type="component" id="thirdparty.sensor.bno055" caption="Accelerometer BNO055">
+		<info type="description" value="summary">
+		Low-level driver for the BNO055 Accelerometer.
+		</info>
+		<build type="c-source" value="bno055.c"/>
+		<build type="c-source" value="bno055_port.c"/>
+		<build type="header-file" subtype="api" value="bno055.h"/>
+		<build type="header-file" subtype="api" value="bno055_port.h"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="bno055_doc.h"/>
+		<build type="doxygen-entry-point" value="bno055_sensor_group"/>
+		<require idref="common.services.basic.gpio"/>
+		<require idref="common.services.basic.clock"/>
+		<require idref="common.services.delay"/>
+		<require idref="sam.drivers.pmc"/>
+		<require idref="sam.drivers.twihs"/>
+		<build type="module-config" subtype="required-header-file" value="conf_bno055.h"/>
+		<build type="module-config" subtype="path" value="module_config"/>
+		<device-support value="same70"/>
+	</module>
+</asf>

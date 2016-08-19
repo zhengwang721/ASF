@@ -46,9 +46,9 @@
 #include "sys/cc.h"
 #include "lib/random.h"
 /*---------------------------------------------------------------------------*/
-#define DEBUG 0
+#define _DEBUG_ 0
 
-#if DEBUG
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else

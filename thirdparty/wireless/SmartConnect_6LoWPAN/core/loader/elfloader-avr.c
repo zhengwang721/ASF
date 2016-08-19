@@ -60,8 +60,8 @@
 
 #define ELF32_R_TYPE(info)      ((unsigned char)(info))
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <avr/pgmspace.h>
 #define PRINTF(FORMAT,args...) printf_P(PSTR(FORMAT),##args)
 #else

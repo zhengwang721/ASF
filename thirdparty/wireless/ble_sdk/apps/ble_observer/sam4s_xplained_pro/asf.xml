@@ -1,0 +1,27 @@
+<asf xmlversion="1.0">
+	<project caption="BLE-Observer Application - SAM 4s Xplained Pro" id="thirdparty.wireless.ble_sdk.apps.ble_observer.sam4s_xplained_pro" force-caption="true" force-description="true">
+		<info type="description" value="summary">
+		Battery Service Application for BLE stack.
+		</info>	
+		<require idref="thirdparty.wireless.ble_sdk.apps.ble_observer"/>
+		<require idref="thirdparty.wireless.ble_sdk.apps.config.sam4s"/>
+		<build type="include-path" value="../../config/sam4s/"/>
+		<build type="header-file" value="../../config/sam4s/conf_board.h"/>
+		<build type="header-file" value="../../config/sam4s/conf_clock.h"/>
+  		<build type="header-file" value="../../config/sam4s/conf_sleepmgr.h"/>
+		<build type="header-file" value="../../config/sam4s/conf_serialdrv.h"/>
+		<build type="header-file" value="../../config/sam4s/conf_uart_serial.h"/>
+		<build type="header-file" value="../../config/sam4s/conf_extint.h"/>
+		<build type="header-file" value="../../config/sam4s/conf_timer.h"/>
+		<require idref="board.sam4s_xplained_pro"/>
+		
+		<generator value="iarewarm"/>
+		<generator value="armgcc" />
+		<generator value="as5_arm" />
+		<generator value="doxygen"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<device-support value="atsam4sd32c"/>
+	</project>
+</asf>

@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface (SPI) DMA slave example for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -451,7 +451,7 @@ static void spi_master_initialize(void)
 	spi_set_clock_phase(SPI_MASTER_BASE, SPI_CHIP_SEL, SPI_CLK_PHASE);
 	spi_set_bits_per_transfer(SPI_MASTER_BASE, SPI_CHIP_SEL,
 			SPI_CSR_BITS_8_BIT);
-	ul_sysclk = sysclk_get_cpu_hz();
+	ul_sysclk = sysclk_get_peripheral_hz();
 	spi_set_baudrate_div(SPI_MASTER_BASE, SPI_CHIP_SEL,
 			(ul_sysclk / g_ul_spi_clock));
 	spi_set_transfer_delay(SPI_MASTER_BASE, SPI_CHIP_SEL, SPI_DLYBS,
@@ -492,7 +492,6 @@ static void spi_master_transfer(void *p_buf, uint32_t ul_size)
 	dmac_trans.ul_descriptor_addr = 0;
 	dmac_channel_single_buf_transfer_init(DMAC, BOARD_SPI_DMAC_TX_CH,
 			(dma_transfer_descriptor_t *) & dmac_trans);
-	dmac_channel_enable(DMAC, BOARD_SPI_DMAC_TX_CH);
 
 	dmac_channel_disable(DMAC, BOARD_SPI_DMAC_RX_CH);
 	dmac_trans.ul_source_addr = (uint32_t) & SPI_MASTER_BASE->SPI_RDR;
@@ -506,6 +505,8 @@ static void spi_master_transfer(void *p_buf, uint32_t ul_size)
 	dmac_trans.ul_descriptor_addr = 0;
 	dmac_channel_single_buf_transfer_init(DMAC, BOARD_SPI_DMAC_RX_CH,
 			&dmac_trans);
+
+	dmac_channel_enable(DMAC, BOARD_SPI_DMAC_TX_CH);
 	dmac_channel_enable(DMAC, BOARD_SPI_DMAC_RX_CH);
 }
 

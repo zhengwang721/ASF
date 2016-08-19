@@ -4,7 +4,7 @@
  *
  * \brief WINC1500 Mode Change Example.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -22,9 +22,6 @@
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -118,14 +115,14 @@
 static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
-		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+		.baudrate =		CONF_UART_BAUDRATE,
+		.charlength =	CONF_UART_CHAR_LENGTH,
+		.paritytype =	CONF_UART_PARITY,
+		.stopbits =		CONF_UART_STOP_BITS,
 	};
 
 	/* Configure UART console. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,
-			CONF_PINS_UART_FLAGS);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
@@ -146,6 +143,10 @@ static int8_t enable_disable_ap_mode(void)
 	strcpy((char *)&strM2MAPConfig.au8SSID, MAIN_WLAN_SSID);
 	strM2MAPConfig.u8ListenChannel = MAIN_WLAN_AP_CHANNEL;
 	strM2MAPConfig.u8SecType = MAIN_WLAN_AUTH;
+	strM2MAPConfig.au8DHCPServerIP[0] = 0xC0; /* 192 */
+	strM2MAPConfig.au8DHCPServerIP[1] = 0xA8; /* 168 */
+	strM2MAPConfig.au8DHCPServerIP[2] = 0x01; /* 1 */
+	strM2MAPConfig.au8DHCPServerIP[3] = 0x01; /* 1 */
 
 	/* Start AP mode. */
 	ret = m2m_wifi_enable_ap(&strM2MAPConfig);
@@ -247,7 +248,7 @@ int main(void)
 
 	/**
 	 * AP mode.
-	 * On and off AP mode.
+	 * Turn On and off AP mode.
 	 */
 	ret = enable_disable_ap_mode();
 	if (M2M_SUCCESS != ret) {
@@ -260,7 +261,7 @@ int main(void)
 
 	/**
 	 * P2P mode.
-	 * On and off P2P mode.
+	 * Turn On and off P2P mode.
 	 */
 	ret = enable_disable_p2p_mode();
 	if (M2M_SUCCESS != ret) {

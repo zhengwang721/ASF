@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Driver (Count Mode)
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,28 +48,30 @@
 #define RTC_COUNT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_rtc_count_group SAM RTC Count Driver (RTC COUNT)
+ * \defgroup asfdoc_sam0_rtc_count_group SAM RTC Count (RTC COUNT) Driver
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
- * and management of the device's Real Time Clock functionality in Count
- * operating mode, for the configuration and retrieval of the current RTC
- * counter value. The following driver API modes are covered by this
- * manual:
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides
+ * an interface for the configuration and management of the device's Real Time
+ * Clock functionality in Count operating mode, for the configuration and
+ * retrieval of the current RTC counter value. The following driver API modes
+ * are covered by this manual:
  *
  *  - Polled APIs
  * \if RTC_COUNT_CALLBACK_MODE
  *  - Callback APIs
  * \endif
  *
- * The following peripherals are used by this module:
+ * The following peripheral is used by this module:
  *  - RTC (Real Time Clock)
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
- *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM L21
- *  - Atmel | SMART SAM DA0/DA1
+ *  - Atmel | SMART SAM D09/D10/D11
+ *  - Atmel | SMART SAM L21/L22
+ *  - Atmel | SMART SAM DA1
+ *  - Atmel | SMART SAM C20/C21
+ *  - Atmel | SMART SAM R30
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_count_prerequisites
@@ -113,23 +115,27 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PERIODIC_INT</td>
- *    <td>SAML21</td>
+ *    <td>SAM L21/L22/C20/C21/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PRESCALER_OFF</td>
- *    <td>SAML21</td>
+ *    <td>SAM L21/L22/C20/C21/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAML21</td>
+ *    <td>SAM L21/L22/C20/C21/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
- *    <td>SAML21</td>
+ *    <td>SAM L21/L22/R30</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
+ *    <td>SAM D20, SAM D21, SAM R21, SAM D10, SAM D11, SAM DA1</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_RTC_TAMPER_DETECTION</td>
+ *    <td>SAM L22</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -162,7 +168,7 @@
  *
  * \f[ f_{PERIODIC}=\frac{f_{ASY}}{2^{n+3}} \f]
  *
- * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock set up in the RTC
+ * Where \f$f_{ASY}\f$ refers to the \e asynchronous clock is set up in the RTC
  * module configuration. The \b n parameter is the event source generator index
  * of the RTC module. If the asynchronous clock is operated at the recommended
  * frequency of 1KHz, the formula results in the values shown in
@@ -201,7 +207,7 @@
  * </table>
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_sam0_events_group "SAM Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM Event System (EVENTS) Driver"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
@@ -225,10 +231,13 @@
  * and slower when given a negative correction value.
  *
  *
+ * \subsection asfdoc_sam0_rtc_count_module_overview_tamper_detect RTC Tamper Detect
+ * see \ref asfdoc_sam0_rtc_tamper_detect
+ *
  * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
  *
  * \subsection asfdoc_sam0_rtc_count_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA0/DA1 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11/DA1 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -282,16 +291,16 @@
  * }
  * \enddot
  *
- * \subsubsection asfdoc_sam0_rtc_count_clock_saml SAM L21 Clock Setup
- * The RTC clock can be selected from OSC32K,XOSC32K or OSCULP32K , and a 32KHz
+ * \subsubsection asfdoc_sam0_rtc_count_clock_saml SAM L21/C20/C21/R30 Clock Setup
+ * The RTC clock can be selected from OSC32K, XOSC32K, or OSCULP32K, and a 32KHz
  * or 1KHz oscillator clock frequency is required. This clock must be
  * configured and enabled in the 32KHz oscillator controller before using the RTC.
  *
- * The table below lists the available RTC clock \ref asfdoc_sam0_rtc_count_rtc_clk
+ * The table below lists the available RTC clock \ref asfdoc_sam0_rtc_count_rtc_clk.
  *
  * \anchor asfdoc_sam0_rtc_count_rtc_clk
  * <table>
- *   <caption>RTC clocks source</caption>
+ *   <caption>RTC Clocks Source</caption>
  *   <tr>
  *     <th>RTC clock frequency</th>
  *     <th>Clock source</th>
@@ -360,22 +369,32 @@ extern "C" {
 #endif
 
 /**
- * Define port features set according to different device family
+ * \name Driver Feature Definition
+ *
+ * Define port features set according to different device family.
  * @{
 */
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAML22) || (SAMC20) || (SAMC21) || (SAMR30) || defined(__DOXYGEN__)
 /** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
 /** RTC prescaler is off. */
 #  define FEATURE_RTC_PRESCALER_OFF
 /** RTC clock selection. */
 #  define FEATURE_RTC_CLOCK_SELECTION
+#  if !(SAMC20) && !(SAMC21)
 /** General purpose registers. */
 #  define FEATURE_RTC_GENERAL_PURPOSE_REG
+#  endif
 #else
 /** RTC continuously updated. */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
 #endif
+
+#if (SAML22) || defined(__DOXYGEN__)
+/** RTC tamper detection. */
+#  define FEATURE_RTC_TAMPER_DETECTION
+#endif
+
 /*@}*/
 
 #ifdef FEATURE_RTC_CLOCK_SELECTION
@@ -384,17 +403,19 @@ extern "C" {
  * RTC clock source.
  */
 enum rtc_clock_sel {
-	/** 1.024KHz from 32KHz internal ULP oscillator. */
+	/** 1.024KHz from 32KHz internal ULP oscillator */
 	RTC_CLOCK_SELECTION_ULP1K = OSC32KCTRL_RTCCTRL_RTCSEL_ULP1K_Val,
-	/** 32.768KHz from 32KHz internal ULP oscillator. */
+	/** 32.768KHz from 32KHz internal ULP oscillator */
 	RTC_CLOCK_SELECTION_ULP32K = OSC32KCTRL_RTCCTRL_RTCSEL_ULP32K_Val,
-	/** 1.024KHz from 32KHz internal oscillator. */
+#if !(SAML22)
+	/** 1.024KHz from 32KHz internal oscillator */
 	RTC_CLOCK_SELECTION_OSC1K = OSC32KCTRL_RTCCTRL_RTCSEL_OSC1K_Val,
-	/** 32.768KHz from 32KHz internal oscillator. */
+	/** 32.768KHz from 32KHz internal oscillator */
 	RTC_CLOCK_SELECTION_OSC32K = OSC32KCTRL_RTCCTRL_RTCSEL_OSC32K_Val,
-	/** 1.024KHz from 32KHz internal oscillator. */
+#endif
+	/** 1.024KHz from 32KHz external oscillator */
 	RTC_CLOCK_SELECTION_XOSC1K = OSC32KCTRL_RTCCTRL_RTCSEL_XOSC1K_Val,
-	/** 32.768KHz from 32.768KHz external crystal oscillator. */
+	/** 32.768KHz from 32.768KHz external crystal oscillator */
 	RTC_CLOCK_SELECTION_XOSC32K = OSC32KCTRL_RTCCTRL_RTCSEL_XOSC32K_Val,
 };
 #endif
@@ -406,9 +427,9 @@ enum rtc_clock_sel {
  * operation.
  */
 enum rtc_count_mode {
-	/** RTC Count module operates in 16-bit mode. */
+	/** RTC Count module operates in 16-bit mode */
 	RTC_COUNT_MODE_16BIT = 0,
-	/** RTC Count module operates in 32-bit mode. */
+	/** RTC Count module operates in 32-bit mode */
 	RTC_COUNT_MODE_32BIT = 1,
 };
 
@@ -422,26 +443,26 @@ enum rtc_count_mode {
  * \note Not all compare channels are available in all devices and modes.
  */
 enum rtc_count_compare {
-	/** Compare channel 0. */
+	/** Compare channel 0 */
 	RTC_COUNT_COMPARE_0 = 0,
 #if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
-	/** Compare channel 1. */
+	/** Compare channel 1 */
 	RTC_COUNT_COMPARE_1 = 1,
 #endif
 #if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
-	/** Compare channel 2. */
+	/** Compare channel 2 */
 	RTC_COUNT_COMPARE_2 = 2,
 #endif
 #if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
-	/** Compare channel 3. */
+	/** Compare channel 3 */
 	RTC_COUNT_COMPARE_3 = 3,
 #endif
 #if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
-	/** Compare channel 4. */
+	/** Compare channel 4 */
 	RTC_COUNT_COMPARE_4 = 4,
 #endif
 #if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
-	/** Compare channel 5. */
+	/** Compare channel 5 */
 	RTC_COUNT_COMPARE_5 = 5,
 #endif
 };
@@ -451,21 +472,21 @@ enum rtc_count_compare {
  * \brief Available periodic interval source.
  */
 enum rtc_count_periodic_interval{
-	/** Periodic interval 0. */
+	/** Periodic interval 0 */
 	RTC_COUNT_PERIODIC_INTERVAL_0 = 0,
-	/** Periodic interval 1. */
+	/** Periodic interval 1 */
 	RTC_COUNT_PERIODIC_INTERVAL_1 = 1,
-	/** Periodic interval 2. */
+	/** Periodic interval 2 */
 	RTC_COUNT_PERIODIC_INTERVAL_2 = 2,
-	/** Periodic interval 3. */
+	/** Periodic interval 3 */
 	RTC_COUNT_PERIODIC_INTERVAL_3 = 3,
-	/** Periodic interval 4. */
+	/** Periodic interval 4 */
 	RTC_COUNT_PERIODIC_INTERVAL_4 = 4,
-	/** Periodic interval 5. */
+	/** Periodic interval 5 */
 	RTC_COUNT_PERIODIC_INTERVAL_5 = 5,
-	/** Periodic interval 6. */
+	/** Periodic interval 6 */
 	RTC_COUNT_PERIODIC_INTERVAL_6 = 6,
-	/** Periodic interval 7. */
+	/** Periodic interval 7 */
 	RTC_COUNT_PERIODIC_INTERVAL_7 = 7,
 };
 #endif
@@ -478,49 +499,54 @@ enum rtc_count_periodic_interval{
  * The available callback types for the RTC count module.
  */
 enum rtc_count_callback {
-	/** Callback for Periodic Interval 0 Interrupt. */
+	/** Callback for Periodic Interval 0 Interrupt */
 	RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_0 = 0,
-	/** Callback for Periodic Interval 1 Interrupt. */
+	/** Callback for Periodic Interval 1 Interrupt */
 	RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_1,
-	/** Callback for Periodic Interval 2 Interrupt. */
+	/** Callback for Periodic Interval 2 Interrupt */
 	RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_2,
-	/** Callback for Periodic Interval 3 Interrupt. */
+	/** Callback for Periodic Interval 3 Interrupt */
 	RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_3,
-	/** Callback for Periodic Interval 4 Interrupt. */
+	/** Callback for Periodic Interval 4 Interrupt */
 	RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_4,
-	/** Callback for Periodic Interval 5 Interrupt. */
+	/** Callback for Periodic Interval 5 Interrupt */
 	RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_5,
-	/** Callback for Periodic Interval 6 Interrupt. */
+	/** Callback for Periodic Interval 6 Interrupt */
 	RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_6,
-	/** Callback for Periodic Interval 7 Interrupt. */
+	/** Callback for Periodic Interval 7 Interrupt */
 	RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_7,
-	/** Callback for compare channel 0. */
+	/** Callback for compare channel 0 */
 	RTC_COUNT_CALLBACK_COMPARE_0,
 #  if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
-	/** Callback for compare channel 1. */
+	/** Callback for compare channel 1 */
 	RTC_COUNT_CALLBACK_COMPARE_1,
 #  endif
 #  if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
-	/** Callback for compare channel 2. */
+	/** Callback for compare channel 2 */
 	RTC_COUNT_CALLBACK_COMPARE_2,
 #  endif
-#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
-	/** Callback for compare channel 3. */
+#  if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
+	/** Callback for compare channel 3 */
 	RTC_COUNT_CALLBACK_COMPARE_3,
 #  endif
 #  if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
-	/** Callback for compare channel 4. */
+	/** Callback for compare channel 4 */
 	RTC_COUNT_CALLBACK_COMPARE_4,
 #  endif
 #  if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
-	/** Callback for compare channel 5. */
+	/** Callback for compare channel 5 */
 	RTC_COUNT_CALLBACK_COMPARE_5,
 #  endif
 
-	/** Callback for  overflow. */
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper */
+	RTC_COUNT_CALLBACK_TAMPER,
+#endif
+
+	/** Callback for overflow */
 	RTC_COUNT_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
-	/** Total number of callbacks. */
+	/** Total number of callbacks */
 	_RTC_COUNT_CALLBACK_N
 #  endif
 };
@@ -531,32 +557,38 @@ enum rtc_count_callback {
  * The available callback types for the RTC count module.
  */
 enum rtc_count_callback {
-	/** Callback for compare channel 0. */
+	/** Callback for compare channel 0 */
 	RTC_COUNT_CALLBACK_COMPARE_0 = 0,
 #  if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
-	/** Callback for compare channel 1. */
+	/** Callback for compare channel 1 */
 	RTC_COUNT_CALLBACK_COMPARE_1,
 #  endif
 #  if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
-	/** Callback for compare channel 2. */
+	/** Callback for compare channel 2 */
 	RTC_COUNT_CALLBACK_COMPARE_2,
 #  endif
-#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
-	/** Callback for compare channel 3. */
+#  if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
+	/** Callback for compare channel 3 */
 	RTC_COUNT_CALLBACK_COMPARE_3,
 #  endif
 #  if (RTC_NUM_OF_COMP16 > 4) || defined(__DOXYGEN__)
-	/** Callback for compare channel 4. */
+	/** Callback for compare channel 4 */
 	RTC_COUNT_CALLBACK_COMPARE_4,
 #  endif
 #  if (RTC_NUM_OF_COMP16 > 5) || defined(__DOXYGEN__)
-	/** Callback for compare channel 5. */
+	/** Callback for compare channel 5 */
 	RTC_COUNT_CALLBACK_COMPARE_5,
 #  endif
-	/** Callback for overflow. */
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Callback for tamper */
+	RTC_COUNT_CALLBACK_TAMPER,
+#endif
+
+	/** Callback for overflow */
 	RTC_COUNT_CALLBACK_OVERFLOW,
 #  if !defined(__DOXYGEN__)
-	/** Total number of callbacks. */
+	/** Total number of callbacks */
 	_RTC_COUNT_CALLBACK_N
 #  endif
 };
@@ -575,29 +607,29 @@ typedef void (*rtc_count_callback_t)(void);
  */
 enum rtc_count_prescaler {
 	/** RTC prescaler is off, and the input clock frequency is
-	prescaled by a factor of 1. */
+	prescaled by a factor of 1 */
 	RTC_COUNT_PRESCALER_OFF      = RTC_MODE0_CTRLA_PRESCALER_OFF,
-	/** RTC input clock frequency is prescaled by a factor of 1. */
+	/** RTC input clock frequency is prescaled by a factor of 1 */
 	RTC_COUNT_PRESCALER_DIV_1    = RTC_MODE0_CTRLA_PRESCALER_DIV1,
-	/** RTC input clock frequency is prescaled by a factor of 2. */
+	/** RTC input clock frequency is prescaled by a factor of 2 */
 	RTC_COUNT_PRESCALER_DIV_2    = RTC_MODE0_CTRLA_PRESCALER_DIV2,
-	/** RTC input clock frequency is prescaled by a factor of 4. */
+	/** RTC input clock frequency is prescaled by a factor of 4 */
 	RTC_COUNT_PRESCALER_DIV_4    = RTC_MODE0_CTRLA_PRESCALER_DIV4,
-	/** RTC input clock frequency is prescaled by a factor of 8. */
+	/** RTC input clock frequency is prescaled by a factor of 8 */
 	RTC_COUNT_PRESCALER_DIV_8    = RTC_MODE0_CTRLA_PRESCALER_DIV8,
-	/** RTC input clock frequency is prescaled by a factor of 16. */
+	/** RTC input clock frequency is prescaled by a factor of 16 */
 	RTC_COUNT_PRESCALER_DIV_16   = RTC_MODE0_CTRLA_PRESCALER_DIV16,
-	/** RTC input clock frequency is prescaled by a factor of 32. */
+	/** RTC input clock frequency is prescaled by a factor of 32 */
 	RTC_COUNT_PRESCALER_DIV_32   = RTC_MODE0_CTRLA_PRESCALER_DIV32,
-	/** RTC input clock frequency is prescaled by a factor of 64. */
+	/** RTC input clock frequency is prescaled by a factor of 64 */
 	RTC_COUNT_PRESCALER_DIV_64   = RTC_MODE0_CTRLA_PRESCALER_DIV64,
-	/** RTC input clock frequency is prescaled by a factor of 128. */
+	/** RTC input clock frequency is prescaled by a factor of 128 */
 	RTC_COUNT_PRESCALER_DIV_128  = RTC_MODE0_CTRLA_PRESCALER_DIV128,
-	/** RTC input clock frequency is prescaled by a factor of 256. */
+	/** RTC input clock frequency is prescaled by a factor of 256 */
 	RTC_COUNT_PRESCALER_DIV_256  = RTC_MODE0_CTRLA_PRESCALER_DIV256,
-	/** RTC input clock frequency is prescaled by a factor of 512. */
+	/** RTC input clock frequency is prescaled by a factor of 512 */
 	RTC_COUNT_PRESCALER_DIV_512  = RTC_MODE0_CTRLA_PRESCALER_DIV512,
-	/** RTC input clock frequency is prescaled by a factor of 1024. */
+	/** RTC input clock frequency is prescaled by a factor of 1024 */
 	RTC_COUNT_PRESCALER_DIV_1024 = RTC_MODE0_CTRLA_PRESCALER_DIV1024,
 };
 #else
@@ -607,27 +639,27 @@ enum rtc_count_prescaler {
  * The available input clock prescaler values for the RTC count module.
  */
 enum rtc_count_prescaler {
-	/** RTC input clock frequency is prescaled by a factor of 1. */
+	/** RTC input clock frequency is prescaled by a factor of 1 */
 	RTC_COUNT_PRESCALER_DIV_1    = RTC_MODE0_CTRL_PRESCALER_DIV1,
-	/** RTC input clock frequency is prescaled by a factor of 2. */
+	/** RTC input clock frequency is prescaled by a factor of 2 */
 	RTC_COUNT_PRESCALER_DIV_2    = RTC_MODE0_CTRL_PRESCALER_DIV2,
-	/** RTC input clock frequency is prescaled by a factor of 4. */
+	/** RTC input clock frequency is prescaled by a factor of 4 */
 	RTC_COUNT_PRESCALER_DIV_4    = RTC_MODE0_CTRL_PRESCALER_DIV4,
-	/** RTC input clock frequency is prescaled by a factor of 8. */
+	/** RTC input clock frequency is prescaled by a factor of 8 */
 	RTC_COUNT_PRESCALER_DIV_8    = RTC_MODE0_CTRL_PRESCALER_DIV8,
-	/** RTC input clock frequency is prescaled by a factor of 16. */
+	/** RTC input clock frequency is prescaled by a factor of 16 */
 	RTC_COUNT_PRESCALER_DIV_16   = RTC_MODE0_CTRL_PRESCALER_DIV16,
-	/** RTC input clock frequency is prescaled by a factor of 32. */
+	/** RTC input clock frequency is prescaled by a factor of 32 */
 	RTC_COUNT_PRESCALER_DIV_32   = RTC_MODE0_CTRL_PRESCALER_DIV32,
-	/** RTC input clock frequency is prescaled by a factor of 64. */
+	/** RTC input clock frequency is prescaled by a factor of 64 */
 	RTC_COUNT_PRESCALER_DIV_64   = RTC_MODE0_CTRL_PRESCALER_DIV64,
-	/** RTC input clock frequency is prescaled by a factor of 128. */
+	/** RTC input clock frequency is prescaled by a factor of 128 */
 	RTC_COUNT_PRESCALER_DIV_128  = RTC_MODE0_CTRL_PRESCALER_DIV128,
-	/** RTC input clock frequency is prescaled by a factor of 256. */
+	/** RTC input clock frequency is prescaled by a factor of 256 */
 	RTC_COUNT_PRESCALER_DIV_256  = RTC_MODE0_CTRL_PRESCALER_DIV256,
-	/** RTC input clock frequency is prescaled by a factor of 512. */
+	/** RTC input clock frequency is prescaled by a factor of 512 */
 	RTC_COUNT_PRESCALER_DIV_512  = RTC_MODE0_CTRL_PRESCALER_DIV512,
-	/** RTC input clock frequency is prescaled by a factor of 1024. */
+	/** RTC input clock frequency is prescaled by a factor of 1024 */
 	RTC_COUNT_PRESCALER_DIV_1024 = RTC_MODE0_CTRL_PRESCALER_DIV1024,
 };
 #endif
@@ -639,14 +671,20 @@ enum rtc_count_prescaler {
  * \ref rtc_count_disable_events().
  */
 struct rtc_count_events {
-	/** Generate an output event on each overflow of the RTC count. */
+	/** Generate an output event on each overflow of the RTC count */
 	bool generate_event_on_overflow;
 	/** Generate an output event on a compare channel match against the RTC
-	 *  count. */
+	 *  count */
 	bool generate_event_on_compare[RTC_NUM_OF_COMP16];
 	/** Generate an output event periodically at a binary division of the RTC
-	 *  counter frequency. */
+	 *  counter frequency */
 	bool generate_event_on_periodic[8];
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/** Generate an output event on every tamper input */
+	bool generate_event_on_tamper;
+	/** Tamper input event and capture the COUNT value */
+	bool on_event_to_tamper;
+#endif
 };
 
 #if !defined(__DOXYGEN__)
@@ -654,20 +692,20 @@ struct rtc_count_events {
  * \brief Device structure.
  */
 struct rtc_module {
-	/** RTC hardware module. */
+	/** RTC hardware module */
 	Rtc *hw;
-	/** Operation mode of count. */
+	/** Operation mode of count */
 	enum rtc_count_mode mode;
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
-	/** Set if counter value should be continuously updated. */
+	/** Set if counter value should be continuously updated */
 	bool continuously_update;
 #endif
 #  if RTC_COUNT_ASYNC == true
-	/** Pointers to callback functions. */
+	/** Pointers to callback functions */
 	volatile rtc_count_callback_t callbacks[_RTC_COUNT_CALLBACK_N];
-	/** Mask for registered callbacks. */
+	/** Mask for registered callbacks */
 	volatile uint16_t registered_callback;
-	/** Mask for enabled callbacks. */
+	/** Mask for enabled callbacks */
 	volatile uint16_t enabled_callback;
 #  endif
 };
@@ -681,27 +719,27 @@ struct rtc_module {
  * user configurations are set.
  */
 struct rtc_count_config {
-	/** Input clock prescaler for the RTC module. */
+	/** Input clock prescaler for the RTC module */
 	enum rtc_count_prescaler prescaler;
-	/** Select the operation mode of the RTC.*/
+	/** Select the operation mode of the RTC */
 	enum rtc_count_mode mode;
 	/** If true, clears the counter value on compare match. Only available
-	 *  whilst running in 32-bit mode. */
+	 *  whilst running in 32-bit mode */
 	bool clear_on_match;
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	/** Continuously update the counter value so no synchronization is
-	 *  needed for reading. */
+	 *  needed for reading */
 	bool continuously_update;
 #endif
-#if (SAML21)
-		/** Enable count read synchronization. The COUNT value requires
-		 * synchronization when reading. Disabling the synchronization 
-		 * will prevent the COUNT value from displaying the current value. */
-		bool enable_read_sync;
+#if (SAML21XXXB) || (SAML22) || (SAMC20) || (SAMC21) || (SAMR30)
+	/** Enable count read synchronization. The COUNT value requires
+	 * synchronization when reading. Disabling the synchronization
+	 * will prevent the COUNT value from displaying the current value. */
+	bool enable_read_sync;
 #endif
 
 	/** Array of Compare values. Not all Compare values are available in 32-bit
-	 *  mode. */
+	 *  mode */
 	uint32_t compare_values[RTC_NUM_OF_COMP16];
 };
 
@@ -717,17 +755,17 @@ struct rtc_count_config {
  *  Initializes the configuration structure to default values. This
  *  function should be called at the start of any RTC initialization.
  *
- *  The default configuration is as follows:
+ *  The default configuration is:
  *  - Input clock divided by a factor of 1024
  *  - RTC in 32-bit mode
  *  - Clear on compare match off
  *  - Continuously sync count register off
  *  - No event source on
  *  - All compare values equal 0
- *  - Count read synchronization is disabled for SAML21
+ *  - Count read synchronization is enabled for SAM L22
  *
  *  \param[out] config  Configuration structure to be initialized to default
- *                      values.
+ *                      values
  */
 static inline void rtc_count_get_config_defaults(
 		struct rtc_count_config *const config)
@@ -743,8 +781,8 @@ static inline void rtc_count_get_config_defaults(
 #ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config->continuously_update = false;
 #endif
-#if (SAML21)
-	config->enable_read_sync = false;
+#if (SAML21XXXB) || (SAML22) || (SAMC20) || (SAMC21) || (SAMR30)
+	config->enable_read_sync    = true;
 #endif
 
 	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
@@ -767,17 +805,17 @@ void rtc_count_disable(struct rtc_module *const module);
 uint8_t _rtc_get_inst_index(
 		Rtc *const hw)
 {
-	/* List of available RTC modules. */
+	/* List of available RTC modules */
 	static Rtc *const rtc_modules[RTC_INST_NUM] = RTC_INSTS;
 
-	/* Find index for RTC instance. */
+	/* Find index for RTC instance */
 	for (uint32_t i = 0; i < RTC_INST_NUM; i++) {
 		if (hw == rtc_modules[i]) {
 			return i;
 		}
 	}
 
-	/* Invalid data given. */
+	/* Invalid data given */
 	Assert(false);
 	return 0;
 }
@@ -883,10 +921,10 @@ static inline void rtc_count_clear_overflow(struct rtc_module *const module)
  * \param[in,out]  module  RTC hardware module
  * \param[in]  n  RTC periodic interval interrupt
  *
- * \return periodic interval interrupt state of the RTC module.
+ * \return Periodic interval interrupt state of the RTC module.
  *
  * \retval true   RTC periodic interval interrupt occurs
- * \retval false  RTC periodic interval interrupt dosen't occurs
+ * \retval false  RTC periodic interval interrupt doesn't occur
  */
 static inline bool rtc_count_is_periodic_interval(struct rtc_module *const module,
 										enum rtc_count_periodic_interval n)
@@ -940,7 +978,7 @@ enum status_code rtc_count_clear_compare_match(
  */
 
 /**
- * \brief Enables a RTC event output.
+ * \brief Enables an RTC event output.
  *
  *  Enables one or more output events from the RTC module. See
  *  \ref rtc_count_events for a list of events this module supports.
@@ -962,31 +1000,43 @@ static inline void rtc_count_enable_events(
 
 	uint32_t event_mask = 0;
 
-	/* Check if the user has requested an overflow event. */
+	/* Check if the user has requested an overflow event */
 	if (events->generate_event_on_overflow) {
 		event_mask |= RTC_MODE0_EVCTRL_OVFEO;
 	}
 
-	/* Check if the user has requested any compare events. */
+	/* Check if the user has requested any compare events */
 	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
 		if (events->generate_event_on_compare[i]) {
 			event_mask |= RTC_MODE0_EVCTRL_CMPEO(1 << i);
 		}
 	}
 
-	/* Check if the user has requested any periodic events. */
+	/* Check if the user has requested any periodic events */
 	for (uint8_t i = 0; i < 8; i++) {
 		if (events->generate_event_on_periodic[i]) {
 			event_mask |= RTC_MODE0_EVCTRL_PEREO(1 << i);
 		}
 	}
 
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEVEI;
+	}
+#endif
+
 	/* Enable given event(s). */
 	rtc_module->MODE0.EVCTRL.reg |= event_mask;
 }
 
 /**
- * \brief Disables a RTC event output.
+ * \brief Disables an RTC event output.
  *
  *  Disabled one or more output events from the RTC module. See
  *  \ref rtc_count_events for a list of events this module supports.
@@ -1008,24 +1058,36 @@ static inline void rtc_count_disable_events(
 
 	uint32_t event_mask = 0;
 
-	/* Check if the user has requested an overflow event. */
+	/* Check if the user has requested an overflow event */
 	if (events->generate_event_on_overflow) {
 		event_mask |= RTC_MODE0_EVCTRL_OVFEO;
 	}
 
-	/* Check if the user has requested any compare events. */
+	/* Check if the user has requested any compare events */
 	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
 		if (events->generate_event_on_compare[i]) {
 			event_mask |= RTC_MODE0_EVCTRL_CMPEO(1 << i);
 		}
 	}
 
-	/* Check if the user has requested any periodic events. */
+	/* Check if the user has requested any periodic events */
 	for (uint8_t i = 0; i < 8; i++) {
 		if (events->generate_event_on_periodic[i]) {
 			event_mask |= RTC_MODE0_EVCTRL_PEREO(1 << i);
 		}
 	}
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+	/* Check if the user has requested a tamper event output. */
+	if (events->generate_event_on_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEREO;
+	}
+
+	/* Check if the user has requested a tamper event input. */
+	if (events->on_event_to_tamper) {
+		event_mask |= RTC_MODE0_EVCTRL_TAMPEVEI;
+	}
+#endif
 
 	/* Disable given event(s). */
 	rtc_module->MODE0.EVCTRL.reg &= ~event_mask;
@@ -1068,7 +1130,7 @@ static inline void rtc_write_general_purpose_reg(
  * \param[in] module  Pointer to the software instance struct
  * \param[in] index General purpose register index (0..3)
  *
- * \retval Value of general purpose register
+ * \return Value of general purpose register.
  */
 static inline uint32_t rtc_read_general_purpose_reg(
 	struct rtc_module *const module,
@@ -1086,6 +1148,19 @@ static inline uint32_t rtc_read_general_purpose_reg(
 
 /** @} */
 #endif
+
+#ifdef FEATURE_RTC_TAMPER_DETECTION
+#include "rtc_tamper.h"
+/**
+ * \brief Get the tamper stamp value.
+ *
+ * \param[in,out] module  Pointer to the software instance struct
+ *
+ * \return The current tamper stamp value as a 32-bit unsigned integer.
+ */
+uint32_t rtc_tamper_get_stamp (struct rtc_module *const module);
+#endif
+
 
 /** @} */
 
@@ -1141,17 +1216,28 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAML21</td>
+ *		<td>Added support for SAM C21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAM L21/L22</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAM R30</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for RTC tamper feature</td>
  *	</tr>
  *	<tr>
  *		<td>
- *          Added support for SAMD21 and added driver instance parameter to all
- *          API function calls, except get_config_defaults
+ *          Added driver instance parameter to all API function calls, except
+ *          get_config_defaults
  *      </td>
  *	</tr>
  *	<tr>
- *		<td>Updated initialization function to also enable the digital interface
- *          clock to the module if it is disabled</td>
+ *		<td>
+ *			Updated initialization function to also enable the digital interface
+ *          clock to the module if it is disabled
+ *		</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -1165,45 +1251,46 @@ static inline uint32_t rtc_read_general_purpose_reg(
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_rtc_count_group. QSGs are simple
  * examples with step-by-step instructions to configure and use this driver in a
- * selection of use cases. Note that QSGs can be compiled as a standalone
+ * selection of use cases. Note that a QSG can be compiled as a standalone
  * application or be added to the user application.
  *
  *  - \subpage asfdoc_sam0_rtc_count_basic_use_case
  * \if RTC_COUNT_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_rtc_count_callback_use_case
  * \endif
+ *  - \subpage asfdoc_sam0_rtc_tamper_dma_use_case
  *
  * \page asfdoc_sam0_rtc_count_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  *	<tr>
- *		<td>E</td>
- *		<td>04/2015</td>
- *		<td>Added support for SAML21 and SAMDA0/DA1.</td>
+ *		<td>42111E</td>
+ *		<td>12/2015</td>
+ *		<td>Added support for SAM L21/L22, SAM C21, SAM D09, SAMR30 and SAM DA1</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>42111D</td>
  *		<td>12/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11.</td>
+ *		<td>Added support for SAM R21 and SAM D10/D11</td>
  *	</tr>
  *	<tr>
- *		<td>C</td>
+ *		<td>42111C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAM D21</td>
  *	</tr>
  *	<tr>
- *		<td>B</td>
+ *		<td>42111B</td>
  *		<td>06/2013</td>
  *		<td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42111A</td>
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>

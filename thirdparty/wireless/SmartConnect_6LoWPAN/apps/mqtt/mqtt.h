@@ -46,7 +46,7 @@
 #define DBG(...) printf(__VA_ARGS__)
 #else
 #define DBG(...)
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
 
 extern process_event_t mqtt_update_event;
 

@@ -51,7 +51,8 @@
  *
  * \section Requirements
  *
- * This example can be used on SAM4E-EK boards.
+ * This example can be used on SAM4E-EK boards,SAMV71-Xplained-Ultra,
+ * SAME70-Xplained-Pro.
  *
  * \section Description
  *
@@ -112,7 +113,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 
 	/* Configure console UART. */
@@ -167,14 +174,25 @@ int main(void)
 
 	struct afec_ch_config afec_ch_cfg;
 	afec_ch_get_config_defaults(&afec_ch_cfg);
-	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
 
+#if (SAMV71 || SAMV70 || SAME70 || SAMS70)
+	/*
+	 * Because the internal AFEC offset is 0x200, it should cancel it and shift
+	 * down to 0.
+	 */
+	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x200);
+
+	afec_ch_cfg.gain = AFEC_GAINVALUE_0;
+
+#else
 	/*
 	 * Because the internal AFEC offset is 0x800, it should cancel it and shift
 	 * down to 0.
 	 */
 	afec_channel_set_analog_offset(AFEC0, AFEC_CHANNEL_POTENTIOMETER, 0x800);
+#endif
 
+	afec_ch_set_config(AFEC0, AFEC_CHANNEL_POTENTIOMETER, &afec_ch_cfg);
 	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
 
 	afec_set_comparison_mode(AFEC0, AFEC_CMP_MODE_2, AFEC_CHANNEL_POTENTIOMETER, 0);
@@ -188,6 +206,5 @@ int main(void)
 	while (1) {
 		afec_start_software_conversion(AFEC0);
 		delay_ms(1000);
-
 	}
 }

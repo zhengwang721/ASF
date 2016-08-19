@@ -21,9 +21,11 @@
 		</info>
 		
 		<build type="c-source" value="ast.c"/>
-		<build type="header-file" subtype="api" value="ast.h"/>
 		<build type="include-path" value="."/>
-		
+		<build type="header-file" subtype="api" value="ast.h"/>
+		<build type="include-path" value="./example1"/>
+		<build type="include-path" value="./example2"/>
+
 		<build type="doxygen-entry-point" value="asfdoc_sam_drivers_ast_group"/>
 		<build type="module-config" subtype="required-header-file" value="conf_ast.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>

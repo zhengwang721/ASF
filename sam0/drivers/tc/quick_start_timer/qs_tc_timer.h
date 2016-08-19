@@ -47,7 +47,7 @@
 /**
  * \page asfdoc_sam0_tc_timer_use_case Quick Start Guide for TC - Timer
  *
- * In this use case, the TC  will be used as a timer, to generate overflow and
+ * In this use case, the TC will be used as a timer to generate overflow and
  * compare match callbacks. In the callbacks the on-board LED is toggled.
  *
  * The TC module will be set up as follows:
@@ -92,8 +92,12 @@
  *   \snippet samd11_xplained_pro/conf_qs_tc_timer.h definition_tc
  * - SAM L21 Xplained Pro.
  *   \snippet saml21_xplained_pro/conf_qs_tc_timer.h definition_tc
+ * - SAM L22 Xplained Pro.
+ *   \snippet saml22_xplained_pro/conf_qs_tc_timer.h definition_tc
  * - SAM DA1 Xplained Pro.
  *   \snippet samda1_xplained_pro/conf_qs_tc_timer.h definition_tc
+ * - SAM C21 Xplained Pro.
+ *   \snippet samc21_xplained_pro/conf_qs_tc_timer.h definition_tc
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_timer.c module_inst

@@ -85,7 +85,7 @@
 /* For Debug, logging, statistics                                            */
 /*---------------------------------------------------------------------------*/
 
-#define DEBUG DEBUG_NONE
+#define _DEBUG_ DEBUG_NONE
 #include "uip-debug.h"
 
 #if UIP_CONF_IPV6_RPL

@@ -3,7 +3,7 @@
  *
  * \brief SAM4S Xplained Pro board configuration
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -21,9 +21,6 @@
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -43,7 +40,10 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_TWI0					1
-#define BOARD_USING_AT30TSE				AT30TSE758
+#define CONF_BOARD_UART_CONSOLE
+
+#define CONF_BOARD_SPI
+
+#define CONF_BOARD_SPI_NPCS0
 
 #endif /* CONF_BOARD_H_INCLUDED */

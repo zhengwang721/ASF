@@ -56,8 +56,8 @@
 #define NVM_PAGESIZE          64    /* size of a page in flash, in bytes */
 #define NVM_FLASH_END_D20J18  (0x0ul + 262144) /* 256kB flash */
 /*---------------------------------------------------------------------------*/
-#define DEBUG                 0
-#if DEBUG
+#define _DEBUG_                 0
+#if _DEBUG_
 #define PRINTF(...)       printf(__VA_ARGS__)
 #else
 #define PRINTF(...)

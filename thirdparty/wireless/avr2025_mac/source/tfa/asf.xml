@@ -22,7 +22,7 @@
 		
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#3"     caption="atmegarfa1 tfa  support enabled">
 			<info type="description" value="summary">
-			ATMEGARFR2 Transceiver Feature Access
+			ATMEGARFA1 Transceiver Feature Access
 			</info>
 			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.atmegarfa1"/>
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfa1"/>

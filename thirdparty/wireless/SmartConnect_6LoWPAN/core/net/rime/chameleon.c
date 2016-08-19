@@ -54,8 +54,8 @@
 
 extern const struct chameleon_module CHAMELEON_MODULE;
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
@@ -69,7 +69,7 @@ chameleon_init(void)
   channel_init();
 }
 /*---------------------------------------------------------------------------*/
-#if DEBUG
+#if _DEBUG_
 static void
 printbin(int n, int digits)
 {
@@ -105,7 +105,7 @@ printhdr(uint8_t *hdr, int len)
     printf("\n");
   }
 }
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
 /*---------------------------------------------------------------------------*/
 struct channel *
 chameleon_parse(void)
@@ -113,9 +113,9 @@ chameleon_parse(void)
   struct channel *c = NULL;
   PRINTF("%d.%d: chameleon_input\n",
 	 linkaddr_node_addr.u8[0],linkaddr_node_addr.u8[1]);
-#if DEBUG
+#if _DEBUG_
   printhdr(packetbuf_dataptr(), packetbuf_datalen());
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
   c = CHAMELEON_MODULE.input();
   if(c != NULL) {
     PRINTF("%d.%d: chameleon_input channel %d\n",
@@ -140,9 +140,9 @@ chameleon_create(struct channel *c)
 
   ret = CHAMELEON_MODULE.output(c);
   packetbuf_set_attr(PACKETBUF_ATTR_CHANNEL, c->channelno);
-#if DEBUG
+#if _DEBUG_
   printhdr(packetbuf_hdrptr(), packetbuf_hdrlen());
-#endif /* DEBUG */
+#endif /* _DEBUG_ */
   if(ret) {
     return 1;
   }

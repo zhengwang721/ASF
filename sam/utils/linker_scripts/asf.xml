@@ -343,7 +343,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c4c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c4c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c4c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c4c_0"/>
+			<device-support value="atsam4c4c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4C4C Core 1" id="sam.utils.linker_scripts#atsam4c4_1">
 			<info type="description" value="summary">
@@ -353,7 +353,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c4c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c4c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c4c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c4c_1"/>
+			<device-support value="atsam4c4c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4C8C Core 0" id="sam.utils.linker_scripts#atsam4c8_0">
 			<info type="description" value="summary">
@@ -363,7 +363,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c8c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c8c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c8c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c8c_0"/>
+			<device-support value="atsam4c8c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4C8C Core 1" id="sam.utils.linker_scripts#atsam4c8_1">
 			<info type="description" value="summary">
@@ -373,7 +373,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c8c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c8c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c8c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c8c_1"/>
+			<device-support value="atsam4c8c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4C16C Core 0" id="sam.utils.linker_scripts#atsam4c16_0">
 			<info type="description" value="summary">
@@ -383,7 +383,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c16c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c16c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c16c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c16c_0"/>
+			<device-support value="atsam4c16c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4C16C Core 1" id="sam.utils.linker_scripts#atsam4c16_1">
 			<info type="description" value="summary">
@@ -393,7 +393,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c16c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c16c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c16c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c16c_1"/>
+		<device-support value="atsam4c16c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4C32C Core 0" id="sam.utils.linker_scripts#atsam4c32c_0">
 			<info type="description" value="summary">
@@ -403,7 +403,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c32c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c32c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c32c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c32c_0"/>
+			<device-support value="atsam4c32c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4C32C Core 1" id="sam.utils.linker_scripts#atsam4c32c_1">
 			<info type="description" value="summary">
@@ -413,7 +413,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c32c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c32c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c32c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c32c_1"/>
+			<device-support value="atsam4c32c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4C32E Core 0" id="sam.utils.linker_scripts#atsam4c32e_0">
 			<info type="description" value="summary">
@@ -423,7 +423,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c32e_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c32e_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c32e_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c32e_0"/>
+			<device-support value="atsam4c32e:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4C32E Core 1" id="sam.utils.linker_scripts#atsam4c32e_1">
 			<info type="description" value="summary">
@@ -433,7 +433,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4c/gcc/sam4c32e_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4c/iar/sam4c32e_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4c/iar/sam4c32e_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4c32e_1"/>
+			<device-support value="atsam4c32e:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMP8C Core 0" id="sam.utils.linker_scripts#atsam4cmp8_0">
 			<info type="description" value="summary">
@@ -443,7 +443,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cmp8c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cmp8c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cmp8c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cmp8c_0"/>
+			<device-support value="atsam4cmp8c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMP8C Core 1" id="sam.utils.linker_scripts#atsam4cmp8_1">
 			<info type="description" value="summary">
@@ -453,7 +453,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cmp8c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cmp8c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cmp8c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cmp8c_1"/>
+			<device-support value="atsam4cmp8c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMP16C Core 0" id="sam.utils.linker_scripts#atsam4cmp16_0">
 			<info type="description" value="summary">
@@ -463,7 +463,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cmp16c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cmp16c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cmp16c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cmp16c_0"/>
+			<device-support value="atsam4cmp16c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMP16C Core 1" id="sam.utils.linker_scripts#atsam4cmp16_1">
 			<info type="description" value="summary">
@@ -473,7 +473,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cmp16c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cmp16c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cmp16c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cmp16c_1"/>
+			<device-support value="atsam4cmp16c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMP32C Core 0" id="sam.utils.linker_scripts#atsam4cmp32_0">
 			<info type="description" value="summary">
@@ -483,7 +483,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cmp32c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cmp32c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cmp32c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cmp32c_0"/>
+			<device-support value="atsam4cmp32c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMP32C Core 1" id="sam.utils.linker_scripts#atsam4cmp32_1">
 			<info type="description" value="summary">
@@ -493,7 +493,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cmp32c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cmp32c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cmp32c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cmp32c_1"/>
+			<device-support value="atsam4cmp32c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMS4C Core 0" id="sam.utils.linker_scripts#atsam4cms4_0">
 			<info type="description" value="summary">
@@ -503,7 +503,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cms4c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cms4c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cms4c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cms4c_0"/>
+			<device-support value="atsam4cms4c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMS4C Core 1" id="sam.utils.linker_scripts#atsam4cms4_1">
 			<info type="description" value="summary">
@@ -513,7 +513,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cms4c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cms4c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cms4c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cms4c_1"/>
+			<device-support value="atsam4cms4c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMS8C Core 0" id="sam.utils.linker_scripts#atsam4cms8_0">
 			<info type="description" value="summary">
@@ -523,7 +523,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cms8c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cms8c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cms8c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cms8c_0"/>
+			<device-support value="atsam4cms8c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMS8C Core 1" id="sam.utils.linker_scripts#atsam4cms8_1">
 			<info type="description" value="summary">
@@ -533,7 +533,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cms8c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cms8c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cms8c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cms8c_1"/>
+			<device-support value="atsam4cms8c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMS16C Core 0" id="sam.utils.linker_scripts#atsam4cms16_0">
 			<info type="description" value="summary">
@@ -543,7 +543,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cms16c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cms16c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cms16c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cms16c_0"/>
+			<device-support value="atsam4cms16c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMS16C Core 1" id="sam.utils.linker_scripts#atsam4cms16_1">
 			<info type="description" value="summary">
@@ -553,7 +553,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cms16c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cms16c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cms16c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cms16c_1"/>
+			<device-support value="atsam4cms16c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMS32C Core 0" id="sam.utils.linker_scripts#atsam4cms32_0">
 			<info type="description" value="summary">
@@ -563,7 +563,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cms32c_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cms32c_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cms32c_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cms32c_0"/>
+			<device-support value="atsam4cms32c:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CMS32C Core 1" id="sam.utils.linker_scripts#atsam4cms32_1">
 			<info type="description" value="summary">
@@ -573,7 +573,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cm/gcc/sam4cms32c_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cm/iar/sam4cms32c_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cm/iar/sam4cms32c_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cms32c_1"/>
+			<device-support value="atsam4cms32c:1"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CP16B Core 0" id="sam.utils.linker_scripts#atsam4cp16b_0">
 			<info type="description" value="summary">
@@ -583,7 +583,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cp/gcc/sam4cp16b_0_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cp/iar/sam4cp16b_0_flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cp/iar/sam4cp16b_0_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cp16b_0"/>
+			<device-support value="atsam4cp16b:0"/>
 		</module>
 		<module type="build-specific" caption="Linker script for SAM4CP16B Core 1" id="sam.utils.linker_scripts#atsam4cp16b_1">
 			<info type="description" value="summary">
@@ -593,7 +593,7 @@
 			<build type="linker-config" subtype="aux-script" value="sam4cp/gcc/sam4cp16b_1_sram.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="script" value="sam4cp/iar/sam4cp16b_1_sram.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="sam4cp/iar/sam4cp16b_1_sram.icf" toolchain="iarewarm"/>
-			<device-support value="atsam4cp16b_1"/>
+			<device-support value="atsam4cp16b:1"/>
 		</module>
 
 		<module type="build-specific" caption="Linker script for SAMG51G18" id="sam.utils.linker_scripts#atsamg51g18">
@@ -715,6 +715,368 @@
 			<build type="linker-config" subtype="script" value="samg/samg55n19/iar/flash.icf" toolchain="iarewarm"/>
 			<build type="linker-config" subtype="aux-script" value="samg/samg55n19/iar/sram.icf" toolchain="iarewarm"/>
 			<device-support value="atsamg55n19"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV71J19" id="sam.utils.linker_scripts#atsamv71j19">
+			<info type="description" value="summary">
+			Linker script for SAMV71J19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv71/samv71j19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71j19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv71/samv71j19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71j19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv71j19"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV71J20" id="sam.utils.linker_scripts#atsamv71j20">
+			<info type="description" value="summary">
+			Linker script for SAMV71J20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv71/samv71j20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71j20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv71/samv71j20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71j20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv71j20"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV71J21" id="sam.utils.linker_scripts#atsamv71j21">
+			<info type="description" value="summary">
+			Linker script for SAMV71J21 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv71/samv71j21/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71j21/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv71/samv71j21/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71j21/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv71j21"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV71n19" id="sam.utils.linker_scripts#atsamv71n19">
+			<info type="description" value="summary">
+			Linker script for SAMV71N19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv71/samv71n19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71n19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv71/samv71n19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71n19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv71n19"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV71n20" id="sam.utils.linker_scripts#atsamv71n20">
+			<info type="description" value="summary">
+			Linker script for SAMV71N20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv71/samv71n20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71n20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv71/samv71n20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71n20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv71n20"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV71n21" id="sam.utils.linker_scripts#atsamv71n21">
+			<info type="description" value="summary">
+			Linker script for SAMV71N21 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv71/samv71n21/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71n21/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv71/samv71n21/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71n21/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv71n21"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV71q19" id="sam.utils.linker_scripts#atsamv71q19">
+			<info type="description" value="summary">
+			Linker script for SAMV71Q19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv71/samv71q19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71q19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv71/samv71q19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71q19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv71q19"/>
+		</module>
+		
+		<module type="build-specific" caption="Linker script for SAMV71q20" id="sam.utils.linker_scripts#atsamv71q20">
+			<info type="description" value="summary">
+			Linker script for SAMV71Q20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv71/samv71q20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71q20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv71/samv71q20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71q20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv71q20"/>
+		</module>
+		
+		<module type="build-specific" caption="Linker script for SAMV71q21" id="sam.utils.linker_scripts#atsamv71q21">
+			<info type="description" value="summary">
+			Linker script for SAMV71Q21 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv71/samv71q21/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71q21/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv71/samv71q21/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv71/samv71q21/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv71q21"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAME70J19" id="sam.utils.linker_scripts#atsame70j19">
+			<info type="description" value="summary">
+			Linker script for SAME70J19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="same70/same70j19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70j19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="same70/same70j19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70j19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsame70j19"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAME70J20" id="sam.utils.linker_scripts#atsame70j20">
+			<info type="description" value="summary">
+			Linker script for SAME70J20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="same70/same70j20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70j20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="same70/same70j20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70j20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsame70j20"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAME70J21" id="sam.utils.linker_scripts#atsame70j21">
+			<info type="description" value="summary">
+			Linker script for SAME70J21 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="same70/same70j21/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70j21/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="same70/same70j21/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70j21/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsame70j21"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAME70n19" id="sam.utils.linker_scripts#atsame70n19">
+			<info type="description" value="summary">
+			Linker script for SAME70N19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="same70/same70n19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70n19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="same70/same70n19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70n19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsame70n19"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAME70n20" id="sam.utils.linker_scripts#atsame70n20">
+			<info type="description" value="summary">
+			Linker script for SAME70N20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="same70/same70n20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70n20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="same70/same70n20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70n20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsame70n20"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAME70n21" id="sam.utils.linker_scripts#atsame70n21">
+			<info type="description" value="summary">
+			Linker script for SAME70N21 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="same70/same70n21/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70n21/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="same70/same70n21/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70n21/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsame70n21"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAME70q19" id="sam.utils.linker_scripts#atsame70q19">
+			<info type="description" value="summary">
+			Linker script for SAME70Q19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="same70/same70q19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70q19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="same70/same70q19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70q19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsame70q19"/>
+		</module>
+		
+		<module type="build-specific" caption="Linker script for SAME70q20" id="sam.utils.linker_scripts#atsame70q20">
+			<info type="description" value="summary">
+			Linker script for SAME70Q20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="same70/same70q20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70q20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="same70/same70q20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70q20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsame70q20"/>
+		</module>
+		
+		<module type="build-specific" caption="Linker script for SAME70q21" id="sam.utils.linker_scripts#atsame70q21">
+			<info type="description" value="summary">
+			Linker script for SAME70Q21 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="same70/same70q21/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70q21/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="same70/same70q21/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="same70/same70q21/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsame70q21"/>
+		</module>
+		<module type="build-specific" caption="Linker script for SAMS70J19" id="sam.utils.linker_scripts#atsams70j19">
+			<info type="description" value="summary">
+			Linker script for SAMS70J19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="sams70/sams70j19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70j19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="sams70/sams70j19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70j19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsams70j19"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMS70J20" id="sam.utils.linker_scripts#atsams70j20">
+			<info type="description" value="summary">
+			Linker script for SAMS70J20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="sams70/sams70j20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70j20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="sams70/sams70j20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70j20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsams70j20"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMS70J21" id="sam.utils.linker_scripts#atsams70j21">
+			<info type="description" value="summary">
+			Linker script for SAMS70J21 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="sams70/sams70j21/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70j21/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="sams70/sams70j21/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70j21/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsams70j21"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMS70n19" id="sam.utils.linker_scripts#atsams70n19">
+			<info type="description" value="summary">
+			Linker script for SAMS70N19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="sams70/sams70n19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70n19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="sams70/sams70n19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70n19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsams70n19"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMS70n20" id="sam.utils.linker_scripts#atsams70n20">
+			<info type="description" value="summary">
+			Linker script for SAMS70N20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="sams70/sams70n20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70n20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="sams70/sams70n20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70n20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsams70n20"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMS70n21" id="sam.utils.linker_scripts#atsams70n21">
+			<info type="description" value="summary">
+			Linker script for SAMS70N21 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="sams70/sams70n21/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70n21/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="sams70/sams70n21/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70n21/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsams70n21"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMS70q19" id="sam.utils.linker_scripts#atsams70q19">
+			<info type="description" value="summary">
+			Linker script for SAMS70Q19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="sams70/sams70q19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70q19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="sams70/sams70q19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70q19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsams70q19"/>
+		</module>
+		
+		<module type="build-specific" caption="Linker script for SAMS70q20" id="sam.utils.linker_scripts#atsams70q20">
+			<info type="description" value="summary">
+			Linker script for SAMS70Q20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="sams70/sams70q20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70q20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="sams70/sams70q20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70q20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsams70q20"/>
+		</module>
+		
+		<module type="build-specific" caption="Linker script for SAMS70q21" id="sam.utils.linker_scripts#atsams70q21">
+			<info type="description" value="summary">
+			Linker script for SAMS70Q21 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="sams70/sams70q21/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70q21/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="sams70/sams70q21/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="sams70/sams70q21/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsams70q21"/>
+		</module>
+		
+		<module type="build-specific" caption="Linker script for SAMV70J19" id="sam.utils.linker_scripts#atsamv70j19">
+			<info type="description" value="summary">
+			Linker script for SAMV70J19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv70/samv70j19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70j19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv70/samv70j19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70j19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv70j19"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV70J20" id="sam.utils.linker_scripts#atsamv70j20">
+			<info type="description" value="summary">
+			Linker script for SAMV70J20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv70/samv70j20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70j20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv70/samv70j20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70j20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv70j20"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV70n19" id="sam.utils.linker_scripts#atsamv70n19">
+			<info type="description" value="summary">
+			Linker script for SAMV70N19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv70/samv70n19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70n19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv70/samv70n19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70n19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv70n19"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV70n20" id="sam.utils.linker_scripts#atsamv70n20">
+			<info type="description" value="summary">
+			Linker script for SAMV70N20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv70/samv70n20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70n20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv70/samv70n20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70n20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv70n20"/>
+		</module>
+
+		<module type="build-specific" caption="Linker script for SAMV70q19" id="sam.utils.linker_scripts#atsamv70q19">
+			<info type="description" value="summary">
+			Linker script for SAMV70Q19 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv70/samv70q19/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70q19/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv70/samv70q19/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70q19/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv70q19"/>
+		</module>
+		
+		<module type="build-specific" caption="Linker script for SAMV70q20" id="sam.utils.linker_scripts#atsamv70q20">
+			<info type="description" value="summary">
+			Linker script for SAMV70Q20 devices.
+			</info>
+			<build type="linker-config" subtype="script" value="samv70/samv70q20/gcc/flash.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70q20/gcc/sram.ld" toolchain="armgcc"/>
+			<build type="linker-config" subtype="script" value="samv70/samv70q20/iar/flash.icf" toolchain="iarewarm"/>
+			<build type="linker-config" subtype="aux-script" value="samv70/samv70q20/iar/sram.icf" toolchain="iarewarm"/>
+			<device-support value="atsamv70q20"/>
 		</module>
 	</select-by-device>
 </asf>

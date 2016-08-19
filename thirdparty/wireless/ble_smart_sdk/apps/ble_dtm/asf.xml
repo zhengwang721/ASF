@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+	<module type="application" caption="BLE Direct Test Mode[DTM] Application" id="thirdparty.wireless.ble_smart_sdk.apps.ble_dtm">
+		<info type="description" value="summary">
+		BLE Direct Test Mode[DTM] Application
+		</info>	
+		<build type="include-path" value="."/>
+		<build type="c-source" value="app.c"/>
+		<build type="define" name="OTAU_FEATURE" value="false"/>
+		<build type="distribute" subtype="user-file" value="Atmel-42704-ATSAMB11-BluSDK-SMART-Wireless-Composer_UserGuide.pdf"/>
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+  		<require idref="thirdparty.wireless.ble_smart_sdk.lib"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.inc"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.src"/>
+
+		<require idref="thirdparty.wireless.ble_smart_sdk.services.uart"/>
+		<require idref="thirdparty.wireless.ble_smart_sdk.services.gpio"/>
+		
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

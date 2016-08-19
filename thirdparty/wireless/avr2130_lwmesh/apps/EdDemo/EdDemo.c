@@ -44,6 +44,11 @@
  * \mainpage
  * \section preface Preface
  * This is the reference manual for the EDDemo  Application
+ * The Lightweight Mesh EDDemo application demonstrates the energy detection(ED) feature of Atmel Transceivers and helps analysing the energy on all channels .
+ * This application requires only one node for demonstration.
+ * No Data communication is performed in this application and no networking API's are used.
+ * A terminal needs to be connected to the node .
+ * The node measures the energy values on all channels periodically and prints the results on the connected terminal.
  */
 /*- Includes ---------------------------------------------------------------*/
 #include <stdlib.h>

@@ -1,0 +1,12 @@
+<asf xmlversion="1.0">
+	<module type="meta" caption="SAMB11 Application Configuration" id="thirdparty.wireless.ble_smart_sdk.apps.config.samb11">
+		<info type="description" value="summary">
+		SAMB11 Application Configuration for BLE stack
+		</info>
+		<build type="include-path" value="."/>
+		<!--build type="define" name="UART_FLOWCONTROL_4WIRE_MODE" value="false"/>
+		<build type="define" name="UART_FLOWCONTROL_6WIRE_MODE" value="true"/-->
+		<device-support-alias value="ble_smart_stack_lib_support"/>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

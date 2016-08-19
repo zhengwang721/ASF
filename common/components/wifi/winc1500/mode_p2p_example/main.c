@@ -4,7 +4,7 @@
  *
  * \brief WINC1500 P2P Mode Example.
  *
- * Copyright (c) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -22,9 +22,6 @@
  *
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -105,14 +102,14 @@
 static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
-		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+		.baudrate =		CONF_UART_BAUDRATE,
+		.charlength =	CONF_UART_CHAR_LENGTH,
+		.paritytype =	CONF_UART_PARITY,
+		.stopbits =		CONF_UART_STOP_BITS,
 	};
 
 	/* Configure UART console. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,
-			CONF_PINS_UART_FLAGS);
 	stdio_serial_init(CONF_UART, &uart_serial_options);
 }
 
@@ -201,7 +198,7 @@ int main(void)
 	}
 
 	/* Bring up P2P mode with channel number. */
-	ret = m2m_wifi_p2p(MAIN_WLAN_CHANNEL);
+	ret = m2m_wifi_p2p(M2M_WIFI_CH_6);
 	if (M2M_SUCCESS != ret) {
 		printf("main: m2m_wifi_p2p call error!\r\n");
 		while (1) {
@@ -209,6 +206,7 @@ int main(void)
 	}
 
 	printf("P2P mode started. You can connect to %s.\r\n", (char *)MAIN_WLAN_DEVICE_NAME);
+
 	while (1) {
 		/* Handle pending events from network controller. */
 		while (m2m_wifi_handle_events(NULL) != M2M_SUCCESS) {

@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<project caption="CLOCK Failure Detector for the SAM L22 Xplained Pro" id="sam0.applications.clock_fail_detector.saml22_xplained_pro">
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_example.h"/>
+		<require idref="board.saml22_xplained_pro"/>
+		<require idref="sam0.applications.clock_fail_detector"/>
+		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="iarewarm"/>
+		<generator value="doxygen-v2"/>
+		<device-support value="atsaml22n18a"/>
+	</project>
+</asf>

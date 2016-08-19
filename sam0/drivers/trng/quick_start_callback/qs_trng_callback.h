@@ -3,7 +3,7 @@
  *
  * \brief SAM True Random Number Generator Driver Quick Start
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
  * \page asfdoc_sam0_trng_basic_use_case_callback Quick Start Guide for TRNG - Callback
  *
  * In this use case, the True Random Number Generator (TRNG) module is configured for:
- *  \li The TRNG peripheral will not be stopped in standby sleep mode.
+ *  \li The TRNG peripheral will not be stopped in standby sleep mode
  *
  * This use case will read random data in interrupt mode repeatly. After reading
  * specific size of buffer data, the board LED will be toggled.
@@ -63,7 +63,7 @@
  * \snippet qs_trng_callback.c setup_init
  *
  * \subsection asfdoc_sam0_trng_callback_use_case_setup_flow Workflow
- * -# Create an TRNG device instance struct, which will be associated with an
+ * -# Create a TRNG device instance struct, which will be associated with a
  *    TRNG peripheral hardware instance.
  *    \snippet qs_trng_callback.c setup_1
  *    \note Device instance structures shall \b never go out of scope when in
@@ -72,7 +72,7 @@
  * -# Create a new function \c configure_trng(), which will be used to configure
  *    the overall TRNG peripheral.
  *    \snippet qs_trng_callback.c setup_2
- * -# Create an TRNG peripheral configuration structure that will
+ * -# Create a TRNG peripheral configuration structure that will
  *    be filled out to set the module configuration.
  *    \snippet qs_trng_callback.c setup_2_1
  * -# Fill the TRNG peripheral configuration structure with the
@@ -99,7 +99,7 @@
  *
  * -# Enable the now initialized TRNG peripheral.
  *    \snippet qs_trng_callback.c setup_init_1
- *    \note This should not be done until after the TRNG is setup and ready
+ *    \note This should not be done until after the TRNG is set up and ready
  *       to be used.
  *
  * \section asfdoc_sam0_trng_callback_use_case_imp Implementation

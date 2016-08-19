@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+
 /*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -83,8 +84,12 @@
  *   \snippet samd11_xplained_pro/conf_quick_start_callback.h definition_pwm
  * - SAM L21 Xplained Pro.
  *   \snippet saml21_xplained_pro/conf_quick_start_callback.h definition_pwm
+ * - SAM L22 Xplained Pro.
+ *   \snippet saml22_xplained_pro/conf_quick_start_callback.h definition_pwm
  * - SAM DA1 Xplained Pro.
  *   \snippet samda1_xplained_pro/conf_quick_start_callback.h definition_pwm
+ * - SAM C21 Xplained Pro.
+ *   \snippet samc21_xplained_pro/conf_quick_start_callback.h definition_pwm 
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_callback.c module_inst

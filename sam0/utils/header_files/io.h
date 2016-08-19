@@ -5,7 +5,7 @@
  *
  * This file defines common SAM0 series.
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -66,6 +66,10 @@
 #  include "samr21.h"
 #endif
 
+#if (SAMD09)
+#  include "samd09.h"
+#endif
+
 #if (SAMD10)
 #  include "samd10.h"
 #endif
@@ -78,12 +82,28 @@
 #  include "saml21.h"
 #endif
 
-#if (SAMDA0)
-#  include "samda0.h"
+#if (SAMR30)
+#  include "samr30.h"
+#endif
+
+#if (SAML22)
+#  include "saml22.h"
 #endif
 
 #if (SAMDA1)
 #  include "samda1.h"
+#endif
+
+#if (SAMC20)
+#  include "samc20.h"
+#endif
+
+#if (SAMC21)
+#  include "samc21.h"
+#endif
+
+#if (SAMB11)
+#  include "samb11.h"
 #endif
 
 #endif /* _SAM_IO_ */

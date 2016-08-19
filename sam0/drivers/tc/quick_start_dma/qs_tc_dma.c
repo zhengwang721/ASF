@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/D11/L21/DA1 Timer/Counter Driver with DMA Quickstart
+ * \brief SAM Timer/Counter Driver with DMA Quickstart
  *
- * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -80,7 +80,7 @@ static volatile bool transfer_is_done = false;
 
 //! [example_descriptor]
 COMPILER_ALIGNED(16)
-DmacDescriptor example_descriptor;
+DmacDescriptor example_descriptor SECTION_DMAC_DESCRIPTOR;
 //! [example_descriptor]
 
 //! [config_tc]

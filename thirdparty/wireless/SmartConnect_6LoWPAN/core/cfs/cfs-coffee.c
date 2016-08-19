@@ -46,8 +46,8 @@
 #include <limits.h>
 #include <string.h>
 
-#define DEBUG 0
-#if DEBUG
+#define _DEBUG_ 0
+#if _DEBUG_
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
@@ -229,7 +229,7 @@ static void
 read_header(struct file_header *hdr, coffee_page_t page)
 {
   COFFEE_READ(hdr, sizeof(*hdr), page * COFFEE_PAGE_SIZE);
-#if DEBUG
+#if _DEBUG_
   if(HDR_ACTIVE(*hdr) && !HDR_VALID(*hdr)) {
     PRINTF("Invalid header at page %u!\n", (unsigned)page);
   }

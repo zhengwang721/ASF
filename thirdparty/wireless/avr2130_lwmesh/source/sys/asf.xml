@@ -12,7 +12,7 @@
 		<build type="header-file"   value="inc/sysTimer.h"/>
 		<build type="header-file"   value="inc/sysConfig.h"/>
 		<build type="include-path"  value="inc/"/>
-		<require idref="thirdparty.wireless.common_services.trx_access"/>
+		<require idref="thirdparty.wireless.services.trx_access"/>
 		<require idref="thirdparty.wireless.common_services.common_hw_timer"/>
         <require idref="thirdparty.wireless.common_services.sal"/>
 		<build type="doxygen-entry-point" value="group_lwmesh_sys"/>
@@ -29,7 +29,9 @@
 	<device-support value="samd21"/>
 	<device-support value="samr21"/>
 	<device-support value="sam4e"/>
-	<device-support value="sam4s"/>	<device-support value="sam4l"/>
+	<device-support value="sam4s"/>	
+	<device-support value="sam4l"/>
+	<device-support value="saml21"/>
 </device-alias-map>
 
 <device-alias-map name="avr2130_lwmesh_spi_support">
@@ -38,6 +40,7 @@
 	<device-support value="samd20"/>
 	<device-support value="samd21"/>
 	<device-support value="samr21"/>
+	<device-support value="saml21"/>
 	<device-support value="sam4l"/>
 	<device-support value="sam4e"/>
 	<device-support value="sam4s"/>

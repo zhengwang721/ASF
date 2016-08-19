@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel&reg; | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel&reg; | SMART ARM&reg;-based microcontrollers provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks, and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection, and
@@ -102,7 +102,7 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_SYSTEM_CLOCK_DPLL</td>
- *		<td>SAMD21, SAMR21, SAMD10, SAMD11</td>
+ *		<td>SAM D21, SAM R21, SAM D10, SAM D11</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -387,7 +387,7 @@ enum system_osc8m_div {
 /**
  * \brief Frequency range for the internal 8MHz RC oscillator.
  *
- * Internal 8MHz RC oscillator frequency range setting
+ * Internal 8MHz RC oscillator frequency range setting.
  */
 enum system_osc8m_frequency_range {
 	/** Frequency range 4MHz to 6MHz. */
@@ -1409,7 +1409,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>
- *			\li Updated dfll configuration function to implement workaround for
+ *			\li Updated DFLL configuration function to implement workaround for
  *			    errata 9905 in the DFLL module
  *			\li Updated \c system_clock_init() to reset interrupt flags before
  *			    they are used
@@ -1458,7 +1458,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	<tr>
  *		<td>E</td>
  *		<td>04/2015</td>
- *		<td>Added support for SAMDA0/DA1.</td>
+ *		<td>Added support for SAMDAx.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

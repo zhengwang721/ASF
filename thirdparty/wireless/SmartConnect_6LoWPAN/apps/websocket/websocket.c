@@ -73,7 +73,7 @@ struct websocket_frame_mask {
   uint8_t mask[4];
 };
 
-#define DEBUG DEBUG_NONE
+#define _DEBUG_ DEBUG_NONE
 #include "net/ip/uip-debug.h"
 
 /*---------------------------------------------------------------------------*/

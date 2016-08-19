@@ -3,7 +3,7 @@
  *
  * \brief Supply Controller (SUPC) driver for SAM.
  *
- * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,6 +72,8 @@ extern "C" {
 void supc_enable_backup_mode(Supc *p_supc)
 {
 	p_supc->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF;
+	uint32_t ul_dummy = p_supc->SUPC_MR;
+	__DSB();
 	__WFE();
 	__WFI();
 }
@@ -121,6 +123,8 @@ void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass)
 	/* Set Bypass mode if required */
 	if (ul_bypass == 1) {
 		p_supc->SUPC_MR |= SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS;
+	} else {
+		p_supc->SUPC_MR &= ~(SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS);
 	}
 
 	p_supc->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
@@ -357,7 +361,7 @@ void supc_set_slcd_vol(Supc *p_supc, uint32_t vol)
 }
 #endif
 
-#if SAMG54
+#if (SAMG54 || SAMG55)
 /**
  * \brief Set the internal voltage regulator to use factory trim value.
  *
@@ -365,9 +369,14 @@ void supc_set_slcd_vol(Supc *p_supc, uint32_t vol)
  */
 void supc_set_regulator_trim_factory(Supc *p_supc)
 {
+#if SAMG54
 	uint32_t ul_mr = p_supc->SUPC_MR &
 			(~(SUPC_MR_VRVDD_Msk | SUPC_MR_VDDSEL_USER_VRVDD));
 	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr;
+#else
+	uint32_t ul_pwmr = p_supc->SUPC_PWMR & (~SUPC_PWMR_ECPWRS);
+	p_supc->SUPC_PWMR = SUPC_PWMR_KEY_PASSWD | ul_pwmr;
+#endif
 }
 
 /**
@@ -380,11 +389,41 @@ void supc_set_regulator_trim_factory(Supc *p_supc)
  */
 void supc_set_regulator_trim_user(Supc *p_supc, uint32_t value)
 {
+#if SAMG54
 	uint32_t ul_mr = p_supc->SUPC_MR & (~SUPC_MR_VRVDD_Msk);
 	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr | SUPC_MR_VDDSEL_USER_VRVDD
 		 | SUPC_MR_VRVDD(value);
+#else
+	uint32_t ul_pwmr = p_supc->SUPC_PWMR & (~(0xFu << 9));
+	p_supc->SUPC_PWMR = SUPC_PWMR_KEY_PASSWD | ul_pwmr | SUPC_PWMR_ECPWRS
+		| ((value & 0xFu) << 9);
+#endif
 }
 
+#endif
+
+#if (SAMV70 || SAMV71 || SAME70 || SAMS70)
+/**
+ * \brief SRAM On In Backup Mode.
+ *
+ * \param p_supc Pointer to a SUPC instance.
+ *
+ */
+void supc_backup_sram_on(Supc *p_supc)
+{
+	p_supc->SUPC_MR |= (SUPC_MR_KEY_PASSWD | SUPC_MR_BKUPRETON);
+}
+
+/**
+ * \brief SRAM Off In Backup Mode.
+ *
+ * \param p_supc Pointer to a SUPC instance.
+ *
+ */
+void supc_backup_sram_off(Supc *p_supc)
+{
+	p_supc->SUPC_MR &= (~(SUPC_MR_KEY_PASSWD | SUPC_MR_BKUPRETON));	
+}
 #endif
 
 //@}

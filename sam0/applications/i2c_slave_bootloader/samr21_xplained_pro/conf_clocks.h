@@ -94,7 +94,7 @@
 #  define CONF_CLOCK_DFLL_ON_DEMAND               false
 
 /* DFLL open loop mode configuration */
-#  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
+#  define CONF_CLOCK_DFLL_FINE_VALUE              (512)
 
 /* DFLL closed loop mode configuration */
 #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
@@ -160,10 +160,10 @@
 #  define CONF_CLOCK_GCLK_3_OUTPUT_ENABLE         false
 
 /* Configure GCLK generator 4 */
-#  define CONF_CLOCK_GCLK_4_ENABLE                false
+#  define CONF_CLOCK_GCLK_4_ENABLE                true
 #  define CONF_CLOCK_GCLK_4_RUN_IN_STANDBY        false
-#  define CONF_CLOCK_GCLK_4_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC8M
-#  define CONF_CLOCK_GCLK_4_PRESCALER             1
+#  define CONF_CLOCK_GCLK_4_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_ULP32K
+#  define CONF_CLOCK_GCLK_4_PRESCALER             32
 #  define CONF_CLOCK_GCLK_4_OUTPUT_ENABLE         false
 
 /* Configure GCLK generator 5 */
