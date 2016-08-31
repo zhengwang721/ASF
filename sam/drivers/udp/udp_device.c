@@ -756,7 +756,7 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes,
 	udd_reset_endpoint(ep);
 	// Set configuration of new endpoint
 	udd_configure_endpoint(ep,
-		(b_dir_in ? (bmAttributes | 0x4) : bmAttributes),
+		(b_dir_in ? ((bmAttributes&USB_EP_TYPE_MASK) | 0x4) : (bmAttributes&USB_EP_TYPE_MASK)),
 		0);
 	return true;
 }
