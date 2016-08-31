@@ -111,6 +111,13 @@ enum ioport_sense {
 	IOPORT_SENSE_LEVEL_LOW, /*!< IOPORT sense low level  */
 	IOPORT_SENSE_LEVEL_HIGH,/*!< IOPORT sense High level  */
 };
+#elif XMEGA
+enum ioport_sense {
+	IOPORT_SENSE_BOTHEDGES, /*!< IOPORT sense both rising and falling edges */
+	IOPORT_SENSE_RISING,    /*!< IOPORT sense rising edges */
+	IOPORT_SENSE_FALLING,   /*!< IOPORT sense falling edges */
+	IOPORT_SENSE_LEVEL_LOW, /*!< IOPORT sense low level */
+};
 #else
 enum ioport_sense {
 	IOPORT_SENSE_BOTHEDGES, /*!< IOPORT sense both rising and falling edges */
