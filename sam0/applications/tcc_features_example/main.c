@@ -3,9 +3,9 @@
  *
  * \brief SAM D11 TCC Features Example Application
  *        Refer following application note for details.
- *        AT42357 - Using the Timer Counter for Control Applications (TCC).
+ *        AT07690 - Using the Timer Counter for Control Applications (TCC).
  *
- * Copyright (C) 2014-2016 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2016 Atmel Corporation. All rights reserved.
  *
  * \license
  * \asf_license_start
@@ -92,7 +92,7 @@ void configure_evsys (void);
 //////////////////// END OF FUNCTION DECLARATION ////////////////////////////
 /* 
  * Description: This example project helps you to configure the TCC Module
- * for different Features/Modes available in TCC module of SAML22 
+ * for different Features/Modes available in TCC module of SAMD11 
  */
   
 /* Configure the TCC module as per the application requirement */
