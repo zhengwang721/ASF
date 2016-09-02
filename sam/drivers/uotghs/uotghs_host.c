@@ -4,7 +4,7 @@
  * \brief USB host driver
  * Compliance with common driver UHD
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -393,7 +393,7 @@ static void uhd_pipe_out_ready(uint8_t pipe);
 static void uhd_pipe_in_received(uint8_t pipe);
 #endif
 #ifdef UHD_PIPE_DMA_SUPPORTED
-static uint32_t uhd_pipes_dma_nb_trans[USBHS_EPT_NUM - 1];
+static uint32_t uhd_pipes_dma_nb_trans[UOTGHS_EPT_NUM - 1];
 static void uhd_pipe_trans_complet(uint8_t pipe);
 static void uhd_pipe_interrupt_dma(uint8_t pipe);
 #endif
