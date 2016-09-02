@@ -65,6 +65,10 @@
 #define IOPORT_PORTD    3
 #endif
 
+#if AVR8_PART_IS_DEFINED(ATmega328PB) || AVR8_PART_IS_DEFINED(ATmega324PB)
+#define IOPORT_PORTE    4
+#endif
+
 #if MEGA_XX0_1 || MEGA_RF
 #define IOPORT_PORTE    4
 #define IOPORT_PORTF    5
