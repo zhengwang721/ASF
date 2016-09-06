@@ -4,7 +4,7 @@
  * \brief USB host driver
  * Compliance with common driver UHD
  *
- * Copyright (C) 2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015-2016 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -440,6 +440,7 @@ static void uhd_pipe_out_ready(uint8_t pipe);
 static void uhd_pipe_in_received(uint8_t pipe);
 #endif
 #ifdef UHD_PIPE_DMA_SUPPORTED
+static uint32_t uhd_pipes_dma_nb_trans[USBHS_EPT_NUM - 1];
 static void uhd_pipe_trans_complet(uint8_t pipe);
 static void uhd_pipe_interrupt_dma(uint8_t pipe);
 #endif
@@ -1925,7 +1926,7 @@ static void uhd_pipe_trans_complet(uint8_t pipe)
 				}
 			}
 			uhd_pipe_dma_set_control(pipe, uhd_dma_ctrl);
-			ptr_job->nb_trans += next_trans;
+			uhd_pipes_dma_nb_trans[pipe - 1] = next_trans;
 			cpu_irq_restore(flags);
 			return;
 		}
@@ -1977,7 +1978,7 @@ static void uhd_pipe_interrupt_dma(uint8_t pipe)
 
 		// Transfer no complete (short packet or ZLP) then:
 		// Update number of transfered data
-		ptr_job->nb_trans -= nb_remaining;
+		ptr_job->nb_trans = uhd_pipes_dma_nb_trans[pipe - 1] - nb_remaining;
 
 		// Set transfer complete to stop the transfer
 		ptr_job->buf_size = ptr_job->nb_trans;
