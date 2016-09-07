@@ -1443,6 +1443,7 @@ void pmc_enable_backupmode(void)
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG55 || SAMV71 || SAMV70 || SAME70 || SAMS70)
 	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_STOP_VREG;
 	uint32_t ul_dummy = SUPC->SUPC_MR;
+	UNUSED(ul_dummy);
 	__DSB();
 	__WFE();
 	__WFI();
