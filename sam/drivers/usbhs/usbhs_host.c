@@ -627,6 +627,7 @@ void uhd_enable(void)
 		otg_unfreeze_clock();
 	}
 # else
+	uhd_enable_vbus(); // enable VBUS
 	USBHS->USBHS_HSTIER = USBHS_HSTIER_HWUPIES;
 	uhd_sleep_mode(UHD_STATE_DISCONNECT);
 #endif
@@ -636,7 +637,6 @@ void uhd_enable(void)
 	USBHS->USBHS_HSTIER = USBHS_HSTIER_DCONNIES | USBHS_HSTIER_HSOFIES
 				| USBHS_HSTIER_RSTIES;
 
-	otg_freeze_clock();
 	uhd_sleep_mode(UHD_STATE_NO_VBUS);
 
 	cpu_irq_restore(flags);
@@ -1127,6 +1127,9 @@ static void uhd_interrupt(void)
 		return;
 	}
 
+	// Check USB clock ready after asynchronous interrupt
+	while (!Is_otg_clock_usable());
+
 	// Manage dis/connection event
 	if (Is_uhd_disconnection() && Is_uhd_disconnection_int_enabled()) {
 		uhd_ack_disconnection();
@@ -1163,20 +1166,6 @@ static void uhd_interrupt(void)
 		uhd_resume_start = 0;
 		uhc_notify_connection(true);
 		return;
-	}
-
-      /* If Wakeup interrupt is enabled and triggered and connection intterupt is enabled  */
-	if(Is_uhd_wakeup() && Is_uhd_connection_int_enabled()) {
-		 // Check USB clock ready after asynchronous interrupt
-		while (!Is_otg_clock_usable());
-		otg_unfreeze_clock();
-		// Here the wakeup interrupt has been used to detect connection
-		// with an asynchrone interrupt
-		USBHS->USBHS_HSTIDR = USBHS_HSTIDR_HWUPIEC;
-		//uhd_sleep_mode(UHD_STATE_IDLE);
-		uhd_enable_vbus(); // enable VBUS
-		uhd_sleep_mode(UHD_STATE_DISCONNECT);
-		UHC_VBUS_CHANGE(true);
 	}
 
 	if (Is_uhd_wakeup_interrupt_enabled() && (Is_uhd_wakeup() ||
